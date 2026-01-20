@@ -1,0 +1,339 @@
+/**
+ * Scroll Animations CSS
+ * Smooth, professional scroll-triggered animations
+ */
+
+/* ============================================
+   SCROLL PROGRESS INDICATOR
+   ============================================ */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1B4332, #D4A574);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
+}
+
+/* ============================================
+   BASE ANIMATION STATES
+   ============================================ */
+.animate-on-scroll {
+    opacity: 0;
+    transition: 
+        opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: none !important;
+}
+
+/* Staggered delay based on index */
+.animate-on-scroll.stagger {
+    transition-delay: calc(var(--stagger-index, 0) * 100ms);
+}
+
+/* ============================================
+   FADE UP - Classic reveal from below
+   ============================================ */
+.fade-up {
+    transform: translateY(40px);
+}
+
+/* ============================================
+   SLIDE LEFT - Enter from left side
+   ============================================ */
+.slide-left {
+    transform: translateX(-60px);
+}
+
+/* ============================================
+   SLIDE RIGHT - Enter from right side
+   ============================================ */
+.slide-right {
+    transform: translateX(60px);
+}
+
+/* ============================================
+   SCALE UP - Grow from smaller size
+   ============================================ */
+.scale-up {
+    transform: scale(0.9);
+}
+
+/* ============================================
+   FADE IN ONLY - No movement
+   ============================================ */
+.fade-in {
+    transform: translateY(0);
+}
+
+/* ============================================
+   BLUR IN - Fade with blur effect
+   ============================================ */
+.blur-in {
+    filter: blur(10px);
+    transform: translateY(20px);
+}
+
+.blur-in.is-visible {
+    filter: blur(0);
+}
+
+/* ============================================
+   ROTATE IN - Slight rotation on entry
+   ============================================ */
+.rotate-in {
+    transform: perspective(1000px) rotateX(10deg) translateY(30px);
+    transform-origin: center bottom;
+}
+
+/* ============================================
+   SPECIAL ANIMATIONS
+   ============================================ */
+
+/* Hero section - always visible with entrance animation */
+.hero {
+    animation: heroEntrance 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes heroEntrance {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.hero .hero-text {
+    animation: heroTextSlide 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes heroTextSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero .hero-image-container {
+    animation: heroImageSlide 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+@keyframes heroImageSlide {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.hero .hero-meta {
+    animation: heroMetaFade 0.8s ease 0.8s forwards;
+    opacity: 0;
+}
+
+@keyframes heroMetaFade {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Credentials badge bounce */
+.credentials-badge {
+    animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+@keyframes badgePop {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Big number pulse on appear */
+.big-number.counted,
+.stat-number.counted {
+    animation: numberPulse 0.5s ease;
+}
+
+@keyframes numberPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Chart line drawing animation */
+.chart-line-good {
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: drawLine 2s ease forwards;
+    animation-play-state: paused;
+}
+
+.is-visible .chart-line-good {
+    animation-play-state: running;
+}
+
+.chart-line-bad {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: drawLine 2.5s ease 0.5s forwards;
+    animation-play-state: paused;
+}
+
+.is-visible .chart-line-bad {
+    animation-play-state: running;
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Trust items icons */
+.trust-item.is-visible i {
+    animation: iconBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes iconBounce {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Service cards hover enhancement */
+.service-card {
+    transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.1);
+}
+
+.service-card .service-icon {
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.05);
+}
+
+/* Approach steps number animation */
+.approach-step .step-number {
+    transition: 
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.3s ease;
+}
+
+.approach-step:hover .step-number {
+    transform: scale(1.15);
+    background: var(--color-primary);
+    color: white;
+}
+
+/* CTA section - subtle glow effect */
+.cta-section {
+    position: relative;
+    transition: box-shadow 0.5s ease;
+}
+
+.cta-section:hover {
+    box-shadow: inset 0 0 100px rgba(255,255,255,0.05);
+}
+
+/* Button animations - clean transitions */
+.btn-primary,
+.btn-secondary,
+.booking-submit-btn {
+    transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.3s ease;
+}
+
+/* FAQ item expansion feel */
+.faq-item {
+    transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.faq-item:hover {
+    transform: translateX(5px);
+    box-shadow: -4px 0 0 var(--color-primary);
+}
+
+/* Booking calendar day hover */
+.day.available {
+    transition: 
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.day.available:hover {
+    transform: scale(1.1);
+}
+
+/* Contact methods */
+.contact-method {
+    transition: 
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.contact-method:hover {
+    transform: translateY(-3px) scale(1.02);
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll,
+    .hero,
+    .hero .hero-text,
+    .hero .hero-image-container,
+    .credentials-badge,
+    .chart-line-good,
+    .chart-line-bad {
+        animation: none !important;
+        transition: opacity 0.3s ease !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+    
+    .scroll-progress {
+        display: none;
+    }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+.animate-on-scroll {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Prevent layout shift */
+section {
+    contain: layout style;
+}

@@ -1,0 +1,153 @@
+﻿@import "tailwindcss";
+
+/* Custom Tailwind Theme */
+@theme {
+    --color-primary: #1B4332;
+    --color-secondary: #D4A574;
+    --color-accent: #2D6A4F;
+    --color-cream: #F8F6F1;
+    --color-bg-light: #FDFBF7;
+    
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-sans: 'Inter', sans-serif;
+}
+
+/* All clickable elements should have pointer cursor */
+a, button, [role="button"], .btn-primary, .lang-btn, .mobile-menu-btn,
+input[type="submit"], input[type="button"] {
+    cursor: pointer;
+}
+
+/* Hero section - NO animations, NO transforms */
+#hero,
+#hero *,
+#hero img,
+#hero .grid,
+#hero .lg\:col-span-2,
+#hero .lg\:col-span-3 {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+#hero .animate-on-scroll,
+#hero .fade-up,
+#hero .scale-up,
+#hero .slide-left,
+#hero .slide-right {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Improved section separators */
+.section-divider {
+    position: relative;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+    border-radius: 2px;
+}
+
+/* iOS Safari link detection fix */
+a[x-apple-data-detectors] {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #FDFBF7;
+}
+
+/* Phosphor icons base */
+i.ph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Booking calendar styles */
+.calendar-container {
+    background: var(--color-cream);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Form focus styles */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Mobile Menu Styles */
+.nav-links {
+    display: none;
+}
+
+.nav-links.mobile-open {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+}
+
+/* Hamburger animation */
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+}
+
+.mobile-menu-btn span {
+    transition: all 0.3s ease;
+}
+
+/* Hide mobile menu on desktop */
+@media (min-width: 768px) {
+    .nav-links,
+    .nav-links.mobile-open {
+        display: none !important;
+    }
+}
