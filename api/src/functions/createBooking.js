@@ -51,7 +51,7 @@ app.http('createBooking', {
                 
                 // Email to client
                 await resend.emails.send({
-                    from: 'Sofija Nutrition <noreply@sofija-nutrition.lv>',
+                    from: 'Sofija Nutrition <onboarding@resend.dev>',
                     to: email,
                     subject: `Rezervācijas apstiprinājums - ${bookingId}`,
                     html: `
@@ -79,9 +79,9 @@ app.http('createBooking', {
                 });
 
                 // Email to admin
-                const adminEmail = process.env.ADMIN_EMAIL || 'info@sofija-nutrition.lv';
+                const adminEmail = process.env.ADMIN_EMAIL || 'ivanovs.kirils95@gmail.com';
                 await resend.emails.send({
-                    from: 'Sofija Nutrition <noreply@sofija-nutrition.lv>',
+                    from: 'Sofija Nutrition <onboarding@resend.dev>',
                     to: adminEmail,
                     subject: `Jauna rezervācija - ${bookingId}`,
                     html: `
