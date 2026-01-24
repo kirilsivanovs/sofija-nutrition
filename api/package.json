@@ -2,6 +2,9 @@
   "name": "sofija-nutrition-api",
   "version": "1.0.0",
   "main": "src/functions/*.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet\""
