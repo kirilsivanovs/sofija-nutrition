@@ -1,0 +1,538 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Sofija Nutrition - Admin Panel">
+    <div class="min-h-screen bg-gray-50">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-semibold text-gray-800">🌿 Sofija Nutrition Admin</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="user-info" class="text-sm text-gray-600"></span>
+                    <a href="/.auth/logout" class="text-sm text-red-600 hover:text-red-800">Iziet</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="bg-white border-b">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex gap-6">
+                    <button class="tab-btn active py-4 px-2 border-b-2 border-primary text-primary font-medium" data-tab="bookings">
+                        📅 Ieraksti
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="availability">
+                        🕐 Pieejamība
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="settings">
+                        ⚙️ Iestatījumi
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 py-6">
+            <!-- Bookings Tab -->
+            <div id="tab-bookings" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">Klientu ieraksti</h2>
+                    <div class="flex gap-2">
+                        <select id="booking-filter" class="px-3 py-2 border rounded-lg text-sm">
+                            <option value="all">Visi</option>
+                            <option value="pending">Gaida apstiprinājumu</option>
+                            <option value="confirmed">Apstiprināti</option>
+                            <option value="cancelled">Atcelti</option>
+                        </select>
+                        <button id="refresh-bookings" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
+                            🔄 Atjaunot
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bookings-loading" class="text-center py-12 text-gray-500">
+                    Ielādē ierakstus...
+                </div>
+
+                <div id="bookings-list" class="hidden space-y-4">
+                    <!-- Bookings will be inserted here -->
+                </div>
+
+                <div id="bookings-empty" class="hidden text-center py-12 text-gray-500">
+                    Nav ierakstu
+                </div>
+            </div>
+
+            <!-- Availability Tab -->
+            <div id="tab-availability" class="tab-content hidden">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold mb-4">Darba laiki</h2>
+                    <p class="text-sm text-gray-600 mb-4">Iestatiet pieejamos laikus katrai nedēļas dienai</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div id="availability-form" class="space-y-4">
+                        <!-- Days will be generated here -->
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t">
+                        <button id="save-availability" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                            💾 Saglabāt
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h2 class="text-lg font-semibold mb-4">Bloķētie datumi</h2>
+                    <p class="text-sm text-gray-600 mb-4">Pievienojiet datumus, kad nepieņemat klientus (atvaļinājums, svētki u.c.)</p>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex gap-4 mb-4">
+                            <input type="date" id="block-date" class="px-3 py-2 border rounded-lg">
+                            <input type="text" id="block-reason" placeholder="Iemesls (piem. Atvaļinājums)" class="flex-1 px-3 py-2 border rounded-lg">
+                            <button id="add-blocked-date" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                                + Pievienot
+                            </button>
+                        </div>
+                        <div id="blocked-dates-list" class="space-y-2">
+                            <!-- Blocked dates will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="tab-content hidden">
+                <h2 class="text-lg font-semibold mb-6">Vietnes iestatījumi</h2>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <!-- Prices -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="font-medium mb-4">💰 Cenas</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Pirmreizējā konsultācija (€)</label>
+                                <input type="number" id="price-initial" class="w-full px-3 py-2 border rounded-lg" value="65">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Atkārtota konsultācija (€)</label>
+                                <input type="number" id="price-followup" class="w-full px-3 py-2 border rounded-lg" value="45">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="font-medium mb-4">📞 Kontaktinformācija</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">E-pasts</label>
+                                <input type="email" id="contact-email" class="w-full px-3 py-2 border rounded-lg" value="sofija@nutrition.lv">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Telefons</label>
+                                <input type="tel" id="contact-phone" class="w-full px-3 py-2 border rounded-lg" value="+371 20000000">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Adrese</label>
+                                <input type="text" id="contact-address" class="w-full px-3 py-2 border rounded-lg" value="Rīga, Latvija">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Consultation Duration -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="font-medium mb-4">⏱️ Konsultāciju ilgums</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Pirmreizējā (minūtes)</label>
+                                <input type="number" id="duration-initial" class="w-full px-3 py-2 border rounded-lg" value="60">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Atkārtota (minūtes)</label>
+                                <input type="number" id="duration-followup" class="w-full px-3 py-2 border rounded-lg" value="30">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="font-medium mb-4">🏦 Maksājumu informācija</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Bankas nosaukums</label>
+                                <input type="text" id="bank-name" class="w-full px-3 py-2 border rounded-lg" value="Swedbank">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">IBAN</label>
+                                <input type="text" id="bank-iban" class="w-full px-3 py-2 border rounded-lg" value="LV00HABA0000000000000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button id="save-settings" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                        💾 Saglabāt iestatījumus
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        :root {
+            --color-primary: #d4a574;
+        }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary { color: var(--color-primary); }
+        .border-primary { border-color: var(--color-primary); }
+        .hover\:bg-primary\/90:hover { background-color: rgba(212, 165, 116, 0.9); }
+    </style>
+
+    <script is:inline>
+    (function() {
+        // Get user info
+        fetch('/.auth/me')
+            .then(r => r.json())
+            .then(data => {
+                if (data.clientPrincipal) {
+                    const user = data.clientPrincipal;
+                    document.getElementById('user-info').textContent = 
+                        `${user.userDetails || user.userId} (${user.identityProvider})`;
+                }
+            })
+            .catch(() => {});
+
+        // Tab switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                tabBtns.forEach(b => {
+                    b.classList.remove('active', 'border-primary', 'text-primary');
+                    b.classList.add('border-transparent', 'text-gray-500');
+                });
+                btn.classList.add('active', 'border-primary', 'text-primary');
+                btn.classList.remove('border-transparent', 'text-gray-500');
+
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+                // Load data for tab
+                if (tabId === 'bookings') loadBookings();
+                if (tabId === 'availability') loadAvailability();
+                if (tabId === 'settings') loadSettings();
+            });
+        });
+
+        // Load bookings
+        async function loadBookings() {
+            const loading = document.getElementById('bookings-loading');
+            const list = document.getElementById('bookings-list');
+            const empty = document.getElementById('bookings-empty');
+            const filter = document.getElementById('booking-filter').value;
+
+            loading.classList.remove('hidden');
+            list.classList.add('hidden');
+            empty.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/admin/bookings?status=' + filter);
+                const data = await response.json();
+                
+                loading.classList.add('hidden');
+
+                if (!data.bookings || data.bookings.length === 0) {
+                    empty.classList.remove('hidden');
+                    return;
+                }
+
+                list.innerHTML = data.bookings.map(b => `
+                    <div class="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row md:items-center gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-medium">${b.name}</span>
+                                <span class="text-xs px-2 py-0.5 rounded ${getStatusClass(b.status)}">${getStatusText(b.status)}</span>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                📅 ${b.date} ${b.time} | 
+                                ${b.service === 'initial' ? 'Pirmreizējā' : 'Atkārtota'} | 
+                                ${b.consultationFormat === 'online' ? '💻 Online' : '🏥 Klātienē'}
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">
+                                ✉️ ${b.email} ${b.phone ? '| 📞 ' + b.phone : ''}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            ${b.status === 'pending' ? `
+                                <button onclick="confirmBooking('${b.id}')" class="px-3 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200">
+                                    ✓ Apstiprināt
+                                </button>
+                            ` : ''}
+                            ${b.status !== 'cancelled' ? `
+                                <button onclick="cancelBooking('${b.id}')" class="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200">
+                                    ✕ Atcelt
+                                </button>
+                            ` : ''}
+                            <button onclick="viewBooking('${b.id}')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200">
+                                👁️ Skatīt
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                list.classList.remove('hidden');
+            } catch (error) {
+                loading.textContent = 'Kļūda ielādējot datus: ' + error.message;
+            }
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'confirmed': return 'bg-green-100 text-green-700';
+                case 'pending': return 'bg-yellow-100 text-yellow-700';
+                case 'cancelled': return 'bg-red-100 text-red-700';
+                default: return 'bg-gray-100 text-gray-700';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'confirmed': return 'Apstiprināts';
+                case 'pending': return 'Gaida';
+                case 'cancelled': return 'Atcelts';
+                default: return status;
+            }
+        }
+
+        window.confirmBooking = async function(id) {
+            if (!confirm('Apstiprināt šo ierakstu?')) return;
+            try {
+                await fetch('/api/admin/bookings/' + id, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'confirmed' })
+                });
+                loadBookings();
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        };
+
+        window.cancelBooking = async function(id) {
+            if (!confirm('Atcelt šo ierakstu?')) return;
+            try {
+                await fetch('/api/admin/bookings/' + id, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'cancelled' })
+                });
+                loadBookings();
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        };
+
+        window.viewBooking = function(id) {
+            alert('Detaļu skats būs pieejams drīzumā');
+        };
+
+        document.getElementById('booking-filter').addEventListener('change', loadBookings);
+        document.getElementById('refresh-bookings').addEventListener('click', loadBookings);
+
+        // Availability
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const dayNames = {
+            monday: 'Pirmdiena',
+            tuesday: 'Otrdiena', 
+            wednesday: 'Trešdiena',
+            thursday: 'Ceturtdiena',
+            friday: 'Piektdiena',
+            saturday: 'Sestdiena',
+            sunday: 'Svētdiena'
+        };
+
+        function loadAvailability() {
+            const form = document.getElementById('availability-form');
+            
+            form.innerHTML = days.map(day => `
+                <div class="flex items-center gap-4 py-3 border-b last:border-0">
+                    <div class="w-32 font-medium">${dayNames[day]}</div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="day-${day}-enabled" class="w-4 h-4" checked>
+                        <span class="text-sm text-gray-600">Aktīva</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="time" id="day-${day}-start" value="09:00" class="px-2 py-1 border rounded">
+                        <span>-</span>
+                        <input type="time" id="day-${day}-end" value="17:00" class="px-2 py-1 border rounded">
+                    </div>
+                </div>
+            `).join('');
+
+            // Disable weekends by default
+            document.getElementById('day-saturday-enabled').checked = false;
+            document.getElementById('day-sunday-enabled').checked = false;
+
+            // Try to load saved availability
+            fetch('/api/admin/availability')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.schedule) {
+                        Object.entries(data.schedule).forEach(([day, config]) => {
+                            const checkbox = document.getElementById(`day-${day}-enabled`);
+                            const startInput = document.getElementById(`day-${day}-start`);
+                            const endInput = document.getElementById(`day-${day}-end`);
+                            if (checkbox) checkbox.checked = config.enabled;
+                            if (startInput) startInput.value = config.start || '09:00';
+                            if (endInput) endInput.value = config.end || '17:00';
+                        });
+                    }
+                    if (data.blockedDates) {
+                        renderBlockedDates(data.blockedDates);
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function renderBlockedDates(dates) {
+            const list = document.getElementById('blocked-dates-list');
+            if (!dates || dates.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-sm">Nav bloķētu datumu</p>';
+                return;
+            }
+            list.innerHTML = dates.map(d => `
+                <div class="flex items-center justify-between p-2 bg-red-50 rounded">
+                    <span>${d.date} ${d.reason ? '- ' + d.reason : ''}</span>
+                    <button onclick="removeBlockedDate('${d.date}')" class="text-red-600 hover:text-red-800">✕</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('save-availability').addEventListener('click', async () => {
+            const schedule = {};
+            days.forEach(day => {
+                schedule[day] = {
+                    enabled: document.getElementById(`day-${day}-enabled`).checked,
+                    start: document.getElementById(`day-${day}-start`).value,
+                    end: document.getElementById(`day-${day}-end`).value
+                };
+            });
+
+            try {
+                await fetch('/api/admin/availability', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ schedule })
+                });
+                alert('Pieejamība saglabāta!');
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        });
+
+        document.getElementById('add-blocked-date').addEventListener('click', async () => {
+            const date = document.getElementById('block-date').value;
+            const reason = document.getElementById('block-reason').value;
+            if (!date) return alert('Izvēlieties datumu');
+
+            try {
+                await fetch('/api/admin/availability/block', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date, reason })
+                });
+                loadAvailability();
+                document.getElementById('block-date').value = '';
+                document.getElementById('block-reason').value = '';
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        });
+
+        window.removeBlockedDate = async function(date) {
+            try {
+                await fetch('/api/admin/availability/block', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date })
+                });
+                loadAvailability();
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        };
+
+        // Settings
+        function loadSettings() {
+            fetch('/api/admin/settings')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.prices) {
+                        document.getElementById('price-initial').value = data.prices.initial || 65;
+                        document.getElementById('price-followup').value = data.prices.followup || 45;
+                    }
+                    if (data.contact) {
+                        document.getElementById('contact-email').value = data.contact.email || '';
+                        document.getElementById('contact-phone').value = data.contact.phone || '';
+                        document.getElementById('contact-address').value = data.contact.address || '';
+                    }
+                    if (data.duration) {
+                        document.getElementById('duration-initial').value = data.duration.initial || 60;
+                        document.getElementById('duration-followup').value = data.duration.followup || 30;
+                    }
+                    if (data.bank) {
+                        document.getElementById('bank-name').value = data.bank.name || '';
+                        document.getElementById('bank-iban').value = data.bank.iban || '';
+                    }
+                })
+                .catch(() => {});
+        }
+
+        document.getElementById('save-settings').addEventListener('click', async () => {
+            const settings = {
+                prices: {
+                    initial: parseInt(document.getElementById('price-initial').value),
+                    followup: parseInt(document.getElementById('price-followup').value)
+                },
+                contact: {
+                    email: document.getElementById('contact-email').value,
+                    phone: document.getElementById('contact-phone').value,
+                    address: document.getElementById('contact-address').value
+                },
+                duration: {
+                    initial: parseInt(document.getElementById('duration-initial').value),
+                    followup: parseInt(document.getElementById('duration-followup').value)
+                },
+                bank: {
+                    name: document.getElementById('bank-name').value,
+                    iban: document.getElementById('bank-iban').value
+                }
+            };
+
+            try {
+                await fetch('/api/admin/settings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                alert('Iestatījumi saglabāti!');
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        });
+
+        // Initial load
+        loadBookings();
+    })();
+    </script>
+</Layout>
