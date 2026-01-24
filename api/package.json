@@ -10,8 +10,6 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@azure/functions": "4.5.1",
-    "pdf-lib": "^1.17.1",
-    "resend": "^4.0.0"
+    "@azure/functions": "4.5.1"
   }
 }
