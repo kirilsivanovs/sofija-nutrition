@@ -510,7 +510,9 @@ class BookingCalendar {
         // For local development without API
         const simulatedBooking = {
             id: `INV-${Date.now().toString(36).toUpperCase()}`,
-            ...bookingData,
+            date: bookingData.date,
+            time: bookingData.time,
+            serviceType: bookingData.serviceType,
             price: bookingData.serviceType === 'cgm-diagnostic' ? 150 : 
                    bookingData.serviceType === 'consultation' ? 80 : 50
         };
@@ -528,10 +530,20 @@ class BookingCalendar {
             });
         }
 
-        // Show success modal
+        // Show success modal with proper close handler
         const modal = this.container.querySelector('.booking-success-modal');
         if (modal) {
             modal.style.display = 'flex';
+            
+            // Re-attach close button event
+            const closeBtn = modal.querySelector('.close-success-btn');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    modal.style.display = 'none';
+                    this.render();
+                    this.attachEventListeners();
+                };
+            }
         }
 
         // Reset form
