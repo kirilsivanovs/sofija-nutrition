@@ -3,6 +3,9 @@
  * A calendar widget for scheduling appointments
  */
 
+// External API URL (Azure Functions BYOF)
+const API_BASE_URL = 'https://sofija-nutrition-api.azurewebsites.net';
+
 class BookingCalendar {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
@@ -85,8 +88,8 @@ class BookingCalendar {
 
     async loadAvailability() {
         try {
-            // Try API first (in production on Azure SWA)
-            let response = await fetch('/api/availability');
+            // Try external Azure Functions API first
+            let response = await fetch(`${API_BASE_URL}/api/availability`);
             
             // Fallback to static JSON for local development
             if (!response.ok) {
@@ -415,8 +418,8 @@ class BookingCalendar {
         console.log('Submitting booking:', bookingData);
 
         try {
-            // Try API first
-            const response = await fetch('/api/booking', {
+            // Call external Azure Functions API
+            const response = await fetch(`${API_BASE_URL}/api/bookings`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
