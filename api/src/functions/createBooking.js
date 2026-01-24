@@ -201,7 +201,7 @@ app.http('createBooking', {
                 try {
                     // Email to client
                     const clientEmailResult = await resend.emails.send({
-                        from: 'Sofija Nutrition <onboarding@resend.dev>',
+                        from: 'Sofija Ivanova | Uztura Speciāliste <onboarding@resend.dev>',
                         to: email,
                         subject: t.emailSubject(bookingId),
                         html: `
@@ -263,7 +263,7 @@ app.http('createBooking', {
                     // Email to admin (always in Latvian)
                     const adminEmail = process.env.ADMIN_EMAIL || 'ivanovs.kirils95@gmail.com';
                     const adminEmailResult = await resend.emails.send({
-                        from: 'Sofija Nutrition <onboarding@resend.dev>',
+                        from: 'Sofija Ivanova | Uztura Speciāliste <onboarding@resend.dev>',
                         to: adminEmail,
                         subject: `Jauna rezervācija - ${bookingId}`,
                         html: `
