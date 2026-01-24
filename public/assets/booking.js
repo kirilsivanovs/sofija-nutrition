@@ -26,8 +26,12 @@ class BookingCalendar {
                 months: ["Janvāris", "Februāris", "Marts", "Aprīlis", "Maijs", "Jūnijs", 
                          "Jūlijs", "Augusts", "Septembris", "Oktobris", "Novembris", "Decembris"],
                 serviceLabel: "Pakalpojuma veids",
+                formatLabel: "Konsultācijas formāts",
+                formatOnline: "Attālināti (Zoom/Google Meet)",
+                formatInPerson: "Klātienē",
                 nameLabel: "Jūsu vārds",
-                emailLabel: "E-pasts vai tālrunis",
+                emailLabel: "E-pasts",
+                phoneLabel: "Telefons",
                 messageLabel: "Komentārs (neobligāts)",
                 submitBtn: "Apstiprināt rezervāciju",
                 successTitle: "Rezervācija veiksmīga!",
@@ -45,8 +49,12 @@ class BookingCalendar {
                 months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
                          "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
                 serviceLabel: "Тип услуги",
+                formatLabel: "Формат консультации",
+                formatOnline: "Онлайн (Zoom/Google Meet)",
+                formatInPerson: "Очно",
                 nameLabel: "Ваше имя",
-                emailLabel: "Email или телефон",
+                emailLabel: "Email",
+                phoneLabel: "Телефон",
                 messageLabel: "Комментарий (необязательно)",
                 submitBtn: "Подтвердить запись",
                 successTitle: "Запись успешна!",
@@ -64,8 +72,12 @@ class BookingCalendar {
                 months: ["January", "February", "March", "April", "May", "June",
                          "July", "August", "September", "October", "November", "December"],
                 serviceLabel: "Service type",
+                formatLabel: "Consultation format",
+                formatOnline: "Online (Zoom/Google Meet)",
+                formatInPerson: "In-person",
                 nameLabel: "Your name",
-                emailLabel: "Email or phone",
+                emailLabel: "Email",
+                phoneLabel: "Phone",
                 messageLabel: "Comment (optional)",
                 submitBtn: "Confirm booking",
                 successTitle: "Booking successful!",
@@ -164,13 +176,38 @@ class BookingCalendar {
                                 </div>
                                 
                                 <div class="form-group">
+                                    <label>${this.t('formatLabel')}</label>
+                                    <div class="format-options">
+                                        <label class="format-option">
+                                            <input type="radio" name="consultationFormat" value="online" required>
+                                            <span class="format-label">
+                                                <i class="ph ph-video-camera"></i>
+                                                ${this.t('formatOnline')}
+                                            </span>
+                                        </label>
+                                        <label class="format-option">
+                                            <input type="radio" name="consultationFormat" value="in-person">
+                                            <span class="format-label">
+                                                <i class="ph ph-map-pin"></i>
+                                                ${this.t('formatInPerson')}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
                                     <label>${this.t('nameLabel')}</label>
                                     <input type="text" name="name" required placeholder="Anna">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>${this.t('emailLabel')}</label>
-                                    <input type="text" name="email" required placeholder="anna@email.com">
+                                    <input type="email" name="email" required placeholder="anna@email.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>${this.t('phoneLabel')}</label>
+                                    <input type="tel" name="phone" placeholder="+371 20000000">
                                 </div>
                                 
                                 <div class="form-group">
@@ -410,7 +447,9 @@ class BookingCalendar {
             time: this.selectedTime,
             name: formData.get('name'),
             email: formData.get('email'),
+            phone: formData.get('phone'),
             serviceType: formData.get('serviceType'),
+            consultationFormat: formData.get('consultationFormat'),
             message: formData.get('message'),
             language: this.currentLang
         };

@@ -5,49 +5,62 @@ const { Resend } = require('resend');
 const fs = require('fs');
 const path = require('path');
 
+// In-memory booking storage (for MVP - later replace with Azure Table Storage)
+const bookings = new Map();
+
 // Translations for emails and PDF
 const translations = {
     lv: {
-        emailSubject: (id) => `Rezervācijas apstiprinājums - ${id}`,
+        emailSubject: (id) => `Rezervacijas apstiprinajums - ${id}`,
         emailGreeting: (name) => `Labdien, ${name}!`,
-        emailThankYou: 'Paldies par rezervāciju!',
-        emailConfirmed: 'Jūsu rezervācija ir apstiprināta:',
-        emailBookingId: 'Rezervācijas numurs',
+        emailThankYou: 'Paldies par rezervaciju!',
+        emailConfirmed: 'Jusu rezervacija ir apstiprināta:',
+        emailBookingId: 'Rezervacijas numurs',
         emailService: 'Pakalpojums',
+        emailFormat: 'Formats',
         emailDate: 'Datums',
         emailTime: 'Laiks',
         emailPrice: 'Cena',
-        emailInvoiceAttached: 'Rēķins ir pievienots šim e-pastam.',
-        emailQuestions: 'Ja jums ir jautājumi, lūdzu, sazinieties ar mums.',
-        emailRegards: 'Ar cieņu,',
+        emailInvoiceAttached: 'Rekins ir pievienots sim e-pastam.',
+        emailQuestions: 'Ja jums ir jautajumi, ludzu, sazinieties ar mums.',
+        emailRegards: 'Ar cienu,',
+        emailSubtitle: 'Uztura specialiste · PhD',
+        formatOnline: 'Attalinati (Zoom/Google Meet)',
+        formatInPerson: 'Klatiene',
+        // Payment confirmed
+        paymentConfirmedSubject: (id) => `Maksajums apstiprinats - ${id}`,
+        paymentConfirmedTitle: 'Maksajums sanemts!',
+        paymentConfirmedText: 'Paldies! Jusu maksajums ir sanemts. Gaidam Jus konsultacija:',
+        paymentWaitingText: 'Gaidam Jus:',
         // PDF
-        pdfSubtitle: 'Uztura speciāliste · PhD',
-        pdfInvoice: 'RĒĶINS',
+        pdfSubtitle: 'Uztura specialiste · PhD',
+        pdfInvoice: 'REKINS',
         pdfNumber: 'Numurs',
         pdfDate: 'Datums',
         pdfClient: 'Klients',
-        pdfName: 'Vārds',
+        pdfName: 'Vards',
         pdfEmail: 'E-pasts',
         pdfPhone: 'Telefons',
+        pdfFormat: 'Formats',
         pdfService: 'Pakalpojums',
         pdfTime: 'Laiks',
         pdfPrice: 'Cena',
-        pdfTotal: 'KOPĀ',
-        pdfPaymentInfo: 'Maksājuma informācija',
+        pdfTotal: 'KOPA',
+        pdfPaymentInfo: 'Maksajuma informacija',
         pdfBank: 'Banka',
-        pdfReference: 'Maksājuma mērķis',
-        pdfNotes: 'Piezīmes',
-        pdfThankYou: 'Paldies, ka izvēlējāties mūs!',
-        pdfNotProvided: 'Nav norādīts',
+        pdfReference: 'Maksajuma merkis',
+        pdfNotes: 'Piezimes',
+        pdfThankYou: 'Paldies, ka izvelejaties mus!',
+        pdfNotProvided: 'Nav noradits',
         // Services
         services: {
-            'initial': 'Sākotnējā konsultācija',
-            'followup': 'Atkārtota konsultācija',
-            'package3': '3 konsultāciju pakete',
-            'package5': '5 konsultāciju pakete',
+            'initial': 'Sakotneja konsultacija',
+            'followup': 'Atkartota konsultacija',
+            'package3': '3 konsultaciju pakete',
+            'package5': '5 konsultaciju pakete',
             'cgm-diagnostic': 'CGM diagnostikas programma',
-            'consultation': 'Uztura konsultācija',
-            'free-consultation': 'Bezmaksas 15 min konsultācija'
+            'consultation': 'Uztura konsultacija',
+            'free-consultation': 'Bezmaksas 15 min konsultacija'
         }
     },
     en: {
@@ -57,12 +70,21 @@ const translations = {
         emailConfirmed: 'Your booking has been confirmed:',
         emailBookingId: 'Booking ID',
         emailService: 'Service',
+        emailFormat: 'Format',
         emailDate: 'Date',
         emailTime: 'Time',
         emailPrice: 'Price',
         emailInvoiceAttached: 'The invoice is attached to this email.',
         emailQuestions: 'If you have any questions, please contact us.',
         emailRegards: 'Best regards,',
+        emailSubtitle: 'Nutrition Specialist · PhD',
+        formatOnline: 'Online (Zoom/Google Meet)',
+        formatInPerson: 'In-person',
+        // Payment confirmed
+        paymentConfirmedSubject: (id) => `Payment Confirmed - ${id}`,
+        paymentConfirmedTitle: 'Payment Received!',
+        paymentConfirmedText: 'Thank you! Your payment has been received. We look forward to seeing you:',
+        paymentWaitingText: 'We look forward to seeing you:',
         // PDF
         pdfSubtitle: 'Nutrition Specialist · PhD',
         pdfInvoice: 'INVOICE',
@@ -72,6 +94,7 @@ const translations = {
         pdfName: 'Name',
         pdfEmail: 'Email',
         pdfPhone: 'Phone',
+        pdfFormat: 'Format',
         pdfService: 'Service',
         pdfTime: 'Time',
         pdfPrice: 'Price',
@@ -94,46 +117,56 @@ const translations = {
         }
     },
     ru: {
-        emailSubject: (id) => `Подтверждение бронирования - ${id}`,
-        emailGreeting: (name) => `Здравствуйте, ${name}!`,
-        emailThankYou: 'Спасибо за бронирование!',
-        emailConfirmed: 'Ваше бронирование подтверждено:',
-        emailBookingId: 'Номер бронирования',
-        emailService: 'Услуга',
-        emailDate: 'Дата',
-        emailTime: 'Время',
-        emailPrice: 'Цена',
-        emailInvoiceAttached: 'Счёт прикреплён к этому письму.',
-        emailQuestions: 'Если у вас есть вопросы, пожалуйста, свяжитесь с нами.',
-        emailRegards: 'С уважением,',
+        emailSubject: (id) => `Podtverzhdenie bronirovaniya - ${id}`,
+        emailGreeting: (name) => `Zdravstvuyte, ${name}!`,
+        emailThankYou: 'Spasibo za bronirovanie!',
+        emailConfirmed: 'Vashe bronirovanie podtverzhdeno:',
+        emailBookingId: 'Nomer bronirovaniya',
+        emailService: 'Usluga',
+        emailFormat: 'Format',
+        emailDate: 'Data',
+        emailTime: 'Vremya',
+        emailPrice: 'Cena',
+        emailInvoiceAttached: 'Schyot prikreplyon k etomu pismu.',
+        emailQuestions: 'Esli u vas est voprosy, pozhaluysta, svyazhites s nami.',
+        emailRegards: 'S uvazheniem,',
+        emailSubtitle: 'Specialist po pitaniyu · PhD',
+        formatOnline: 'Onlayn (Zoom/Google Meet)',
+        formatInPerson: 'Ochno',
+        // Payment confirmed
+        paymentConfirmedSubject: (id) => `Oplata podtverzhdena - ${id}`,
+        paymentConfirmedTitle: 'Oplata poluchena!',
+        paymentConfirmedText: 'Spasibo! Vasha oplata poluchena. Zhdem vas na konsultacii:',
+        paymentWaitingText: 'Zhdem vas:',
         // PDF
-        pdfSubtitle: 'Специалист по питанию · PhD',
-        pdfInvoice: 'СЧЁТ',
-        pdfNumber: 'Номер',
-        pdfDate: 'Дата',
-        pdfClient: 'Клиент',
-        pdfName: 'Имя',
+        pdfSubtitle: 'Specialist po pitaniyu · PhD',
+        pdfInvoice: 'SCHYOT',
+        pdfNumber: 'Nomer',
+        pdfDate: 'Data',
+        pdfClient: 'Klient',
+        pdfName: 'Imya',
         pdfEmail: 'Email',
-        pdfPhone: 'Телефон',
-        pdfService: 'Услуга',
-        pdfTime: 'Время',
-        pdfPrice: 'Цена',
-        pdfTotal: 'ИТОГО',
-        pdfPaymentInfo: 'Платёжная информация',
-        pdfBank: 'Банк',
-        pdfReference: 'Назначение платежа',
-        pdfNotes: 'Примечания',
-        pdfThankYou: 'Спасибо, что выбрали нас!',
-        pdfNotProvided: 'Не указано',
+        pdfPhone: 'Telefon',
+        pdfFormat: 'Format',
+        pdfService: 'Usluga',
+        pdfTime: 'Vremya',
+        pdfPrice: 'Cena',
+        pdfTotal: 'ITOGO',
+        pdfPaymentInfo: 'Platezhnaya informaciya',
+        pdfBank: 'Bank',
+        pdfReference: 'Naznachenie platezha',
+        pdfNotes: 'Primechaniya',
+        pdfThankYou: 'Spasibo, chto vybrali nas!',
+        pdfNotProvided: 'Ne ukazano',
         // Services
         services: {
-            'initial': 'Первичная консультация',
-            'followup': 'Повторная консультация',
-            'package3': 'Пакет из 3 консультаций',
-            'package5': 'Пакет из 5 консультаций',
-            'cgm-diagnostic': 'Программа CGM диагностики',
-            'consultation': 'Консультация по питанию',
-            'free-consultation': 'Бесплатная 15-мин консультация'
+            'initial': 'Pervichnaya konsultaciya',
+            'followup': 'Povtornaya konsultaciya',
+            'package3': 'Paket iz 3 konsultaciy',
+            'package5': 'Paket iz 5 konsultaciy',
+            'cgm-diagnostic': 'Programma CGM diagnostiki',
+            'consultation': 'Konsultaciya po pitaniyu',
+            'free-consultation': 'Besplatnaya 15-min konsultaciya'
         }
     }
 };
@@ -149,6 +182,367 @@ const servicePrices = {
     'free-consultation': 0
 };
 
+// API Base URL for confirmation links
+const API_BASE_URL = process.env.API_BASE_URL || 'https://sofija-nutrition-api.azurewebsites.net';
+
+function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, date, time, price) {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 40px 40px 30px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+                                        <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">${t.emailSubtitle}</p>
+                                        <div style="width: 50px; height: 3px; background-color: #d4a574; margin-top: 16px; border-radius: 2px;"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <h2 style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 24px; font-weight: 600;">${t.emailThankYou}</h2>
+                            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.6;">${t.emailGreeting(name)}</p>
+                            <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.6;">${t.emailConfirmed}</p>
+                            
+                            <!-- Booking Details Card -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%); border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailBookingId}</span><br>
+                                                    <span style="color: #2d5a4a; font-size: 16px; font-weight: 600;">${bookingId}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailService}</span><br>
+                                                    <span style="color: #333; font-size: 16px; font-weight: 500;">${serviceName}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailFormat}</span><br>
+                                                    <span style="color: #333; font-size: 16px; font-weight: 500;">${formatLabel}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td width="50%">
+                                                                <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailDate}</span><br>
+                                                                <span style="color: #333; font-size: 16px; font-weight: 500;">${date}</span>
+                                                            </td>
+                                                            <td width="50%">
+                                                                <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailTime}</span><br>
+                                                                <span style="color: #333; font-size: 16px; font-weight: 500;">${time}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 16px 0 0 0;">
+                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailPrice}</span><br>
+                                                    <span style="color: #2d5a4a; font-size: 28px; font-weight: 700;">${price > 0 ? '€' + price : 'FREE'}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; line-height: 1.6;">
+                                📎 ${t.emailInvoiceAttached}
+                            </p>
+                            <p style="margin: 0 0 30px 0; color: #666; font-size: 14px; line-height: 1.6;">
+                                ${t.emailQuestions}
+                            </p>
+                            
+                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.8;">
+                                ${t.emailRegards}<br>
+                                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #2d5a4a; padding: 25px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px;">www.sofija-nutrition.lv</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+}
+
+function generateAdminEmailHTML(booking, confirmUrl) {
+    const formatLabel = booking.consultationFormat === 'online' ? 'Attalinati' : 'Klatiene';
+    return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 30px 40px;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">🆕 Jauna rezervacija!</h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 30px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Numurs</span><br>
+                                                    <span style="color: #2d5a4a; font-size: 18px; font-weight: 700;">${booking.id}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Klients</span><br>
+                                                    <span style="font-size: 16px; font-weight: 500;">${booking.name}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">E-pasts</span><br>
+                                                    <span style="font-size: 14px;">${booking.email}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Telefons</span><br>
+                                                    <span style="font-size: 14px;">${booking.phone || 'Nav noradits'}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Pakalpojums</span><br>
+                                                    <span style="font-size: 14px; font-weight: 500;">${booking.serviceName}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Formats</span><br>
+                                                    <span style="font-size: 14px; font-weight: 500; color: ${booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50'};">
+                                                        ${booking.consultationFormat === 'online' ? '💻' : '📍'} ${formatLabel}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td width="50%">
+                                                                <span style="color: #888; font-size: 12px; text-transform: uppercase;">Datums</span><br>
+                                                                <span style="font-size: 14px; font-weight: 500;">${booking.date}</span>
+                                                            </td>
+                                                            <td width="50%">
+                                                                <span style="color: #888; font-size: 12px; text-transform: uppercase;">Laiks</span><br>
+                                                                <span style="font-size: 14px; font-weight: 500;">${booking.time}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Summa</span><br>
+                                                    <span style="font-size: 22px; font-weight: 700; color: #2d5a4a;">${booking.price > 0 ? '€' + booking.price : 'BEZMAKSAS'}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Valoda</span><br>
+                                                    <span style="font-size: 14px;">${booking.language.toUpperCase()}</span>
+                                                </td>
+                                            </tr>
+                                            ${booking.notes ? `
+                                            <tr>
+                                                <td style="padding: 10px 0; border-top: 1px solid #e0e0e0;">
+                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Piezimes</span><br>
+                                                    <span style="font-size: 14px;">${booking.notes}</span>
+                                                </td>
+                                            </tr>
+                                            ` : ''}
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Confirm Payment Button -->
+                            ${booking.price > 0 ? `
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="padding: 20px 0;">
+                                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Kad maksajums sanems, nospied pogu:</p>
+                                        <a href="${confirmUrl}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+                                            ✓ Apstiprinat maksajumu
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            ` : `
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="padding: 20px 0;">
+                                        <p style="margin: 0; padding: 15px 25px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px;">
+                                            ✓ Bezmaksas konsultacija - maksajums nav nepieciesams
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            `}
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #2d5a4a; padding: 20px 40px; text-align: center;">
+                            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+}
+
+function generatePaymentConfirmedEmailHTML(t, booking) {
+    const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 40px 40px 30px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+                                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: inline-block; line-height: 80px; font-size: 40px;">✓</div>
+                                        <h1 style="margin: 20px 0 0 0; color: #ffffff; font-size: 28px; font-weight: 600;">${t.paymentConfirmedTitle}</h1>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.6; text-align: center;">${t.paymentConfirmedText}</p>
+                            
+                            <!-- Appointment Details -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
+                                <tr>
+                                    <td style="padding: 30px; text-align: center;">
+                                        <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">${t.emailService}</p>
+                                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 20px; font-weight: 600;">${booking.serviceName}</p>
+                                        
+                                        <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">${t.emailFormat}</p>
+                                        <p style="margin: 0 0 20px 0; color: #333; font-size: 16px; font-weight: 500;">
+                                            ${booking.consultationFormat === 'online' ? '💻' : '📍'} ${formatLabel}
+                                        </p>
+                                        
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td width="50%" style="text-align: center; padding: 15px;">
+                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px;">${t.emailDate}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">${booking.date}</p>
+                                                </td>
+                                                <td width="50%" style="text-align: center; padding: 15px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
+                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px;">${t.emailTime}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">${booking.time}</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.8; text-align: center;">
+                                ${t.emailRegards}<br>
+                                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #2d5a4a; padding: 25px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px;">www.sofija-nutrition.lv</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+}
+
+// Create Booking Endpoint
 app.http('createBooking', {
     methods: ['POST'],
     authLevel: 'anonymous',
@@ -156,11 +550,13 @@ app.http('createBooking', {
     handler: async (request, context) => {
         try {
             const body = await request.json();
-            const { name, email, phone, date, time, notes, message, language } = body;
+            const { email, phone, date, time, notes, message, language, consultationFormat } = body;
+            const name = body.name || '';
             const service = body.service || body.serviceType;
             const bookingNotes = notes || message;
             const lang = translations[language] ? language : 'lv';
             const t = translations[lang];
+            const format = consultationFormat || 'online';
 
             // Validate required fields
             if (!name || !email || !date || !time || !service) {
@@ -176,6 +572,26 @@ app.http('createBooking', {
             // Get service info
             const price = servicePrices[service] || 0;
             const serviceName = t.services[service] || service;
+            const formatLabel = format === 'online' ? t.formatOnline : t.formatInPerson;
+
+            // Store booking data (for payment confirmation)
+            const bookingData = {
+                id: bookingId,
+                name,
+                email,
+                phone,
+                date,
+                time,
+                service,
+                serviceName,
+                price,
+                consultationFormat: format,
+                notes: bookingNotes,
+                language: lang,
+                paymentConfirmed: price === 0, // Free consultations are auto-confirmed
+                createdAt: new Date().toISOString()
+            };
+            bookings.set(bookingId, bookingData);
 
             // Generate PDF invoice
             const pdfBytes = await generateInvoicePDF({
@@ -186,12 +602,13 @@ app.http('createBooking', {
                 date,
                 time,
                 serviceName,
+                formatLabel,
                 price,
                 notes: bookingNotes,
                 t
             });
 
-            // Send confirmation email with invoice
+            // Send confirmation emails
             const resendApiKey = process.env.RESEND_API_KEY;
             let emailStatus = { sent: false, error: null };
             
@@ -201,55 +618,10 @@ app.http('createBooking', {
                 try {
                     // Email to client
                     const clientEmailResult = await resend.emails.send({
-                        from: 'Sofija Ivanova | Uztura Speciāliste <onboarding@resend.dev>',
+                        from: 'Sofija Ivanova <onboarding@resend.dev>',
                         to: email,
                         subject: t.emailSubject(bookingId),
-                        html: `
-                            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                                <div style="background: linear-gradient(135deg, #2d5a4a 0%, #3d7a6a 100%); padding: 30px; text-align: center;">
-                                    <h1 style="color: white; margin: 0; font-size: 28px;">Sofija Ivanova</h1>
-                                    <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 14px;">${t.pdfSubtitle}</p>
-                                </div>
-                                <div style="padding: 30px; background: #f9f9f9;">
-                                    <h2 style="color: #2d5a4a; margin-top: 0;">${t.emailThankYou}</h2>
-                                    <p>${t.emailGreeting(name)}</p>
-                                    <p>${t.emailConfirmed}</p>
-                                    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                                        <table style="width: 100%; border-collapse: collapse;">
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #666;">${t.emailBookingId}:</td>
-                                                <td style="padding: 8px 0; font-weight: bold;">${bookingId}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #666;">${t.emailService}:</td>
-                                                <td style="padding: 8px 0; font-weight: bold;">${serviceName}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #666;">${t.emailDate}:</td>
-                                                <td style="padding: 8px 0; font-weight: bold;">${date}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #666;">${t.emailTime}:</td>
-                                                <td style="padding: 8px 0; font-weight: bold;">${time}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #666;">${t.emailPrice}:</td>
-                                                <td style="padding: 8px 0; font-weight: bold; color: #2d5a4a; font-size: 18px;">€${price}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <p style="color: #666;">${t.emailInvoiceAttached}</p>
-                                    <p style="color: #666;">${t.emailQuestions}</p>
-                                    <p style="margin-top: 30px;">
-                                        ${t.emailRegards}<br>
-                                        <strong>Sofija Ivanova</strong>
-                                    </p>
-                                </div>
-                                <div style="background: #2d5a4a; padding: 20px; text-align: center;">
-                                    <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 12px;">www.sofija-nutrition.lv</p>
-                                </div>
-                            </div>
-                        `,
+                        html: generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, date, time, price),
                         attachments: [
                             {
                                 filename: `invoice-${bookingId}.pdf`,
@@ -260,26 +632,15 @@ app.http('createBooking', {
                     
                     context.log('Client email result:', JSON.stringify(clientEmailResult));
 
-                    // Email to admin (always in Latvian)
+                    // Email to admin with payment confirmation button
                     const adminEmail = process.env.ADMIN_EMAIL || 'ivanovs.kirils95@gmail.com';
+                    const confirmUrl = `${API_BASE_URL}/api/confirm-payment?id=${bookingId}&token=${Buffer.from(bookingId + ':' + email).toString('base64')}`;
+                    
                     const adminEmailResult = await resend.emails.send({
-                        from: 'Sofija Ivanova | Uztura Speciāliste <onboarding@resend.dev>',
+                        from: 'Sofija Ivanova <onboarding@resend.dev>',
                         to: adminEmail,
-                        subject: `Jauna rezervācija - ${bookingId}`,
-                        html: `
-                            <h2>Jauna rezervācija!</h2>
-                            <ul>
-                                <li><strong>Numurs:</strong> ${bookingId}</li>
-                                <li><strong>Klients:</strong> ${name}</li>
-                                <li><strong>E-pasts:</strong> ${email}</li>
-                                <li><strong>Telefons:</strong> ${phone || 'Nav norādīts'}</li>
-                                <li><strong>Pakalpojums:</strong> ${serviceName}</li>
-                                <li><strong>Datums:</strong> ${date}</li>
-                                <li><strong>Laiks:</strong> ${time}</li>
-                                <li><strong>Valoda:</strong> ${lang.toUpperCase()}</li>
-                                <li><strong>Piezīmes:</strong> ${bookingNotes || 'Nav'}</li>
-                            </ul>
-                        `,
+                        subject: `Jauna rezervacija - ${bookingId}`,
+                        html: generateAdminEmailHTML(bookingData, confirmUrl),
                         attachments: [
                             {
                                 filename: `invoice-${bookingId}.pdf`,
@@ -311,10 +672,11 @@ app.http('createBooking', {
                         email,
                         serviceType: service,
                         serviceName,
+                        consultationFormat: format,
                         price
                     },
                     emailStatus,
-                    message: 'Rezervācija veiksmīgi izveidota'
+                    message: 'Rezervacija veiksmigi izveidota'
                 }
             };
 
@@ -328,7 +690,134 @@ app.http('createBooking', {
     }
 });
 
-async function generateInvoicePDF({ bookingId, name, email, phone, date, time, serviceName, price, notes, t }) {
+// Confirm Payment Endpoint (for admin to click from email)
+app.http('confirmPayment', {
+    methods: ['GET'],
+    authLevel: 'anonymous',
+    route: 'confirm-payment',
+    handler: async (request, context) => {
+        try {
+            const url = new URL(request.url);
+            const bookingId = url.searchParams.get('id');
+            const token = url.searchParams.get('token');
+
+            if (!bookingId || !token) {
+                return {
+                    status: 400,
+                    headers: { 'Content-Type': 'text/html' },
+                    body: generateConfirmationPage('error', 'Nepareizi parametri / Invalid parameters')
+                };
+            }
+
+            // Get booking from storage
+            const booking = bookings.get(bookingId);
+            
+            if (!booking) {
+                // For demo: if booking not in memory, show error
+                // In production: fetch from Azure Table Storage
+                return {
+                    status: 404,
+                    headers: { 'Content-Type': 'text/html' },
+                    body: generateConfirmationPage('error', `Rezervacija ${bookingId} nav atrasta. Iespejams, serveris tika restartets. / Booking not found.`)
+                };
+            }
+
+            // Verify token
+            const expectedToken = Buffer.from(bookingId + ':' + booking.email).toString('base64');
+            if (token !== expectedToken) {
+                return {
+                    status: 403,
+                    headers: { 'Content-Type': 'text/html' },
+                    body: generateConfirmationPage('error', 'Nepareizs tokens / Invalid token')
+                };
+            }
+
+            // Check if already confirmed
+            if (booking.paymentConfirmed) {
+                return {
+                    status: 200,
+                    headers: { 'Content-Type': 'text/html' },
+                    body: generateConfirmationPage('already', `Maksajums jau apstiprinats! / Payment already confirmed! (${bookingId})`)
+                };
+            }
+
+            // Mark as confirmed
+            booking.paymentConfirmed = true;
+            booking.paymentConfirmedAt = new Date().toISOString();
+            bookings.set(bookingId, booking);
+
+            // Send confirmation email to client
+            const resendApiKey = process.env.RESEND_API_KEY;
+            let emailSent = false;
+            
+            if (resendApiKey) {
+                const resend = new Resend(resendApiKey);
+                const t = translations[booking.language] || translations.lv;
+                
+                try {
+                    await resend.emails.send({
+                        from: 'Sofija Ivanova <onboarding@resend.dev>',
+                        to: booking.email,
+                        subject: t.paymentConfirmedSubject(bookingId),
+                        html: generatePaymentConfirmedEmailHTML(t, booking)
+                    });
+                    emailSent = true;
+                    context.log('Payment confirmation email sent to:', booking.email);
+                } catch (emailError) {
+                    context.error('Failed to send payment confirmation email:', emailError);
+                }
+            }
+
+            return {
+                status: 200,
+                headers: { 'Content-Type': 'text/html' },
+                body: generateConfirmationPage('success', `Maksajums apstiprinats! Klientam ${booking.name} (${booking.email}) nosutits apstiprinajums. / Payment confirmed!`, emailSent)
+            };
+
+        } catch (error) {
+            context.error('Error confirming payment:', error);
+            return {
+                status: 500,
+                headers: { 'Content-Type': 'text/html' },
+                body: generateConfirmationPage('error', 'Servera kluda / Server error: ' + error.message)
+            };
+        }
+    }
+});
+
+function generateConfirmationPage(status, message, emailSent = false) {
+    const statusColors = {
+        success: { bg: '#e8f5e9', color: '#2e7d32', icon: '✓' },
+        error: { bg: '#ffebee', color: '#c62828', icon: '✕' },
+        already: { bg: '#fff3e0', color: '#ef6c00', icon: '!' }
+    };
+    const s = statusColors[status] || statusColors.error;
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+</head>
+<body style="margin: 0; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div style="max-width: 500px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: ${s.bg}; padding: 40px; text-align: center;">
+            <div style="width: 80px; height: 80px; background: ${s.color}; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; color: white; margin-bottom: 20px;">${s.icon}</div>
+            <h1 style="margin: 0; color: ${s.color}; font-size: 24px;">${status === 'success' ? 'Maksajums apstiprinats!' : status === 'already' ? 'Jau apstiprinats' : 'Kluda'}</h1>
+        </div>
+        <div style="padding: 30px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 16px; line-height: 1.6;">${message}</p>
+            ${emailSent ? '<p style="margin: 0; padding: 10px 20px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosutits!</p>' : ''}
+            <a href="https://wonderful-bay-0fb550403.4.azurestaticapps.net" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz majas lapu</a>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
+async function generateInvoicePDF({ bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes, t }) {
     const pdfDoc = await PDFDocument.create();
     
     // Register fontkit for custom fonts with Unicode support
@@ -360,7 +849,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
         color: primaryColor
     });
     
-    // Header text - Doctor name and title (like on website)
+    // Header text - Doctor name and title
     page.drawText('Sofija Ivanova', {
         x: 50,
         y: height - 55,
@@ -451,6 +940,8 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
 
     page.drawText(serviceName, { x: 50, y, size: 11, font });
     y -= 16;
+    page.drawText(`${t.pdfFormat}: ${formatLabel}`, { x: 50, y, size: 11, font });
+    y -= 16;
     page.drawText(`${t.pdfDate}: ${date}`, { x: 50, y, size: 11, font });
     y -= 16;
     page.drawText(`${t.pdfTime}: ${time}`, { x: 50, y, size: 11, font });
@@ -471,7 +962,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
 
     // Price row
     page.drawText(serviceName, { x: 60, y, size: 11, font });
-    page.drawText(`€${price.toFixed(2)}`, { x: width - 130, y, size: 11, font });
+    page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', { x: width - 130, y, size: 11, font });
     y -= 25;
 
     // Separator line
@@ -493,25 +984,27 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     
     page.drawText(t.pdfTotal + ':', { x: width - 190, y: y + 5, size: 12, font: boldFont });
-    page.drawText(`€${price.toFixed(2)}`, { x: width - 100, y: y + 5, size: 14, font: boldFont, color: primaryColor });
+    page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', { x: width - 100, y: y + 5, size: 14, font: boldFont, color: primaryColor });
     y -= 55;
 
-    // Payment info
-    page.drawText(t.pdfPaymentInfo, {
-        x: 50,
-        y,
-        size: 14,
-        font: boldFont,
-        color: primaryColor
-    });
-    y -= 22;
+    // Payment info (only if not free)
+    if (price > 0) {
+        page.drawText(t.pdfPaymentInfo, {
+            x: 50,
+            y,
+            size: 14,
+            font: boldFont,
+            color: primaryColor
+        });
+        y -= 22;
 
-    page.drawText(`${t.pdfBank}: Swedbank`, { x: 50, y, size: 11, font });
-    y -= 16;
-    page.drawText('IBAN: LV00HABA0000000000000', { x: 50, y, size: 11, font });
-    y -= 16;
-    page.drawText(`${t.pdfReference}: ${bookingId}`, { x: 50, y, size: 11, font });
-    y -= 35;
+        page.drawText(`${t.pdfBank}: Swedbank`, { x: 50, y, size: 11, font });
+        y -= 16;
+        page.drawText('IBAN: LV00HABA0000000000000', { x: 50, y, size: 11, font });
+        y -= 16;
+        page.drawText(`${t.pdfReference}: ${bookingId}`, { x: 50, y, size: 11, font });
+        y -= 35;
+    }
 
     // Notes (if any)
     if (notes) {
@@ -523,7 +1016,8 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
             color: primaryColor
         });
         y -= 22;
-        page.drawText(notes.substring(0, 100), { x: 50, y, size: 11, font, color: grayColor });
+        const truncatedNotes = notes.length > 80 ? notes.substring(0, 80) + '...' : notes;
+        page.drawText(truncatedNotes, { x: 50, y, size: 11, font, color: grayColor });
     }
 
     // Footer
