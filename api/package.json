@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "main": "src/functions/*.js",
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@azure/data-tables": "^13.3.2",
-    "@azure/functions": "^4.0.0",
+    "@azure/data-tables": "13.2.2",
+    "@azure/functions": "4.5.1",
     "pdfkit": "^0.17.2",
     "resend": "^4.0.0"
   }
