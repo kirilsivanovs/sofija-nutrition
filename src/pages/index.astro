@@ -35,10 +35,10 @@ import Layout from '../layouts/Layout.astro';
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button type="button" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer touch-manipulation" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
-                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
+                <button type="button" onclick="this.classList.toggle('active');document.getElementById('mobile-nav-menu').classList.toggle('open');document.body.style.overflow=document.getElementById('mobile-nav-menu').classList.contains('open')?'hidden':'';" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer" style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
                 </button>
             </nav>
             
@@ -55,6 +55,55 @@ import Layout from '../layouts/Layout.astro';
                 </div>
             </div>
         </div>
+        
+        <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
+        <script is:inline>
+        (function() {
+            var btn = document.querySelector('.mobile-menu-btn');
+            var menu = document.querySelector('.mobile-nav-menu');
+            if (!btn || !menu) return;
+            
+            function toggle(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var isOpen = menu.classList.toggle('open');
+                btn.classList.toggle('active', isOpen);
+                btn.setAttribute('aria-expanded', String(isOpen));
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+                document.body.style.position = isOpen ? 'fixed' : '';
+                document.body.style.width = isOpen ? '100%' : '';
+                document.body.style.top = isOpen ? '0' : '';
+            }
+            
+            function close() {
+                menu.classList.remove('open');
+                btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+                document.body.style.top = '';
+            }
+            
+            // Multiple event types for iOS Safari
+            btn.addEventListener('click', toggle, false);
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                toggle(e);
+            }, { passive: false });
+            
+            // Close on link click
+            var links = menu.querySelectorAll('a');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', close, false);
+            }
+            
+            // Close on overlay click
+            menu.addEventListener('click', function(e) {
+                if (e.target === menu) close();
+            }, false);
+        })();
+        </script>
     </header>
 
     <!-- Hero Section -->
