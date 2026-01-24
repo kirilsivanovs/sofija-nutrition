@@ -269,7 +269,7 @@ import Layout from '../../layouts/Layout.astro';
             empty.classList.add('hidden');
 
             try {
-                const response = await fetch(API_BASE + '/admin/bookings?status=' + filter);
+                const response = await fetch(API_BASE + '/dashboard/bookings?status=' + filter);
                 const data = await response.json();
                 
                 loading.classList.add('hidden');
@@ -340,7 +340,7 @@ import Layout from '../../layouts/Layout.astro';
         window.confirmBooking = async function(id) {
             if (!confirm('Apstiprināt šo ierakstu?')) return;
             try {
-                await fetch(API_BASE + '/admin/bookings/' + id, {
+                await fetch(API_BASE + '/dashboard/bookings/' + id, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'confirmed' })
@@ -354,7 +354,7 @@ import Layout from '../../layouts/Layout.astro';
         window.cancelBooking = async function(id) {
             if (!confirm('Atcelt šo ierakstu?')) return;
             try {
-                await fetch(API_BASE + '/admin/bookings/' + id, {
+                await fetch(API_BASE + '/dashboard/bookings/' + id, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'cancelled' })
@@ -407,7 +407,7 @@ import Layout from '../../layouts/Layout.astro';
             document.getElementById('day-sunday-enabled').checked = false;
 
             // Try to load saved availability
-            fetch(API_BASE + '/admin/availability')
+            fetch(API_BASE + '/dashboard/availability')
                 .then(r => r.json())
                 .then(data => {
                     if (data.schedule) {
@@ -455,7 +455,7 @@ import Layout from '../../layouts/Layout.astro';
             });
 
             try {
-                await fetch(API_BASE + '/admin/availability', {
+                await fetch(API_BASE + '/dashboard/availability', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ schedule })
@@ -472,7 +472,7 @@ import Layout from '../../layouts/Layout.astro';
             if (!date) return alert('Izvēlieties datumu');
 
             try {
-                await fetch(API_BASE + '/admin/availability/block', {
+                await fetch(API_BASE + '/dashboard/availability/block', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date, reason })
@@ -487,7 +487,7 @@ import Layout from '../../layouts/Layout.astro';
 
         window.removeBlockedDate = async function(date) {
             try {
-                await fetch(API_BASE + '/admin/availability/block', {
+                await fetch(API_BASE + '/dashboard/availability/block', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date })
@@ -500,7 +500,7 @@ import Layout from '../../layouts/Layout.astro';
 
         // Settings
         function loadSettings() {
-            fetch(API_BASE + '/admin/settings')
+            fetch(API_BASE + '/dashboard/settings')
                 .then(r => r.json())
                 .then(data => {
                     if (data.prices) {
@@ -546,7 +546,7 @@ import Layout from '../../layouts/Layout.astro';
             };
 
             try {
-                await fetch(API_BASE + '/admin/settings', {
+                await fetch(API_BASE + '/dashboard/settings', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settings)

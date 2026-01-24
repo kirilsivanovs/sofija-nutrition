@@ -7,7 +7,7 @@ const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 app.http('adminGetBookings', {
     methods: ['GET'],
     authLevel: 'anonymous', // SWA handles auth
-    route: 'admin/bookings',
+    route: 'dashboard/bookings',
     handler: async (request, context) => {
         try {
             const url = new URL(request.url);
@@ -69,7 +69,7 @@ app.http('adminGetBookings', {
 app.http('adminUpdateBooking', {
     methods: ['PATCH'],
     authLevel: 'anonymous',
-    route: 'admin/bookings/{id}',
+    route: 'dashboard/bookings/{id}',
     handler: async (request, context) => {
         try {
             const bookingId = request.params.id;
@@ -123,7 +123,7 @@ app.http('adminUpdateBooking', {
 app.http('adminGetBooking', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: 'admin/bookings/{id}',
+    route: 'dashboard/bookings/{id}',
     handler: async (request, context) => {
         try {
             const bookingId = request.params.id;

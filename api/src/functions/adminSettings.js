@@ -23,7 +23,7 @@ async function ensureTable(tableName) {
 app.http('adminGetAvailability', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: 'admin/availability',
+    route: 'dashboard/availability',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
@@ -77,7 +77,7 @@ app.http('adminGetAvailability', {
 app.http('adminUpdateAvailability', {
     methods: ['PUT'],
     authLevel: 'anonymous',
-    route: 'admin/availability',
+    route: 'dashboard/availability',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
@@ -113,7 +113,7 @@ app.http('adminUpdateAvailability', {
 app.http('adminAddBlockedDate', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    route: 'admin/availability/block',
+    route: 'dashboard/availability/block',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
@@ -167,7 +167,7 @@ app.http('adminAddBlockedDate', {
 app.http('adminRemoveBlockedDate', {
     methods: ['DELETE'],
     authLevel: 'anonymous',
-    route: 'admin/availability/block',
+    route: 'dashboard/availability/block',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
@@ -215,7 +215,7 @@ app.http('adminRemoveBlockedDate', {
 app.http('adminGetSettings', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: 'admin/settings',
+    route: 'dashboard/settings',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
@@ -257,7 +257,7 @@ app.http('adminGetSettings', {
 app.http('adminUpdateSettings', {
     methods: ['PUT'],
     authLevel: 'anonymous',
-    route: 'admin/settings',
+    route: 'dashboard/settings',
     handler: async (request, context) => {
         try {
             await ensureTable(SETTINGS_TABLE);
