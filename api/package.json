@@ -7,7 +7,9 @@
   },
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet\""
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.2",
@@ -15,5 +17,8 @@
     "@pdf-lib/fontkit": "^1.1.1",
     "pdf-lib": "^1.17.1",
     "resend": "^6.8.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }

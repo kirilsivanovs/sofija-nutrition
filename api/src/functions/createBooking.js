@@ -13,11 +13,9 @@ let tableClient = null;
 async function getTableClient() {
     if (!tableClient && connectionString) {
         tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
-        // Create table if not exists
         try {
             await tableClient.createTable();
         } catch (error) {
-            // Table already exists - ignore error
             if (error.statusCode !== 409) {
                 console.error('Error creating table:', error.message);
             }
@@ -26,14 +24,13 @@ async function getTableClient() {
     return tableClient;
 }
 
-// Fallback in-memory storage (when no connection string)
 const inMemoryBookings = new Map();
 
 async function saveBooking(booking) {
     const client = await getTableClient();
     if (client) {
         const entity = {
-            partitionKey: booking.date, // Partition by date for efficient queries
+            partitionKey: booking.date,
             rowKey: booking.id,
             ...booking,
             createdAt: booking.createdAt || new Date().toISOString()
@@ -41,7 +38,6 @@ async function saveBooking(booking) {
         await client.upsertEntity(entity);
         return true;
     } else {
-        // Fallback to in-memory
         inMemoryBookings.set(booking.id, booking);
         return false;
     }
@@ -50,7 +46,6 @@ async function saveBooking(booking) {
 async function getBooking(bookingId) {
     const client = await getTableClient();
     if (client) {
-        // Query across all partitions
         const entities = client.listEntities({
             queryOptions: { filter: `RowKey eq '${bookingId}'` }
         });
@@ -67,56 +62,56 @@ async function updateBooking(booking) {
     return saveBooking(booking);
 }
 
-// Translations for emails and PDF
+// Translations with proper Latvian diacritics (ā, ē, ī, ū, ļ, ņ, ķ, ģ, č, š, ž)
 const translations = {
     lv: {
-        emailSubject: (id) => `Rezervacijas apstiprinajums - ${id}`,
+        emailSubject: (id) => `Rezervācijas apstiprinājums - ${id}`,
         emailGreeting: (name) => `Labdien, ${name}!`,
-        emailThankYou: 'Paldies par rezervaciju!',
-        emailConfirmed: 'Jusu rezervacija ir apstiprinata:',
-        emailBookingId: 'Rezervacijas numurs',
+        emailThankYou: 'Paldies par rezervāciju!',
+        emailConfirmed: 'Jūsu rezervācija ir apstiprināta:',
+        emailBookingId: 'Rezervācijas numurs',
         emailService: 'Pakalpojums',
-        emailFormat: 'Formats',
+        emailFormat: 'Formāts',
         emailDate: 'Datums',
         emailTime: 'Laiks',
         emailPrice: 'Cena',
-        emailInvoiceAttached: 'Rekins ir pievienots sim e-pastam.',
-        emailQuestions: 'Ja jums ir jautajumi, ludzu, sazinieties ar mums.',
-        emailRegards: 'Ar cienu,',
-        emailSubtitle: 'Uztura specialiste · PhD',
-        formatOnline: 'Attalinati (Zoom/Google Meet)',
-        formatInPerson: 'Klatiene',
-        paymentConfirmedSubject: (id) => `Maksajums apstiprinats - ${id}`,
-        paymentConfirmedTitle: 'Maksajums sanemts!',
-        paymentConfirmedText: 'Paldies! Jusu maksajums ir sanemts. Gaidam Jus konsultacija:',
-        paymentWaitingText: 'Gaidam Jus:',
-        pdfSubtitle: 'Uztura specialiste · PhD',
-        pdfInvoice: 'REKINS',
+        emailInvoiceAttached: 'Rēķins ir pievienots šim e-pastam.',
+        emailQuestions: 'Ja jums ir jautājumi, lūdzu, sazinieties ar mums.',
+        emailRegards: 'Ar cieņu,',
+        emailSubtitle: 'Uztura speciāliste · PhD',
+        formatOnline: 'Attālināti (Zoom/Google Meet)',
+        formatInPerson: 'Klātienē',
+        paymentConfirmedSubject: (id) => `Maksājums apstiprināts - ${id}`,
+        paymentConfirmedTitle: 'Maksājums saņemts!',
+        paymentConfirmedText: 'Paldies! Jūsu maksājums ir saņemts. Gaidām Jūs konsultācijā:',
+        paymentWaitingText: 'Gaidām Jūs:',
+        pdfSubtitle: 'Uztura speciāliste · PhD',
+        pdfInvoice: 'RĒĶINS',
         pdfNumber: 'Numurs',
         pdfDate: 'Datums',
         pdfClient: 'Klients',
-        pdfName: 'Vards',
+        pdfName: 'Vārds',
         pdfEmail: 'E-pasts',
         pdfPhone: 'Telefons',
-        pdfFormat: 'Formats',
+        pdfFormat: 'Formāts',
         pdfService: 'Pakalpojums',
         pdfTime: 'Laiks',
         pdfPrice: 'Cena',
-        pdfTotal: 'KOPA',
-        pdfPaymentInfo: 'Maksajuma informacija',
+        pdfTotal: 'KOPĀ',
+        pdfPaymentInfo: 'Maksājuma informācija',
         pdfBank: 'Banka',
-        pdfReference: 'Maksajuma merkis',
-        pdfNotes: 'Piezimes',
-        pdfThankYou: 'Paldies, ka izvelejaties mus!',
-        pdfNotProvided: 'Nav noradits',
+        pdfReference: 'Maksājuma mērķis',
+        pdfNotes: 'Piezīmes',
+        pdfThankYou: 'Paldies, ka izvēlējāties mūs!',
+        pdfNotProvided: 'Nav norādīts',
         services: {
-            'initial': 'Sakotneja konsultacija',
-            'followup': 'Atkartota konsultacija',
-            'package3': '3 konsultaciju pakete',
-            'package5': '5 konsultaciju pakete',
+            'initial': 'Sākotnējā konsultācija',
+            'followup': 'Atkārtota konsultācija',
+            'package3': '3 konsultāciju pakete',
+            'package5': '5 konsultāciju pakete',
             'cgm-diagnostic': 'CGM diagnostikas programma',
-            'consultation': 'Uztura konsultacija',
-            'free-consultation': 'Bezmaksas 15 min konsultacija'
+            'consultation': 'Uztura konsultācija',
+            'free-consultation': 'Bezmaksas 15 min konsultācija'
         }
     },
     en: {
@@ -170,53 +165,53 @@ const translations = {
         }
     },
     ru: {
-        emailSubject: (id) => `Podtverzhdenie bronirovaniya - ${id}`,
-        emailGreeting: (name) => `Zdravstvuyte, ${name}!`,
-        emailThankYou: 'Spasibo za bronirovanie!',
-        emailConfirmed: 'Vashe bronirovanie podtverzhdeno:',
-        emailBookingId: 'Nomer bronirovaniya',
-        emailService: 'Usluga',
-        emailFormat: 'Format',
-        emailDate: 'Data',
-        emailTime: 'Vremya',
-        emailPrice: 'Cena',
-        emailInvoiceAttached: 'Schyot prikreplyon k etomu pismu.',
-        emailQuestions: 'Esli u vas est voprosy, pozhaluysta, svyazhites s nami.',
-        emailRegards: 'S uvazheniem,',
-        emailSubtitle: 'Specialist po pitaniyu · PhD',
-        formatOnline: 'Onlayn (Zoom/Google Meet)',
-        formatInPerson: 'Ochno',
-        paymentConfirmedSubject: (id) => `Oplata podtverzhdena - ${id}`,
-        paymentConfirmedTitle: 'Oplata poluchena!',
-        paymentConfirmedText: 'Spasibo! Vasha oplata poluchena. Zhdem vas na konsultacii:',
-        paymentWaitingText: 'Zhdem vas:',
-        pdfSubtitle: 'Specialist po pitaniyu · PhD',
-        pdfInvoice: 'SCHYOT',
-        pdfNumber: 'Nomer',
-        pdfDate: 'Data',
-        pdfClient: 'Klient',
-        pdfName: 'Imya',
+        emailSubject: (id) => `Подтверждение бронирования - ${id}`,
+        emailGreeting: (name) => `Здравствуйте, ${name}!`,
+        emailThankYou: 'Спасибо за бронирование!',
+        emailConfirmed: 'Ваше бронирование подтверждено:',
+        emailBookingId: 'Номер бронирования',
+        emailService: 'Услуга',
+        emailFormat: 'Формат',
+        emailDate: 'Дата',
+        emailTime: 'Время',
+        emailPrice: 'Цена',
+        emailInvoiceAttached: 'Счёт прикреплён к этому письму.',
+        emailQuestions: 'Если у вас есть вопросы, пожалуйста, свяжитесь с нами.',
+        emailRegards: 'С уважением,',
+        emailSubtitle: 'Специалист по питанию · PhD',
+        formatOnline: 'Онлайн (Zoom/Google Meet)',
+        formatInPerson: 'Очно',
+        paymentConfirmedSubject: (id) => `Оплата подтверждена - ${id}`,
+        paymentConfirmedTitle: 'Оплата получена!',
+        paymentConfirmedText: 'Спасибо! Ваша оплата получена. Ждём вас на консультации:',
+        paymentWaitingText: 'Ждём вас:',
+        pdfSubtitle: 'Специалист по питанию · PhD',
+        pdfInvoice: 'СЧЁТ',
+        pdfNumber: 'Номер',
+        pdfDate: 'Дата',
+        pdfClient: 'Клиент',
+        pdfName: 'Имя',
         pdfEmail: 'Email',
-        pdfPhone: 'Telefon',
-        pdfFormat: 'Format',
-        pdfService: 'Usluga',
-        pdfTime: 'Vremya',
-        pdfPrice: 'Cena',
-        pdfTotal: 'ITOGO',
-        pdfPaymentInfo: 'Platezhnaya informaciya',
-        pdfBank: 'Bank',
-        pdfReference: 'Naznachenie platezha',
-        pdfNotes: 'Primechaniya',
-        pdfThankYou: 'Spasibo, chto vybrali nas!',
-        pdfNotProvided: 'Ne ukazano',
+        pdfPhone: 'Телефон',
+        pdfFormat: 'Формат',
+        pdfService: 'Услуга',
+        pdfTime: 'Время',
+        pdfPrice: 'Цена',
+        pdfTotal: 'ИТОГО',
+        pdfPaymentInfo: 'Платёжная информация',
+        pdfBank: 'Банк',
+        pdfReference: 'Назначение платежа',
+        pdfNotes: 'Примечания',
+        pdfThankYou: 'Спасибо, что выбрали нас!',
+        pdfNotProvided: 'Не указано',
         services: {
-            'initial': 'Pervichnaya konsultaciya',
-            'followup': 'Povtornaya konsultaciya',
-            'package3': 'Paket iz 3 konsultaciy',
-            'package5': 'Paket iz 5 konsultaciy',
-            'cgm-diagnostic': 'Programma CGM diagnostiki',
-            'consultation': 'Konsultaciya po pitaniyu',
-            'free-consultation': 'Besplatnaya 15-min konsultaciya'
+            'initial': 'Первичная консультация',
+            'followup': 'Повторная консультация',
+            'package3': 'Пакет из 3 консультаций',
+            'package5': 'Пакет из 5 консультаций',
+            'cgm-diagnostic': 'Программа CGM диагностики',
+            'consultation': 'Консультация по питанию',
+            'free-consultation': 'Бесплатная 15-мин консультация'
         }
     }
 };
@@ -233,6 +228,7 @@ const servicePrices = {
 
 const API_BASE_URL = process.env.API_BASE_URL || 'https://sofija-nutrition-api.azurewebsites.net';
 
+// Responsive email template - works on mobile
 function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, date, time, price) {
     return `
 <!DOCTYPE html>
@@ -240,77 +236,91 @@ function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, d
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>${t.emailSubject(bookingId)}</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
         <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <td align="center" style="padding: 20px 10px;">
+                <!-- Main container - responsive width -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 40px 40px 30px 40px;">
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
-                                        <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">${t.emailSubtitle}</p>
-                                        <div style="width: 50px; height: 3px; background-color: #d4a574; margin-top: 16px; border-radius: 2px;"></div>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 30px 20px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+                            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">${t.emailSubtitle}</p>
+                            <div style="width: 50px; height: 3px; background-color: #d4a574; margin: 16px auto 0; border-radius: 2px;"></div>
                         </td>
                     </tr>
                     
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px;">
-                            <h2 style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 24px; font-weight: 600;">${t.emailThankYou}</h2>
-                            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.6;">${t.emailGreeting(name)}</p>
-                            <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.6;">${t.emailConfirmed}</p>
+                        <td style="padding: 30px 20px;">
+                            <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">${t.emailThankYou}</h2>
+                            <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(name)}</p>
+                            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">${t.emailConfirmed}</p>
                             
                             <!-- Booking Details Card -->
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%); border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
                                 <tr>
-                                    <td style="padding: 25px;">
-                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                    <td style="padding: 20px;">
+                                        <!-- Booking ID -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
                                             <tr>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailBookingId}</span><br>
-                                                    <span style="color: #2d5a4a; font-size: 16px; font-weight: 600;">${bookingId}</span>
+                                                <td>
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailBookingId}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 16px; font-weight: 600;">${bookingId}</p>
                                                 </td>
                                             </tr>
+                                        </table>
+                                        
+                                        <!-- Service -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
                                             <tr>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailService}</span><br>
-                                                    <span style="color: #333; font-size: 16px; font-weight: 500;">${serviceName}</span>
+                                                <td>
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailService}</p>
+                                                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">${serviceName}</p>
                                                 </td>
                                             </tr>
+                                        </table>
+                                        
+                                        <!-- Format -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
                                             <tr>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailFormat}</span><br>
-                                                    <span style="color: #333; font-size: 16px; font-weight: 500;">${formatLabel}</span>
+                                                <td>
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailFormat}</p>
+                                                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">${formatLabel}</p>
                                                 </td>
                                             </tr>
+                                        </table>
+                                        
+                                        <!-- Date & Time - side by side on desktop, stacked on mobile -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
                                             <tr>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                                        <tr>
-                                                            <td width="50%">
-                                                                <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailDate}</span><br>
-                                                                <span style="color: #333; font-size: 16px; font-weight: 500;">${date}</span>
-                                                            </td>
-                                                            <td width="50%">
-                                                                <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailTime}</span><br>
-                                                                <span style="color: #333; font-size: 16px; font-weight: 500;">${time}</span>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
+                                                <td width="50%" style="padding-right: 10px; vertical-align: top;">
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailDate}</p>
+                                                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">${date}</p>
+                                                </td>
+                                                <td width="50%" style="padding-left: 10px; vertical-align: top;">
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailTime}</p>
+                                                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">${time}</p>
                                                 </td>
                                             </tr>
+                                        </table>
+                                        
+                                        <!-- Price -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="padding: 16px 0 0 0;">
-                                                    <span style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailPrice}</span><br>
-                                                    <span style="color: #2d5a4a; font-size: 28px; font-weight: 700;">${price > 0 ? '€' + price : 'FREE'}</span>
+                                                <td>
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${t.emailPrice}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">${price > 0 ? '€' + price : 'FREE'}</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -318,33 +328,25 @@ function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, d
                                 </tr>
                             </table>
                             
-                            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; line-height: 1.6;">
+                            <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                                 📎 ${t.emailInvoiceAttached}
                             </p>
-                            <p style="margin: 0 0 30px 0; color: #666; font-size: 14px; line-height: 1.6;">
+                            <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                                 ${t.emailQuestions}
                             </p>
                             
-                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.8;">
+                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                                 ${t.emailRegards}<br>
                                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
                             </p>
                         </td>
                     </tr>
                     
-                    <!-- Footer - Fixed visibility -->
+                    <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2d5a4a; padding: 25px 40px;">
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
-                                    </td>
-                                    <td align="right">
-                                        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">© 2026 Sofija Ivanova</p>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+                            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+                            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
                         </td>
                     </tr>
                 </table>
@@ -356,127 +358,143 @@ function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, d
 }
 
 function generateAdminEmailHTML(booking, confirmUrl) {
-    const formatLabel = booking.consultationFormat === 'online' ? 'Attalinati' : 'Klatiene';
+    const formatLabel = booking.consultationFormat === 'online' ? 'Attālināti' : 'Klātienē';
     return `
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"></head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
         <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 30px 40px;">
-                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">🆕 Jauna rezervacija!</h1>
+                        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
                         </td>
                     </tr>
                     
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 30px 40px;">
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+                        <td style="padding: 25px 20px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
                                 <tr>
                                     <td style="padding: 20px;">
-                                        <table width="100%" cellpadding="0" cellspacing="0">
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Numurs</span><br>
-                                                    <span style="color: #2d5a4a; font-size: 18px; font-weight: 700;">${booking.id}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Klients</span><br>
-                                                    <span style="font-size: 16px; font-weight: 500;">${booking.name}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">E-pasts</span><br>
-                                                    <span style="font-size: 14px;">${booking.email}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Telefons</span><br>
-                                                    <span style="font-size: 14px;">${booking.phone || 'Nav noradits'}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Pakalpojums</span><br>
-                                                    <span style="font-size: 14px; font-weight: 500;">${booking.serviceName}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Formats</span><br>
-                                                    <span style="font-size: 14px; font-weight: 500; color: ${booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50'};">
-                                                        ${booking.consultationFormat === 'online' ? '💻' : '📍'} ${formatLabel}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <table width="100%">
-                                                        <tr>
-                                                            <td width="50%">
-                                                                <span style="color: #888; font-size: 12px; text-transform: uppercase;">Datums</span><br>
-                                                                <span style="font-size: 14px; font-weight: 500;">${booking.date}</span>
-                                                            </td>
-                                                            <td width="50%">
-                                                                <span style="color: #888; font-size: 12px; text-transform: uppercase;">Laiks</span><br>
-                                                                <span style="font-size: 14px; font-weight: 500;">${booking.time}</span>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Summa</span><br>
-                                                    <span style="font-size: 22px; font-weight: 700; color: #2d5a4a;">${booking.price > 0 ? '€' + booking.price : 'BEZMAKSAS'}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 10px 0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Valoda</span><br>
-                                                    <span style="font-size: 14px;">${booking.language.toUpperCase()}</span>
-                                                </td>
-                                            </tr>
-                                            ${booking.notes ? `
-                                            <tr>
-                                                <td style="padding: 10px 0; border-top: 1px solid #e0e0e0;">
-                                                    <span style="color: #888; font-size: 12px; text-transform: uppercase;">Piezimes</span><br>
-                                                    <span style="font-size: 14px;">${booking.notes}</span>
-                                                </td>
-                                            </tr>
-                                            ` : ''}
+                                        <!-- Booking ID -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
+                                                <p style="margin: 0; color: #2d5a4a; font-size: 16px; font-weight: 700;">${booking.id}</p>
+                                            </td></tr>
                                         </table>
+                                        
+                                        <!-- Client -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
+                                                <p style="margin: 0; font-size: 15px; font-weight: 500;">${booking.name}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Email -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
+                                                <p style="margin: 0; font-size: 14px; word-break: break-all;">${booking.email}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Phone -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
+                                                <p style="margin: 0; font-size: 14px;">${booking.phone || 'Nav norādīts'}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Service -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
+                                                <p style="margin: 0; font-size: 14px; font-weight: 500;">${booking.serviceName}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Format -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
+                                                <p style="margin: 0; font-size: 14px; font-weight: 500; color: ${booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50'};">
+                                                    ${booking.consultationFormat === 'online' ? '💻' : '📍'} ${formatLabel}
+                                                </p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Date & Time -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr>
+                                                <td width="50%">
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
+                                                    <p style="margin: 0; font-size: 14px; font-weight: 500;">${booking.date}</p>
+                                                </td>
+                                                <td width="50%">
+                                                    <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
+                                                    <p style="margin: 0; font-size: 14px; font-weight: 500;">${booking.time}</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <!-- Price -->
+                                        <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
+                                                <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a;">${booking.price > 0 ? '€' + booking.price : 'BEZMAKSAS'}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        <!-- Language -->
+                                        <table role="presentation" width="100%">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
+                                                <p style="margin: 0; font-size: 14px;">${booking.language.toUpperCase()}</p>
+                                            </td></tr>
+                                        </table>
+                                        
+                                        ${booking.notes ? `
+                                        <table role="presentation" width="100%" style="border-top: 1px solid #e0e0e0; padding-top: 10px; margin-top: 10px;">
+                                            <tr><td>
+                                                <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Piezīmes</p>
+                                                <p style="margin: 0; font-size: 14px;">${booking.notes}</p>
+                                            </td></tr>
+                                        </table>
+                                        ` : ''}
                                     </td>
                                 </tr>
                             </table>
                             
                             <!-- Confirm Payment Button -->
                             ${booking.price > 0 ? `
-                            <table width="100%" cellpadding="0" cellspacing="0">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td align="center" style="padding: 20px 0;">
-                                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Kad maksajums sanemts, nospied pogu:</p>
-                                        <a href="${confirmUrl}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
-                                            ✓ Apstiprinat maksajumu
+                                    <td align="center" style="padding: 15px 0;">
+                                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Kad maksājums saņemts, nospied pogu:</p>
+                                        <a href="${confirmUrl}" style="display: inline-block; padding: 14px 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600;">
+                                            ✓ Apstiprināt maksājumu
                                         </a>
                                     </td>
                                 </tr>
                             </table>
                             ` : `
-                            <table width="100%" cellpadding="0" cellspacing="0">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td align="center" style="padding: 20px 0;">
-                                        <p style="margin: 0; padding: 15px 25px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px;">
-                                            ✓ Bezmaksas konsultacija - maksajums nav nepieciesams
+                                    <td align="center" style="padding: 15px 0;">
+                                        <p style="margin: 0; padding: 12px 20px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;">
+                                            ✓ Bezmaksas konsultācija - maksājums nav nepieciešams
                                         </p>
                                     </td>
                                 </tr>
@@ -487,7 +505,7 @@ function generateAdminEmailHTML(booking, confirmUrl) {
                     
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2d5a4a; padding: 20px 40px; text-align: center;">
+                        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
                             <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
                         </td>
                     </tr>
@@ -508,51 +526,46 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
         <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 40px 40px 30px 40px;">
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td align="center">
-                                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: inline-block; line-height: 80px; font-size: 40px;">✓</div>
-                                        <h1 style="margin: 20px 0 0 0; color: #ffffff; font-size: 28px; font-weight: 600;">${t.paymentConfirmedTitle}</h1>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 35px 20px; text-align: center;">
+                            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✓</div>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">${t.paymentConfirmedTitle}</h1>
                         </td>
                     </tr>
                     
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px;">
-                            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.6; text-align: center;">${t.paymentConfirmedText}</p>
+                        <td style="padding: 30px 20px;">
+                            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.paymentConfirmedText}</p>
                             
                             <!-- Appointment Details -->
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; margin-bottom: 25px;">
                                 <tr>
-                                    <td style="padding: 30px; text-align: center;">
-                                        <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">${t.emailService}</p>
-                                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 20px; font-weight: 600;">${booking.serviceName}</p>
+                                    <td style="padding: 25px; text-align: center;">
+                                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailService}</p>
+                                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">${booking.serviceName}</p>
                                         
-                                        <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">${t.emailFormat}</p>
-                                        <p style="margin: 0 0 20px 0; color: #333; font-size: 16px; font-weight: 500;">
+                                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailFormat}</p>
+                                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
                                             ${booking.consultationFormat === 'online' ? '💻' : '📍'} ${formatLabel}
                                         </p>
                                         
-                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td width="50%" style="text-align: center; padding: 15px;">
-                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px;">${t.emailDate}</p>
-                                                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">${booking.date}</p>
+                                                <td width="50%" style="text-align: center; padding: 10px;">
+                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailDate}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">${booking.date}</p>
                                                 </td>
-                                                <td width="50%" style="text-align: center; padding: 15px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
-                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px;">${t.emailTime}</p>
-                                                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">${booking.time}</p>
+                                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
+                                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailTime}</p>
+                                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">${booking.time}</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -560,26 +573,18 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
                                 </tr>
                             </table>
                             
-                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.8; text-align: center;">
+                            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                                 ${t.emailRegards}<br>
                                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
                             </p>
                         </td>
                     </tr>
                     
-                    <!-- Footer - Fixed visibility -->
+                    <!-- Footer -->
                     <tr>
-                        <td style="background-color: #2d5a4a; padding: 25px 40px;">
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
-                                    </td>
-                                    <td align="right">
-                                        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">© 2026 Sofija Ivanova</p>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+                            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+                            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
                         </td>
                     </tr>
                 </table>
@@ -607,10 +612,7 @@ app.http('createBooking', {
             const format = consultationFormat || 'online';
 
             if (!name || !email || !date || !time || !service) {
-                return {
-                    status: 400,
-                    jsonBody: { error: 'Missing required fields: name, email, date, time, service' }
-                };
+                return { status: 400, jsonBody: { error: 'Missing required fields: name, email, date, time, service' } };
             }
 
             const bookingId = `SN-${Date.now().toString(36).toUpperCase()}`;
@@ -635,16 +637,11 @@ app.http('createBooking', {
                 createdAt: new Date().toISOString()
             };
             
-            // Save to Azure Table Storage (or in-memory fallback)
             const savedToTable = await saveBooking(bookingData);
             context.log(`Booking saved to ${savedToTable ? 'Azure Table Storage' : 'in-memory storage'}`);
 
-            // Generate PDF invoice
-            const pdfBytes = await generateInvoicePDF({
-                bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes: bookingNotes, t
-            });
+            const pdfBytes = await generateInvoicePDF({ bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes: bookingNotes, t });
 
-            // Send emails
             const resendApiKey = process.env.RESEND_API_KEY;
             let emailStatus = { sent: false, error: null };
             
@@ -668,7 +665,7 @@ app.http('createBooking', {
                     const adminEmailResult = await resend.emails.send({
                         from: 'Sofija Ivanova <onboarding@resend.dev>',
                         to: adminEmail,
-                        subject: `Jauna rezervacija - ${bookingId}`,
+                        subject: `Jauna rezervācija - ${bookingId}`,
                         html: generateAdminEmailHTML(bookingData, confirmUrl),
                         attachments: [{ filename: `invoice-${bookingId}.pdf`, content: Buffer.from(pdfBytes).toString('base64') }]
                     });
@@ -691,7 +688,7 @@ app.http('createBooking', {
                     booking: { id: bookingId, date, time, name, email, serviceType: service, serviceName, consultationFormat: format, price },
                     emailStatus,
                     storage: savedToTable ? 'azure-table' : 'in-memory',
-                    message: 'Rezervacija veiksmigi izveidota'
+                    message: 'Rezervācija veiksmīgi izveidota'
                 }
             };
 
@@ -714,30 +711,28 @@ app.http('confirmPayment', {
             const token = url.searchParams.get('token');
 
             if (!bookingId || !token) {
-                return { status: 400, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Nepareizi parametri / Invalid parameters') };
+                return { status: 400, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('error', 'Nepareizi parametri / Invalid parameters') };
             }
 
             const booking = await getBooking(bookingId);
             
             if (!booking) {
-                return { status: 404, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', `Rezervacija ${bookingId} nav atrasta. / Booking not found.`) };
+                return { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('error', `Rezervācija ${bookingId} nav atrasta. Iespējams, tā tika izveidota pirms sistēmas atjaunināšanas. / Booking not found.`) };
             }
 
             const expectedToken = Buffer.from(bookingId + ':' + booking.email).toString('base64');
             if (token !== expectedToken) {
-                return { status: 403, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Nepareizs tokens / Invalid token') };
+                return { status: 403, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('error', 'Nepareizs tokens / Invalid token') };
             }
 
             if (booking.paymentConfirmed) {
-                return { status: 200, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('already', `Maksajums jau apstiprinats! / Payment already confirmed! (${bookingId})`) };
+                return { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('already', `Maksājums jau apstiprināts! / Payment already confirmed! (${bookingId})`) };
             }
 
-            // Update booking
             booking.paymentConfirmed = true;
             booking.paymentConfirmedAt = new Date().toISOString();
             await updateBooking(booking);
 
-            // Send confirmation email to client
             const resendApiKey = process.env.RESEND_API_KEY;
             let emailSent = false;
             
@@ -759,41 +754,41 @@ app.http('confirmPayment', {
                 }
             }
 
-            return { status: 200, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('success', `Maksajums apstiprinats! Klientam ${booking.name} (${booking.email}) nosutits apstiprinajums.`, emailSent) };
+            return { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('success', `Maksājums apstiprināts! Klientam ${booking.name} (${booking.email}) nosūtīts apstiprinājums.`, emailSent) };
 
         } catch (error) {
             context.error('Error confirming payment:', error);
-            return { status: 500, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Servera kluda / Server error: ' + error.message) };
+            return { status: 500, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: generateConfirmationPage('error', 'Servera kļūda / Server error: ' + error.message) };
         }
     }
 });
 
 function generateConfirmationPage(status, message, emailSent = false) {
     const statusColors = {
-        success: { bg: '#e8f5e9', color: '#2e7d32', icon: '✓' },
-        error: { bg: '#ffebee', color: '#c62828', icon: '✕' },
-        already: { bg: '#fff3e0', color: '#ef6c00', icon: '!' }
+        success: { bg: '#e8f5e9', color: '#2e7d32', icon: '✓', title: 'Maksājums apstiprināts!' },
+        error: { bg: '#ffebee', color: '#c62828', icon: '✕', title: 'Kļūda' },
+        already: { bg: '#fff3e0', color: '#ef6c00', icon: '!', title: 'Jau apstiprināts' }
     };
     const s = statusColors[status] || statusColors.error;
     
     return `
 <!DOCTYPE html>
-<html>
+<html lang="lv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Confirmation</title>
+    <title>Maksājuma apstiprinājums</title>
 </head>
-<body style="margin: 0; padding: 40px 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
-    <div style="max-width: 500px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
-        <div style="background: ${s.bg}; padding: 40px; text-align: center;">
-            <div style="width: 80px; height: 80px; background: ${s.color}; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; color: white; margin-bottom: 20px;">${s.icon}</div>
-            <h1 style="margin: 0; color: ${s.color}; font-size: 24px;">${status === 'success' ? 'Maksajums apstiprinats!' : status === 'already' ? 'Jau apstiprinats' : 'Kluda'}</h1>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: ${s.bg}; padding: 30px 20px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: ${s.color}; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; color: white; margin-bottom: 15px;">${s.icon}</div>
+            <h1 style="margin: 0; color: ${s.color}; font-size: 20px;">${s.title}</h1>
         </div>
-        <div style="padding: 30px; text-align: center;">
-            <p style="margin: 0 0 20px 0; color: #666; font-size: 16px; line-height: 1.6;">${message}</p>
-            ${emailSent ? '<p style="margin: 0; padding: 10px 20px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosutits!</p>' : ''}
-            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz majas lapu</a>
+        <div style="padding: 25px 20px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">${message}</p>
+            ${emailSent ? '<p style="margin: 0 0 20px 0; padding: 10px 15px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosūtīts!</p>' : ''}
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
         </div>
     </div>
 </body>
@@ -815,7 +810,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     const { width, height } = page.getSize();
     
     const primaryColor = rgb(0.176, 0.353, 0.29);
-    const accentColor = rgb(0.827, 0.569, 0.455);
+    const accentColor = rgb(0.831, 0.647, 0.455);
     const grayColor = rgb(0.4, 0.4, 0.4);
     const lightGray = rgb(0.95, 0.95, 0.95);
     
