@@ -35,15 +35,15 @@ import Layout from '../layouts/Layout.astro';
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative" aria-label="Menu">
-                    <span class="w-6 h-0.5 bg-primary transition-all"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all"></span>
+                <button type="button" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer touch-manipulation" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
+                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
+                    <span class="w-6 h-0.5 bg-primary transition-all pointer-events-none"></span>
                 </button>
             </nav>
             
             <!-- Mobile Nav -->
-            <div class="mobile-nav-menu">
+            <div id="mobile-nav-menu" class="mobile-nav-menu">
                 <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-2">Programma</a>
                 <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-2">Kā tas strādā</a>
                 <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-2">Par mani</a>

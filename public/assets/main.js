@@ -807,25 +807,55 @@
         btn.classList.toggle('active', btn.dataset.lang === 'lv');
     });
     
-    // Mobile Menu Functionality
+    // Mobile Menu Functionality - iOS Safari Compatible
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mobileNavMenu = document.querySelector('.mobile-nav-menu');
     const mobileNavAnchors = document.querySelectorAll('.mobile-nav-menu a');
     
+    function toggleMobileMenu(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        const isOpen = mobileNavMenu.classList.toggle('open');
+        mobileMenuBtn.classList.toggle('active', isOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        
+        // iOS Safari fix - prevent body scrolling
+        if (isOpen) {
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        } else {
+            document.body.style.position = '';
+            document.body.style.width = '';
+        }
+    }
+    
+    function closeMobileMenu() {
+        mobileMenuBtn.classList.remove('active');
+        mobileNavMenu.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+    }
+    
     if (mobileMenuBtn && mobileNavMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            mobileNavMenu.classList.toggle('open');
-            document.body.style.overflow = mobileNavMenu.classList.contains('open') ? 'hidden' : '';
-        });
+        // Use both click and touchend for better iOS support
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
         
         // Close menu when clicking a link
         mobileNavAnchors.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                mobileNavMenu.classList.remove('open');
-                document.body.style.overflow = '';
-            });
+            link.addEventListener('click', closeMobileMenu);
+        });
+        
+        // Close menu when clicking outside (on the overlay)
+        mobileNavMenu.addEventListener('click', (e) => {
+            if (e.target === mobileNavMenu) {
+                closeMobileMenu();
+            }
         });
     }
 });
