@@ -1,6 +1,6 @@
 const { app } = require('@azure/functions');
 
-// List of all API endpoints to monitor
+// List of all API endpoints to monitor (excluding self to avoid recursion)
 const endpoints = [
     { name: 'Health', path: '/api/health', method: 'GET', critical: true },
     { name: 'Get Availability', path: '/api/availability', method: 'GET', critical: true },
@@ -9,7 +9,6 @@ const endpoints = [
     { name: 'Admin Availability', path: '/api/dashboard/availability', method: 'GET', critical: true },
     { name: 'Admin Settings', path: '/api/dashboard/settings', method: 'GET', critical: false },
     { name: 'Admin Table Data', path: '/api/dashboard/tables/bookings', method: 'GET', critical: false },
-    { name: 'Admin Monitoring', path: '/api/dashboard/monitoring', method: 'GET', critical: false },
 ];
 
 const BASE_URL = 'https://sofija-nutrition-api.azurewebsites.net';
