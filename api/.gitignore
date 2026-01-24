@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Local settings (contains secrets)
+local.settings.json
+
+# Build output
+dist/
+bin/
+obj/
+
+# IDE
+.vscode/
+*.suo
+*.user
+
+# Logs
+*.log

@@ -85,7 +85,15 @@ class BookingCalendar {
 
     async loadAvailability() {
         try {
-            const response = await fetch('data/availability.json');
+            // Try API first (in production on Azure SWA)
+            let response = await fetch('/api/availability');
+            
+            // Fallback to static JSON for local development
+            if (!response.ok) {
+                console.log('API not available, falling back to static JSON');
+                response = await fetch('/data/availability.json');
+            }
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -276,8 +284,27 @@ class BookingCalendar {
             .filter(b => b.date === dateStr)
             .map(b => b.time);
         
+        // Get current time for filtering past slots on today
+        const now = new Date();
+        const today = this.formatDateISO(now);
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        
         return this.availability.slots[dateStr]
             .filter(time => !bookedTimes.includes(time))
+            .filter(time => {
+                // If not today, show all available slots
+                if (dateStr !== today) return true;
+                
+                // For today, filter out past times
+                const [slotHour, slotMinute] = time.split(':').map(Number);
+                
+                // Add 30 min buffer - don't allow booking less than 30 min from now
+                const slotTotalMinutes = slotHour * 60 + slotMinute;
+                const currentTotalMinutes = currentHour * 60 + currentMinute + 30;
+                
+                return slotTotalMinutes > currentTotalMinutes;
+            })
             .sort();
     }
 
@@ -364,24 +391,138 @@ class BookingCalendar {
     }
 
     async submitBooking(formData) {
-        // In production, this would send to a server
-        // For now, we'll simulate success and show confirmation
+        const submitBtn = this.container.querySelector('.booking-submit-btn');
+        const originalBtnText = submitBtn?.innerHTML;
         
-        const booking = {
+        // Show loading state
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> ' + 
+                (this.currentLang === 'ru' ? 'Отправка...' : 
+                 this.currentLang === 'en' ? 'Sending...' : 'Sūta...');
+        }
+
+        const bookingData = {
             date: this.selectedDate,
             time: this.selectedTime,
             name: formData.get('name'),
             email: formData.get('email'),
-            type: formData.get('serviceType'),
+            serviceType: formData.get('serviceType'),
             message: formData.get('message'),
-            createdAt: new Date().toISOString()
+            language: this.currentLang
         };
 
-        console.log('New booking:', booking);
+        console.log('Submitting booking:', bookingData);
 
-        // Add to local booked array (simulating database)
+        try {
+            // Try API first
+            const response = await fetch('/api/booking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Booking API response:', result);
+                
+                if (result.success) {
+                    // Update success modal with invoice info
+                    this.showSuccessWithInvoice(result.booking);
+                } else {
+                    throw new Error(result.error || 'Booking failed');
+                }
+            } else {
+                // Fallback for local development without API
+                console.log('API not available, simulating success');
+                this.simulateLocalBooking(bookingData);
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            // Fallback for local development
+            this.simulateLocalBooking(bookingData);
+        } finally {
+            // Reset button state
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
+    }
+
+    showSuccessWithInvoice(booking) {
+        // Add to local booked array
         if (this.availability) {
-            this.availability.booked.push(booking);
+            this.availability.booked.push({
+                date: booking.date,
+                time: booking.time,
+                type: booking.serviceType
+            });
+        }
+
+        // Update success modal content
+        const modal = this.container.querySelector('.booking-success-modal');
+        const successContent = modal?.querySelector('.success-content');
+        
+        if (successContent && booking) {
+            const invoiceInfo = this.currentLang === 'ru' 
+                ? `<p class="invoice-info">Счёт <strong>${booking.id}</strong> отправлен на вашу почту.<br>Сумма: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
+                : this.currentLang === 'en'
+                ? `<p class="invoice-info">Invoice <strong>${booking.id}</strong> has been sent to your email.<br>Amount: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
+                : `<p class="invoice-info">Rēķins <strong>${booking.id}</strong> ir nosūtīts uz Jūsu e-pastu.<br>Summa: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`;
+            
+            successContent.innerHTML = `
+                <div class="success-icon">
+                    <i class="ph ph-check-circle"></i>
+                </div>
+                <h3>${this.t('successTitle')}</h3>
+                ${invoiceInfo}
+                <p>${this.t('successText')}</p>
+                <button class="close-success-btn">${this.t('closeBtn')}</button>
+            `;
+            
+            // Re-attach close button event
+            successContent.querySelector('.close-success-btn')?.addEventListener('click', () => {
+                modal.style.display = 'none';
+                this.render();
+                this.attachEventListeners();
+            });
+        }
+
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+
+        // Reset form
+        this.selectedDate = null;
+        this.selectedTime = null;
+        
+        // Call callback
+        this.onBookingComplete(booking);
+    }
+
+    simulateLocalBooking(bookingData) {
+        // For local development without API
+        const simulatedBooking = {
+            id: `INV-${Date.now().toString(36).toUpperCase()}`,
+            ...bookingData,
+            price: bookingData.serviceType === 'cgm-diagnostic' ? 150 : 
+                   bookingData.serviceType === 'consultation' ? 80 : 50
+        };
+
+        console.log('Simulated booking (local dev):', simulatedBooking);
+        
+        // Add to local booked array
+        if (this.availability) {
+            this.availability.booked.push({
+                date: bookingData.date,
+                time: bookingData.time,
+                name: bookingData.name,
+                email: bookingData.email,
+                type: bookingData.serviceType
+            });
         }
 
         // Show success modal
@@ -395,7 +536,7 @@ class BookingCalendar {
         this.selectedTime = null;
         
         // Call callback
-        this.onBookingComplete(booking);
+        this.onBookingComplete(simulatedBooking);
     }
 
     attachEventListeners() {

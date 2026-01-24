@@ -403,6 +403,36 @@
     background: var(--color-accent);
 }
 
+/* Invoice info in success modal */
+.invoice-info {
+    background: var(--color-cream);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 15px;
+    border-left: 3px solid var(--color-secondary);
+}
+
+.invoice-info strong {
+    color: var(--color-primary);
+}
+
+/* Loading spinner animation */
+.ph-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Disabled button state */
+.booking-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .booking-body {

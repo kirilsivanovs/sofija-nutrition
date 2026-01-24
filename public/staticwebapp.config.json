@@ -1,7 +1,14 @@
 {
     "navigationFallback": {
-        "rewrite": "/index.html"
+        "rewrite": "/index.html",
+        "exclude": ["/assets/*", "/data/*", "/api/*"]
     },
+    "routes": [
+        {
+            "route": "/api/*",
+            "allowedRoles": ["anonymous"]
+        }
+    ],
     "globalHeaders": {
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
