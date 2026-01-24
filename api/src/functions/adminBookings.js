@@ -80,24 +80,26 @@ app.http('adminUpdateBooking', {
                 'bookings'
             );
 
-            // Find the booking by rowKey (id)
+            // Find the booking by iterating (RowKey filter doesn't work reliably in listEntities)
             let existingBooking = null;
-            for await (const entity of tableClient.listEntities({
-                filter: `RowKey eq '${bookingId}'`
-            })) {
-                existingBooking = entity;
-                break;
+            for await (const entity of tableClient.listEntities()) {
+                if (entity.rowKey === bookingId) {
+                    existingBooking = entity;
+                    break;
+                }
             }
 
             if (!existingBooking) {
                 return {
                     status: 404,
-                    jsonBody: { error: 'Booking not found' }
+                    jsonBody: { error: 'Booking not found', id: bookingId }
                 };
             }
 
             // Update the booking
             const updatedBooking = {
+                partitionKey: existingBooking.partitionKey,
+                rowKey: existingBooking.rowKey,
                 ...existingBooking,
                 ...body,
                 updatedAt: new Date().toISOString()
@@ -133,18 +135,19 @@ app.http('adminGetBooking', {
                 'bookings'
             );
 
+            // Find the booking by iterating
             let booking = null;
-            for await (const entity of tableClient.listEntities({
-                filter: `RowKey eq '${bookingId}'`
-            })) {
-                booking = entity;
-                break;
+            for await (const entity of tableClient.listEntities()) {
+                if (entity.rowKey === bookingId) {
+                    booking = entity;
+                    break;
+                }
             }
 
             if (!booking) {
                 return {
                     status: 404,
-                    jsonBody: { error: 'Booking not found' }
+                    jsonBody: { error: 'Booking not found', id: bookingId }
                 };
             }
 
