@@ -7,3 +7,4 @@ require('./functions/getAvailability');
 // Admin functions
 require('./functions/adminBookings');
 require('./functions/adminSettings');
+require('./functions/adminTableData');

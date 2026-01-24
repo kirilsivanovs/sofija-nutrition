@@ -30,6 +30,9 @@ import Layout from '../../layouts/Layout.astro';
                     <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="settings">
                         ⚙️ Iestatījumi
                     </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="data">
+                        🗄️ Dati
+                    </button>
                 </div>
             </div>
         </nav>
@@ -60,20 +63,28 @@ import Layout from '../../layouts/Layout.astro';
                 <!-- Calendar Legend -->
                 <div class="flex flex-wrap gap-4 mb-4 text-sm">
                     <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-emerald-50 border border-emerald-200"></span>
+                        <span>Pieejama diena</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-green-50 border-l-4 border-l-green-400"></span>
+                        <span>Ir ieraksti</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-red-50 border border-red-200"></span>
+                        <span>Brīvdiena</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-red-100 border-l-4 border-l-red-400"></span>
+                        <span>Svētki / Bloķēts</span>
+                    </div>
+                    <div class="flex items-center gap-2">
                         <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
                         <span>Gaida apstiprinājumu</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="w-3 h-3 rounded-full bg-green-500"></span>
                         <span>Apstiprināts</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-red-400"></span>
-                        <span>Atcelts</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                        <span>🇱🇻 Valsts svētki</span>
                     </div>
                 </div>
 
@@ -249,6 +260,51 @@ import Layout from '../../layouts/Layout.astro';
                     </button>
                 </div>
             </div>
+
+            <!-- Data Tab - Azure Table Storage Viewer -->
+            <div id="tab-data" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">🗄️ Azure Table Storage</h2>
+                    <div class="flex gap-2">
+                        <select id="table-select" class="px-3 py-2 border rounded-lg text-sm">
+                            <option value="bookings">bookings</option>
+                            <option value="adminSettings">adminSettings</option>
+                        </select>
+                        <button id="refresh-table" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
+                            🔄 Atjaunot
+                        </button>
+                        <button id="export-csv" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200">
+                            📥 CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div id="table-loading" class="text-center py-12 text-gray-500">
+                    Ielādē datus...
+                </div>
+
+                <div id="table-container" class="hidden">
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead id="table-header" class="bg-gray-50 text-left">
+                                    <!-- Headers will be inserted here -->
+                                </thead>
+                                <tbody id="table-body" class="divide-y">
+                                    <!-- Rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <span id="table-count">0</span> ieraksti
+                    </div>
+                </div>
+
+                <div id="table-empty" class="hidden text-center py-12 text-gray-500">
+                    Tabula ir tukša
+                </div>
+            </div>
         </main>
     </div>
 
@@ -271,6 +327,11 @@ import Layout from '../../layouts/Layout.astro';
         let currentDate = new Date();
         let allBookings = [];
         let holidays = {};
+        let schedule = {};
+        let blockedDates = new Set();
+        
+        // Day names for schedule lookup
+        const dayNamesForSchedule = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         
         // Latvian month names
         const monthNames = [
@@ -314,6 +375,7 @@ import Layout from '../../layouts/Layout.astro';
                 if (tabId === 'bookings') loadCalendar();
                 if (tabId === 'availability') loadAvailability();
                 if (tabId === 'settings') loadSettings();
+                if (tabId === 'data') loadTableData();
             });
         });
 
@@ -353,15 +415,17 @@ import Layout from '../../layouts/Layout.astro';
                 `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
             try {
-                // Fetch bookings and holidays in parallel
+                // Fetch bookings, holidays, and schedule in parallel
                 const year = currentDate.getFullYear();
-                const [bookingsRes, holidaysRes] = await Promise.all([
+                const [bookingsRes, holidaysRes, availabilityRes] = await Promise.all([
                     fetch(API_BASE + '/dashboard/bookings'),
-                    fetch(API_BASE + '/holidays?year=' + year)
+                    fetch(API_BASE + '/holidays?year=' + year),
+                    fetch(API_BASE + '/dashboard/availability')
                 ]);
                 
                 const bookingsData = await bookingsRes.json();
                 const holidaysData = await holidaysRes.json();
+                const availabilityData = await availabilityRes.json();
                 
                 allBookings = bookingsData.bookings || [];
                 
@@ -372,6 +436,10 @@ import Layout from '../../layouts/Layout.astro';
                         holidays[h.date] = h.name;
                     });
                 }
+                
+                // Store schedule and blocked dates
+                schedule = availabilityData.schedule || {};
+                blockedDates = new Set((availabilityData.blockedDates || []).map(d => d.date));
                 
                 renderCalendar();
                 
@@ -422,26 +490,56 @@ import Layout from '../../layouts/Layout.astro';
                 const dayBookings = bookingsByDate[dateStr] || [];
                 const dayOfWeek = (startDay + day - 1) % 7;
                 const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+                const isBlocked = blockedDates.has(dateStr);
+                
+                // Check if this day is a working day according to schedule
+                const checkDate = new Date(year, month, day);
+                const scheduleDayName = dayNamesForSchedule[checkDate.getDay()];
+                const daySchedule = schedule[scheduleDayName];
+                const isWorkingDay = daySchedule && daySchedule.enabled;
                 
                 // Count by status
                 const pending = dayBookings.filter(b => b.status === 'pending').length;
                 const confirmed = dayBookings.filter(b => b.status === 'confirmed').length;
                 const cancelled = dayBookings.filter(b => b.status === 'cancelled').length;
                 
+                // Determine background color
+                // Red = non-working (weekends, holidays, blocked, disabled in schedule)
+                // Green = working day with appointments
+                // Light green = working day available
                 let bgClass = 'bg-white';
-                if (isHoliday) bgClass = 'bg-blue-50';
-                else if (isWeekend) bgClass = 'bg-gray-50';
+                let textClass = '';
+                let borderClass = '';
+                
+                if (isHoliday || isBlocked) {
+                    bgClass = 'bg-red-100';
+                    textClass = 'text-red-700';
+                    borderClass = 'border-l-4 border-l-red-400';
+                } else if (isWeekend || !isWorkingDay) {
+                    bgClass = 'bg-red-50';
+                    textClass = 'text-red-400';
+                } else if (confirmed > 0 || pending > 0) {
+                    bgClass = 'bg-green-50';
+                    borderClass = 'border-l-4 border-l-green-400';
+                } else {
+                    bgClass = 'bg-emerald-50';
+                }
                 
                 html += `
-                    <div class="min-h-[100px] ${bgClass} border-b border-r p-1 cursor-pointer hover:bg-gray-100 transition-colors"
+                    <div class="min-h-[100px] ${bgClass} ${borderClass} border-b border-r p-1 cursor-pointer hover:brightness-95 transition-all"
                          onclick="showDayDetails('${dateStr}')">
                         <div class="flex justify-between items-start">
-                            <span class="text-sm font-medium ${isToday ? 'bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center' : ''} ${isWeekend ? 'text-red-500' : ''}">
+                            <span class="text-sm font-medium ${isToday ? 'bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center' : ''} ${textClass}">
                                 ${day}
                             </span>
                             ${isHoliday ? '<span class="text-xs">🇱🇻</span>' : ''}
+                            ${isBlocked && !isHoliday ? '<span class="text-xs">🚫</span>' : ''}
                         </div>
-                        ${isHoliday ? `<div class="text-xs text-blue-600 mt-1 leading-tight">${isHoliday}</div>` : ''}
+                        ${isHoliday ? `<div class="text-xs text-red-600 mt-1 leading-tight font-medium">${isHoliday}</div>` : ''}
+                        ${isBlocked && !isHoliday ? `<div class="text-xs text-red-500 mt-1">Bloķēts</div>` : ''}
+                        ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `
+                            <div class="text-xs text-gray-400 mt-1">${daySchedule.start}-${daySchedule.end}</div>
+                        ` : ''}
                         ${dayBookings.length > 0 ? `
                             <div class="mt-1 space-y-1">
                                 ${pending > 0 ? `<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span><span class="text-xs">${pending} gaida</span></div>` : ''}
@@ -799,6 +897,148 @@ import Layout from '../../layouts/Layout.astro';
         
         document.getElementById('holiday-year').addEventListener('change', loadHolidays);
         document.getElementById('refresh-holidays').addEventListener('click', loadHolidays);
+
+        // Table Data Viewer
+        let currentTableData = { entities: [], columns: [] };
+
+        async function loadTableData() {
+            const tableName = document.getElementById('table-select').value;
+            const loading = document.getElementById('table-loading');
+            const container = document.getElementById('table-container');
+            const empty = document.getElementById('table-empty');
+
+            loading.classList.remove('hidden');
+            container.classList.add('hidden');
+            empty.classList.add('hidden');
+
+            try {
+                const response = await fetch(API_BASE + '/dashboard/tables/' + tableName);
+                const data = await response.json();
+                
+                currentTableData = data;
+                
+                loading.classList.add('hidden');
+
+                if (!data.entities || data.entities.length === 0) {
+                    empty.classList.remove('hidden');
+                    document.getElementById('table-count').textContent = '0';
+                    return;
+                }
+
+                renderTable(data);
+                container.classList.remove('hidden');
+                document.getElementById('table-count').textContent = data.count || data.entities.length;
+            } catch (error) {
+                loading.textContent = 'Kļūda: ' + error.message;
+            }
+        }
+
+        function renderTable(data) {
+            const header = document.getElementById('table-header');
+            const body = document.getElementById('table-body');
+            const columns = data.columns || [];
+
+            // Render header
+            header.innerHTML = `<tr>
+                ${columns.map(col => `<th class="px-3 py-2 font-medium text-gray-700 whitespace-nowrap">${col}</th>`).join('')}
+                <th class="px-3 py-2 font-medium text-gray-700">Darbības</th>
+            </tr>`;
+
+            // Render body
+            body.innerHTML = data.entities.map(entity => {
+                const pk = encodeURIComponent(entity.partitionKey || '');
+                const rk = encodeURIComponent(entity.rowKey || '');
+                
+                return `<tr class="hover:bg-gray-50">
+                    ${columns.map(col => {
+                        let value = entity[col];
+                        if (value === undefined || value === null) value = '';
+                        if (typeof value === 'object') value = JSON.stringify(value);
+                        
+                        // Truncate long values
+                        const displayValue = String(value).length > 50 
+                            ? String(value).substring(0, 50) + '...' 
+                            : value;
+                        
+                        // Color coding for status
+                        let cellClass = 'px-3 py-2 text-gray-600 whitespace-nowrap';
+                        if (col === 'status') {
+                            if (value === 'confirmed') cellClass += ' text-green-600 font-medium';
+                            else if (value === 'pending') cellClass += ' text-yellow-600 font-medium';
+                            else if (value === 'cancelled') cellClass += ' text-red-600 font-medium';
+                        }
+                        
+                        return `<td class="${cellClass}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`;
+                    }).join('')}
+                    <td class="px-3 py-2">
+                        <button onclick="deleteEntity('${pk}', '${rk}')" class="text-red-500 hover:text-red-700 text-sm">🗑️</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        window.deleteEntity = async function(partitionKey, rowKey) {
+            if (!confirm('Vai tiešām dzēst šo ierakstu? Šī darbība ir neatgriezeniska!')) return;
+            
+            const tableName = document.getElementById('table-select').value;
+            
+            try {
+                const response = await fetch(
+                    `${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`,
+                    { method: 'DELETE' }
+                );
+                
+                if (response.ok) {
+                    loadTableData();
+                } else {
+                    const error = await response.json();
+                    alert('Kļūda: ' + (error.details || error.error));
+                }
+            } catch (e) {
+                alert('Kļūda: ' + e.message);
+            }
+        };
+
+        function exportTableToCSV() {
+            if (!currentTableData.entities || currentTableData.entities.length === 0) {
+                alert('Nav datu eksportēšanai');
+                return;
+            }
+
+            const columns = currentTableData.columns;
+            const rows = currentTableData.entities;
+            
+            // Create CSV content
+            const csvContent = [
+                columns.join(','),
+                ...rows.map(row => 
+                    columns.map(col => {
+                        let value = row[col];
+                        if (value === undefined || value === null) return '';
+                        if (typeof value === 'object') value = JSON.stringify(value);
+                        // Escape quotes and wrap in quotes if contains comma
+                        value = String(value).replace(/"/g, '""');
+                        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+                            value = `"${value}"`;
+                        }
+                        return value;
+                    }).join(',')
+                )
+            ].join('\n');
+
+            // Download file
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${document.getElementById('table-select').value}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('table-select').addEventListener('change', loadTableData);
+        document.getElementById('refresh-table').addEventListener('click', loadTableData);
+        document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
     })();
     </script>
 </Layout>

@@ -1,10 +1,11 @@
 const { app } = require('@azure/functions');
 const config = require('../config');
 const translations = require('../translations');
-const { saveBooking, generateBookingId, generatePaymentToken } = require('../services/bookingRepository');
+const { saveBooking, generateBookingId, generatePaymentToken, isSlotBooked } = require('../services/bookingRepository');
 const { sendClientConfirmation, sendAdminNotification, isConfigured } = require('../services/emailService');
 const { generateInvoicePDF } = require('../services/pdfService');
 const { generateClientEmailHTML, generateAdminEmailHTML } = require('../templates/emailTemplates');
+const { isLatvianHoliday } = require('../services/latvianHolidays');
 
 app.http('createBooking', {
     methods: ['POST'],
@@ -22,6 +23,50 @@ app.http('createBooking', {
                 return {
                     status: 400,
                     jsonBody: { error: 'Missing required fields: name, email, date, time, service' }
+                };
+            }
+
+            // Check if date is a weekend
+            const bookingDate = new Date(date);
+            const dayOfWeek = bookingDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                return {
+                    status: 400,
+                    jsonBody: { 
+                        error: 'Weekend booking not allowed',
+                        errorLv: 'Brīvdienās pieraksts nav iespējams',
+                        errorRu: 'Запись в выходные дни недоступна',
+                        errorEn: 'Booking on weekends is not available'
+                    }
+                };
+            }
+
+            // Check if date is a holiday
+            const holidayCheck = isLatvianHoliday(date);
+            if (holidayCheck.isHoliday) {
+                return {
+                    status: 400,
+                    jsonBody: { 
+                        error: 'Holiday booking not allowed',
+                        holiday: holidayCheck.name,
+                        errorLv: `Svētku dienā pieraksts nav iespējams: ${holidayCheck.name}`,
+                        errorRu: `Запись в праздничный день недоступна: ${holidayCheck.name}`,
+                        errorEn: `Booking on holidays is not available: ${holidayCheck.name}`
+                    }
+                };
+            }
+
+            // Check if slot is already booked
+            const slotTaken = await isSlotBooked(date, time);
+            if (slotTaken) {
+                return {
+                    status: 409,
+                    jsonBody: { 
+                        error: 'Time slot already booked',
+                        errorLv: 'Šis laiks jau ir aizņemts. Lūdzu, izvēlieties citu laiku.',
+                        errorRu: 'Это время уже занято. Пожалуйста, выберите другое время.',
+                        errorEn: 'This time slot is already booked. Please choose another time.'
+                    }
                 };
             }
 
@@ -100,8 +145,13 @@ app.http('createBooking', {
                     t.emailSubject(bookingId),
                     clientEmailHtml,
                     attachments
-                );
-                context.log('Client confirmation email sent');
+                ).then(result => {
+                    if (result.success) {
+                        context.log('Client email sent successfully, id:', result.id);
+                    } else {
+                        context.error('Client email failed:', result.error);
+                    }
+                });
 
                 // Send admin notification
                 const adminBooking = {
@@ -112,8 +162,13 @@ app.http('createBooking', {
                 await sendAdminNotification(
                     `Jauna rezervācija - ${bookingId}`,
                     adminEmailHtml
-                );
-                context.log('Admin notification email sent');
+                ).then(result => {
+                    if (result.success) {
+                        context.log('Admin email sent successfully, id:', result.id);
+                    } else {
+                        context.error('Admin email failed:', result.error);
+                    }
+                });
             } else {
                 context.warn('Email service not configured - skipping emails');
             }

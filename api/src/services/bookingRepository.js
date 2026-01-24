@@ -121,6 +121,39 @@ function isUsingAzureStorage() {
     return !!connectionString;
 }
 
+/**
+ * Check if a time slot is already booked (not cancelled)
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @param {string} time - Time in HH:MM format
+ * @returns {Promise<boolean>} - true if slot is already booked
+ */
+async function isSlotBooked(date, time) {
+    const client = await getTableClient();
+    
+    if (client) {
+        // Query all bookings for this date
+        const entities = client.listEntities({
+            queryOptions: { filter: `PartitionKey eq '${date}'` }
+        });
+        
+        for await (const entity of entities) {
+            // Check if same time and not cancelled
+            if (entity.time === time && entity.status !== 'cancelled') {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        // In-memory check
+        for (const [, booking] of inMemoryBookings) {
+            if (booking.date === date && booking.time === time && booking.status !== 'cancelled') {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 module.exports = {
     saveBooking,
     getBooking,
@@ -128,5 +161,6 @@ module.exports = {
     generateBookingId,
     generatePaymentToken,
     verifyPaymentToken,
-    isUsingAzureStorage
+    isUsingAzureStorage,
+    isSlotBooked
 };
