@@ -6,6 +6,37 @@ const defaultSlots = [
     '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
 ];
 
+// Service types available
+const serviceTypes = [
+    {
+        id: 'cgm-diagnostic',
+        duration: 60,
+        name: {
+            lv: 'CGM diagnostika (60 min)',
+            ru: 'CGM-диагностика (60 мин)',
+            en: 'CGM Diagnostic (60 min)'
+        }
+    },
+    {
+        id: 'consultation',
+        duration: 60,
+        name: {
+            lv: 'Uztura konsultācija (60 min)',
+            ru: 'Консультация по питанию (60 мин)',
+            en: 'Nutrition Consultation (60 min)'
+        }
+    },
+    {
+        id: 'free-consultation',
+        duration: 15,
+        name: {
+            lv: 'Bezmaksas konsultācija (15 min)',
+            ru: 'Бесплатная консультация (15 мин)',
+            en: 'Free Consultation (15 min)'
+        }
+    }
+];
+
 // Simulated booked slots (in production, fetch from database)
 const bookedSlots = {};
 
@@ -18,11 +49,15 @@ app.http('getAvailability', {
             const date = request.params.date;
             
             if (!date) {
-                // Return availability for next 30 days
-                const availability = {};
+                // Return availability for next 30 days in format expected by frontend
+                const slots = {};
                 const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                const currentHour = today.getHours();
+                const currentMinute = today.getMinutes();
                 
-                for (let i = 1; i <= 30; i++) {
+                // Include today if there are still available slots
+                for (let i = 0; i <= 30; i++) {
                     const checkDate = new Date(today);
                     checkDate.setDate(today.getDate() + i);
                     
@@ -33,12 +68,31 @@ app.http('getAvailability', {
                     
                     const dateStr = checkDate.toISOString().split('T')[0];
                     const booked = bookedSlots[dateStr] || [];
-                    availability[dateStr] = defaultSlots.filter(slot => !booked.includes(slot));
+                    let availableSlots = defaultSlots.filter(slot => !booked.includes(slot));
+                    
+                    // For today, filter out past times (with 30 min buffer)
+                    if (dateStr === todayStr) {
+                        const currentTotalMinutes = currentHour * 60 + currentMinute + 30;
+                        availableSlots = availableSlots.filter(time => {
+                            const [slotHour, slotMinute] = time.split(':').map(Number);
+                            return (slotHour * 60 + slotMinute) > currentTotalMinutes;
+                        });
+                    }
+                    
+                    // Only add date if there are available slots
+                    if (availableSlots.length > 0) {
+                        slots[dateStr] = availableSlots;
+                    }
                 }
                 
+                // Return in format expected by frontend
                 return {
                     status: 200,
-                    jsonBody: { availability }
+                    jsonBody: { 
+                        slots,
+                        booked: [], // In production, return actual bookings
+                        serviceTypes
+                    }
                 };
             }
             
@@ -50,8 +104,9 @@ app.http('getAvailability', {
                 status: 200,
                 jsonBody: {
                     date,
-                    availableSlots: available,
-                    bookedSlots: booked
+                    slots: { [date]: available },
+                    booked: [],
+                    serviceTypes
                 }
             };
             

@@ -9,7 +9,10 @@ app.http('createBooking', {
     handler: async (request, context) => {
         try {
             const body = await request.json();
-            const { name, email, phone, date, time, service, notes } = body;
+            // Support both 'service' and 'serviceType' field names, and 'notes' or 'message'
+            const { name, email, phone, date, time, notes, message } = body;
+            const service = body.service || body.serviceType;
+            const bookingNotes = notes || message;
 
             // Validate required fields
             if (!name || !email || !date || !time || !service) {
@@ -22,12 +25,15 @@ app.http('createBooking', {
             // Generate booking ID
             const bookingId = `SN-${Date.now().toString(36).toUpperCase()}`;
 
-            // Service prices
+            // Service prices (support both old and new service IDs)
             const servicePrices = {
-                'initial': { name: 'Sākotnējā konsultācija', price: 65 },
-                'followup': { name: 'Atkārtota konsultācija', price: 45 },
-                'package3': { name: '3 konsultāciju pakete', price: 150 },
-                'package5': { name: '5 konsultāciju pakete', price: 220 }
+                'initial': { name: 'Initial Consultation', price: 65 },
+                'followup': { name: 'Follow-up Consultation', price: 45 },
+                'package3': { name: '3 Consultation Package', price: 150 },
+                'package5': { name: '5 Consultation Package', price: 220 },
+                'cgm-diagnostic': { name: 'CGM Diagnostic Program', price: 150 },
+                'consultation': { name: 'Nutrition Consultation', price: 80 },
+                'free-consultation': { name: 'Free 15-min Consultation', price: 0 }
             };
 
             const selectedService = servicePrices[service] || { name: service, price: 0 };
@@ -41,7 +47,7 @@ app.http('createBooking', {
                 date,
                 time,
                 service: selectedService,
-                notes
+                notes: bookingNotes
             });
 
             // Send confirmation email with invoice
@@ -125,6 +131,23 @@ app.http('createBooking', {
     }
 });
 
+// Helper to convert Latvian chars to ASCII for PDF (standard fonts don't support Unicode)
+function toAscii(text) {
+    if (!text) return '';
+    return text
+        .replace(/ā/g, 'a').replace(/Ā/g, 'A')
+        .replace(/č/g, 'c').replace(/Č/g, 'C')
+        .replace(/ē/g, 'e').replace(/Ē/g, 'E')
+        .replace(/ģ/g, 'g').replace(/Ģ/g, 'G')
+        .replace(/ī/g, 'i').replace(/Ī/g, 'I')
+        .replace(/ķ/g, 'k').replace(/Ķ/g, 'K')
+        .replace(/ļ/g, 'l').replace(/Ļ/g, 'L')
+        .replace(/ņ/g, 'n').replace(/Ņ/g, 'N')
+        .replace(/š/g, 's').replace(/Š/g, 'S')
+        .replace(/ū/g, 'u').replace(/Ū/g, 'U')
+        .replace(/ž/g, 'z').replace(/Ž/g, 'Z');
+}
+
 async function generateInvoicePDF({ bookingId, name, email, phone, date, time, service, notes }) {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595.28, 841.89]); // A4
@@ -144,7 +167,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 30;
 
-    page.drawText('Uztura konsultācijas', {
+    page.drawText('Nutrition Consulting', {
         x: 50,
         y,
         size: 12,
@@ -154,7 +177,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     y -= 50;
 
     // Invoice title
-    page.drawText('RĒĶINS / INVOICE', {
+    page.drawText('INVOICE', {
         x: 50,
         y,
         size: 18,
@@ -162,7 +185,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 30;
 
-    page.drawText(`Numurs: ${bookingId}`, {
+    page.drawText(`Number: ${bookingId}`, {
         x: 50,
         y,
         size: 11,
@@ -170,7 +193,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 15;
 
-    page.drawText(`Datums: ${new Date().toLocaleDateString('lv-LV')}`, {
+    page.drawText(`Date: ${new Date().toISOString().split('T')[0]}`, {
         x: 50,
         y,
         size: 11,
@@ -179,7 +202,7 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     y -= 40;
 
     // Client info
-    page.drawText('Klients:', {
+    page.drawText('Client:', {
         x: 50,
         y,
         size: 12,
@@ -187,18 +210,18 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 18;
 
-    page.drawText(`Vārds: ${name}`, { x: 50, y, size: 11, font });
+    page.drawText(`Name: ${toAscii(name)}`, { x: 50, y, size: 11, font });
     y -= 15;
-    page.drawText(`E-pasts: ${email}`, { x: 50, y, size: 11, font });
+    page.drawText(`Email: ${email}`, { x: 50, y, size: 11, font });
     y -= 15;
     if (phone) {
-        page.drawText(`Telefons: ${phone}`, { x: 50, y, size: 11, font });
+        page.drawText(`Phone: ${phone}`, { x: 50, y, size: 11, font });
         y -= 15;
     }
     y -= 25;
 
     // Service details
-    page.drawText('Pakalpojums:', {
+    page.drawText('Service:', {
         x: 50,
         y,
         size: 12,
@@ -206,11 +229,11 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 18;
 
-    page.drawText(service.name, { x: 50, y, size: 11, font });
+    page.drawText(toAscii(service.name), { x: 50, y, size: 11, font });
     y -= 15;
-    page.drawText(`Datums: ${date}`, { x: 50, y, size: 11, font });
+    page.drawText(`Date: ${date}`, { x: 50, y, size: 11, font });
     y -= 15;
-    page.drawText(`Laiks: ${time}`, { x: 50, y, size: 11, font });
+    page.drawText(`Time: ${time}`, { x: 50, y, size: 11, font });
     y -= 40;
 
     // Price table
@@ -222,12 +245,12 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
         color: rgb(0.9, 0.9, 0.9)
     });
 
-    page.drawText('Pakalpojums', { x: 60, y: y - 20, size: 11, font: boldFont });
-    page.drawText('Cena', { x: width - 150, y: y - 20, size: 11, font: boldFont });
+    page.drawText('Service', { x: 60, y: y - 20, size: 11, font: boldFont });
+    page.drawText('Price', { x: width - 150, y: y - 20, size: 11, font: boldFont });
     y -= 45;
 
-    page.drawText(service.name, { x: 60, y, size: 11, font });
-    page.drawText(`€${service.price.toFixed(2)}`, { x: width - 150, y, size: 11, font });
+    page.drawText(toAscii(service.name), { x: 60, y, size: 11, font });
+    page.drawText(`EUR ${service.price.toFixed(2)}`, { x: width - 150, y, size: 11, font });
     y -= 30;
 
     // Total
@@ -239,12 +262,12 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 20;
 
-    page.drawText('KOPĀ / TOTAL:', { x: 60, y, size: 12, font: boldFont });
-    page.drawText(`€${service.price.toFixed(2)}`, { x: width - 150, y, size: 12, font: boldFont });
+    page.drawText('TOTAL:', { x: 60, y, size: 12, font: boldFont });
+    page.drawText(`EUR ${service.price.toFixed(2)}`, { x: width - 150, y, size: 12, font: boldFont });
     y -= 50;
 
     // Payment info
-    page.drawText('Maksājuma informācija:', {
+    page.drawText('Payment Information:', {
         x: 50,
         y,
         size: 12,
@@ -252,27 +275,27 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     });
     y -= 18;
 
-    page.drawText('Banka: Swedbank', { x: 50, y, size: 11, font });
+    page.drawText('Bank: Swedbank', { x: 50, y, size: 11, font });
     y -= 15;
     page.drawText('IBAN: LV00HABA0000000000000', { x: 50, y, size: 11, font });
     y -= 15;
-    page.drawText(`Maksājuma mērķis: ${bookingId}`, { x: 50, y, size: 11, font });
+    page.drawText(`Reference: ${bookingId}`, { x: 50, y, size: 11, font });
     y -= 40;
 
     // Notes
     if (notes) {
-        page.drawText('Piezīmes:', {
+        page.drawText('Notes:', {
             x: 50,
             y,
             size: 12,
             font: boldFont
         });
         y -= 18;
-        page.drawText(notes, { x: 50, y, size: 11, font });
+        page.drawText(toAscii(notes), { x: 50, y, size: 11, font });
     }
 
     // Footer
-    page.drawText('Paldies par izvēli!', {
+    page.drawText('Thank you for choosing Sofija Nutrition!', {
         x: 50,
         y: 60,
         size: 10,
