@@ -1,4 +1,5 @@
 const { app } = require('@azure/functions');
+const { isLatvianHoliday } = require('../services/latvianHolidays');
 
 // Simple in-memory availability (for demo purposes)
 // In production, this should come from a database or calendar API
@@ -67,6 +68,13 @@ app.http('getAvailability', {
                     }
                     
                     const dateStr = checkDate.toISOString().split('T')[0];
+                    
+                    // Skip Latvian public holidays
+                    const holidayCheck = isLatvianHoliday(dateStr);
+                    if (holidayCheck.isHoliday) {
+                        continue;
+                    }
+                    
                     const booked = bookedSlots[dateStr] || [];
                     let availableSlots = defaultSlots.filter(slot => !booked.includes(slot));
                     

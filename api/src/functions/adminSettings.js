@@ -1,5 +1,6 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
+const { getLatvianHolidays, getHolidaysInRange } = require('../services/latvianHolidays');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const SETTINGS_TABLE = 'adminSettings';
@@ -283,6 +284,39 @@ app.http('adminUpdateSettings', {
             return {
                 status: 500,
                 jsonBody: { error: 'Failed to update settings', details: error.message }
+            };
+        }
+    }
+});
+
+// Get Latvian holidays
+app.http('getHolidays', {
+    methods: ['GET'],
+    authLevel: 'anonymous',
+    route: 'holidays',
+    handler: async (request, context) => {
+        try {
+            const url = new URL(request.url);
+            const year = parseInt(url.searchParams.get('year')) || new Date().getFullYear();
+            const startDate = url.searchParams.get('start');
+            const endDate = url.searchParams.get('end');
+
+            let holidays;
+            if (startDate && endDate) {
+                holidays = getHolidaysInRange(startDate, endDate);
+            } else {
+                holidays = getLatvianHolidays(year);
+            }
+
+            return {
+                status: 200,
+                jsonBody: { holidays, year }
+            };
+        } catch (error) {
+            context.error('Error fetching holidays:', error);
+            return {
+                status: 500,
+                jsonBody: { error: 'Failed to fetch holidays', details: error.message }
             };
         }
     }

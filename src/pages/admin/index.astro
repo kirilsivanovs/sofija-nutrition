@@ -102,6 +102,26 @@ import Layout from '../../layouts/Layout.astro';
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-8">
+                    <h2 class="text-lg font-semibold mb-4">🇱🇻 Latvijas valsts svētki</h2>
+                    <p class="text-sm text-gray-600 mb-4">Šajos datumos automātiski netiek pieņemti ieraksti</p>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex gap-4 mb-4">
+                            <select id="holiday-year" class="px-3 py-2 border rounded-lg">
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                            <button id="refresh-holidays" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                                🔄 Atjaunot
+                            </button>
+                        </div>
+                        <div id="holidays-list" class="grid gap-2 md:grid-cols-2">
+                            <!-- Holidays will be listed here -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Settings Tab -->
@@ -195,6 +215,9 @@ import Layout from '../../layouts/Layout.astro';
 
     <script is:inline>
     (function() {
+        // API base URL - use external Azure Functions App
+        const API_BASE = 'https://sofija-nutrition-api.azurewebsites.net/api';
+        
         // Get user info
         fetch('/.auth/me')
             .then(r => r.json())
@@ -246,7 +269,7 @@ import Layout from '../../layouts/Layout.astro';
             empty.classList.add('hidden');
 
             try {
-                const response = await fetch('/api/admin/bookings?status=' + filter);
+                const response = await fetch(API_BASE + '/admin/bookings?status=' + filter);
                 const data = await response.json();
                 
                 loading.classList.add('hidden');
@@ -317,7 +340,7 @@ import Layout from '../../layouts/Layout.astro';
         window.confirmBooking = async function(id) {
             if (!confirm('Apstiprināt šo ierakstu?')) return;
             try {
-                await fetch('/api/admin/bookings/' + id, {
+                await fetch(API_BASE + '/admin/bookings/' + id, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'confirmed' })
@@ -331,7 +354,7 @@ import Layout from '../../layouts/Layout.astro';
         window.cancelBooking = async function(id) {
             if (!confirm('Atcelt šo ierakstu?')) return;
             try {
-                await fetch('/api/admin/bookings/' + id, {
+                await fetch(API_BASE + '/admin/bookings/' + id, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'cancelled' })
@@ -384,7 +407,7 @@ import Layout from '../../layouts/Layout.astro';
             document.getElementById('day-sunday-enabled').checked = false;
 
             // Try to load saved availability
-            fetch('/api/admin/availability')
+            fetch(API_BASE + '/admin/availability')
                 .then(r => r.json())
                 .then(data => {
                     if (data.schedule) {
@@ -402,6 +425,9 @@ import Layout from '../../layouts/Layout.astro';
                     }
                 })
                 .catch(() => {});
+            
+            // Load holidays
+            loadHolidays();
         }
 
         function renderBlockedDates(dates) {
@@ -429,7 +455,7 @@ import Layout from '../../layouts/Layout.astro';
             });
 
             try {
-                await fetch('/api/admin/availability', {
+                await fetch(API_BASE + '/admin/availability', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ schedule })
@@ -446,7 +472,7 @@ import Layout from '../../layouts/Layout.astro';
             if (!date) return alert('Izvēlieties datumu');
 
             try {
-                await fetch('/api/admin/availability/block', {
+                await fetch(API_BASE + '/admin/availability/block', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date, reason })
@@ -461,7 +487,7 @@ import Layout from '../../layouts/Layout.astro';
 
         window.removeBlockedDate = async function(date) {
             try {
-                await fetch('/api/admin/availability/block', {
+                await fetch(API_BASE + '/admin/availability/block', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ date })
@@ -474,7 +500,7 @@ import Layout from '../../layouts/Layout.astro';
 
         // Settings
         function loadSettings() {
-            fetch('/api/admin/settings')
+            fetch(API_BASE + '/admin/settings')
                 .then(r => r.json())
                 .then(data => {
                     if (data.prices) {
@@ -520,7 +546,7 @@ import Layout from '../../layouts/Layout.astro';
             };
 
             try {
-                await fetch('/api/admin/settings', {
+                await fetch(API_BASE + '/admin/settings', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settings)
@@ -533,6 +559,33 @@ import Layout from '../../layouts/Layout.astro';
 
         // Initial load
         loadBookings();
+        
+        // Holidays
+        async function loadHolidays() {
+            const year = document.getElementById('holiday-year').value;
+            const list = document.getElementById('holidays-list');
+            
+            try {
+                const response = await fetch(API_BASE + '/holidays?year=' + year);
+                const data = await response.json();
+                
+                if (data.holidays && data.holidays.length > 0) {
+                    list.innerHTML = data.holidays.map(h => `
+                        <div class="flex items-center justify-between p-2 bg-blue-50 rounded">
+                            <span class="font-medium">${h.date}</span>
+                            <span class="text-gray-600">${h.name}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<p class="text-gray-500">Nav svētku šajā gadā</p>';
+                }
+            } catch (e) {
+                list.innerHTML = '<p class="text-red-500">Kļūda ielādējot svētkus</p>';
+            }
+        }
+        
+        document.getElementById('holiday-year').addEventListener('change', loadHolidays);
+        document.getElementById('refresh-holidays').addEventListener('click', loadHolidays);
     })();
     </script>
 </Layout>
