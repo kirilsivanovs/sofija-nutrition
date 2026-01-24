@@ -2,11 +2,70 @@ const { app } = require('@azure/functions');
 const { PDFDocument, rgb } = require('pdf-lib');
 const fontkit = require('@pdf-lib/fontkit');
 const { Resend } = require('resend');
+const { TableClient } = require('@azure/data-tables');
 const fs = require('fs');
 const path = require('path');
 
-// In-memory booking storage (for MVP - later replace with Azure Table Storage)
-const bookings = new Map();
+// Azure Table Storage client
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+let tableClient = null;
+
+async function getTableClient() {
+    if (!tableClient && connectionString) {
+        tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
+        // Create table if not exists
+        try {
+            await tableClient.createTable();
+        } catch (error) {
+            // Table already exists - ignore error
+            if (error.statusCode !== 409) {
+                console.error('Error creating table:', error.message);
+            }
+        }
+    }
+    return tableClient;
+}
+
+// Fallback in-memory storage (when no connection string)
+const inMemoryBookings = new Map();
+
+async function saveBooking(booking) {
+    const client = await getTableClient();
+    if (client) {
+        const entity = {
+            partitionKey: booking.date, // Partition by date for efficient queries
+            rowKey: booking.id,
+            ...booking,
+            createdAt: booking.createdAt || new Date().toISOString()
+        };
+        await client.upsertEntity(entity);
+        return true;
+    } else {
+        // Fallback to in-memory
+        inMemoryBookings.set(booking.id, booking);
+        return false;
+    }
+}
+
+async function getBooking(bookingId) {
+    const client = await getTableClient();
+    if (client) {
+        // Query across all partitions
+        const entities = client.listEntities({
+            queryOptions: { filter: `RowKey eq '${bookingId}'` }
+        });
+        for await (const entity of entities) {
+            return entity;
+        }
+        return null;
+    } else {
+        return inMemoryBookings.get(bookingId);
+    }
+}
+
+async function updateBooking(booking) {
+    return saveBooking(booking);
+}
 
 // Translations for emails and PDF
 const translations = {
@@ -14,7 +73,7 @@ const translations = {
         emailSubject: (id) => `Rezervacijas apstiprinajums - ${id}`,
         emailGreeting: (name) => `Labdien, ${name}!`,
         emailThankYou: 'Paldies par rezervaciju!',
-        emailConfirmed: 'Jusu rezervacija ir apstiprināta:',
+        emailConfirmed: 'Jusu rezervacija ir apstiprinata:',
         emailBookingId: 'Rezervacijas numurs',
         emailService: 'Pakalpojums',
         emailFormat: 'Formats',
@@ -27,12 +86,10 @@ const translations = {
         emailSubtitle: 'Uztura specialiste · PhD',
         formatOnline: 'Attalinati (Zoom/Google Meet)',
         formatInPerson: 'Klatiene',
-        // Payment confirmed
         paymentConfirmedSubject: (id) => `Maksajums apstiprinats - ${id}`,
         paymentConfirmedTitle: 'Maksajums sanemts!',
         paymentConfirmedText: 'Paldies! Jusu maksajums ir sanemts. Gaidam Jus konsultacija:',
         paymentWaitingText: 'Gaidam Jus:',
-        // PDF
         pdfSubtitle: 'Uztura specialiste · PhD',
         pdfInvoice: 'REKINS',
         pdfNumber: 'Numurs',
@@ -52,7 +109,6 @@ const translations = {
         pdfNotes: 'Piezimes',
         pdfThankYou: 'Paldies, ka izvelejaties mus!',
         pdfNotProvided: 'Nav noradits',
-        // Services
         services: {
             'initial': 'Sakotneja konsultacija',
             'followup': 'Atkartota konsultacija',
@@ -80,12 +136,10 @@ const translations = {
         emailSubtitle: 'Nutrition Specialist · PhD',
         formatOnline: 'Online (Zoom/Google Meet)',
         formatInPerson: 'In-person',
-        // Payment confirmed
         paymentConfirmedSubject: (id) => `Payment Confirmed - ${id}`,
         paymentConfirmedTitle: 'Payment Received!',
         paymentConfirmedText: 'Thank you! Your payment has been received. We look forward to seeing you:',
         paymentWaitingText: 'We look forward to seeing you:',
-        // PDF
         pdfSubtitle: 'Nutrition Specialist · PhD',
         pdfInvoice: 'INVOICE',
         pdfNumber: 'Number',
@@ -105,7 +159,6 @@ const translations = {
         pdfNotes: 'Notes',
         pdfThankYou: 'Thank you for choosing us!',
         pdfNotProvided: 'Not provided',
-        // Services
         services: {
             'initial': 'Initial Consultation',
             'followup': 'Follow-up Consultation',
@@ -133,12 +186,10 @@ const translations = {
         emailSubtitle: 'Specialist po pitaniyu · PhD',
         formatOnline: 'Onlayn (Zoom/Google Meet)',
         formatInPerson: 'Ochno',
-        // Payment confirmed
         paymentConfirmedSubject: (id) => `Oplata podtverzhdena - ${id}`,
         paymentConfirmedTitle: 'Oplata poluchena!',
         paymentConfirmedText: 'Spasibo! Vasha oplata poluchena. Zhdem vas na konsultacii:',
         paymentWaitingText: 'Zhdem vas:',
-        // PDF
         pdfSubtitle: 'Specialist po pitaniyu · PhD',
         pdfInvoice: 'SCHYOT',
         pdfNumber: 'Nomer',
@@ -158,7 +209,6 @@ const translations = {
         pdfNotes: 'Primechaniya',
         pdfThankYou: 'Spasibo, chto vybrali nas!',
         pdfNotProvided: 'Ne ukazano',
-        // Services
         services: {
             'initial': 'Pervichnaya konsultaciya',
             'followup': 'Povtornaya konsultaciya',
@@ -171,7 +221,6 @@ const translations = {
     }
 };
 
-// Service prices
 const servicePrices = {
     'initial': 65,
     'followup': 45,
@@ -182,7 +231,6 @@ const servicePrices = {
     'free-consultation': 0
 };
 
-// API Base URL for confirmation links
 const API_BASE_URL = process.env.API_BASE_URL || 'https://sofija-nutrition-api.azurewebsites.net';
 
 function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, date, time, price) {
@@ -284,16 +332,16 @@ function generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, d
                         </td>
                     </tr>
                     
-                    <!-- Footer -->
+                    <!-- Footer - Fixed visibility -->
                     <tr>
                         <td style="background-color: #2d5a4a; padding: 25px 40px;">
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px;">www.sofija-nutrition.lv</p>
+                                        <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
                                     </td>
                                     <td align="right">
-                                        <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+                                        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">© 2026 Sofija Ivanova</p>
                                     </td>
                                 </tr>
                             </table>
@@ -416,7 +464,7 @@ function generateAdminEmailHTML(booking, confirmUrl) {
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" style="padding: 20px 0;">
-                                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Kad maksajums sanems, nospied pogu:</p>
+                                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Kad maksajums sanemts, nospied pogu:</p>
                                         <a href="${confirmUrl}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
                                             ✓ Apstiprinat maksajumu
                                         </a>
@@ -519,16 +567,16 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
                         </td>
                     </tr>
                     
-                    <!-- Footer -->
+                    <!-- Footer - Fixed visibility -->
                     <tr>
                         <td style="background-color: #2d5a4a; padding: 25px 40px;">
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px;">www.sofija-nutrition.lv</p>
+                                        <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
                                     </td>
                                     <td align="right">
-                                        <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+                                        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">© 2026 Sofija Ivanova</p>
                                     </td>
                                 </tr>
                             </table>
@@ -558,7 +606,6 @@ app.http('createBooking', {
             const t = translations[lang];
             const format = consultationFormat || 'online';
 
-            // Validate required fields
             if (!name || !email || !date || !time || !service) {
                 return {
                     status: 400,
@@ -566,15 +613,11 @@ app.http('createBooking', {
                 };
             }
 
-            // Generate booking ID
             const bookingId = `SN-${Date.now().toString(36).toUpperCase()}`;
-
-            // Get service info
             const price = servicePrices[service] || 0;
             const serviceName = t.services[service] || service;
             const formatLabel = format === 'online' ? t.formatOnline : t.formatInPerson;
 
-            // Store booking data (for payment confirmation)
             const bookingData = {
                 id: bookingId,
                 name,
@@ -588,27 +631,20 @@ app.http('createBooking', {
                 consultationFormat: format,
                 notes: bookingNotes,
                 language: lang,
-                paymentConfirmed: price === 0, // Free consultations are auto-confirmed
+                paymentConfirmed: price === 0,
                 createdAt: new Date().toISOString()
             };
-            bookings.set(bookingId, bookingData);
+            
+            // Save to Azure Table Storage (or in-memory fallback)
+            const savedToTable = await saveBooking(bookingData);
+            context.log(`Booking saved to ${savedToTable ? 'Azure Table Storage' : 'in-memory storage'}`);
 
             // Generate PDF invoice
             const pdfBytes = await generateInvoicePDF({
-                bookingId,
-                name,
-                email,
-                phone,
-                date,
-                time,
-                serviceName,
-                formatLabel,
-                price,
-                notes: bookingNotes,
-                t
+                bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes: bookingNotes, t
             });
 
-            // Send confirmation emails
+            // Send emails
             const resendApiKey = process.env.RESEND_API_KEY;
             let emailStatus = { sent: false, error: null };
             
@@ -616,23 +652,16 @@ app.http('createBooking', {
                 const resend = new Resend(resendApiKey);
                 
                 try {
-                    // Email to client
                     const clientEmailResult = await resend.emails.send({
                         from: 'Sofija Ivanova <onboarding@resend.dev>',
                         to: email,
                         subject: t.emailSubject(bookingId),
                         html: generateClientEmailHTML(t, name, bookingId, serviceName, formatLabel, date, time, price),
-                        attachments: [
-                            {
-                                filename: `invoice-${bookingId}.pdf`,
-                                content: Buffer.from(pdfBytes).toString('base64')
-                            }
-                        ]
+                        attachments: [{ filename: `invoice-${bookingId}.pdf`, content: Buffer.from(pdfBytes).toString('base64') }]
                     });
                     
                     context.log('Client email result:', JSON.stringify(clientEmailResult));
 
-                    // Email to admin with payment confirmation button
                     const adminEmail = process.env.ADMIN_EMAIL || 'ivanovs.kirils95@gmail.com';
                     const confirmUrl = `${API_BASE_URL}/api/confirm-payment?id=${bookingId}&token=${Buffer.from(bookingId + ':' + email).toString('base64')}`;
                     
@@ -641,12 +670,7 @@ app.http('createBooking', {
                         to: adminEmail,
                         subject: `Jauna rezervacija - ${bookingId}`,
                         html: generateAdminEmailHTML(bookingData, confirmUrl),
-                        attachments: [
-                            {
-                                filename: `invoice-${bookingId}.pdf`,
-                                content: Buffer.from(pdfBytes).toString('base64')
-                            }
-                        ]
+                        attachments: [{ filename: `invoice-${bookingId}.pdf`, content: Buffer.from(pdfBytes).toString('base64') }]
                     });
                     
                     context.log('Admin email result:', JSON.stringify(adminEmailResult));
@@ -664,33 +688,21 @@ app.http('createBooking', {
                 status: 201,
                 jsonBody: {
                     success: true,
-                    booking: {
-                        id: bookingId,
-                        date,
-                        time,
-                        name,
-                        email,
-                        serviceType: service,
-                        serviceName,
-                        consultationFormat: format,
-                        price
-                    },
+                    booking: { id: bookingId, date, time, name, email, serviceType: service, serviceName, consultationFormat: format, price },
                     emailStatus,
+                    storage: savedToTable ? 'azure-table' : 'in-memory',
                     message: 'Rezervacija veiksmigi izveidota'
                 }
             };
 
         } catch (error) {
             context.error('Error creating booking:', error);
-            return {
-                status: 500,
-                jsonBody: { error: 'Internal server error', details: error.message }
-            };
+            return { status: 500, jsonBody: { error: 'Internal server error', details: error.message } };
         }
     }
 });
 
-// Confirm Payment Endpoint (for admin to click from email)
+// Confirm Payment Endpoint
 app.http('confirmPayment', {
     methods: ['GET'],
     authLevel: 'anonymous',
@@ -702,49 +714,28 @@ app.http('confirmPayment', {
             const token = url.searchParams.get('token');
 
             if (!bookingId || !token) {
-                return {
-                    status: 400,
-                    headers: { 'Content-Type': 'text/html' },
-                    body: generateConfirmationPage('error', 'Nepareizi parametri / Invalid parameters')
-                };
+                return { status: 400, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Nepareizi parametri / Invalid parameters') };
             }
 
-            // Get booking from storage
-            const booking = bookings.get(bookingId);
+            const booking = await getBooking(bookingId);
             
             if (!booking) {
-                // For demo: if booking not in memory, show error
-                // In production: fetch from Azure Table Storage
-                return {
-                    status: 404,
-                    headers: { 'Content-Type': 'text/html' },
-                    body: generateConfirmationPage('error', `Rezervacija ${bookingId} nav atrasta. Iespejams, serveris tika restartets. / Booking not found.`)
-                };
+                return { status: 404, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', `Rezervacija ${bookingId} nav atrasta. / Booking not found.`) };
             }
 
-            // Verify token
             const expectedToken = Buffer.from(bookingId + ':' + booking.email).toString('base64');
             if (token !== expectedToken) {
-                return {
-                    status: 403,
-                    headers: { 'Content-Type': 'text/html' },
-                    body: generateConfirmationPage('error', 'Nepareizs tokens / Invalid token')
-                };
+                return { status: 403, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Nepareizs tokens / Invalid token') };
             }
 
-            // Check if already confirmed
             if (booking.paymentConfirmed) {
-                return {
-                    status: 200,
-                    headers: { 'Content-Type': 'text/html' },
-                    body: generateConfirmationPage('already', `Maksajums jau apstiprinats! / Payment already confirmed! (${bookingId})`)
-                };
+                return { status: 200, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('already', `Maksajums jau apstiprinats! / Payment already confirmed! (${bookingId})`) };
             }
 
-            // Mark as confirmed
+            // Update booking
             booking.paymentConfirmed = true;
             booking.paymentConfirmedAt = new Date().toISOString();
-            bookings.set(bookingId, booking);
+            await updateBooking(booking);
 
             // Send confirmation email to client
             const resendApiKey = process.env.RESEND_API_KEY;
@@ -768,19 +759,11 @@ app.http('confirmPayment', {
                 }
             }
 
-            return {
-                status: 200,
-                headers: { 'Content-Type': 'text/html' },
-                body: generateConfirmationPage('success', `Maksajums apstiprinats! Klientam ${booking.name} (${booking.email}) nosutits apstiprinajums. / Payment confirmed!`, emailSent)
-            };
+            return { status: 200, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('success', `Maksajums apstiprinats! Klientam ${booking.name} (${booking.email}) nosutits apstiprinajums.`, emailSent) };
 
         } catch (error) {
             context.error('Error confirming payment:', error);
-            return {
-                status: 500,
-                headers: { 'Content-Type': 'text/html' },
-                body: generateConfirmationPage('error', 'Servera kluda / Server error: ' + error.message)
-            };
+            return { status: 500, headers: { 'Content-Type': 'text/html' }, body: generateConfirmationPage('error', 'Servera kluda / Server error: ' + error.message) };
         }
     }
 });
@@ -810,7 +793,7 @@ function generateConfirmationPage(status, message, emailSent = false) {
         <div style="padding: 30px; text-align: center;">
             <p style="margin: 0 0 20px 0; color: #666; font-size: 16px; line-height: 1.6;">${message}</p>
             ${emailSent ? '<p style="margin: 0; padding: 10px 20px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosutits!</p>' : ''}
-            <a href="https://wonderful-bay-0fb550403.4.azurestaticapps.net" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz majas lapu</a>
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz majas lapu</a>
         </div>
     </div>
 </body>
@@ -819,11 +802,8 @@ function generateConfirmationPage(status, message, emailSent = false) {
 
 async function generateInvoicePDF({ bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes, t }) {
     const pdfDoc = await PDFDocument.create();
-    
-    // Register fontkit for custom fonts with Unicode support
     pdfDoc.registerFontkit(fontkit);
     
-    // Load Roboto fonts (support Latvian/Russian characters)
     const fontsDir = path.join(__dirname, '..', 'fonts');
     const regularFontBytes = fs.readFileSync(path.join(fontsDir, 'Roboto-Regular.ttf'));
     const boldFontBytes = fs.readFileSync(path.join(fontsDir, 'Roboto-Bold.ttf'));
@@ -831,96 +811,32 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     const font = await pdfDoc.embedFont(regularFontBytes);
     const boldFont = await pdfDoc.embedFont(boldFontBytes);
     
-    const page = pdfDoc.addPage([595.28, 841.89]); // A4
+    const page = pdfDoc.addPage([595.28, 841.89]);
     const { width, height } = page.getSize();
     
-    // Colors matching website
-    const primaryColor = rgb(0.176, 0.353, 0.29); // #2d5a4a
-    const accentColor = rgb(0.827, 0.569, 0.455); // #d39174
+    const primaryColor = rgb(0.176, 0.353, 0.29);
+    const accentColor = rgb(0.827, 0.569, 0.455);
     const grayColor = rgb(0.4, 0.4, 0.4);
     const lightGray = rgb(0.95, 0.95, 0.95);
     
-    // Header background
-    page.drawRectangle({
-        x: 0,
-        y: height - 120,
-        width: width,
-        height: 120,
-        color: primaryColor
-    });
-    
-    // Header text - Doctor name and title
-    page.drawText('Sofija Ivanova', {
-        x: 50,
-        y: height - 55,
-        size: 28,
-        font: boldFont,
-        color: rgb(1, 1, 1)
-    });
-    
-    page.drawText(t.pdfSubtitle, {
-        x: 50,
-        y: height - 80,
-        size: 12,
-        font,
-        color: rgb(0.8, 0.8, 0.8)
-    });
-    
-    // Accent line
-    page.drawRectangle({
-        x: 50,
-        y: height - 95,
-        width: 60,
-        height: 3,
-        color: accentColor
-    });
+    // Header
+    page.drawRectangle({ x: 0, y: height - 120, width: width, height: 120, color: primaryColor });
+    page.drawText('Sofija Ivanova', { x: 50, y: height - 55, size: 28, font: boldFont, color: rgb(1, 1, 1) });
+    page.drawText(t.pdfSubtitle, { x: 50, y: height - 80, size: 12, font, color: rgb(0.8, 0.8, 0.8) });
+    page.drawRectangle({ x: 50, y: height - 95, width: 60, height: 3, color: accentColor });
     
     let y = height - 160;
     
-    // Invoice title
-    page.drawText(t.pdfInvoice, {
-        x: 50,
-        y,
-        size: 24,
-        font: boldFont,
-        color: primaryColor
-    });
+    page.drawText(t.pdfInvoice, { x: 50, y, size: 24, font: boldFont, color: primaryColor });
     y -= 35;
 
-    // Invoice details box
-    page.drawRectangle({
-        x: 50,
-        y: y - 50,
-        width: 200,
-        height: 50,
-        color: lightGray
-    });
-    
-    page.drawText(`${t.pdfNumber}: ${bookingId}`, {
-        x: 60,
-        y: y - 20,
-        size: 11,
-        font: boldFont
-    });
-
-    page.drawText(`${t.pdfDate}: ${new Date().toLocaleDateString('lv-LV')}`, {
-        x: 60,
-        y: y - 38,
-        size: 11,
-        font
-    });
+    page.drawRectangle({ x: 50, y: y - 50, width: 200, height: 50, color: lightGray });
+    page.drawText(`${t.pdfNumber}: ${bookingId}`, { x: 60, y: y - 20, size: 11, font: boldFont });
+    page.drawText(`${t.pdfDate}: ${new Date().toLocaleDateString('lv-LV')}`, { x: 60, y: y - 38, size: 11, font });
     y -= 80;
 
-    // Client info section
-    page.drawText(t.pdfClient, {
-        x: 50,
-        y,
-        size: 14,
-        font: boldFont,
-        color: primaryColor
-    });
+    page.drawText(t.pdfClient, { x: 50, y, size: 14, font: boldFont, color: primaryColor });
     y -= 22;
-
     page.drawText(`${t.pdfName}: ${name}`, { x: 50, y, size: 11, font });
     y -= 16;
     page.drawText(`${t.pdfEmail}: ${email}`, { x: 50, y, size: 11, font });
@@ -928,16 +844,8 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     page.drawText(`${t.pdfPhone}: ${phone || t.pdfNotProvided}`, { x: 50, y, size: 11, font });
     y -= 35;
 
-    // Service section
-    page.drawText(t.pdfService, {
-        x: 50,
-        y,
-        size: 14,
-        font: boldFont,
-        color: primaryColor
-    });
+    page.drawText(t.pdfService, { x: 50, y, size: 14, font: boldFont, color: primaryColor });
     y -= 22;
-
     page.drawText(serviceName, { x: 50, y, size: 11, font });
     y -= 16;
     page.drawText(`${t.pdfFormat}: ${formatLabel}`, { x: 50, y, size: 11, font });
@@ -947,57 +855,26 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
     page.drawText(`${t.pdfTime}: ${time}`, { x: 50, y, size: 11, font });
     y -= 40;
 
-    // Price table header
-    page.drawRectangle({
-        x: 50,
-        y: y - 25,
-        width: width - 100,
-        height: 25,
-        color: primaryColor
-    });
-
+    page.drawRectangle({ x: 50, y: y - 25, width: width - 100, height: 25, color: primaryColor });
     page.drawText(t.pdfService, { x: 60, y: y - 17, size: 11, font: boldFont, color: rgb(1, 1, 1) });
     page.drawText(t.pdfPrice, { x: width - 130, y: y - 17, size: 11, font: boldFont, color: rgb(1, 1, 1) });
     y -= 40;
 
-    // Price row
     page.drawText(serviceName, { x: 60, y, size: 11, font });
     page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', { x: width - 130, y, size: 11, font });
     y -= 25;
 
-    // Separator line
-    page.drawLine({
-        start: { x: 50, y },
-        end: { x: width - 50, y },
-        thickness: 1,
-        color: rgb(0.8, 0.8, 0.8)
-    });
+    page.drawLine({ start: { x: 50, y }, end: { x: width - 50, y }, thickness: 1, color: rgb(0.8, 0.8, 0.8) });
     y -= 25;
 
-    // Total
-    page.drawRectangle({
-        x: width - 200,
-        y: y - 5,
-        width: 150,
-        height: 30,
-        color: lightGray
-    });
-    
+    page.drawRectangle({ x: width - 200, y: y - 5, width: 150, height: 30, color: lightGray });
     page.drawText(t.pdfTotal + ':', { x: width - 190, y: y + 5, size: 12, font: boldFont });
     page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', { x: width - 100, y: y + 5, size: 14, font: boldFont, color: primaryColor });
     y -= 55;
 
-    // Payment info (only if not free)
     if (price > 0) {
-        page.drawText(t.pdfPaymentInfo, {
-            x: 50,
-            y,
-            size: 14,
-            font: boldFont,
-            color: primaryColor
-        });
+        page.drawText(t.pdfPaymentInfo, { x: 50, y, size: 14, font: boldFont, color: primaryColor });
         y -= 22;
-
         page.drawText(`${t.pdfBank}: Swedbank`, { x: 50, y, size: 11, font });
         y -= 16;
         page.drawText('IBAN: LV00HABA0000000000000', { x: 50, y, size: 11, font });
@@ -1006,43 +883,17 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
         y -= 35;
     }
 
-    // Notes (if any)
     if (notes) {
-        page.drawText(t.pdfNotes, {
-            x: 50,
-            y,
-            size: 14,
-            font: boldFont,
-            color: primaryColor
-        });
+        page.drawText(t.pdfNotes, { x: 50, y, size: 14, font: boldFont, color: primaryColor });
         y -= 22;
         const truncatedNotes = notes.length > 80 ? notes.substring(0, 80) + '...' : notes;
         page.drawText(truncatedNotes, { x: 50, y, size: 11, font, color: grayColor });
     }
 
     // Footer
-    page.drawRectangle({
-        x: 0,
-        y: 0,
-        width: width,
-        height: 60,
-        color: primaryColor
-    });
-    
-    page.drawText(t.pdfThankYou, {
-        x: 50,
-        y: 35,
-        size: 11,
-        font,
-        color: rgb(1, 1, 1)
-    });
-    page.drawText('www.sofija-nutrition.lv', {
-        x: 50,
-        y: 18,
-        size: 10,
-        font,
-        color: rgb(0.7, 0.7, 0.7)
-    });
+    page.drawRectangle({ x: 0, y: 0, width: width, height: 60, color: primaryColor });
+    page.drawText(t.pdfThankYou, { x: 50, y: 35, size: 11, font, color: rgb(1, 1, 1) });
+    page.drawText('www.sofija-nutrition.lv', { x: 50, y: 18, size: 10, font, color: accentColor });
 
     return await pdfDoc.save();
 }
