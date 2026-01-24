@@ -809,21 +809,21 @@
     
     // Mobile Menu Functionality
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    const navLinksAnchors = document.querySelectorAll('.nav-links a');
+    const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+    const mobileNavAnchors = document.querySelectorAll('.mobile-nav-menu a');
     
-    if (mobileMenuBtn && navLinks) {
+    if (mobileMenuBtn && mobileNavMenu) {
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenuBtn.classList.toggle('active');
-            navLinks.classList.toggle('mobile-open');
-            document.body.style.overflow = navLinks.classList.contains('mobile-open') ? 'hidden' : '';
+            mobileNavMenu.classList.toggle('open');
+            document.body.style.overflow = mobileNavMenu.classList.contains('open') ? 'hidden' : '';
         });
         
         // Close menu when clicking a link
-        navLinksAnchors.forEach(link => {
+        mobileNavAnchors.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuBtn.classList.remove('active');
-                navLinks.classList.remove('mobile-open');
+                mobileNavMenu.classList.remove('open');
                 document.body.style.overflow = '';
             });
         });
