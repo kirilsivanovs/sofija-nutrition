@@ -172,9 +172,20 @@ const latvianDiacritics = ['ā', 'ē', 'ī', 'ū', 'ļ', 'ņ', 'ķ', 'ģ', 'č',
 // Russian Cyrillic characters for validation
 const russianCyrillic = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'];
 
+/**
+ * Get translation object for a language
+ * @param {string} lang - Language code (lv, en, ru)
+ * @returns {Object} - Translation object with all strings and functions
+ */
+function getTranslation(lang) {
+    const langCode = ['lv', 'en', 'ru'].includes(lang) ? lang : 'lv';
+    return translations[langCode];
+}
+
 module.exports = {
     translations,
     servicePrices,
     latvianDiacritics,
-    russianCyrillic
+    russianCyrillic,
+    getTranslation
 };
