@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^az functionapp restart --name sofija-nutrition-api --resource-group PersonalProjects$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

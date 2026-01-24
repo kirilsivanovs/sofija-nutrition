@@ -1,15 +1,17 @@
 {
   "name": "sofija-nutrition-api",
   "version": "1.0.0",
-  "main": "src/functions/*.js",
+  "main": "src/index.js",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@azure/functions": "4.5.1"
+    "@azure/functions": "4.5.1",
+    "pdf-lib": "^1.17.1",
+    "resend": "^6.8.0"
   }
 }
