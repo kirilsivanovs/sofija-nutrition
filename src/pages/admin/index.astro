@@ -33,6 +33,9 @@ import Layout from '../../layouts/Layout.astro';
                     <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="data">
                         🗄️ Dati
                     </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="monitoring">
+                        📊 Monitoring
+                    </button>
                 </div>
             </div>
         </nav>
@@ -305,6 +308,71 @@ import Layout from '../../layouts/Layout.astro';
                     Tabula ir tukša
                 </div>
             </div>
+
+            <!-- Monitoring Tab - Azure Functions Status -->
+            <div id="tab-monitoring" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">📊 Azure Functions Monitoring</h2>
+                    <div class="flex gap-2 items-center">
+                        <span id="last-check" class="text-sm text-gray-500"></span>
+                        <button id="refresh-monitoring" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
+                            🔄 Pārbaudīt
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Overall Status -->
+                <div id="monitoring-status" class="mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-medium">Kopējais statuss</h3>
+                                <p id="status-text" class="text-2xl font-bold mt-2">Pārbauda...</p>
+                            </div>
+                            <div id="status-indicator" class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-4xl">
+                                ⏳
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t">
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-gray-800" id="stat-total">-</p>
+                                <p class="text-sm text-gray-500">Kopā</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-green-600" id="stat-healthy">-</p>
+                                <p class="text-sm text-gray-500">Veselīgi</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-yellow-600" id="stat-degraded">-</p>
+                                <p class="text-sm text-gray-500">Degradēti</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-red-600" id="stat-unhealthy">-</p>
+                                <p class="text-sm text-gray-500">Neveselīgi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endpoints List -->
+                <div id="monitoring-loading" class="text-center py-12 text-gray-500">
+                    Pārbauda funkciju statusu...
+                </div>
+
+                <div id="endpoints-container" class="hidden">
+                    <h3 class="font-medium mb-4">API Endpoints</h3>
+                    <div id="endpoints-list" class="space-y-3">
+                        <!-- Endpoints will be inserted here -->
+                    </div>
+
+                    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-medium mb-2">Vide</h4>
+                        <div id="environment-info" class="text-sm text-gray-600 space-y-1">
+                            <!-- Environment info will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -376,6 +444,7 @@ import Layout from '../../layouts/Layout.astro';
                 if (tabId === 'availability') loadAvailability();
                 if (tabId === 'settings') loadSettings();
                 if (tabId === 'data') loadTableData();
+                if (tabId === 'monitoring') loadMonitoring();
             });
         });
 
@@ -1039,6 +1108,96 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('table-select').addEventListener('change', loadTableData);
         document.getElementById('refresh-table').addEventListener('click', loadTableData);
         document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
+
+        // Monitoring functions
+        async function loadMonitoring() {
+            const loading = document.getElementById('monitoring-loading');
+            const container = document.getElementById('endpoints-container');
+            
+            loading.classList.remove('hidden');
+            container.classList.add('hidden');
+            
+            try {
+                const response = await fetch(API_BASE + '/dashboard/monitoring');
+                const data = await response.json();
+                
+                // Update overall status
+                const statusText = document.getElementById('status-text');
+                const statusIndicator = document.getElementById('status-indicator');
+                
+                const statusConfig = {
+                    healthy: { text: 'Viss darbojas', emoji: '✅', bgClass: 'bg-green-100' },
+                    degraded: { text: 'Daļēji degradēts', emoji: '⚠️', bgClass: 'bg-yellow-100' },
+                    unhealthy: { text: 'Problēmas!', emoji: '❌', bgClass: 'bg-red-100' }
+                };
+                
+                const config = statusConfig[data.overallStatus] || statusConfig.unhealthy;
+                statusText.textContent = config.text;
+                statusIndicator.textContent = config.emoji;
+                statusIndicator.className = `w-20 h-20 rounded-full ${config.bgClass} flex items-center justify-center text-4xl`;
+                
+                // Update stats
+                document.getElementById('stat-total').textContent = data.summary.total;
+                document.getElementById('stat-healthy').textContent = data.summary.healthy;
+                document.getElementById('stat-degraded').textContent = data.summary.degraded;
+                document.getElementById('stat-unhealthy').textContent = data.summary.unhealthy;
+                
+                // Update last check time
+                document.getElementById('last-check').textContent = 
+                    `Pārbaudīts: ${new Date(data.checkedAt).toLocaleTimeString('lv-LV')} (${data.totalCheckTime}ms)`;
+                
+                // Render endpoints
+                const endpointsList = document.getElementById('endpoints-list');
+                endpointsList.innerHTML = data.endpoints.map(ep => {
+                    const statusColors = {
+                        healthy: 'bg-green-100 text-green-800 border-green-200',
+                        degraded: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                        unhealthy: 'bg-red-100 text-red-800 border-red-200'
+                    };
+                    const statusIcons = { healthy: '✅', degraded: '⚠️', unhealthy: '❌' };
+                    
+                    return `
+                        <div class="bg-white rounded-lg border p-4 flex justify-between items-center ${ep.status === 'unhealthy' ? 'border-red-300' : 'border-gray-200'}">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">${statusIcons[ep.status]}</span>
+                                <div>
+                                    <div class="font-medium">${ep.name}</div>
+                                    <div class="text-sm text-gray-500">
+                                        <span class="font-mono text-xs bg-gray-100 px-1 rounded">${ep.method}</span>
+                                        <span class="font-mono text-xs ml-1">${ep.path}</span>
+                                        ${ep.critical ? '<span class="ml-2 text-red-600 text-xs">• Kritisks</span>' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-1 rounded text-sm ${statusColors[ep.status]}">
+                                    ${ep.httpStatus > 0 ? ep.httpStatus : 'Klūda'}
+                                </span>
+                                <div class="text-sm text-gray-500 mt-1">${ep.responseTime}ms</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Render environment info
+                document.getElementById('environment-info').innerHTML = `
+                    <div><strong>Function App:</strong> ${data.environment.functionApp}</div>
+                    <div><strong>Node.js:</strong> ${data.environment.nodeVersion}</div>
+                    <div><strong>Vidējais atbildes laiks:</strong> ${data.avgResponseTime}ms</div>
+                `;
+                
+                loading.classList.add('hidden');
+                container.classList.remove('hidden');
+                
+            } catch (error) {
+                loading.textContent = 'Kļūda: ' + error.message;
+                document.getElementById('status-text').textContent = 'Kļūda!';
+                document.getElementById('status-indicator').textContent = '❌';
+                document.getElementById('status-indicator').className = 'w-20 h-20 rounded-full bg-red-100 flex items-center justify-center text-4xl';
+            }
+        }
+
+        document.getElementById('refresh-monitoring').addEventListener('click', loadMonitoring);
     })();
     </script>
 </Layout>

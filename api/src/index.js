@@ -8,3 +8,4 @@ require('./functions/getAvailability');
 require('./functions/adminBookings');
 require('./functions/adminSettings');
 require('./functions/adminTableData');
+require('./functions/adminMonitoring');
