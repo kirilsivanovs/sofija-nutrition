@@ -16,7 +16,10 @@ import Layout from '../../layouts/Layout.astro';
                 </a>
                 <div class="admin-user">
                     <span id="user-info" class="admin-user-name"></span>
-                    <a href="/.auth/logout" class="admin-logout">Iziet</a>
+                    <a href="/.auth/logout" class="admin-logout">
+                        <i class="ph ph-sign-out"></i>
+                        <span>Iziet</span>
+                    </a>
                 </div>
             </div>
         </header>
@@ -24,11 +27,11 @@ import Layout from '../../layouts/Layout.astro';
         <!-- Mobile Tab Selector -->
         <div class="mobile-tab-select">
             <select id="mobile-tab-selector" class="mobile-tab-dropdown">
-                <option value="bookings">📅 Ieraksti</option>
-                <option value="availability">🕐 Pieejamība</option>
-                <option value="settings">⚙️ Iestatījumi</option>
-                <option value="data">🗄️ Dati</option>
-                <option value="monitoring">📊 Monitoring</option>
+                <option value="bookings">Ieraksti</option>
+                <option value="availability">Pieejamība</option>
+                <option value="settings">Iestatījumi</option>
+                <option value="data">Dati</option>
+                <option value="monitoring">Monitoring</option>
             </select>
         </div>
 
@@ -36,24 +39,24 @@ import Layout from '../../layouts/Layout.astro';
         <nav class="admin-nav">
             <div class="admin-nav-inner">
                 <button class="admin-tab active" data-tab="bookings">
-                    <span class="admin-tab-icon">📅</span>
-                    <span class="admin-tab-text">Ieraksti</span>
+                    <i class="ph ph-calendar-check"></i>
+                    <span>Ieraksti</span>
                 </button>
                 <button class="admin-tab" data-tab="availability">
-                    <span class="admin-tab-icon">🕐</span>
-                    <span class="admin-tab-text">Pieejamība</span>
+                    <i class="ph ph-clock"></i>
+                    <span>Pieejamība</span>
                 </button>
                 <button class="admin-tab" data-tab="settings">
-                    <span class="admin-tab-icon">⚙️</span>
-                    <span class="admin-tab-text">Iestatījumi</span>
+                    <i class="ph ph-gear"></i>
+                    <span>Iestatījumi</span>
                 </button>
                 <button class="admin-tab" data-tab="data">
-                    <span class="admin-tab-icon">🗄️</span>
-                    <span class="admin-tab-text">Dati</span>
+                    <i class="ph ph-database"></i>
+                    <span>Dati</span>
                 </button>
                 <button class="admin-tab" data-tab="monitoring">
-                    <span class="admin-tab-icon">📊</span>
-                    <span class="admin-tab-text">Monitoring</span>
+                    <i class="ph ph-chart-line"></i>
+                    <span>Monitoring</span>
                 </button>
             </div>
         </nav>
@@ -65,11 +68,17 @@ import Layout from '../../layouts/Layout.astro';
                 <div class="content-header">
                     <h2 class="content-title">Klientu ieraksti</h2>
                     <div class="calendar-controls">
-                        <button id="prev-month" class="btn-icon" title="Iepriekšējais mēnesis">←</button>
+                        <button id="prev-month" class="cal-nav-btn" title="Iepriekšējais mēnesis">
+                            <i class="ph ph-caret-left"></i>
+                        </button>
                         <span id="current-month" class="calendar-month"></span>
-                        <button id="next-month" class="btn-icon" title="Nākamais mēnesis">→</button>
+                        <button id="next-month" class="cal-nav-btn" title="Nākamais mēnesis">
+                            <i class="ph ph-caret-right"></i>
+                        </button>
                         <button id="today-btn" class="btn-primary btn-sm">Šodien</button>
-                        <button id="refresh-bookings" class="btn-icon" title="Atjaunot">🔄</button>
+                        <button id="refresh-bookings" class="cal-nav-btn" title="Atjaunot">
+                            <i class="ph ph-arrows-clockwise"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -90,7 +99,7 @@ import Layout from '../../layouts/Layout.astro';
 
                 <div id="calendar-container" class="calendar-wrapper hidden">
                     <div class="calendar-card">
-                        <div class="calendar-header">
+                        <div class="calendar-header-row">
                             <div class="calendar-day-name">Pr</div>
                             <div class="calendar-day-name">Ot</div>
                             <div class="calendar-day-name">Tr</div>
@@ -107,7 +116,9 @@ import Layout from '../../layouts/Layout.astro';
                     <div class="day-details-card">
                         <div class="day-details-header">
                             <h3 id="day-details-title"></h3>
-                            <button id="close-day-details" class="btn-close">✕</button>
+                            <button id="close-day-details" class="btn-close">
+                                <i class="ph ph-x"></i>
+                            </button>
                         </div>
                         <div id="day-bookings-list" class="bookings-list"></div>
                     </div>
@@ -122,7 +133,10 @@ import Layout from '../../layouts/Layout.astro';
                 <div class="card">
                     <div id="availability-form" class="availability-form"></div>
                     <div class="card-footer">
-                        <button id="save-availability" class="btn-primary">💾 Saglabāt</button>
+                        <button id="save-availability" class="btn-primary">
+                            <i class="ph ph-floppy-disk"></i>
+                            <span>Saglabāt</span>
+                        </button>
                     </div>
                 </div>
 
@@ -134,13 +148,16 @@ import Layout from '../../layouts/Layout.astro';
                     <div class="blocked-date-form">
                         <input type="date" id="block-date" class="input-field">
                         <input type="text" id="block-reason" placeholder="Iemesls" class="input-field input-flex">
-                        <button id="add-blocked-date" class="btn-danger">+ Pievienot</button>
+                        <button id="add-blocked-date" class="btn-danger">
+                            <i class="ph ph-plus"></i>
+                            <span>Pievienot</span>
+                        </button>
                     </div>
                     <div id="blocked-dates-list" class="blocked-list"></div>
                 </div>
 
                 <div class="section-divider"></div>
-                <div class="content-header"><h2 class="content-title">🇱🇻 Latvijas valsts svētki</h2></div>
+                <div class="content-header"><h2 class="content-title">Latvijas valsts svētki</h2></div>
                 <p class="content-subtitle">Šajos datumos automātiski netiek pieņemti ieraksti</p>
                 
                 <div class="card">
@@ -149,7 +166,10 @@ import Layout from '../../layouts/Layout.astro';
                             <option value="2026">2026</option>
                             <option value="2027">2027</option>
                         </select>
-                        <button id="refresh-holidays" class="btn-secondary">🔄 Atjaunot</button>
+                        <button id="refresh-holidays" class="btn-secondary">
+                            <i class="ph ph-arrows-clockwise"></i>
+                            <span>Atjaunot</span>
+                        </button>
                     </div>
                     <div id="holidays-list" class="holidays-grid"></div>
                 </div>
@@ -161,7 +181,7 @@ import Layout from '../../layouts/Layout.astro';
 
                 <div class="settings-grid">
                     <div class="card">
-                        <h3 class="card-title">💰 Cenas</h3>
+                        <h3 class="card-title"><i class="ph ph-currency-eur"></i> Cenas</h3>
                         <div class="form-group">
                             <label class="form-label">Pirmreizējā konsultācija (€)</label>
                             <input type="number" id="price-initial" class="input-field" value="65">
@@ -173,7 +193,7 @@ import Layout from '../../layouts/Layout.astro';
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">📞 Kontaktinformācija</h3>
+                        <h3 class="card-title"><i class="ph ph-phone"></i> Kontaktinformācija</h3>
                         <div class="form-group">
                             <label class="form-label">E-pasts</label>
                             <input type="email" id="contact-email" class="input-field" value="sofija@nutrition.lv">
@@ -189,7 +209,7 @@ import Layout from '../../layouts/Layout.astro';
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">⏱️ Konsultāciju ilgums</h3>
+                        <h3 class="card-title"><i class="ph ph-timer"></i> Konsultāciju ilgums</h3>
                         <div class="form-group">
                             <label class="form-label">Pirmreizējā (minūtes)</label>
                             <input type="number" id="duration-initial" class="input-field" value="60">
@@ -201,7 +221,7 @@ import Layout from '../../layouts/Layout.astro';
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">🏦 Maksājumu informācija</h3>
+                        <h3 class="card-title"><i class="ph ph-bank"></i> Maksājumu informācija</h3>
                         <div class="form-group">
                             <label class="form-label">Bankas nosaukums</label>
                             <input type="text" id="bank-name" class="input-field" value="Swedbank">
@@ -214,21 +234,29 @@ import Layout from '../../layouts/Layout.astro';
                 </div>
 
                 <div class="settings-actions">
-                    <button id="save-settings" class="btn-primary">💾 Saglabāt iestatījumus</button>
+                    <button id="save-settings" class="btn-primary">
+                        <i class="ph ph-floppy-disk"></i>
+                        <span>Saglabāt iestatījumus</span>
+                    </button>
                 </div>
             </div>
 
             <!-- Data Tab -->
             <div id="tab-data" class="admin-content hidden">
                 <div class="content-header">
-                    <h2 class="content-title">🗄️ Azure Table Storage</h2>
+                    <h2 class="content-title">Azure Table Storage</h2>
                     <div class="data-controls">
                         <select id="table-select" class="input-field">
                             <option value="bookings">bookings</option>
                             <option value="adminSettings">adminSettings</option>
                         </select>
-                        <button id="refresh-table" class="btn-secondary">🔄</button>
-                        <button id="export-csv" class="btn-info">📥 CSV</button>
+                        <button id="refresh-table" class="btn-secondary">
+                            <i class="ph ph-arrows-clockwise"></i>
+                        </button>
+                        <button id="export-csv" class="btn-info">
+                            <i class="ph ph-download-simple"></i>
+                            <span>CSV</span>
+                        </button>
                     </div>
                 </div>
 
@@ -250,7 +278,7 @@ import Layout from '../../layouts/Layout.astro';
                 </div>
 
                 <div id="table-empty" class="hidden empty-state">
-                    <span class="empty-icon">📭</span>
+                    <i class="ph ph-tray empty-icon"></i>
                     <span>Tabula ir tukša</span>
                 </div>
             </div>
@@ -258,10 +286,13 @@ import Layout from '../../layouts/Layout.astro';
             <!-- Monitoring Tab -->
             <div id="tab-monitoring" class="admin-content hidden">
                 <div class="content-header">
-                    <h2 class="content-title">📊 Azure Functions Monitoring</h2>
+                    <h2 class="content-title">Azure Functions Monitoring</h2>
                     <div class="monitoring-controls">
                         <span id="last-check" class="last-check-text"></span>
-                        <button id="refresh-monitoring" class="btn-secondary">🔄 Pārbaudīt</button>
+                        <button id="refresh-monitoring" class="btn-secondary">
+                            <i class="ph ph-arrows-clockwise"></i>
+                            <span>Pārbaudīt</span>
+                        </button>
                     </div>
                 </div>
 
@@ -271,7 +302,9 @@ import Layout from '../../layouts/Layout.astro';
                             <h3>Kopējais statuss</h3>
                             <p id="status-text" class="status-value">Pārbauda...</p>
                         </div>
-                        <div id="status-indicator" class="status-badge">⏳</div>
+                        <div id="status-indicator" class="status-badge">
+                            <i class="ph ph-circle-notch spinning"></i>
+                        </div>
                     </div>
                     <div class="status-stats">
                         <div class="stat-item"><span class="stat-value" id="stat-total">-</span><span class="stat-label">Kopā</span></div>
@@ -303,210 +336,1107 @@ import Layout from '../../layouts/Layout.astro';
             --color-primary: #1B4332;
             --color-secondary: #D4A574;
             --color-accent: #2D6A4F;
-            --color-text: #1A1A1A;
-            --color-text-light: #666666;
+            --color-text: #374151;
+            --color-text-light: #6b7280;
+            --color-muted: #9ca3af;
             --color-bg: #FDFBF7;
             --color-white: #FFFFFF;
             --color-cream: #F8F6F1;
-            --color-border: #E8E2D8;
+            --color-border: #e5e7eb;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Inter', sans-serif;
-            --shadow-subtle: 0 2px 20px rgba(0,0,0,0.04);
-            --shadow-medium: 0 8px 40px rgba(0,0,0,0.08);
-            --radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius: 16px;
+            --radius-md: 12px;
             --radius-sm: 8px;
         }
-        * { box-sizing: border-box; }
-        .admin-wrapper { min-height: 100vh; background: var(--color-bg); font-family: var(--font-sans); color: var(--color-text); }
-        .admin-header { background: var(--color-white); border-bottom: 1px solid var(--color-border); padding: 12px 16px; position: sticky; top: 0; z-index: 100; }
-        .admin-header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-        .admin-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .admin-logo-img { height: 32px; width: auto; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        .admin-wrapper {
+            min-height: 100vh;
+            background: var(--color-bg);
+            font-family: var(--font-sans);
+            color: var(--color-text);
+        }
+
+        /* Header */
+        .admin-header {
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .admin-logo-img { height: 36px; width: auto; }
+
         .admin-logo-text { display: flex; flex-direction: column; }
-        .admin-logo-name { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--color-primary); line-height: 1.2; }
-        .admin-logo-sub { font-size: 10px; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 1px; }
-        .admin-user { display: flex; align-items: center; gap: 12px; }
-        .admin-user-name { font-size: 13px; color: var(--color-text-light); display: none; }
-        .admin-logout { font-size: 13px; color: #dc2626; text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm); transition: background 0.2s; }
-        .admin-logout:hover { background: #fef2f2; }
-        .mobile-tab-select { display: block; padding: 12px 16px; background: var(--color-white); border-bottom: 1px solid var(--color-border); }
-        .mobile-tab-dropdown { width: 100%; padding: 12px 16px; font-size: 16px; font-family: var(--font-sans); border: 2px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-white); color: var(--color-text); cursor: pointer; }
-        .admin-nav { display: none; background: var(--color-white); border-bottom: 1px solid var(--color-border); }
-        .admin-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 4px; padding: 0 16px; overflow-x: auto; }
-        .admin-tab { display: flex; align-items: center; gap: 6px; padding: 14px 16px; border: none; background: none; font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--color-text-light); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
-        .admin-tab:hover { color: var(--color-primary); background: var(--color-cream); }
-        .admin-tab.active { color: var(--color-primary); border-bottom-color: var(--color-secondary); }
-        .admin-tab-icon { font-size: 16px; }
-        .admin-main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+        .admin-logo-name {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary);
+            line-height: 1.2;
+        }
+
+        .admin-logo-sub {
+            font-size: 11px;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-user-name {
+            font-size: 14px;
+            color: var(--color-text-light);
+            display: none;
+        }
+
+        .admin-logout {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--color-text-light);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .admin-logout:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        /* Mobile Tab Select */
+        .mobile-tab-select {
+            display: block;
+            padding: 16px 20px;
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .mobile-tab-dropdown {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-family: var(--font-sans);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-white);
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+        .mobile-tab-dropdown:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* Desktop Navigation */
+        .admin-nav {
+            display: none;
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .admin-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 4px;
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+
+        .admin-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            border: none;
+            background: none;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .admin-tab i { font-size: 18px; }
+
+        .admin-tab:hover {
+            color: var(--color-primary);
+            background: var(--color-cream);
+        }
+
+        .admin-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-secondary);
+        }
+
+        /* Main Content */
+        .admin-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
         .admin-content { animation: fadeIn 0.2s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .hidden { display: none !important; }
-        .content-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-        .content-title { font-family: var(--font-serif); font-size: 24px; font-weight: 600; color: var(--color-primary); margin: 0; }
-        .content-subtitle { font-size: 14px; color: var(--color-text-light); margin: 0 0 16px 0; }
-        .calendar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .calendar-month { font-weight: 600; font-size: 16px; min-width: 140px; text-align: center; color: var(--color-primary); }
-        .btn-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-white); cursor: pointer; font-size: 16px; transition: all 0.2s; }
-        .btn-icon:hover { background: var(--color-cream); border-color: var(--color-secondary); }
-        .btn-primary { padding: 10px 20px; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); color: white; border: none; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27, 67, 50, 0.3); }
-        .btn-primary.btn-sm { padding: 8px 14px; font-size: 13px; }
-        .btn-secondary { padding: 10px 20px; background: var(--color-cream); color: var(--color-primary); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-        .btn-secondary:hover { background: var(--color-white); border-color: var(--color-secondary); }
-        .btn-danger { padding: 10px 20px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+
+        /* Content Header */
+        .content-header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .content-title {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .content-subtitle {
+            font-size: 14px;
+            color: var(--color-text-light);
+            margin: 0 0 20px 0;
+        }
+
+        /* Calendar Controls */
+        .calendar-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calendar-month {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            font-size: 18px;
+            min-width: 160px;
+            text-align: center;
+            color: var(--color-primary);
+        }
+
+        .cal-nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-white);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--color-text);
+        }
+
+        .cal-nav-btn:hover {
+            background: var(--color-cream);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .cal-nav-btn i { font-size: 18px; }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary.btn-sm {
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--color-white);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-cream);
+            border-color: var(--color-primary);
+        }
+
+        .btn-danger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         .btn-danger:hover { background: #fee2e2; }
-        .btn-info { padding: 10px 20px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+
+        .btn-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         .btn-info:hover { background: #dbeafe; }
-        .btn-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: var(--color-cream); border-radius: 50%; cursor: pointer; font-size: 16px; color: var(--color-text-light); transition: all 0.2s; }
-        .btn-close:hover { background: #fee2e2; color: #dc2626; }
-        .card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); padding: 20px; margin-bottom: 16px; }
-        .card-title { font-size: 16px; font-weight: 600; color: var(--color-primary); margin: 0 0 16px 0; }
-        .card-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border); }
-        .input-field { padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; color: var(--color-text); background: var(--color-white); transition: border-color 0.2s; width: 100%; }
-        .input-field:focus { outline: none; border-color: var(--color-secondary); }
+
+        .btn-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: var(--color-cream);
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--color-text-light);
+            transition: all 0.2s;
+        }
+
+        .btn-close:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-close i { font-size: 18px; }
+
+        /* Cards */
+        .card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin: 0 0 20px 0;
+        }
+
+        .card-title i {
+            font-size: 20px;
+            color: var(--color-secondary);
+        }
+
+        .card-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Form Elements */
+        .input-field {
+            padding: 12px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            color: var(--color-text);
+            background: var(--color-white);
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
         .input-field.input-flex { flex: 1; min-width: 0; }
-        .form-group { margin-bottom: 14px; }
-        .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--color-text-light); margin-bottom: 6px; }
-        .calendar-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; font-size: 12px; }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-box { width: 16px; height: 16px; border-radius: 4px; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .legend-available { background: #ecfdf5; border: 1px solid #a7f3d0; }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            margin-bottom: 8px;
+        }
+
+        /* Calendar Legend */
+        .calendar-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-available { background: rgba(45, 106, 79, 0.1); border: 1px solid rgba(45, 106, 79, 0.3); }
         .legend-booked { background: #f0fdf4; border-left: 3px solid #4ade80; }
         .legend-weekend { background: #fef2f2; border: 1px solid #fecaca; }
         .legend-holiday { background: #fee2e2; border-left: 3px solid #f87171; }
         .legend-pending { background: #facc15; }
         .legend-confirmed { background: #22c55e; }
-        .calendar-wrapper { margin-bottom: 16px; }
-        .calendar-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); overflow: hidden; }
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--color-cream); border-bottom: 1px solid var(--color-border); }
-        .calendar-day-name { padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--color-text-light); }
+
+        /* Calendar */
+        .calendar-wrapper { margin-bottom: 20px; }
+
+        .calendar-card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .calendar-header-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--color-cream);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .calendar-day-name {
+            padding: 12px 4px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .calendar-day-name.weekend { color: #dc2626; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-        .calendar-cell { min-height: 70px; padding: 4px; border-bottom: 1px solid var(--color-border); border-right: 1px solid var(--color-border); cursor: pointer; transition: all 0.15s; font-size: 12px; }
-        .calendar-cell:hover { filter: brightness(0.97); }
-        .calendar-cell.empty { background: var(--color-cream); cursor: default; }
-        .calendar-cell.available { background: #ecfdf5; }
-        .calendar-cell.booked { background: #f0fdf4; border-left: 3px solid #4ade80; }
-        .calendar-cell.weekend { background: #fef2f2; }
-        .calendar-cell.holiday { background: #fee2e2; border-left: 3px solid #f87171; }
-        .calendar-cell .day-number { font-weight: 600; margin-bottom: 2px; }
-        .calendar-cell .day-number.today { background: var(--color-secondary); color: white; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
-        .calendar-cell .holiday-name { font-size: 10px; color: #dc2626; font-weight: 500; line-height: 1.2; }
-        .calendar-cell .day-time { font-size: 10px; color: var(--color-text-light); }
-        .calendar-cell .booking-dots { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
-        .calendar-cell .booking-dot { display: flex; align-items: center; gap: 3px; font-size: 10px; }
-        .calendar-cell .booking-dot span { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar-cell {
+            min-height: 80px;
+            padding: 8px;
+            border-bottom: 1px solid var(--color-border);
+            border-right: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .calendar-cell:nth-child(7n) { border-right: none; }
+
+        .calendar-cell:hover { background: var(--color-cream); }
+
+        .calendar-cell.empty {
+            background: #fafafa;
+            cursor: default;
+        }
+
+        .calendar-cell.available { background: rgba(45, 106, 79, 0.05); }
+
+        .calendar-cell.available::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: 50%;
+        }
+
+        .calendar-cell.booked {
+            background: #f0fdf4;
+            border-left: 3px solid #4ade80;
+        }
+
+        .calendar-cell.weekend {
+            background: #fef7f7;
+            color: var(--color-muted);
+        }
+
+        .calendar-cell.holiday {
+            background: #fef2f2;
+            border-left: 3px solid #f87171;
+        }
+
+        .calendar-cell .day-number {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .calendar-cell .day-number.today {
+            background: var(--color-secondary);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-cell .holiday-name {
+            font-size: 10px;
+            color: #dc2626;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .calendar-cell .day-time {
+            font-size: 11px;
+            color: var(--color-text-light);
+        }
+
+        .calendar-cell .booking-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-top: 4px;
+        }
+
+        .calendar-cell .booking-dot {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+        }
+
+        .calendar-cell .booking-dot span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
         .calendar-cell .booking-dot.pending span { background: #facc15; }
         .calendar-cell .booking-dot.confirmed span { background: #22c55e; }
-        .day-details-panel { margin-top: 16px; }
-        .day-details-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-medium); overflow: hidden; }
-        .day-details-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--color-cream); border-bottom: 1px solid var(--color-border); }
-        .day-details-header h3 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--color-primary); margin: 0; }
-        .bookings-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-        .booking-card { background: var(--color-cream); border-radius: var(--radius-sm); padding: 14px; border-left: 4px solid var(--color-border); }
+
+        /* Day Details Panel */
+        .day-details-panel { margin-top: 20px; }
+
+        .day-details-card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .day-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: var(--color-cream);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .day-details-header h3 {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .bookings-list {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .booking-card {
+            background: var(--color-cream);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            border-left: 4px solid var(--color-border);
+        }
+
         .booking-card.pending { border-left-color: #facc15; }
         .booking-card.confirmed { border-left-color: #22c55e; }
-        .booking-card.cancelled { border-left-color: #f87171; }
-        .booking-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-        .booking-name { font-weight: 600; color: var(--color-text); }
-        .booking-status { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
+        .booking-card.cancelled { border-left-color: #f87171; opacity: 0.7; }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .booking-name {
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 16px;
+        }
+
+        .booking-status {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .booking-status.pending { background: #fef3c7; color: #b45309; }
         .booking-status.confirmed { background: #dcfce7; color: #15803d; }
         .booking-status.cancelled { background: #fee2e2; color: #dc2626; }
-        .booking-time { font-size: 20px; font-weight: 700; color: var(--color-primary); }
-        .booking-details { font-size: 13px; color: var(--color-text-light); display: flex; flex-direction: column; gap: 4px; }
-        .booking-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); flex-wrap: wrap; }
-        .booking-actions button { padding: 6px 12px; font-size: 12px; }
-        .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--color-text-light); }
-        .loading-spinner { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-secondary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+        .booking-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-serif);
+        }
+
+        .booking-details {
+            font-size: 14px;
+            color: var(--color-text-light);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .booking-details div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .booking-details i { font-size: 16px; color: var(--color-muted); }
+
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+            flex-wrap: wrap;
+        }
+
+        .booking-actions button {
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 60px 20px;
+            color: var(--color-text-light);
+        }
+
+        .loading-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
         @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 60px 20px; color: var(--color-text-light); }
-        .empty-icon { font-size: 48px; }
-        .settings-grid { display: grid; gap: 16px; }
-        .settings-actions { margin-top: 16px; }
-        .availability-form { display: flex; flex-direction: column; gap: 12px; }
-        .availability-day { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--color-cream); border-radius: var(--radius-sm); }
-        .availability-day-header { display: flex; align-items: center; gap: 12px; }
-        .availability-day-name { font-weight: 600; min-width: 100px; }
-        .availability-day-times { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .availability-day-times input[type="time"] { padding: 8px; font-size: 14px; width: auto; }
-        .blocked-date-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+
+        .spinning { animation: spin 1s linear infinite; }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 80px 20px;
+            color: var(--color-text-light);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: var(--color-muted);
+        }
+
+        /* Settings Grid */
+        .settings-grid { display: grid; gap: 20px; }
+        .settings-actions { margin-top: 20px; }
+
+        /* Availability Form */
+        .availability-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .availability-day {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+            background: var(--color-cream);
+            border-radius: var(--radius-sm);
+        }
+
+        .availability-day-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .availability-day-name {
+            font-weight: 600;
+            min-width: 100px;
+            color: var(--color-primary);
+        }
+
+        .availability-day-times {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .availability-day-times input[type="time"] {
+            padding: 10px 12px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .blocked-date-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
         .blocked-date-form .input-field { width: auto; }
-        .blocked-list { display: flex; flex-direction: column; gap: 8px; }
-        .blocked-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #fef2f2; border-radius: var(--radius-sm); font-size: 14px; }
-        .holidays-controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+        .blocked-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .blocked-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: #fef2f2;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+        }
+
+        .holidays-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
         .holidays-controls .input-field { width: auto; }
-        .holidays-grid { display: grid; gap: 8px; }
-        .holiday-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #eff6ff; border-radius: var(--radius-sm); font-size: 14px; flex-wrap: wrap; gap: 8px; }
-        .holiday-date { font-weight: 600; color: var(--color-primary); }
+
+        .holidays-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .holiday-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: #eff6ff;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .holiday-date {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        /* Data Table */
         .table-card { padding: 0; overflow: hidden; }
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .data-table th { background: var(--color-cream); padding: 12px; text-align: left; font-weight: 600; color: var(--color-primary); white-space: nowrap; border-bottom: 1px solid var(--color-border); }
-        .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: var(--color-cream);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-primary);
+            white-space: nowrap;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-border);
+            white-space: nowrap;
+        }
+
         .data-table tr:hover td { background: var(--color-cream); }
-        .table-footer { padding: 12px 16px; font-size: 13px; color: var(--color-text-light); }
-        .data-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .table-footer {
+            padding: 14px 20px;
+            font-size: 14px;
+            color: var(--color-text-light);
+        }
+
+        .data-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .data-controls .input-field { width: auto; }
-        .status-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); padding: 20px; margin-bottom: 20px; }
-        .status-main { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-        .status-info h3 { font-size: 14px; font-weight: 500; color: var(--color-text-light); margin: 0 0 8px 0; }
-        .status-value { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--color-primary); margin: 0; }
-        .status-badge { width: 60px; height: 60px; border-radius: 50%; background: var(--color-cream); display: flex; align-items: center; justify-content: center; font-size: 28px; }
-        .status-badge.healthy { background: #dcfce7; }
-        .status-badge.degraded { background: #fef3c7; }
-        .status-badge.unhealthy { background: #fee2e2; }
-        .status-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-border); }
+
+        /* Status Card */
+        .status-card {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .status-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-info h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            margin: 0 0 8px 0;
+        }
+
+        .status-value {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0;
+        }
+
+        .status-badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--color-cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge i { font-size: 32px; }
+
+        .status-badge.healthy { background: #dcfce7; color: #16a34a; }
+        .status-badge.degraded { background: #fef3c7; color: #ca8a04; }
+        .status-badge.unhealthy { background: #fee2e2; color: #dc2626; }
+
+        .status-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-border);
+        }
+
         .stat-item { text-align: center; }
-        .stat-value { display: block; font-size: 28px; font-weight: 700; color: var(--color-text); }
+
+        .stat-value {
+            display: block;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
         .stat-value.stat-healthy { color: #16a34a; }
         .stat-value.stat-degraded { color: #ca8a04; }
         .stat-value.stat-unhealthy { color: #dc2626; }
-        .stat-label { font-size: 12px; color: var(--color-text-light); }
-        .monitoring-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .last-check-text { font-size: 12px; color: var(--color-text-light); }
-        .section-title { font-size: 16px; font-weight: 600; color: var(--color-primary); margin: 0 0 12px 0; }
-        .endpoints-list { display: flex; flex-direction: column; gap: 10px; }
-        .endpoint-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .endpoint-card.unhealthy { border-color: #fecaca; background: #fef2f2; }
-        .endpoint-info { display: flex; align-items: center; gap: 10px; }
-        .endpoint-icon { font-size: 20px; }
-        .endpoint-name { font-weight: 600; font-size: 14px; }
-        .endpoint-path { font-size: 12px; color: var(--color-text-light); }
-        .endpoint-path code { background: var(--color-cream); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; }
-        .endpoint-critical { color: #dc2626; font-size: 11px; font-weight: 500; }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .monitoring-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .last-check-text {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin: 0 0 16px 0;
+        }
+
+        .endpoints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .endpoint-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .endpoint-card.unhealthy {
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .endpoint-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .endpoint-icon { font-size: 24px; }
+        .endpoint-icon.healthy { color: #16a34a; }
+        .endpoint-icon.degraded { color: #ca8a04; }
+        .endpoint-icon.unhealthy { color: #dc2626; }
+
+        .endpoint-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .endpoint-path {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .endpoint-path code {
+            background: var(--color-cream);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .endpoint-critical {
+            color: #dc2626;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
         .endpoint-status { text-align: right; }
-        .endpoint-code { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+        .endpoint-code {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         .endpoint-code.healthy { background: #dcfce7; color: #16a34a; }
         .endpoint-code.degraded { background: #fef3c7; color: #b45309; }
         .endpoint-code.unhealthy { background: #fee2e2; color: #dc2626; }
-        .endpoint-time { font-size: 12px; color: var(--color-text-light); margin-top: 4px; }
-        .environment-card { margin-top: 20px; padding: 16px; background: var(--color-cream); border-radius: var(--radius-sm); }
-        .environment-card h4 { font-size: 14px; font-weight: 600; color: var(--color-primary); margin: 0 0 10px 0; }
-        .env-info { font-size: 13px; color: var(--color-text-light); display: flex; flex-direction: column; gap: 4px; }
-        .section-divider { height: 1px; background: var(--color-border); margin: 24px 0; }
 
+        .endpoint-time {
+            font-size: 13px;
+            color: var(--color-text-light);
+            margin-top: 4px;
+        }
+
+        .environment-card {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--color-cream);
+            border-radius: var(--radius-sm);
+        }
+
+        .environment-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin: 0 0 12px 0;
+        }
+
+        .env-info {
+            font-size: 14px;
+            color: var(--color-text-light);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--color-border);
+            margin: 32px 0;
+        }
+
+        /* Responsive */
         @media (min-width: 768px) {
-            .admin-header { padding: 16px 24px; }
-            .admin-logo-img { height: 36px; }
-            .admin-logo-name { font-size: 20px; }
+            .admin-header { padding: 16px 32px; }
+            .admin-logo-img { height: 40px; }
+            .admin-logo-name { font-size: 22px; }
             .admin-user-name { display: block; }
             .mobile-tab-select { display: none; }
             .admin-nav { display: block; }
-            .admin-main { padding: 24px; }
+            .admin-main { padding: 32px; }
             .content-header { flex-direction: row; justify-content: space-between; align-items: center; }
-            .content-title { font-size: 28px; }
-            .calendar-cell { min-height: 90px; padding: 6px; }
+            .content-title { font-size: 32px; }
+            .calendar-cell { min-height: 100px; padding: 10px; }
             .settings-grid { grid-template-columns: repeat(2, 1fr); }
             .holidays-grid { grid-template-columns: repeat(2, 1fr); }
             .availability-day { flex-direction: row; align-items: center; justify-content: space-between; }
-            .status-badge { width: 80px; height: 80px; font-size: 36px; }
-            .stat-value { font-size: 32px; }
+            .status-badge { width: 80px; height: 80px; }
+            .status-badge i { font-size: 40px; }
         }
 
         @media (min-width: 1024px) {
-            .calendar-cell { min-height: 100px; padding: 8px; }
+            .calendar-cell { min-height: 110px; }
         }
     </style>
 
@@ -581,7 +1511,7 @@ import Layout from '../../layouts/Layout.astro';
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
             } catch (error) {
-                loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>';
+                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>';
             }
         }
 
@@ -623,7 +1553,7 @@ import Layout from '../../layouts/Layout.astro';
                     <div class="day-number ${isToday ? 'today' : ''}">${day}</div>
                     ${isHoliday ? `<div class="holiday-name">${isHoliday}</div>` : ''}
                     ${isBlocked && !isHoliday ? '<div class="holiday-name">Bloķēts</div>' : ''}
-                    ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time">${daySchedule.start}-${daySchedule.end}</div>` : ''}
+                    ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time">${daySchedule.start}–${daySchedule.end}</div>` : ''}
                     ${dayBookings.length > 0 ? `<div class="booking-dots">${pending > 0 ? `<div class="booking-dot pending"><span></span>${pending}</div>` : ''}${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}</div>` : ''}
                 </div>`;
             }
@@ -643,14 +1573,21 @@ import Layout from '../../layouts/Layout.astro';
             const holidayName = holidays[dateStr];
             const dayBookings = allBookings.filter(b => b.date === dateStr);
             let html = '';
-            if (holidayName) html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;"><span>🇱🇻 <strong>Valsts svētki:</strong> ${holidayName}</span></div>`;
-            if (dayBookings.length === 0) html += '<div class="loading-state"><span>Nav ierakstu šajā dienā</span></div>';
+            if (holidayName) html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;"><div class="booking-details"><div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${holidayName}</div></div></div>`;
+            if (dayBookings.length === 0 && !holidayName) html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-muted);"></i><span>Nav ierakstu šajā dienā</span></div>';
             else {
                 dayBookings.sort((a, b) => a.time.localeCompare(b.time));
                 html += dayBookings.map(b => `<div class="booking-card ${b.status}">
                     <div class="booking-header"><div><span class="booking-name">${b.name}</span><span class="booking-status ${b.status}">${getStatusText(b.status)}</span></div><span class="booking-time">${b.time}</span></div>
-                    <div class="booking-details"><div>📋 ${b.service === 'initial' ? 'Pirmreizējā konsultācija' : 'Atkārtota konsultācija'}</div><div>${b.consultationFormat === 'online' ? '💻 Online' : '🏥 Klātienē'}</div><div>✉️ ${b.email}</div>${b.phone ? `<div>📞 ${b.phone}</div>` : ''}${b.notes ? `<div>📝 ${b.notes}</div>` : ''}<div>💰 €${b.price}</div></div>
-                    <div class="booking-actions">${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm">✓ Apstiprināt</button>` : ''}${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger">✕ Atcelt</button>` : ''}</div>
+                    <div class="booking-details">
+                        <div><i class="ph ph-clipboard-text"></i>${b.service === 'initial' ? 'Pirmreizējā konsultācija' : 'Atkārtota konsultācija'}</div>
+                        <div><i class="ph ${b.consultationFormat === 'online' ? 'ph-video-camera' : 'ph-map-pin'}"></i>${b.consultationFormat === 'online' ? 'Online' : 'Klātienē'}</div>
+                        <div><i class="ph ph-envelope"></i>${b.email}</div>
+                        ${b.phone ? `<div><i class="ph ph-phone"></i>${b.phone}</div>` : ''}
+                        ${b.notes ? `<div><i class="ph ph-note"></i>${b.notes}</div>` : ''}
+                        <div><i class="ph ph-currency-eur"></i>€${b.price}</div>
+                    </div>
+                    <div class="booking-actions">${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger"><i class="ph ph-x"></i> Atcelt</button>` : ''}</div>
                 </div>`).join('');
             }
             list.innerHTML = html;
@@ -677,7 +1614,7 @@ import Layout from '../../layouts/Layout.astro';
 
         function loadAvailability() {
             const form = document.getElementById('availability-form');
-            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:18px;height:18px;"><span style="font-size:13px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="time" id="day-${day}-start" value="09:00" class="input-field"><span>—</span><input type="time" id="day-${day}-end" value="17:00" class="input-field"></div></div>`).join('');
+            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:18px;height:18px;accent-color:var(--color-primary);"><span style="font-size:14px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="time" id="day-${day}-start" value="09:00" class="input-field"><span style="color:var(--color-muted);">—</span><input type="time" id="day-${day}-end" value="17:00" class="input-field"></div></div>`).join('');
             document.getElementById('day-saturday-enabled').checked = false;
             document.getElementById('day-sunday-enabled').checked = false;
             fetch(API_BASE + '/dashboard/availability').then(r => r.json()).then(data => {
@@ -697,7 +1634,7 @@ import Layout from '../../layouts/Layout.astro';
         function renderBlockedDates(dates) {
             const list = document.getElementById('blocked-dates-list');
             if (!dates || dates.length === 0) { list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav bloķētu datumu</p>'; return; }
-            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${d.date} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:24px;height:24px;font-size:12px;">✕</button></div>`).join('');
+            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${d.date} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:28px;height:28px;"><i class="ph ph-x"></i></button></div>`).join('');
         }
 
         document.getElementById('save-availability').addEventListener('click', async () => {
@@ -750,7 +1687,7 @@ import Layout from '../../layouts/Layout.astro';
             const container = document.getElementById('table-container');
             const empty = document.getElementById('table-empty');
             loading.classList.remove('hidden'); container.classList.add('hidden'); empty.classList.add('hidden');
-            try { const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); const data = await response.json(); currentTableData = data; loading.classList.add('hidden'); if (!data.entities || data.entities.length === 0) { empty.classList.remove('hidden'); document.getElementById('table-count').textContent = '0'; return; } renderTable(data); container.classList.remove('hidden'); document.getElementById('table-count').textContent = data.count || data.entities.length; } catch (error) { loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>'; }
+            try { const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); const data = await response.json(); currentTableData = data; loading.classList.add('hidden'); if (!data.entities || data.entities.length === 0) { empty.classList.remove('hidden'); document.getElementById('table-count').textContent = '0'; return; } renderTable(data); container.classList.remove('hidden'); document.getElementById('table-count').textContent = data.count || data.entities.length; } catch (error) { loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>'; }
         }
 
         function renderTable(data) {
@@ -761,7 +1698,7 @@ import Layout from '../../layouts/Layout.astro';
             body.innerHTML = data.entities.map(entity => {
                 const pk = encodeURIComponent(entity.partitionKey || '');
                 const rk = encodeURIComponent(entity.rowKey || '');
-                return `<tr>${columns.map(col => { let value = entity[col]; if (value === undefined || value === null) value = ''; if (typeof value === 'object') value = JSON.stringify(value); const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; let style = ''; if (col === 'status') { if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; } return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; }).join('')}<td><button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" style="width:28px;height:28px;" title="Dzēst">🗑️</button></td></tr>`;
+                return `<tr>${columns.map(col => { let value = entity[col]; if (value === undefined || value === null) value = ''; if (typeof value === 'object') value = JSON.stringify(value); const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; let style = ''; if (col === 'status') { if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; } return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; }).join('')}<td><button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" title="Dzēst"><i class="ph ph-trash"></i></button></td></tr>`;
             }).join('');
         }
 
@@ -792,16 +1729,18 @@ import Layout from '../../layouts/Layout.astro';
         async function loadMonitoring() {
             const loading = document.getElementById('monitoring-loading');
             const container = document.getElementById('endpoints-container');
+            const statusIndicator = document.getElementById('status-indicator');
+            statusIndicator.innerHTML = '<i class="ph ph-circle-notch spinning"></i>';
+            statusIndicator.className = 'status-badge';
             loading.classList.remove('hidden'); container.classList.add('hidden');
             try {
                 const response = await fetch(API_BASE + '/dashboard/monitoring');
                 const data = await response.json();
                 const statusText = document.getElementById('status-text');
-                const statusIndicator = document.getElementById('status-indicator');
-                const statusConfig = { healthy: { text: 'Viss darbojas', emoji: '✅', cssClass: 'healthy' }, degraded: { text: 'Daļēji degradēts', emoji: '⚠️', cssClass: 'degraded' }, unhealthy: { text: 'Problēmas!', emoji: '❌', cssClass: 'unhealthy' } };
+                const statusConfig = { healthy: { text: 'Viss darbojas', icon: 'ph-check-circle', cssClass: 'healthy' }, degraded: { text: 'Daļēji degradēts', icon: 'ph-warning', cssClass: 'degraded' }, unhealthy: { text: 'Problēmas!', icon: 'ph-x-circle', cssClass: 'unhealthy' } };
                 const config = statusConfig[data.overallStatus] || statusConfig.unhealthy;
                 statusText.textContent = config.text;
-                statusIndicator.textContent = config.emoji;
+                statusIndicator.innerHTML = `<i class="ph ${config.icon}"></i>`;
                 statusIndicator.className = 'status-badge ' + config.cssClass;
                 document.getElementById('stat-total').textContent = data.summary.total;
                 document.getElementById('stat-healthy').textContent = data.summary.healthy;
@@ -809,16 +1748,16 @@ import Layout from '../../layouts/Layout.astro';
                 document.getElementById('stat-unhealthy').textContent = data.summary.unhealthy;
                 document.getElementById('last-check').textContent = `${new Date(data.checkedAt).toLocaleTimeString('lv-LV')} (${data.totalCheckTime}ms)`;
                 const endpointsList = document.getElementById('endpoints-list');
-                const statusIcons = { healthy: '✅', degraded: '⚠️', unhealthy: '❌' };
-                endpointsList.innerHTML = data.endpoints.map(ep => `<div class="endpoint-card ${ep.status === 'unhealthy' ? 'unhealthy' : ''}"><div class="endpoint-info"><span class="endpoint-icon">${statusIcons[ep.status]}</span><div><div class="endpoint-name">${ep.name}</div><div class="endpoint-path"><code>${ep.method}</code> <code>${ep.path}</code>${ep.critical ? '<span class="endpoint-critical"> • Kritisks</span>' : ''}</div></div></div><div class="endpoint-status"><span class="endpoint-code ${ep.status}">${ep.httpStatus > 0 ? ep.httpStatus : 'Kļūda'}</span><div class="endpoint-time">${ep.responseTime}ms</div></div></div>`).join('');
+                const statusIcons = { healthy: 'ph-check-circle', degraded: 'ph-warning', unhealthy: 'ph-x-circle' };
+                endpointsList.innerHTML = data.endpoints.map(ep => `<div class="endpoint-card ${ep.status === 'unhealthy' ? 'unhealthy' : ''}"><div class="endpoint-info"><i class="ph ${statusIcons[ep.status]} endpoint-icon ${ep.status}"></i><div><div class="endpoint-name">${ep.name}</div><div class="endpoint-path"><code>${ep.method}</code> <code>${ep.path}</code>${ep.critical ? '<span class="endpoint-critical"> • Kritisks</span>' : ''}</div></div></div><div class="endpoint-status"><span class="endpoint-code ${ep.status}">${ep.httpStatus > 0 ? ep.httpStatus : 'Kļūda'}</span><div class="endpoint-time">${ep.responseTime}ms</div></div></div>`).join('');
                 document.getElementById('environment-info').innerHTML = `<div><strong>Function App:</strong> ${data.environment.functionApp}</div><div><strong>Node.js:</strong> ${data.environment.nodeVersion}</div><div><strong>Vidējais atbildes laiks:</strong> ${data.avgResponseTime}ms</div>`;
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
             } catch (error) {
-                loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>';
+                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>';
                 document.getElementById('status-text').textContent = 'Kļūda!';
-                document.getElementById('status-indicator').textContent = '❌';
-                document.getElementById('status-indicator').className = 'status-badge unhealthy';
+                statusIndicator.innerHTML = '<i class="ph ph-x-circle"></i>';
+                statusIndicator.className = 'status-badge unhealthy';
             }
         }
 
