@@ -3,373 +3,295 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
-    <div class="min-h-screen bg-gray-50">
+    <div class="admin-wrapper">
         <!-- Header -->
-        <header class="bg-white shadow-sm border-b">
-            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <h1 class="text-xl font-semibold text-gray-800">🌿 Sofija Nutrition Admin</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span id="user-info" class="text-sm text-gray-600"></span>
-                    <a href="/.auth/logout" class="text-sm text-red-600 hover:text-red-800">Iziet</a>
+        <header class="admin-header">
+            <div class="admin-header-inner">
+                <a href="/" class="admin-logo">
+                    <img src="/assets/img/logo.svg" alt="SI Logo" class="admin-logo-img">
+                    <div class="admin-logo-text">
+                        <span class="admin-logo-name">Sofija Nutrition</span>
+                        <span class="admin-logo-sub">Administrācija</span>
+                    </div>
+                </a>
+                <div class="admin-user">
+                    <span id="user-info" class="admin-user-name"></span>
+                    <a href="/.auth/logout" class="admin-logout">Iziet</a>
                 </div>
             </div>
         </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="bg-white border-b">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex gap-6">
-                    <button class="tab-btn active py-4 px-2 border-b-2 border-primary text-primary font-medium" data-tab="bookings">
-                        📅 Ieraksti
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="availability">
-                        🕐 Pieejamība
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="settings">
-                        ⚙️ Iestatījumi
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="data">
-                        🗄️ Dati
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="monitoring">
-                        📊 Monitoring
-                    </button>
-                </div>
+        <!-- Mobile Tab Selector -->
+        <div class="mobile-tab-select">
+            <select id="mobile-tab-selector" class="mobile-tab-dropdown">
+                <option value="bookings">📅 Ieraksti</option>
+                <option value="availability">🕐 Pieejamība</option>
+                <option value="settings">⚙️ Iestatījumi</option>
+                <option value="data">🗄️ Dati</option>
+                <option value="monitoring">📊 Monitoring</option>
+            </select>
+        </div>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="admin-nav">
+            <div class="admin-nav-inner">
+                <button class="admin-tab active" data-tab="bookings">
+                    <span class="admin-tab-icon">📅</span>
+                    <span class="admin-tab-text">Ieraksti</span>
+                </button>
+                <button class="admin-tab" data-tab="availability">
+                    <span class="admin-tab-icon">🕐</span>
+                    <span class="admin-tab-text">Pieejamība</span>
+                </button>
+                <button class="admin-tab" data-tab="settings">
+                    <span class="admin-tab-icon">⚙️</span>
+                    <span class="admin-tab-text">Iestatījumi</span>
+                </button>
+                <button class="admin-tab" data-tab="data">
+                    <span class="admin-tab-icon">🗄️</span>
+                    <span class="admin-tab-text">Dati</span>
+                </button>
+                <button class="admin-tab" data-tab="monitoring">
+                    <span class="admin-tab-icon">📊</span>
+                    <span class="admin-tab-text">Monitoring</span>
+                </button>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 py-6">
+        <main class="admin-main">
             <!-- Bookings Tab -->
-            <div id="tab-bookings" class="tab-content">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <h2 class="text-lg font-semibold">Klientu ieraksti</h2>
-                    <div class="flex flex-wrap gap-2 items-center">
-                        <button id="prev-month" class="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
-                            ← Iepriekšējais
-                        </button>
-                        <span id="current-month" class="font-medium px-4 py-2 min-w-[180px] text-center"></span>
-                        <button id="next-month" class="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
-                            Nākamais →
-                        </button>
-                        <button id="today-btn" class="px-3 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 ml-2">
-                            Šodien
-                        </button>
-                        <button id="refresh-bookings" class="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
-                            🔄
-                        </button>
+            <div id="tab-bookings" class="admin-content">
+                <div class="content-header">
+                    <h2 class="content-title">Klientu ieraksti</h2>
+                    <div class="calendar-controls">
+                        <button id="prev-month" class="btn-icon" title="Iepriekšējais mēnesis">←</button>
+                        <span id="current-month" class="calendar-month"></span>
+                        <button id="next-month" class="btn-icon" title="Nākamais mēnesis">→</button>
+                        <button id="today-btn" class="btn-primary btn-sm">Šodien</button>
+                        <button id="refresh-bookings" class="btn-icon" title="Atjaunot">🔄</button>
                     </div>
                 </div>
 
                 <!-- Calendar Legend -->
-                <div class="flex flex-wrap gap-4 mb-4 text-sm">
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-emerald-50 border border-emerald-200"></span>
-                        <span>Pieejama diena</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-green-50 border-l-4 border-l-green-400"></span>
-                        <span>Ir ieraksti</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-red-50 border border-red-200"></span>
-                        <span>Brīvdiena</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-red-100 border-l-4 border-l-red-400"></span>
-                        <span>Svētki / Bloķēts</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
-                        <span>Gaida apstiprinājumu</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                        <span>Apstiprināts</span>
+                <div class="calendar-legend">
+                    <div class="legend-item"><span class="legend-box legend-available"></span><span>Pieejama</span></div>
+                    <div class="legend-item"><span class="legend-box legend-booked"></span><span>Ieraksti</span></div>
+                    <div class="legend-item"><span class="legend-box legend-weekend"></span><span>Brīvdiena</span></div>
+                    <div class="legend-item"><span class="legend-box legend-holiday"></span><span>Svētki</span></div>
+                    <div class="legend-item"><span class="legend-dot legend-pending"></span><span>Gaida</span></div>
+                    <div class="legend-item"><span class="legend-dot legend-confirmed"></span><span>Apstiprināts</span></div>
+                </div>
+
+                <div id="bookings-loading" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <span>Ielādē ierakstus...</span>
+                </div>
+
+                <div id="calendar-container" class="calendar-wrapper hidden">
+                    <div class="calendar-card">
+                        <div class="calendar-header">
+                            <div class="calendar-day-name">Pr</div>
+                            <div class="calendar-day-name">Ot</div>
+                            <div class="calendar-day-name">Tr</div>
+                            <div class="calendar-day-name">Ce</div>
+                            <div class="calendar-day-name">Pk</div>
+                            <div class="calendar-day-name weekend">Se</div>
+                            <div class="calendar-day-name weekend">Sv</div>
+                        </div>
+                        <div id="calendar-grid" class="calendar-grid"></div>
                     </div>
                 </div>
 
-                <div id="bookings-loading" class="text-center py-12 text-gray-500">
-                    Ielādē ierakstus...
-                </div>
-
-                <!-- Calendar Grid -->
-                <div id="calendar-container" class="hidden">
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <!-- Calendar Header - Days of week -->
-                        <div class="grid grid-cols-7 bg-gray-50 border-b">
-                            <div class="p-2 text-center text-sm font-medium text-gray-600">Pr</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600">Ot</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600">Tr</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600">Ce</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600">Pk</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600 text-red-500">Se</div>
-                            <div class="p-2 text-center text-sm font-medium text-gray-600 text-red-500">Sv</div>
+                <div id="day-details" class="day-details-panel hidden">
+                    <div class="day-details-card">
+                        <div class="day-details-header">
+                            <h3 id="day-details-title"></h3>
+                            <button id="close-day-details" class="btn-close">✕</button>
                         </div>
-                        <!-- Calendar Body -->
-                        <div id="calendar-grid" class="grid grid-cols-7">
-                            <!-- Calendar days will be inserted here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Selected Day Details -->
-                <div id="day-details" class="hidden mt-6">
-                    <div class="bg-white rounded-lg shadow p-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 id="day-details-title" class="font-semibold text-lg"></h3>
-                            <button id="close-day-details" class="text-gray-400 hover:text-gray-600">✕</button>
-                        </div>
-                        <div id="day-bookings-list" class="space-y-3">
-                            <!-- Day's bookings will be listed here -->
-                        </div>
+                        <div id="day-bookings-list" class="bookings-list"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Availability Tab -->
-            <div id="tab-availability" class="tab-content hidden">
-                <div class="mb-6">
-                    <h2 class="text-lg font-semibold mb-4">Darba laiki</h2>
-                    <p class="text-sm text-gray-600 mb-4">Iestatiet pieejamos laikus katrai nedēļas dienai</p>
-                </div>
+            <div id="tab-availability" class="admin-content hidden">
+                <div class="content-header"><h2 class="content-title">Darba laiki</h2></div>
+                <p class="content-subtitle">Iestatiet pieejamos laikus katrai nedēļas dienai</p>
 
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div id="availability-form" class="space-y-4">
-                        <!-- Days will be generated here -->
-                    </div>
-                    
-                    <div class="mt-6 pt-4 border-t">
-                        <button id="save-availability" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                            💾 Saglabāt
-                        </button>
+                <div class="card">
+                    <div id="availability-form" class="availability-form"></div>
+                    <div class="card-footer">
+                        <button id="save-availability" class="btn-primary">💾 Saglabāt</button>
                     </div>
                 </div>
 
-                <div class="mt-8">
-                    <h2 class="text-lg font-semibold mb-4">Bloķētie datumi</h2>
-                    <p class="text-sm text-gray-600 mb-4">Pievienojiet datumus, kad nepieņemat klientus (atvaļinājums, svētki u.c.)</p>
-                    
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex gap-4 mb-4">
-                            <input type="date" id="block-date" class="px-3 py-2 border rounded-lg">
-                            <input type="text" id="block-reason" placeholder="Iemesls (piem. Atvaļinājums)" class="flex-1 px-3 py-2 border rounded-lg">
-                            <button id="add-blocked-date" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
-                                + Pievienot
-                            </button>
-                        </div>
-                        <div id="blocked-dates-list" class="space-y-2">
-                            <!-- Blocked dates will be listed here -->
-                        </div>
+                <div class="section-divider"></div>
+                <div class="content-header"><h2 class="content-title">Bloķētie datumi</h2></div>
+                <p class="content-subtitle">Pievienojiet datumus, kad nepieņemat klientus</p>
+                
+                <div class="card">
+                    <div class="blocked-date-form">
+                        <input type="date" id="block-date" class="input-field">
+                        <input type="text" id="block-reason" placeholder="Iemesls" class="input-field input-flex">
+                        <button id="add-blocked-date" class="btn-danger">+ Pievienot</button>
                     </div>
+                    <div id="blocked-dates-list" class="blocked-list"></div>
                 </div>
 
-                <div class="mt-8">
-                    <h2 class="text-lg font-semibold mb-4">🇱🇻 Latvijas valsts svētki</h2>
-                    <p class="text-sm text-gray-600 mb-4">Šajos datumos automātiski netiek pieņemti ieraksti</p>
-                    
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex gap-4 mb-4">
-                            <select id="holiday-year" class="px-3 py-2 border rounded-lg">
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                            </select>
-                            <button id="refresh-holidays" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
-                                🔄 Atjaunot
-                            </button>
-                        </div>
-                        <div id="holidays-list" class="grid gap-2 md:grid-cols-2">
-                            <!-- Holidays will be listed here -->
-                        </div>
+                <div class="section-divider"></div>
+                <div class="content-header"><h2 class="content-title">🇱🇻 Latvijas valsts svētki</h2></div>
+                <p class="content-subtitle">Šajos datumos automātiski netiek pieņemti ieraksti</p>
+                
+                <div class="card">
+                    <div class="holidays-controls">
+                        <select id="holiday-year" class="input-field">
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                        <button id="refresh-holidays" class="btn-secondary">🔄 Atjaunot</button>
                     </div>
+                    <div id="holidays-list" class="holidays-grid"></div>
                 </div>
             </div>
 
             <!-- Settings Tab -->
-            <div id="tab-settings" class="tab-content hidden">
-                <h2 class="text-lg font-semibold mb-6">Vietnes iestatījumi</h2>
+            <div id="tab-settings" class="admin-content hidden">
+                <div class="content-header"><h2 class="content-title">Vietnes iestatījumi</h2></div>
 
-                <div class="grid gap-6 md:grid-cols-2">
-                    <!-- Prices -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="font-medium mb-4">💰 Cenas</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Pirmreizējā konsultācija (€)</label>
-                                <input type="number" id="price-initial" class="w-full px-3 py-2 border rounded-lg" value="65">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Atkārtota konsultācija (€)</label>
-                                <input type="number" id="price-followup" class="w-full px-3 py-2 border rounded-lg" value="45">
-                            </div>
+                <div class="settings-grid">
+                    <div class="card">
+                        <h3 class="card-title">💰 Cenas</h3>
+                        <div class="form-group">
+                            <label class="form-label">Pirmreizējā konsultācija (€)</label>
+                            <input type="number" id="price-initial" class="input-field" value="65">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Atkārtota konsultācija (€)</label>
+                            <input type="number" id="price-followup" class="input-field" value="45">
                         </div>
                     </div>
 
-                    <!-- Contact Info -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="font-medium mb-4">📞 Kontaktinformācija</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">E-pasts</label>
-                                <input type="email" id="contact-email" class="w-full px-3 py-2 border rounded-lg" value="sofija@nutrition.lv">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Telefons</label>
-                                <input type="tel" id="contact-phone" class="w-full px-3 py-2 border rounded-lg" value="+371 20000000">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Adrese</label>
-                                <input type="text" id="contact-address" class="w-full px-3 py-2 border rounded-lg" value="Rīga, Latvija">
-                            </div>
+                    <div class="card">
+                        <h3 class="card-title">📞 Kontaktinformācija</h3>
+                        <div class="form-group">
+                            <label class="form-label">E-pasts</label>
+                            <input type="email" id="contact-email" class="input-field" value="sofija@nutrition.lv">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefons</label>
+                            <input type="tel" id="contact-phone" class="input-field" value="+371 20000000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Adrese</label>
+                            <input type="text" id="contact-address" class="input-field" value="Rīga, Latvija">
                         </div>
                     </div>
 
-                    <!-- Consultation Duration -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="font-medium mb-4">⏱️ Konsultāciju ilgums</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Pirmreizējā (minūtes)</label>
-                                <input type="number" id="duration-initial" class="w-full px-3 py-2 border rounded-lg" value="60">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Atkārtota (minūtes)</label>
-                                <input type="number" id="duration-followup" class="w-full px-3 py-2 border rounded-lg" value="30">
-                            </div>
+                    <div class="card">
+                        <h3 class="card-title">⏱️ Konsultāciju ilgums</h3>
+                        <div class="form-group">
+                            <label class="form-label">Pirmreizējā (minūtes)</label>
+                            <input type="number" id="duration-initial" class="input-field" value="60">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Atkārtota (minūtes)</label>
+                            <input type="number" id="duration-followup" class="input-field" value="30">
                         </div>
                     </div>
 
-                    <!-- Payment Info -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="font-medium mb-4">🏦 Maksājumu informācija</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Bankas nosaukums</label>
-                                <input type="text" id="bank-name" class="w-full px-3 py-2 border rounded-lg" value="Swedbank">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">IBAN</label>
-                                <input type="text" id="bank-iban" class="w-full px-3 py-2 border rounded-lg" value="LV00HABA0000000000000">
-                            </div>
+                    <div class="card">
+                        <h3 class="card-title">🏦 Maksājumu informācija</h3>
+                        <div class="form-group">
+                            <label class="form-label">Bankas nosaukums</label>
+                            <input type="text" id="bank-name" class="input-field" value="Swedbank">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">IBAN</label>
+                            <input type="text" id="bank-iban" class="input-field" value="LV00HABA0000000000000">
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <button id="save-settings" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                        💾 Saglabāt iestatījumus
-                    </button>
+                <div class="settings-actions">
+                    <button id="save-settings" class="btn-primary">💾 Saglabāt iestatījumus</button>
                 </div>
             </div>
 
-            <!-- Data Tab - Azure Table Storage Viewer -->
-            <div id="tab-data" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-semibold">🗄️ Azure Table Storage</h2>
-                    <div class="flex gap-2">
-                        <select id="table-select" class="px-3 py-2 border rounded-lg text-sm">
+            <!-- Data Tab -->
+            <div id="tab-data" class="admin-content hidden">
+                <div class="content-header">
+                    <h2 class="content-title">🗄️ Azure Table Storage</h2>
+                    <div class="data-controls">
+                        <select id="table-select" class="input-field">
                             <option value="bookings">bookings</option>
                             <option value="adminSettings">adminSettings</option>
                         </select>
-                        <button id="refresh-table" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
-                            🔄 Atjaunot
-                        </button>
-                        <button id="export-csv" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200">
-                            📥 CSV
-                        </button>
+                        <button id="refresh-table" class="btn-secondary">🔄</button>
+                        <button id="export-csv" class="btn-info">📥 CSV</button>
                     </div>
                 </div>
 
-                <div id="table-loading" class="text-center py-12 text-gray-500">
-                    Ielādē datus...
+                <div id="table-loading" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <span>Ielādē datus...</span>
                 </div>
 
                 <div id="table-container" class="hidden">
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
-                                <thead id="table-header" class="bg-gray-50 text-left">
-                                    <!-- Headers will be inserted here -->
-                                </thead>
-                                <tbody id="table-body" class="divide-y">
-                                    <!-- Rows will be inserted here -->
-                                </tbody>
+                    <div class="card table-card">
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead id="table-header"></thead>
+                                <tbody id="table-body"></tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="mt-4 text-sm text-gray-500">
-                        <span id="table-count">0</span> ieraksti
-                    </div>
+                    <div class="table-footer"><span id="table-count">0</span> ieraksti</div>
                 </div>
 
-                <div id="table-empty" class="hidden text-center py-12 text-gray-500">
-                    Tabula ir tukša
+                <div id="table-empty" class="hidden empty-state">
+                    <span class="empty-icon">📭</span>
+                    <span>Tabula ir tukša</span>
                 </div>
             </div>
 
-            <!-- Monitoring Tab - Azure Functions Status -->
-            <div id="tab-monitoring" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-semibold">📊 Azure Functions Monitoring</h2>
-                    <div class="flex gap-2 items-center">
-                        <span id="last-check" class="text-sm text-gray-500"></span>
-                        <button id="refresh-monitoring" class="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">
-                            🔄 Pārbaudīt
-                        </button>
+            <!-- Monitoring Tab -->
+            <div id="tab-monitoring" class="admin-content hidden">
+                <div class="content-header">
+                    <h2 class="content-title">📊 Azure Functions Monitoring</h2>
+                    <div class="monitoring-controls">
+                        <span id="last-check" class="last-check-text"></span>
+                        <button id="refresh-monitoring" class="btn-secondary">🔄 Pārbaudīt</button>
                     </div>
                 </div>
 
-                <!-- Overall Status -->
-                <div id="monitoring-status" class="mb-6">
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-lg font-medium">Kopējais statuss</h3>
-                                <p id="status-text" class="text-2xl font-bold mt-2">Pārbauda...</p>
-                            </div>
-                            <div id="status-indicator" class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-4xl">
-                                ⏳
-                            </div>
+                <div id="monitoring-status" class="status-card">
+                    <div class="status-main">
+                        <div class="status-info">
+                            <h3>Kopējais statuss</h3>
+                            <p id="status-text" class="status-value">Pārbauda...</p>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t">
-                            <div class="text-center">
-                                <p class="text-3xl font-bold text-gray-800" id="stat-total">-</p>
-                                <p class="text-sm text-gray-500">Kopā</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-3xl font-bold text-green-600" id="stat-healthy">-</p>
-                                <p class="text-sm text-gray-500">Veselīgi</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-3xl font-bold text-yellow-600" id="stat-degraded">-</p>
-                                <p class="text-sm text-gray-500">Degradēti</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-3xl font-bold text-red-600" id="stat-unhealthy">-</p>
-                                <p class="text-sm text-gray-500">Neveselīgi</p>
-                            </div>
-                        </div>
+                        <div id="status-indicator" class="status-badge">⏳</div>
+                    </div>
+                    <div class="status-stats">
+                        <div class="stat-item"><span class="stat-value" id="stat-total">-</span><span class="stat-label">Kopā</span></div>
+                        <div class="stat-item"><span class="stat-value stat-healthy" id="stat-healthy">-</span><span class="stat-label">Veselīgi</span></div>
+                        <div class="stat-item"><span class="stat-value stat-degraded" id="stat-degraded">-</span><span class="stat-label">Degradēti</span></div>
+                        <div class="stat-item"><span class="stat-value stat-unhealthy" id="stat-unhealthy">-</span><span class="stat-label">Neveselīgi</span></div>
                     </div>
                 </div>
 
-                <!-- Endpoints List -->
-                <div id="monitoring-loading" class="text-center py-12 text-gray-500">
-                    Pārbauda funkciju statusu...
+                <div id="monitoring-loading" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <span>Pārbauda funkciju statusu...</span>
                 </div>
 
                 <div id="endpoints-container" class="hidden">
-                    <h3 class="font-medium mb-4">API Endpoints</h3>
-                    <div id="endpoints-list" class="space-y-3">
-                        <!-- Endpoints will be inserted here -->
-                    </div>
-
-                    <div class="mt-6 bg-gray-50 rounded-lg p-4">
-                        <h4 class="font-medium mb-2">Vide</h4>
-                        <div id="environment-info" class="text-sm text-gray-600 space-y-1">
-                            <!-- Environment info will be inserted here -->
-                        </div>
+                    <h3 class="section-title">API Endpoints</h3>
+                    <div id="endpoints-list" class="endpoints-list"></div>
+                    <div class="environment-card">
+                        <h4>Vide</h4>
+                        <div id="environment-info" class="env-info"></div>
                     </div>
                 </div>
             </div>
@@ -378,180 +300,306 @@ import Layout from '../../layouts/Layout.astro';
 
     <style>
         :root {
-            --color-primary: #d4a574;
+            --color-primary: #1B4332;
+            --color-secondary: #D4A574;
+            --color-accent: #2D6A4F;
+            --color-text: #1A1A1A;
+            --color-text-light: #666666;
+            --color-bg: #FDFBF7;
+            --color-white: #FFFFFF;
+            --color-cream: #F8F6F1;
+            --color-border: #E8E2D8;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --shadow-subtle: 0 2px 20px rgba(0,0,0,0.04);
+            --shadow-medium: 0 8px 40px rgba(0,0,0,0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
         }
-        .bg-primary { background-color: var(--color-primary); }
-        .text-primary { color: var(--color-primary); }
-        .border-primary { border-color: var(--color-primary); }
-        .hover\:bg-primary\/90:hover { background-color: rgba(212, 165, 116, 0.9); }
+        * { box-sizing: border-box; }
+        .admin-wrapper { min-height: 100vh; background: var(--color-bg); font-family: var(--font-sans); color: var(--color-text); }
+        .admin-header { background: var(--color-white); border-bottom: 1px solid var(--color-border); padding: 12px 16px; position: sticky; top: 0; z-index: 100; }
+        .admin-header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .admin-logo-img { height: 32px; width: auto; }
+        .admin-logo-text { display: flex; flex-direction: column; }
+        .admin-logo-name { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--color-primary); line-height: 1.2; }
+        .admin-logo-sub { font-size: 10px; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 1px; }
+        .admin-user { display: flex; align-items: center; gap: 12px; }
+        .admin-user-name { font-size: 13px; color: var(--color-text-light); display: none; }
+        .admin-logout { font-size: 13px; color: #dc2626; text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm); transition: background 0.2s; }
+        .admin-logout:hover { background: #fef2f2; }
+        .mobile-tab-select { display: block; padding: 12px 16px; background: var(--color-white); border-bottom: 1px solid var(--color-border); }
+        .mobile-tab-dropdown { width: 100%; padding: 12px 16px; font-size: 16px; font-family: var(--font-sans); border: 2px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-white); color: var(--color-text); cursor: pointer; }
+        .admin-nav { display: none; background: var(--color-white); border-bottom: 1px solid var(--color-border); }
+        .admin-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 4px; padding: 0 16px; overflow-x: auto; }
+        .admin-tab { display: flex; align-items: center; gap: 6px; padding: 14px 16px; border: none; background: none; font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--color-text-light); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .admin-tab:hover { color: var(--color-primary); background: var(--color-cream); }
+        .admin-tab.active { color: var(--color-primary); border-bottom-color: var(--color-secondary); }
+        .admin-tab-icon { font-size: 16px; }
+        .admin-main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+        .admin-content { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none !important; }
+        .content-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+        .content-title { font-family: var(--font-serif); font-size: 24px; font-weight: 600; color: var(--color-primary); margin: 0; }
+        .content-subtitle { font-size: 14px; color: var(--color-text-light); margin: 0 0 16px 0; }
+        .calendar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .calendar-month { font-weight: 600; font-size: 16px; min-width: 140px; text-align: center; color: var(--color-primary); }
+        .btn-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-white); cursor: pointer; font-size: 16px; transition: all 0.2s; }
+        .btn-icon:hover { background: var(--color-cream); border-color: var(--color-secondary); }
+        .btn-primary { padding: 10px 20px; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); color: white; border: none; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27, 67, 50, 0.3); }
+        .btn-primary.btn-sm { padding: 8px 14px; font-size: 13px; }
+        .btn-secondary { padding: 10px 20px; background: var(--color-cream); color: var(--color-primary); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: var(--color-white); border-color: var(--color-secondary); }
+        .btn-danger { padding: 10px 20px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-danger:hover { background: #fee2e2; }
+        .btn-info { padding: 10px 20px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn-info:hover { background: #dbeafe; }
+        .btn-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: var(--color-cream); border-radius: 50%; cursor: pointer; font-size: 16px; color: var(--color-text-light); transition: all 0.2s; }
+        .btn-close:hover { background: #fee2e2; color: #dc2626; }
+        .card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); padding: 20px; margin-bottom: 16px; }
+        .card-title { font-size: 16px; font-weight: 600; color: var(--color-primary); margin: 0 0 16px 0; }
+        .card-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border); }
+        .input-field { padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 14px; color: var(--color-text); background: var(--color-white); transition: border-color 0.2s; width: 100%; }
+        .input-field:focus { outline: none; border-color: var(--color-secondary); }
+        .input-field.input-flex { flex: 1; min-width: 0; }
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--color-text-light); margin-bottom: 6px; }
+        .calendar-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; font-size: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-box { width: 16px; height: 16px; border-radius: 4px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-available { background: #ecfdf5; border: 1px solid #a7f3d0; }
+        .legend-booked { background: #f0fdf4; border-left: 3px solid #4ade80; }
+        .legend-weekend { background: #fef2f2; border: 1px solid #fecaca; }
+        .legend-holiday { background: #fee2e2; border-left: 3px solid #f87171; }
+        .legend-pending { background: #facc15; }
+        .legend-confirmed { background: #22c55e; }
+        .calendar-wrapper { margin-bottom: 16px; }
+        .calendar-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); overflow: hidden; }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--color-cream); border-bottom: 1px solid var(--color-border); }
+        .calendar-day-name { padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--color-text-light); }
+        .calendar-day-name.weekend { color: #dc2626; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+        .calendar-cell { min-height: 70px; padding: 4px; border-bottom: 1px solid var(--color-border); border-right: 1px solid var(--color-border); cursor: pointer; transition: all 0.15s; font-size: 12px; }
+        .calendar-cell:hover { filter: brightness(0.97); }
+        .calendar-cell.empty { background: var(--color-cream); cursor: default; }
+        .calendar-cell.available { background: #ecfdf5; }
+        .calendar-cell.booked { background: #f0fdf4; border-left: 3px solid #4ade80; }
+        .calendar-cell.weekend { background: #fef2f2; }
+        .calendar-cell.holiday { background: #fee2e2; border-left: 3px solid #f87171; }
+        .calendar-cell .day-number { font-weight: 600; margin-bottom: 2px; }
+        .calendar-cell .day-number.today { background: var(--color-secondary); color: white; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .calendar-cell .holiday-name { font-size: 10px; color: #dc2626; font-weight: 500; line-height: 1.2; }
+        .calendar-cell .day-time { font-size: 10px; color: var(--color-text-light); }
+        .calendar-cell .booking-dots { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+        .calendar-cell .booking-dot { display: flex; align-items: center; gap: 3px; font-size: 10px; }
+        .calendar-cell .booking-dot span { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .calendar-cell .booking-dot.pending span { background: #facc15; }
+        .calendar-cell .booking-dot.confirmed span { background: #22c55e; }
+        .day-details-panel { margin-top: 16px; }
+        .day-details-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-medium); overflow: hidden; }
+        .day-details-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--color-cream); border-bottom: 1px solid var(--color-border); }
+        .day-details-header h3 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--color-primary); margin: 0; }
+        .bookings-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .booking-card { background: var(--color-cream); border-radius: var(--radius-sm); padding: 14px; border-left: 4px solid var(--color-border); }
+        .booking-card.pending { border-left-color: #facc15; }
+        .booking-card.confirmed { border-left-color: #22c55e; }
+        .booking-card.cancelled { border-left-color: #f87171; }
+        .booking-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+        .booking-name { font-weight: 600; color: var(--color-text); }
+        .booking-status { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
+        .booking-status.pending { background: #fef3c7; color: #b45309; }
+        .booking-status.confirmed { background: #dcfce7; color: #15803d; }
+        .booking-status.cancelled { background: #fee2e2; color: #dc2626; }
+        .booking-time { font-size: 20px; font-weight: 700; color: var(--color-primary); }
+        .booking-details { font-size: 13px; color: var(--color-text-light); display: flex; flex-direction: column; gap: 4px; }
+        .booking-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); flex-wrap: wrap; }
+        .booking-actions button { padding: 6px 12px; font-size: 12px; }
+        .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--color-text-light); }
+        .loading-spinner { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-secondary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 60px 20px; color: var(--color-text-light); }
+        .empty-icon { font-size: 48px; }
+        .settings-grid { display: grid; gap: 16px; }
+        .settings-actions { margin-top: 16px; }
+        .availability-form { display: flex; flex-direction: column; gap: 12px; }
+        .availability-day { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--color-cream); border-radius: var(--radius-sm); }
+        .availability-day-header { display: flex; align-items: center; gap: 12px; }
+        .availability-day-name { font-weight: 600; min-width: 100px; }
+        .availability-day-times { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .availability-day-times input[type="time"] { padding: 8px; font-size: 14px; width: auto; }
+        .blocked-date-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .blocked-date-form .input-field { width: auto; }
+        .blocked-list { display: flex; flex-direction: column; gap: 8px; }
+        .blocked-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #fef2f2; border-radius: var(--radius-sm); font-size: 14px; }
+        .holidays-controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .holidays-controls .input-field { width: auto; }
+        .holidays-grid { display: grid; gap: 8px; }
+        .holiday-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #eff6ff; border-radius: var(--radius-sm); font-size: 14px; flex-wrap: wrap; gap: 8px; }
+        .holiday-date { font-weight: 600; color: var(--color-primary); }
+        .table-card { padding: 0; overflow: hidden; }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th { background: var(--color-cream); padding: 12px; text-align: left; font-weight: 600; color: var(--color-primary); white-space: nowrap; border-bottom: 1px solid var(--color-border); }
+        .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+        .data-table tr:hover td { background: var(--color-cream); }
+        .table-footer { padding: 12px 16px; font-size: 13px; color: var(--color-text-light); }
+        .data-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        .data-controls .input-field { width: auto; }
+        .status-card { background: var(--color-white); border-radius: var(--radius); box-shadow: var(--shadow-subtle); padding: 20px; margin-bottom: 20px; }
+        .status-main { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .status-info h3 { font-size: 14px; font-weight: 500; color: var(--color-text-light); margin: 0 0 8px 0; }
+        .status-value { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--color-primary); margin: 0; }
+        .status-badge { width: 60px; height: 60px; border-radius: 50%; background: var(--color-cream); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+        .status-badge.healthy { background: #dcfce7; }
+        .status-badge.degraded { background: #fef3c7; }
+        .status-badge.unhealthy { background: #fee2e2; }
+        .status-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-border); }
+        .stat-item { text-align: center; }
+        .stat-value { display: block; font-size: 28px; font-weight: 700; color: var(--color-text); }
+        .stat-value.stat-healthy { color: #16a34a; }
+        .stat-value.stat-degraded { color: #ca8a04; }
+        .stat-value.stat-unhealthy { color: #dc2626; }
+        .stat-label { font-size: 12px; color: var(--color-text-light); }
+        .monitoring-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .last-check-text { font-size: 12px; color: var(--color-text-light); }
+        .section-title { font-size: 16px; font-weight: 600; color: var(--color-primary); margin: 0 0 12px 0; }
+        .endpoints-list { display: flex; flex-direction: column; gap: 10px; }
+        .endpoint-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .endpoint-card.unhealthy { border-color: #fecaca; background: #fef2f2; }
+        .endpoint-info { display: flex; align-items: center; gap: 10px; }
+        .endpoint-icon { font-size: 20px; }
+        .endpoint-name { font-weight: 600; font-size: 14px; }
+        .endpoint-path { font-size: 12px; color: var(--color-text-light); }
+        .endpoint-path code { background: var(--color-cream); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+        .endpoint-critical { color: #dc2626; font-size: 11px; font-weight: 500; }
+        .endpoint-status { text-align: right; }
+        .endpoint-code { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .endpoint-code.healthy { background: #dcfce7; color: #16a34a; }
+        .endpoint-code.degraded { background: #fef3c7; color: #b45309; }
+        .endpoint-code.unhealthy { background: #fee2e2; color: #dc2626; }
+        .endpoint-time { font-size: 12px; color: var(--color-text-light); margin-top: 4px; }
+        .environment-card { margin-top: 20px; padding: 16px; background: var(--color-cream); border-radius: var(--radius-sm); }
+        .environment-card h4 { font-size: 14px; font-weight: 600; color: var(--color-primary); margin: 0 0 10px 0; }
+        .env-info { font-size: 13px; color: var(--color-text-light); display: flex; flex-direction: column; gap: 4px; }
+        .section-divider { height: 1px; background: var(--color-border); margin: 24px 0; }
+
+        @media (min-width: 768px) {
+            .admin-header { padding: 16px 24px; }
+            .admin-logo-img { height: 36px; }
+            .admin-logo-name { font-size: 20px; }
+            .admin-user-name { display: block; }
+            .mobile-tab-select { display: none; }
+            .admin-nav { display: block; }
+            .admin-main { padding: 24px; }
+            .content-header { flex-direction: row; justify-content: space-between; align-items: center; }
+            .content-title { font-size: 28px; }
+            .calendar-cell { min-height: 90px; padding: 6px; }
+            .settings-grid { grid-template-columns: repeat(2, 1fr); }
+            .holidays-grid { grid-template-columns: repeat(2, 1fr); }
+            .availability-day { flex-direction: row; align-items: center; justify-content: space-between; }
+            .status-badge { width: 80px; height: 80px; font-size: 36px; }
+            .stat-value { font-size: 32px; }
+        }
+
+        @media (min-width: 1024px) {
+            .calendar-cell { min-height: 100px; padding: 8px; }
+        }
     </style>
 
     <script is:inline>
     (function() {
-        // API base URL - use external Azure Functions App
         const API_BASE = 'https://sofija-nutrition-api.azurewebsites.net/api';
-        
-        // Calendar state
         let currentDate = new Date();
         let allBookings = [];
         let holidays = {};
         let schedule = {};
         let blockedDates = new Set();
-        
-        // Day names for schedule lookup
         const dayNamesForSchedule = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        
-        // Latvian month names
-        const monthNames = [
-            'Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs',
-            'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'
-        ];
-        
-        // Get user info
-        fetch('/.auth/me')
-            .then(r => r.json())
-            .then(data => {
-                if (data.clientPrincipal) {
-                    const user = data.clientPrincipal;
-                    document.getElementById('user-info').textContent = 
-                        `${user.userDetails || user.userId} (${user.identityProvider})`;
-                }
-            })
-            .catch(() => {});
+        const monthNames = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
 
-        // Tab switching
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
+        fetch('/.auth/me').then(r => r.json()).then(data => {
+            if (data.clientPrincipal) {
+                document.getElementById('user-info').textContent = data.clientPrincipal.userDetails || data.clientPrincipal.userId;
+            }
+        }).catch(() => {});
 
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.dataset.tab;
-                
-                tabBtns.forEach(b => {
-                    b.classList.remove('active', 'border-primary', 'text-primary');
-                    b.classList.add('border-transparent', 'text-gray-500');
-                });
-                btn.classList.add('active', 'border-primary', 'text-primary');
-                btn.classList.remove('border-transparent', 'text-gray-500');
+        const tabBtns = document.querySelectorAll('.admin-tab');
+        const tabContents = document.querySelectorAll('.admin-content');
+        const mobileSelect = document.getElementById('mobile-tab-selector');
 
-                tabContents.forEach(content => {
-                    content.classList.add('hidden');
-                });
-                document.getElementById('tab-' + tabId).classList.remove('hidden');
+        function switchTab(tabId) {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`.admin-tab[data-tab="${tabId}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            tabContents.forEach(c => c.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            mobileSelect.value = tabId;
+            if (tabId === 'bookings') loadCalendar();
+            if (tabId === 'availability') loadAvailability();
+            if (tabId === 'settings') loadSettings();
+            if (tabId === 'data') loadTableData();
+            if (tabId === 'monitoring') loadMonitoring();
+        }
 
-                // Load data for tab
-                if (tabId === 'bookings') loadCalendar();
-                if (tabId === 'availability') loadAvailability();
-                if (tabId === 'settings') loadSettings();
-                if (tabId === 'data') loadTableData();
-                if (tabId === 'monitoring') loadMonitoring();
-            });
-        });
+        tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+        mobileSelect.addEventListener('change', e => switchTab(e.target.value));
 
-        // Calendar navigation
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            loadCalendar();
-        });
-        
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            loadCalendar();
-        });
-        
-        document.getElementById('today-btn').addEventListener('click', () => {
-            currentDate = new Date();
-            loadCalendar();
-        });
-        
+        document.getElementById('prev-month').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); loadCalendar(); });
+        document.getElementById('next-month').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); loadCalendar(); });
+        document.getElementById('today-btn').addEventListener('click', () => { currentDate = new Date(); loadCalendar(); });
         document.getElementById('refresh-bookings').addEventListener('click', loadCalendar);
-        
-        document.getElementById('close-day-details').addEventListener('click', () => {
-            document.getElementById('day-details').classList.add('hidden');
-        });
+        document.getElementById('close-day-details').addEventListener('click', () => document.getElementById('day-details').classList.add('hidden'));
 
-        // Load calendar with bookings and holidays
         async function loadCalendar() {
             const loading = document.getElementById('bookings-loading');
             const container = document.getElementById('calendar-container');
-            
             loading.classList.remove('hidden');
             container.classList.add('hidden');
             document.getElementById('day-details').classList.add('hidden');
-            
-            // Update month display
-            document.getElementById('current-month').textContent = 
-                `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            document.getElementById('current-month').textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
             try {
-                // Fetch bookings, holidays, and schedule in parallel
                 const year = currentDate.getFullYear();
                 const [bookingsRes, holidaysRes, availabilityRes] = await Promise.all([
                     fetch(API_BASE + '/dashboard/bookings'),
                     fetch(API_BASE + '/holidays?year=' + year),
                     fetch(API_BASE + '/dashboard/availability')
                 ]);
-                
                 const bookingsData = await bookingsRes.json();
                 const holidaysData = await holidaysRes.json();
                 const availabilityData = await availabilityRes.json();
-                
                 allBookings = bookingsData.bookings || [];
-                
-                // Convert holidays to a map for easy lookup
                 holidays = {};
-                if (holidaysData.holidays) {
-                    holidaysData.holidays.forEach(h => {
-                        holidays[h.date] = h.name;
-                    });
-                }
-                
-                // Store schedule and blocked dates
+                if (holidaysData.holidays) holidaysData.holidays.forEach(h => { holidays[h.date] = h.name; });
                 schedule = availabilityData.schedule || {};
                 blockedDates = new Set((availabilityData.blockedDates || []).map(d => d.date));
-                
                 renderCalendar();
-                
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
             } catch (error) {
-                loading.textContent = 'Kļūda ielādējot datus: ' + error.message;
+                loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>';
             }
         }
-        
+
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            
-            // Get first day of month and number of days
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const daysInMonth = lastDay.getDate();
-            
-            // Get starting day (0 = Sunday, convert to Monday = 0)
             let startDay = firstDay.getDay() - 1;
             if (startDay < 0) startDay = 6;
-            
-            // Group bookings by date
             const bookingsByDate = {};
-            allBookings.forEach(b => {
-                if (!bookingsByDate[b.date]) bookingsByDate[b.date] = [];
-                bookingsByDate[b.date].push(b);
-            });
-            
-            // Today's date for highlighting
+            allBookings.forEach(b => { if (!bookingsByDate[b.date]) bookingsByDate[b.date] = []; bookingsByDate[b.date].push(b); });
             const today = new Date();
             const todayStr = today.toISOString().split('T')[0];
-            
             let html = '';
-            
-            // Empty cells for days before month starts
-            for (let i = 0; i < startDay; i++) {
-                html += '<div class="min-h-[100px] bg-gray-50 border-b border-r"></div>';
-            }
-            
-            // Days of the month
+            for (let i = 0; i < startDay; i++) html += '<div class="calendar-cell empty"></div>';
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const isToday = dateStr === todayStr;
@@ -560,414 +608,140 @@ import Layout from '../../layouts/Layout.astro';
                 const dayOfWeek = (startDay + day - 1) % 7;
                 const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
                 const isBlocked = blockedDates.has(dateStr);
-                
-                // Check if this day is a working day according to schedule
                 const checkDate = new Date(year, month, day);
                 const scheduleDayName = dayNamesForSchedule[checkDate.getDay()];
                 const daySchedule = schedule[scheduleDayName];
                 const isWorkingDay = daySchedule && daySchedule.enabled;
-                
-                // Count by status
                 const pending = dayBookings.filter(b => b.status === 'pending').length;
                 const confirmed = dayBookings.filter(b => b.status === 'confirmed').length;
-                const cancelled = dayBookings.filter(b => b.status === 'cancelled').length;
-                
-                // Determine background color
-                // Red = non-working (weekends, holidays, blocked, disabled in schedule)
-                // Green = working day with appointments
-                // Light green = working day available
-                let bgClass = 'bg-white';
-                let textClass = '';
-                let borderClass = '';
-                
-                if (isHoliday || isBlocked) {
-                    bgClass = 'bg-red-100';
-                    textClass = 'text-red-700';
-                    borderClass = 'border-l-4 border-l-red-400';
-                } else if (isWeekend || !isWorkingDay) {
-                    bgClass = 'bg-red-50';
-                    textClass = 'text-red-400';
-                } else if (confirmed > 0 || pending > 0) {
-                    bgClass = 'bg-green-50';
-                    borderClass = 'border-l-4 border-l-green-400';
-                } else {
-                    bgClass = 'bg-emerald-50';
-                }
-                
-                html += `
-                    <div class="min-h-[100px] ${bgClass} ${borderClass} border-b border-r p-1 cursor-pointer hover:brightness-95 transition-all"
-                         onclick="showDayDetails('${dateStr}')">
-                        <div class="flex justify-between items-start">
-                            <span class="text-sm font-medium ${isToday ? 'bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center' : ''} ${textClass}">
-                                ${day}
-                            </span>
-                            ${isHoliday ? '<span class="text-xs">🇱🇻</span>' : ''}
-                            ${isBlocked && !isHoliday ? '<span class="text-xs">🚫</span>' : ''}
-                        </div>
-                        ${isHoliday ? `<div class="text-xs text-red-600 mt-1 leading-tight font-medium">${isHoliday}</div>` : ''}
-                        ${isBlocked && !isHoliday ? `<div class="text-xs text-red-500 mt-1">Bloķēts</div>` : ''}
-                        ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `
-                            <div class="text-xs text-gray-400 mt-1">${daySchedule.start}-${daySchedule.end}</div>
-                        ` : ''}
-                        ${dayBookings.length > 0 ? `
-                            <div class="mt-1 space-y-1">
-                                ${pending > 0 ? `<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span><span class="text-xs">${pending} gaida</span></div>` : ''}
-                                ${confirmed > 0 ? `<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-xs">${confirmed} apst.</span></div>` : ''}
-                                ${cancelled > 0 ? `<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-400"></span><span class="text-xs">${cancelled} atc.</span></div>` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
+                let cellClass = 'calendar-cell';
+                if (isHoliday || isBlocked) cellClass += ' holiday';
+                else if (isWeekend || !isWorkingDay) cellClass += ' weekend';
+                else if (confirmed > 0 || pending > 0) cellClass += ' booked';
+                else cellClass += ' available';
+                html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')">
+                    <div class="day-number ${isToday ? 'today' : ''}">${day}</div>
+                    ${isHoliday ? `<div class="holiday-name">${isHoliday}</div>` : ''}
+                    ${isBlocked && !isHoliday ? '<div class="holiday-name">Bloķēts</div>' : ''}
+                    ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time">${daySchedule.start}-${daySchedule.end}</div>` : ''}
+                    ${dayBookings.length > 0 ? `<div class="booking-dots">${pending > 0 ? `<div class="booking-dot pending"><span></span>${pending}</div>` : ''}${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}</div>` : ''}
+                </div>`;
             }
-            
-            // Empty cells to complete the grid
             const totalCells = startDay + daysInMonth;
             const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-            for (let i = 0; i < remainingCells; i++) {
-                html += '<div class="min-h-[100px] bg-gray-50 border-b border-r"></div>';
-            }
-            
+            for (let i = 0; i < remainingCells; i++) html += '<div class="calendar-cell empty"></div>';
             grid.innerHTML = html;
         }
-        
+
         window.showDayDetails = function(dateStr) {
             const details = document.getElementById('day-details');
             const title = document.getElementById('day-details-title');
             const list = document.getElementById('day-bookings-list');
-            
-            // Format date for display
             const date = new Date(dateStr);
             const dayNames = ['Svētdiena', 'Pirmdiena', 'Otrdiena', 'Trešdiena', 'Ceturtdiena', 'Piektdiena', 'Sestdiena'];
             title.textContent = `${dayNames[date.getDay()]}, ${dateStr}`;
-            
-            // Check if holiday
             const holidayName = holidays[dateStr];
-            
-            // Filter bookings for this day
             const dayBookings = allBookings.filter(b => b.date === dateStr);
-            
             let html = '';
-            
-            if (holidayName) {
-                html += `<div class="p-3 bg-blue-50 rounded-lg border border-blue-200 mb-3">
-                    <span class="text-blue-700">🇱🇻 <strong>Valsts svētki:</strong> ${holidayName}</span>
-                </div>`;
-            }
-            
-            if (dayBookings.length === 0) {
-                html += '<p class="text-gray-500 text-center py-4">Nav ierakstu šajā dienā</p>';
-            } else {
+            if (holidayName) html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;"><span>🇱🇻 <strong>Valsts svētki:</strong> ${holidayName}</span></div>`;
+            if (dayBookings.length === 0) html += '<div class="loading-state"><span>Nav ierakstu šajā dienā</span></div>';
+            else {
                 dayBookings.sort((a, b) => a.time.localeCompare(b.time));
-                
-                html += dayBookings.map(b => `
-                    <div class="bg-gray-50 rounded-lg p-3 border-l-4 ${getStatusBorderClass(b.status)}">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="font-medium">${b.name}</span>
-                                <span class="text-xs px-2 py-0.5 rounded ml-2 ${getStatusClass(b.status)}">${getStatusText(b.status)}</span>
-                            </div>
-                            <span class="text-lg font-semibold">${b.time}</span>
-                        </div>
-                        <div class="text-sm text-gray-600 space-y-1">
-                            <div>📋 ${b.service === 'initial' ? 'Pirmreizējā konsultācija' : 'Atkārtota konsultācija'}</div>
-                            <div>${b.consultationFormat === 'online' ? '💻 Online' : '🏥 Klātienē'}</div>
-                            <div>✉️ ${b.email}</div>
-                            ${b.phone ? `<div>📞 ${b.phone}</div>` : ''}
-                            ${b.notes ? `<div>📝 ${b.notes}</div>` : ''}
-                            <div>💰 €${b.price}</div>
-                        </div>
-                        <div class="flex gap-2 mt-3 pt-3 border-t">
-                            ${b.status === 'pending' ? `
-                                <button onclick="confirmBooking('${b.id}')" class="px-3 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200">
-                                    ✓ Apstiprināt
-                                </button>
-                            ` : ''}
-                            ${b.status !== 'cancelled' ? `
-                                <button onclick="cancelBooking('${b.id}')" class="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200">
-                                    ✕ Atcelt
-                                </button>
-                            ` : ''}
-                        </div>
-                    </div>
-                `).join('');
+                html += dayBookings.map(b => `<div class="booking-card ${b.status}">
+                    <div class="booking-header"><div><span class="booking-name">${b.name}</span><span class="booking-status ${b.status}">${getStatusText(b.status)}</span></div><span class="booking-time">${b.time}</span></div>
+                    <div class="booking-details"><div>📋 ${b.service === 'initial' ? 'Pirmreizējā konsultācija' : 'Atkārtota konsultācija'}</div><div>${b.consultationFormat === 'online' ? '💻 Online' : '🏥 Klātienē'}</div><div>✉️ ${b.email}</div>${b.phone ? `<div>📞 ${b.phone}</div>` : ''}${b.notes ? `<div>📝 ${b.notes}</div>` : ''}<div>💰 €${b.price}</div></div>
+                    <div class="booking-actions">${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm">✓ Apstiprināt</button>` : ''}${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger">✕ Atcelt</button>` : ''}</div>
+                </div>`).join('');
             }
-            
             list.innerHTML = html;
             details.classList.remove('hidden');
             details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         };
 
-        function getStatusClass(status) {
-            switch(status) {
-                case 'confirmed': return 'bg-green-100 text-green-700';
-                case 'pending': return 'bg-yellow-100 text-yellow-700';
-                case 'cancelled': return 'bg-red-100 text-red-700';
-                default: return 'bg-gray-100 text-gray-700';
-            }
-        }
-        
-        function getStatusBorderClass(status) {
-            switch(status) {
-                case 'confirmed': return 'border-green-500';
-                case 'pending': return 'border-yellow-400';
-                case 'cancelled': return 'border-red-400';
-                default: return 'border-gray-300';
-            }
-        }
-
         function getStatusText(status) {
-            switch(status) {
-                case 'confirmed': return 'Apstiprināts';
-                case 'pending': return 'Gaida';
-                case 'cancelled': return 'Atcelts';
-                default: return status;
-            }
+            switch(status) { case 'confirmed': return 'Apstiprināts'; case 'pending': return 'Gaida'; case 'cancelled': return 'Atcelts'; default: return status; }
         }
 
         window.confirmBooking = async function(id) {
             if (!confirm('Apstiprināt šo ierakstu?')) return;
-            try {
-                await fetch(API_BASE + '/dashboard/bookings/' + id, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'confirmed' })
-                });
-                loadCalendar();
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) }); loadCalendar(); } catch (e) { alert('Kļūda: ' + e.message); }
         };
 
         window.cancelBooking = async function(id) {
             if (!confirm('Atcelt šo ierakstu?')) return;
-            try {
-                await fetch(API_BASE + '/dashboard/bookings/' + id, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'cancelled' })
-                });
-                loadCalendar();
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'cancelled' }) }); loadCalendar(); } catch (e) { alert('Kļūda: ' + e.message); }
         };
 
-        // Availability
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        const dayNames = {
-            monday: 'Pirmdiena',
-            tuesday: 'Otrdiena', 
-            wednesday: 'Trešdiena',
-            thursday: 'Ceturtdiena',
-            friday: 'Piektdiena',
-            saturday: 'Sestdiena',
-            sunday: 'Svētdiena'
-        };
+        const dayNames = { monday: 'Pirmdiena', tuesday: 'Otrdiena', wednesday: 'Trešdiena', thursday: 'Ceturtdiena', friday: 'Piektdiena', saturday: 'Sestdiena', sunday: 'Svētdiena' };
 
         function loadAvailability() {
             const form = document.getElementById('availability-form');
-            
-            form.innerHTML = days.map(day => `
-                <div class="flex items-center gap-4 py-3 border-b last:border-0">
-                    <div class="w-32 font-medium">${dayNames[day]}</div>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" id="day-${day}-enabled" class="w-4 h-4" checked>
-                        <span class="text-sm text-gray-600">Aktīva</span>
-                    </label>
-                    <div class="flex items-center gap-2">
-                        <input type="time" id="day-${day}-start" value="09:00" class="px-2 py-1 border rounded">
-                        <span>-</span>
-                        <input type="time" id="day-${day}-end" value="17:00" class="px-2 py-1 border rounded">
-                    </div>
-                </div>
-            `).join('');
-
-            // Disable weekends by default
+            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:18px;height:18px;"><span style="font-size:13px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="time" id="day-${day}-start" value="09:00" class="input-field"><span>—</span><input type="time" id="day-${day}-end" value="17:00" class="input-field"></div></div>`).join('');
             document.getElementById('day-saturday-enabled').checked = false;
             document.getElementById('day-sunday-enabled').checked = false;
-
-            // Try to load saved availability
-            fetch(API_BASE + '/dashboard/availability')
-                .then(r => r.json())
-                .then(data => {
-                    if (data.schedule) {
-                        Object.entries(data.schedule).forEach(([day, config]) => {
-                            const checkbox = document.getElementById(`day-${day}-enabled`);
-                            const startInput = document.getElementById(`day-${day}-start`);
-                            const endInput = document.getElementById(`day-${day}-end`);
-                            if (checkbox) checkbox.checked = config.enabled;
-                            if (startInput) startInput.value = config.start || '09:00';
-                            if (endInput) endInput.value = config.end || '17:00';
-                        });
-                    }
-                    if (data.blockedDates) {
-                        renderBlockedDates(data.blockedDates);
-                    }
-                })
-                .catch(() => {});
-            
-            // Load holidays
+            fetch(API_BASE + '/dashboard/availability').then(r => r.json()).then(data => {
+                if (data.schedule) Object.entries(data.schedule).forEach(([day, config]) => {
+                    const checkbox = document.getElementById(`day-${day}-enabled`);
+                    const startInput = document.getElementById(`day-${day}-start`);
+                    const endInput = document.getElementById(`day-${day}-end`);
+                    if (checkbox) checkbox.checked = config.enabled;
+                    if (startInput) startInput.value = config.start || '09:00';
+                    if (endInput) endInput.value = config.end || '17:00';
+                });
+                if (data.blockedDates) renderBlockedDates(data.blockedDates);
+            }).catch(() => {});
             loadHolidays();
         }
 
         function renderBlockedDates(dates) {
             const list = document.getElementById('blocked-dates-list');
-            if (!dates || dates.length === 0) {
-                list.innerHTML = '<p class="text-gray-500 text-sm">Nav bloķētu datumu</p>';
-                return;
-            }
-            list.innerHTML = dates.map(d => `
-                <div class="flex items-center justify-between p-2 bg-red-50 rounded">
-                    <span>${d.date} ${d.reason ? '- ' + d.reason : ''}</span>
-                    <button onclick="removeBlockedDate('${d.date}')" class="text-red-600 hover:text-red-800">✕</button>
-                </div>
-            `).join('');
+            if (!dates || dates.length === 0) { list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav bloķētu datumu</p>'; return; }
+            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${d.date} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:24px;height:24px;font-size:12px;">✕</button></div>`).join('');
         }
 
         document.getElementById('save-availability').addEventListener('click', async () => {
-            const schedule = {};
-            days.forEach(day => {
-                schedule[day] = {
-                    enabled: document.getElementById(`day-${day}-enabled`).checked,
-                    start: document.getElementById(`day-${day}-start`).value,
-                    end: document.getElementById(`day-${day}-end`).value
-                };
-            });
-
-            try {
-                await fetch(API_BASE + '/dashboard/availability', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ schedule })
-                });
-                alert('Pieejamība saglabāta!');
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            const scheduleData = {};
+            days.forEach(day => { scheduleData[day] = { enabled: document.getElementById(`day-${day}-enabled`).checked, start: document.getElementById(`day-${day}-start`).value, end: document.getElementById(`day-${day}-end`).value }; });
+            try { await fetch(API_BASE + '/dashboard/availability', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule: scheduleData }) }); alert('Pieejamība saglabāta!'); } catch (e) { alert('Kļūda: ' + e.message); }
         });
 
         document.getElementById('add-blocked-date').addEventListener('click', async () => {
             const date = document.getElementById('block-date').value;
             const reason = document.getElementById('block-reason').value;
             if (!date) return alert('Izvēlieties datumu');
-
-            try {
-                await fetch(API_BASE + '/dashboard/availability/block', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date, reason })
-                });
-                loadAvailability();
-                document.getElementById('block-date').value = '';
-                document.getElementById('block-reason').value = '';
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date, reason }) }); loadAvailability(); document.getElementById('block-date').value = ''; document.getElementById('block-reason').value = ''; } catch (e) { alert('Kļūda: ' + e.message); }
         });
 
         window.removeBlockedDate = async function(date) {
-            try {
-                await fetch(API_BASE + '/dashboard/availability/block', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date })
-                });
-                loadAvailability();
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date }) }); loadAvailability(); } catch (e) { alert('Kļūda: ' + e.message); }
         };
 
-        // Settings
         function loadSettings() {
-            fetch(API_BASE + '/dashboard/settings')
-                .then(r => r.json())
-                .then(data => {
-                    if (data.prices) {
-                        document.getElementById('price-initial').value = data.prices.initial || 65;
-                        document.getElementById('price-followup').value = data.prices.followup || 45;
-                    }
-                    if (data.contact) {
-                        document.getElementById('contact-email').value = data.contact.email || '';
-                        document.getElementById('contact-phone').value = data.contact.phone || '';
-                        document.getElementById('contact-address').value = data.contact.address || '';
-                    }
-                    if (data.duration) {
-                        document.getElementById('duration-initial').value = data.duration.initial || 60;
-                        document.getElementById('duration-followup').value = data.duration.followup || 30;
-                    }
-                    if (data.bank) {
-                        document.getElementById('bank-name').value = data.bank.name || '';
-                        document.getElementById('bank-iban').value = data.bank.iban || '';
-                    }
-                })
-                .catch(() => {});
+            fetch(API_BASE + '/dashboard/settings').then(r => r.json()).then(data => {
+                if (data.prices) { document.getElementById('price-initial').value = data.prices.initial || 65; document.getElementById('price-followup').value = data.prices.followup || 45; }
+                if (data.contact) { document.getElementById('contact-email').value = data.contact.email || ''; document.getElementById('contact-phone').value = data.contact.phone || ''; document.getElementById('contact-address').value = data.contact.address || ''; }
+                if (data.duration) { document.getElementById('duration-initial').value = data.duration.initial || 60; document.getElementById('duration-followup').value = data.duration.followup || 30; }
+                if (data.bank) { document.getElementById('bank-name').value = data.bank.name || ''; document.getElementById('bank-iban').value = data.bank.iban || ''; }
+            }).catch(() => {});
         }
 
         document.getElementById('save-settings').addEventListener('click', async () => {
-            const settings = {
-                prices: {
-                    initial: parseInt(document.getElementById('price-initial').value),
-                    followup: parseInt(document.getElementById('price-followup').value)
-                },
-                contact: {
-                    email: document.getElementById('contact-email').value,
-                    phone: document.getElementById('contact-phone').value,
-                    address: document.getElementById('contact-address').value
-                },
-                duration: {
-                    initial: parseInt(document.getElementById('duration-initial').value),
-                    followup: parseInt(document.getElementById('duration-followup').value)
-                },
-                bank: {
-                    name: document.getElementById('bank-name').value,
-                    iban: document.getElementById('bank-iban').value
-                }
-            };
-
-            try {
-                await fetch(API_BASE + '/dashboard/settings', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(settings)
-                });
-                alert('Iestatījumi saglabāti!');
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            const settings = { prices: { initial: parseInt(document.getElementById('price-initial').value), followup: parseInt(document.getElementById('price-followup').value) }, contact: { email: document.getElementById('contact-email').value, phone: document.getElementById('contact-phone').value, address: document.getElementById('contact-address').value }, duration: { initial: parseInt(document.getElementById('duration-initial').value), followup: parseInt(document.getElementById('duration-followup').value) }, bank: { name: document.getElementById('bank-name').value, iban: document.getElementById('bank-iban').value } };
+            try { await fetch(API_BASE + '/dashboard/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); alert('Iestatījumi saglabāti!'); } catch (e) { alert('Kļūda: ' + e.message); }
         });
 
-        // Initial load
         loadCalendar();
-        
-        // Holidays
+
         async function loadHolidays() {
             const year = document.getElementById('holiday-year').value;
             const list = document.getElementById('holidays-list');
-            
-            try {
-                const response = await fetch(API_BASE + '/holidays?year=' + year);
-                const data = await response.json();
-                
-                if (data.holidays && data.holidays.length > 0) {
-                    list.innerHTML = data.holidays.map(h => `
-                        <div class="flex items-center justify-between p-2 bg-blue-50 rounded">
-                            <span class="font-medium">${h.date}</span>
-                            <span class="text-gray-600">${h.name}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    list.innerHTML = '<p class="text-gray-500">Nav svētku šajā gadā</p>';
-                }
-            } catch (e) {
-                list.innerHTML = '<p class="text-red-500">Kļūda ielādējot svētkus</p>';
-            }
+            try { const response = await fetch(API_BASE + '/holidays?year=' + year); const data = await response.json(); if (data.holidays && data.holidays.length > 0) list.innerHTML = data.holidays.map(h => `<div class="holiday-item"><span class="holiday-date">${h.date}</span><span>${h.name}</span></div>`).join(''); else list.innerHTML = '<p style="color:var(--color-text-light);">Nav svētku šajā gadā</p>'; } catch (e) { list.innerHTML = '<p style="color:#dc2626;">Kļūda ielādējot svētkus</p>'; }
         }
-        
+
         document.getElementById('holiday-year').addEventListener('change', loadHolidays);
         document.getElementById('refresh-holidays').addEventListener('click', loadHolidays);
 
-        // Table Data Viewer
         let currentTableData = { entities: [], columns: [] };
 
         async function loadTableData() {
@@ -975,127 +749,33 @@ import Layout from '../../layouts/Layout.astro';
             const loading = document.getElementById('table-loading');
             const container = document.getElementById('table-container');
             const empty = document.getElementById('table-empty');
-
-            loading.classList.remove('hidden');
-            container.classList.add('hidden');
-            empty.classList.add('hidden');
-
-            try {
-                const response = await fetch(API_BASE + '/dashboard/tables/' + tableName);
-                const data = await response.json();
-                
-                currentTableData = data;
-                
-                loading.classList.add('hidden');
-
-                if (!data.entities || data.entities.length === 0) {
-                    empty.classList.remove('hidden');
-                    document.getElementById('table-count').textContent = '0';
-                    return;
-                }
-
-                renderTable(data);
-                container.classList.remove('hidden');
-                document.getElementById('table-count').textContent = data.count || data.entities.length;
-            } catch (error) {
-                loading.textContent = 'Kļūda: ' + error.message;
-            }
+            loading.classList.remove('hidden'); container.classList.add('hidden'); empty.classList.add('hidden');
+            try { const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); const data = await response.json(); currentTableData = data; loading.classList.add('hidden'); if (!data.entities || data.entities.length === 0) { empty.classList.remove('hidden'); document.getElementById('table-count').textContent = '0'; return; } renderTable(data); container.classList.remove('hidden'); document.getElementById('table-count').textContent = data.count || data.entities.length; } catch (error) { loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>'; }
         }
 
         function renderTable(data) {
             const header = document.getElementById('table-header');
             const body = document.getElementById('table-body');
             const columns = data.columns || [];
-
-            // Render header
-            header.innerHTML = `<tr>
-                ${columns.map(col => `<th class="px-3 py-2 font-medium text-gray-700 whitespace-nowrap">${col}</th>`).join('')}
-                <th class="px-3 py-2 font-medium text-gray-700">Darbības</th>
-            </tr>`;
-
-            // Render body
+            header.innerHTML = `<tr>${columns.map(col => `<th>${col}</th>`).join('')}<th>Darbības</th></tr>`;
             body.innerHTML = data.entities.map(entity => {
                 const pk = encodeURIComponent(entity.partitionKey || '');
                 const rk = encodeURIComponent(entity.rowKey || '');
-                
-                return `<tr class="hover:bg-gray-50">
-                    ${columns.map(col => {
-                        let value = entity[col];
-                        if (value === undefined || value === null) value = '';
-                        if (typeof value === 'object') value = JSON.stringify(value);
-                        
-                        // Truncate long values
-                        const displayValue = String(value).length > 50 
-                            ? String(value).substring(0, 50) + '...' 
-                            : value;
-                        
-                        // Color coding for status
-                        let cellClass = 'px-3 py-2 text-gray-600 whitespace-nowrap';
-                        if (col === 'status') {
-                            if (value === 'confirmed') cellClass += ' text-green-600 font-medium';
-                            else if (value === 'pending') cellClass += ' text-yellow-600 font-medium';
-                            else if (value === 'cancelled') cellClass += ' text-red-600 font-medium';
-                        }
-                        
-                        return `<td class="${cellClass}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`;
-                    }).join('')}
-                    <td class="px-3 py-2">
-                        <button onclick="deleteEntity('${pk}', '${rk}')" class="text-red-500 hover:text-red-700 text-sm">🗑️</button>
-                    </td>
-                </tr>`;
+                return `<tr>${columns.map(col => { let value = entity[col]; if (value === undefined || value === null) value = ''; if (typeof value === 'object') value = JSON.stringify(value); const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; let style = ''; if (col === 'status') { if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; } return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; }).join('')}<td><button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" style="width:28px;height:28px;" title="Dzēst">🗑️</button></td></tr>`;
             }).join('');
         }
 
         window.deleteEntity = async function(partitionKey, rowKey) {
-            if (!confirm('Vai tiešām dzēst šo ierakstu? Šī darbība ir neatgriezeniska!')) return;
-            
+            if (!confirm('Vai tiešām dzēst šo ierakstu?')) return;
             const tableName = document.getElementById('table-select').value;
-            
-            try {
-                const response = await fetch(
-                    `${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`,
-                    { method: 'DELETE' }
-                );
-                
-                if (response.ok) {
-                    loadTableData();
-                } else {
-                    const error = await response.json();
-                    alert('Kļūda: ' + (error.details || error.error));
-                }
-            } catch (e) {
-                alert('Kļūda: ' + e.message);
-            }
+            try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) loadTableData(); else { const error = await response.json(); alert('Kļūda: ' + (error.details || error.error)); } } catch (e) { alert('Kļūda: ' + e.message); }
         };
 
         function exportTableToCSV() {
-            if (!currentTableData.entities || currentTableData.entities.length === 0) {
-                alert('Nav datu eksportēšanai');
-                return;
-            }
-
+            if (!currentTableData.entities || currentTableData.entities.length === 0) { alert('Nav datu eksportēšanai'); return; }
             const columns = currentTableData.columns;
             const rows = currentTableData.entities;
-            
-            // Create CSV content
-            const csvContent = [
-                columns.join(','),
-                ...rows.map(row => 
-                    columns.map(col => {
-                        let value = row[col];
-                        if (value === undefined || value === null) return '';
-                        if (typeof value === 'object') value = JSON.stringify(value);
-                        // Escape quotes and wrap in quotes if contains comma
-                        value = String(value).replace(/"/g, '""');
-                        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-                            value = `"${value}"`;
-                        }
-                        return value;
-                    }).join(',')
-                )
-            ].join('\n');
-
-            // Download file
+            const csvContent = [columns.join(','), ...rows.map(row => columns.map(col => { let value = row[col]; if (value === undefined || value === null) return ''; if (typeof value === 'object') value = JSON.stringify(value); value = String(value).replace(/"/g, '""'); if (value.includes(',') || value.includes('"') || value.includes('\n')) value = `"${value}"`; return value; }).join(','))].join('\n');
             const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -1109,91 +789,36 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('refresh-table').addEventListener('click', loadTableData);
         document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
 
-        // Monitoring functions
         async function loadMonitoring() {
             const loading = document.getElementById('monitoring-loading');
             const container = document.getElementById('endpoints-container');
-            
-            loading.classList.remove('hidden');
-            container.classList.add('hidden');
-            
+            loading.classList.remove('hidden'); container.classList.add('hidden');
             try {
                 const response = await fetch(API_BASE + '/dashboard/monitoring');
                 const data = await response.json();
-                
-                // Update overall status
                 const statusText = document.getElementById('status-text');
                 const statusIndicator = document.getElementById('status-indicator');
-                
-                const statusConfig = {
-                    healthy: { text: 'Viss darbojas', emoji: '✅', bgClass: 'bg-green-100' },
-                    degraded: { text: 'Daļēji degradēts', emoji: '⚠️', bgClass: 'bg-yellow-100' },
-                    unhealthy: { text: 'Problēmas!', emoji: '❌', bgClass: 'bg-red-100' }
-                };
-                
+                const statusConfig = { healthy: { text: 'Viss darbojas', emoji: '✅', cssClass: 'healthy' }, degraded: { text: 'Daļēji degradēts', emoji: '⚠️', cssClass: 'degraded' }, unhealthy: { text: 'Problēmas!', emoji: '❌', cssClass: 'unhealthy' } };
                 const config = statusConfig[data.overallStatus] || statusConfig.unhealthy;
                 statusText.textContent = config.text;
                 statusIndicator.textContent = config.emoji;
-                statusIndicator.className = `w-20 h-20 rounded-full ${config.bgClass} flex items-center justify-center text-4xl`;
-                
-                // Update stats
+                statusIndicator.className = 'status-badge ' + config.cssClass;
                 document.getElementById('stat-total').textContent = data.summary.total;
                 document.getElementById('stat-healthy').textContent = data.summary.healthy;
                 document.getElementById('stat-degraded').textContent = data.summary.degraded;
                 document.getElementById('stat-unhealthy').textContent = data.summary.unhealthy;
-                
-                // Update last check time
-                document.getElementById('last-check').textContent = 
-                    `Pārbaudīts: ${new Date(data.checkedAt).toLocaleTimeString('lv-LV')} (${data.totalCheckTime}ms)`;
-                
-                // Render endpoints
+                document.getElementById('last-check').textContent = `${new Date(data.checkedAt).toLocaleTimeString('lv-LV')} (${data.totalCheckTime}ms)`;
                 const endpointsList = document.getElementById('endpoints-list');
-                endpointsList.innerHTML = data.endpoints.map(ep => {
-                    const statusColors = {
-                        healthy: 'bg-green-100 text-green-800 border-green-200',
-                        degraded: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                        unhealthy: 'bg-red-100 text-red-800 border-red-200'
-                    };
-                    const statusIcons = { healthy: '✅', degraded: '⚠️', unhealthy: '❌' };
-                    
-                    return `
-                        <div class="bg-white rounded-lg border p-4 flex justify-between items-center ${ep.status === 'unhealthy' ? 'border-red-300' : 'border-gray-200'}">
-                            <div class="flex items-center gap-3">
-                                <span class="text-xl">${statusIcons[ep.status]}</span>
-                                <div>
-                                    <div class="font-medium">${ep.name}</div>
-                                    <div class="text-sm text-gray-500">
-                                        <span class="font-mono text-xs bg-gray-100 px-1 rounded">${ep.method}</span>
-                                        <span class="font-mono text-xs ml-1">${ep.path}</span>
-                                        ${ep.critical ? '<span class="ml-2 text-red-600 text-xs">• Kritisks</span>' : ''}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="px-2 py-1 rounded text-sm ${statusColors[ep.status]}">
-                                    ${ep.httpStatus > 0 ? ep.httpStatus : 'Klūda'}
-                                </span>
-                                <div class="text-sm text-gray-500 mt-1">${ep.responseTime}ms</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-                // Render environment info
-                document.getElementById('environment-info').innerHTML = `
-                    <div><strong>Function App:</strong> ${data.environment.functionApp}</div>
-                    <div><strong>Node.js:</strong> ${data.environment.nodeVersion}</div>
-                    <div><strong>Vidējais atbildes laiks:</strong> ${data.avgResponseTime}ms</div>
-                `;
-                
+                const statusIcons = { healthy: '✅', degraded: '⚠️', unhealthy: '❌' };
+                endpointsList.innerHTML = data.endpoints.map(ep => `<div class="endpoint-card ${ep.status === 'unhealthy' ? 'unhealthy' : ''}"><div class="endpoint-info"><span class="endpoint-icon">${statusIcons[ep.status]}</span><div><div class="endpoint-name">${ep.name}</div><div class="endpoint-path"><code>${ep.method}</code> <code>${ep.path}</code>${ep.critical ? '<span class="endpoint-critical"> • Kritisks</span>' : ''}</div></div></div><div class="endpoint-status"><span class="endpoint-code ${ep.status}">${ep.httpStatus > 0 ? ep.httpStatus : 'Kļūda'}</span><div class="endpoint-time">${ep.responseTime}ms</div></div></div>`).join('');
+                document.getElementById('environment-info').innerHTML = `<div><strong>Function App:</strong> ${data.environment.functionApp}</div><div><strong>Node.js:</strong> ${data.environment.nodeVersion}</div><div><strong>Vidējais atbildes laiks:</strong> ${data.avgResponseTime}ms</div>`;
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
-                
             } catch (error) {
-                loading.textContent = 'Kļūda: ' + error.message;
+                loading.innerHTML = '<span>Kļūda: ' + error.message + '</span>';
                 document.getElementById('status-text').textContent = 'Kļūda!';
                 document.getElementById('status-indicator').textContent = '❌';
-                document.getElementById('status-indicator').className = 'w-20 h-20 rounded-full bg-red-100 flex items-center justify-center text-4xl';
+                document.getElementById('status-indicator').className = 'status-badge unhealthy';
             }
         }
 
