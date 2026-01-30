@@ -82,7 +82,7 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // В CI серверы запускаются автоматически
+  // В CI используем mock API для надёжности
   // Локально нужно запустить вручную: npm run dev и cd api && npm start
   webServer: process.env.CI ? [
     {
@@ -90,18 +90,17 @@ export default defineConfig({
       url: 'http://localhost:4321',
       name: 'Frontend',
       timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       stdout: 'ignore',
       stderr: 'pipe',
     },
     {
-      command: 'npm run start',
-      cwd: './api',
+      command: 'node e2e/mock-api-server.js',
       url: 'http://localhost:7071/api/health',
-      name: 'Backend API',
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
+      name: 'Mock API',
+      timeout: 30 * 1000,
+      reuseExistingServer: false,
+      stdout: 'pipe',
       stderr: 'pipe',
     }
   ] : undefined,
