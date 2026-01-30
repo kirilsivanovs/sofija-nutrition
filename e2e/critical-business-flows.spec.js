@@ -178,9 +178,11 @@ test.describe('🚨 Критический процесс: Календарь б
  * Если этот тест падает - BACKEND НЕ РАБОТАЕТ
  */
 test.describe('🚨 Критический процесс: API работает', () => {
+  // Используем production API endpoint
+  const API_URL = 'https://sofija-nutrition-api.azurewebsites.net';
   
   test('API Health check возвращает успешный статус', async ({ request }) => {
-    const response = await request.get('http://localhost:7071/api/health');
+    const response = await request.get(`${API_URL}/api/health`);
     
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(200);
@@ -191,7 +193,7 @@ test.describe('🚨 Критический процесс: API работает'
   });
 
   test('API возвращает список услуг (availability endpoint)', async ({ request }) => {
-    const response = await request.get('http://localhost:7071/api/availability');
+    const response = await request.get(`${API_URL}/api/availability`);
     
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(200);
@@ -216,7 +218,7 @@ test.describe('🚨 Критический процесс: API работает'
     }
     const dateString = futureDate.toISOString().split('T')[0];
     
-    const response = await request.get(`http://localhost:7071/api/availability/${dateString}`);
+    const response = await request.get(`${API_URL}/api/availability/${dateString}`);
     
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(200);
@@ -228,7 +230,7 @@ test.describe('🚨 Критический процесс: API работает'
   });
 
   test('API обрабатывает невалидную дату корректно', async ({ request }) => {
-    const response = await request.get('http://localhost:7071/api/availability/invalid-date');
+    const response = await request.get(`${API_URL}/api/availability/invalid-date`);
     
     // API должен либо вернуть ошибку, либо дефолтный ответ
     expect(response.status()).toBeGreaterThanOrEqual(200);

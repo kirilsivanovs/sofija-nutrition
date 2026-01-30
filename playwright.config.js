@@ -38,11 +38,11 @@ export default defineConfig({
   
   /* Shared settings for all the projects below */
   use: {
-    /* Base URL для тестов */
-    baseURL: 'http://localhost:4321',
+    /* Base URL для тестов - используем preview URL из CI или localhost */
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4321',
     
-    /* API endpoint */
-    apiURL: 'http://localhost:7071',
+    /* API endpoint - production API для E2E тестов */
+    apiURL: 'https://sofija-nutrition-api.azurewebsites.net',
     
     /* Collect trace when retrying the failed test */
     trace: 'on-first-retry',
@@ -82,26 +82,7 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // В CI используем mock API для надёжности
+  // В CI тесты запускаются против задеплоенного preview URL
   // Локально нужно запустить вручную: npm run dev и cd api && npm start
-  webServer: process.env.CI ? [
-    {
-      command: 'npm run dev',
-      url: 'http://localhost:4321',
-      name: 'Frontend',
-      timeout: 120 * 1000,
-      reuseExistingServer: false,
-      stdout: 'ignore',
-      stderr: 'pipe',
-    },
-    {
-      command: 'node e2e/mock-api-server.js',
-      url: 'http://localhost:7071/api/health',
-      name: 'Mock API',
-      timeout: 30 * 1000,
-      reuseExistingServer: false,
-      stdout: 'pipe',
-      stderr: 'pipe',
-    }
-  ] : undefined,
+  webServer: process.env.CI ? undefined : undefined,
 });

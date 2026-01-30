@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  # Run API tests before deployment
+  # Run API tests before deployment (fast, no infrastructure needed)
   test_api:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
@@ -41,63 +41,14 @@ jobs:
           path: ./api/coverage/
           retention-days: 7
 
-  # Run E2E tests to protect critical business processes
-  test_e2e:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: Run E2E Tests (Playwright)
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Install API dependencies
-        working-directory: ./api
-        run: npm ci
-      
-      - name: Install Azure Functions Core Tools
-        run: |
-          wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
-          sudo dpkg -i packages-microsoft-prod.deb
-          sudo apt-get update
-          sudo apt-get install -y azure-functions-core-tools-4
-      
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
-      
-      - name: Run Playwright E2E tests
-        run: npm run test:e2e
-        env:
-          CI: true
-      
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
-      
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: test-results/
-          retention-days: 7
-
+  # Deploy to preview environment (for PRs) or production (for main)
   build_and_deploy_job:
-    needs: [test_api, test_e2e]  # Only deploy if both API and E2E tests pass
+    needs: [test_api]  # Only deploy if API tests pass
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    outputs:
+      static_web_app_url: ${{ steps.builddeploy.outputs.static_web_app_url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -116,6 +67,50 @@ jobs:
           api_location: "" # Using external Azure Functions (BYOF)
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+
+  # Run E2E tests AFTER deployment against the real preview URL
+  test_e2e:
+    needs: [build_and_deploy_job]
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Run E2E Tests (Playwright)
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      
+      - name: Run Playwright E2E tests against deployed preview
+        run: npm run test:e2e
+        env:
+          CI: true
+          # Use the preview URL from Azure Static Web Apps deployment
+          PLAYWRIGHT_BASE_URL: ${{ needs.build_and_deploy_job.outputs.static_web_app_url }}
+      
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+      
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
