@@ -93,7 +93,7 @@ describe('Availability API Logic', () => {
 
             expect(dates.length).toBe(91); // 0 to 90 inclusive
             expect(dates[0]).toBe('2026-01-30');
-            expect(dates[90]).toBe('2026-04-29'); // Jan has 31 days, Feb has 28, Mar has 31 = 90 days
+            expect(dates[90]).toBe('2026-04-29'); // 90 days from Jan 30
         });
 
         test('should include March when starting from January 30', () => {
