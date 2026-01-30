@@ -96,6 +96,7 @@ class BookingCalendar {
 
     async init() {
         await this.loadAvailability();
+        this.navigateToFirstAvailableMonth();
         this.render();
         this.attachEventListeners();
     }
@@ -119,6 +120,29 @@ class BookingCalendar {
             console.error('Failed to load availability:', error);
             this.availability = { slots: {}, booked: [], serviceTypes: [] };
         }
+    }
+
+    /**
+     * Навигация к первому месяцу с доступными датами
+     * Чтобы клиент сразу видел ближайшие свободные дни
+     */
+    navigateToFirstAvailableMonth() {
+        if (!this.availability || !this.availability.slots) return;
+        
+        const availableDates = Object.keys(this.availability.slots)
+            .filter(dateStr => {
+                const slots = this.availability.slots[dateStr];
+                return slots && slots.length > 0;
+            })
+            .sort();
+        
+        if (availableDates.length === 0) return;
+        
+        // Берём первую доступную дату
+        const firstAvailableDate = new Date(availableDates[0]);
+        
+        // Устанавливаем currentDate на этот месяц
+        this.currentDate = new Date(firstAvailableDate.getFullYear(), firstAvailableDate.getMonth(), 1);
     }
 
     t(key) {
