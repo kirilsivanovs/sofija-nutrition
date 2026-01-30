@@ -82,19 +82,20 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: [
+  // В CI серверы запускаются автоматически
+  // Локально нужно запустить вручную: npm run dev и cd api && npm start
+  webServer: process.env.CI ? [
     {
       command: 'npm run dev',
       url: 'http://localhost:4321',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       timeout: 120 * 1000,
     },
     {
-      command: 'cd api && func start --cors *',
+      command: 'cd api && npm run start',
       url: 'http://localhost:7071/api/health',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
       timeout: 120 * 1000,
-      cwd: './api',
     }
-  ],
+  ] : undefined,
 });
