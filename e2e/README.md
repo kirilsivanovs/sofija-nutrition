@@ -57,6 +57,23 @@ Playwright E2E тесты защищают критические бизнес-�
 
 ## Как запускать тесты?
 
+**ВАЖНО:** Локально нужно сначала запустить серверы вручную!
+
+### Шаг 1: Запустить API и Frontend
+
+**Terminal 1 - API:**
+```powershell
+cd api
+npm start
+```
+
+**Terminal 2 - Frontend:**
+```powershell
+npm run dev
+```
+
+**Terminal 3 - E2E Tests:**
+
 ### Запуск всех E2E тестов (headless)
 ```powershell
 npm run test:e2e
