@@ -89,13 +89,18 @@ export default defineConfig({
       command: 'npm run dev',
       url: 'http://localhost:4321',
       reuseExistingServer: false,
-      timeout: 120 * 1000,
+      timeout: 180 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
     {
-      command: 'cd api && npm run start',
+      command: 'npm run start',
+      cwd: './api',
       url: 'http://localhost:7071/api/health',
       reuseExistingServer: false,
-      timeout: 120 * 1000,
+      timeout: 180 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     }
   ] : undefined,
 });
