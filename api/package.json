@@ -6,7 +6,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "func start --cors *",
+    "start": "func start --cors \"*\"",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
