@@ -628,7 +628,7 @@ test.describe('🚨 Критический процесс: Performance', () => {
     
     // Проверить что изображение полностью загружено
     const isLoaded = await heroImg.evaluate((img) => {
-      return (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0;
+      return img.complete && img.naturalWidth > 0;
     });
     expect(isLoaded).toBeTruthy();
   });
