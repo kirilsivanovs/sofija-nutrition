@@ -82,18 +82,18 @@ describe('Availability API Logic', () => {
 
     describe('Date Range Generation', () => {
         test('should generate 90 days of dates', () => {
-            const today = new Date('2026-01-30');
+            const today = new Date(Date.UTC(2026, 0, 30)); // Use UTC to avoid timezone issues
             const dates = [];
             
             for (let i = 0; i <= 90; i++) {
                 const checkDate = new Date(today);
-                checkDate.setDate(today.getDate() + i);
+                checkDate.setUTCDate(today.getUTCDate() + i);
                 dates.push(checkDate.toISOString().split('T')[0]);
             }
 
             expect(dates.length).toBe(91); // 0 to 90 inclusive
             expect(dates[0]).toBe('2026-01-30');
-            expect(dates[90]).toBe('2026-04-29'); // 90 days from Jan 30
+            expect(dates[90]).toBe('2026-04-30'); // 90 days from Jan 30 in UTC
         });
 
         test('should include March when starting from January 30', () => {
