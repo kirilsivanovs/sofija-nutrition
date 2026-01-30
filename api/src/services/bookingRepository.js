@@ -9,6 +9,9 @@ const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 let tableClient = null;
 const inMemoryBookings = new Map();
 
+console.log('📦 BookingRepository initialized');
+console.log('   Azure Storage:', connectionString ? '✅ Configured' : '⚠️ Not configured (using in-memory)');
+
 /**
  * Get or create the Azure Table client
  */
@@ -43,12 +46,15 @@ async function saveBooking(booking) {
             createdAt: booking.createdAt || new Date().toISOString()
         };
         await client.upsertEntity(entity);
+        console.log('✅ Booking saved to Azure Storage:', booking.id);
         return true;
     } else {
         inMemoryBookings.set(booking.id, {
             ...booking,
             createdAt: booking.createdAt || new Date().toISOString()
         });
+        console.log('⚠️ Booking saved to IN-MEMORY storage (not persistent!):', booking.id);
+        console.log('Total bookings in memory:', inMemoryBookings.size);
         return false;
     }
 }
@@ -154,6 +160,14 @@ async function isSlotBooked(date, time) {
     }
 }
 
+/**
+ * Get all bookings from in-memory storage (for debugging)
+ * @returns {Array} - Array of all bookings in memory
+ */
+function getAllInMemoryBookings() {
+    return Array.from(inMemoryBookings.values());
+}
+
 module.exports = {
     saveBooking,
     getBooking,
@@ -162,5 +176,6 @@ module.exports = {
     generatePaymentToken,
     verifyPaymentToken,
     isUsingAzureStorage,
-    isSlotBooked
+    isSlotBooked,
+    getAllInMemoryBookings
 };

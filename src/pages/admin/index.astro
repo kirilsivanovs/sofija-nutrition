@@ -88,8 +88,9 @@ import Layout from '../../layouts/Layout.astro';
                     <div class="legend-item"><span class="legend-box legend-booked"></span><span>Ieraksti</span></div>
                     <div class="legend-item"><span class="legend-box legend-weekend"></span><span>Brīvdiena</span></div>
                     <div class="legend-item"><span class="legend-box legend-holiday"></span><span>Svētki</span></div>
-                    <div class="legend-item"><span class="legend-dot legend-pending"></span><span>Gaida</span></div>
                     <div class="legend-item"><span class="legend-dot legend-confirmed"></span><span>Apstiprināts</span></div>
+                    <div class="legend-item"><span class="legend-dot legend-pending"></span><span>Gaida</span></div>
+                    <div class="legend-item"><span class="legend-dot legend-cancelled"></span><span>Atcelts</span></div>
                 </div>
 
                 <div id="bookings-loading" class="loading-state">
@@ -141,8 +142,25 @@ import Layout from '../../layouts/Layout.astro';
                 </div>
 
                 <div class="section-divider"></div>
+                <div class="content-header"><h2 class="content-title">Atvaļinājuma periodi</h2></div>
+                <p class="content-subtitle">Iestatiet periodus, kad esat atvaļinājumā</p>
+                
+                <div class="card">
+                    <div class="vacation-form">
+                        <input type="date" id="vacation-start" class="input-field" placeholder="Sākuma datums">
+                        <input type="date" id="vacation-end" class="input-field" placeholder="Beigu datums">
+                        <input type="text" id="vacation-reason" placeholder="Piezīmes (neobligāti)" class="input-field input-flex">
+                        <button id="add-vacation" class="btn-primary">
+                            <i class="ph ph-calendar-x"></i>
+                            <span>Pievienot atvaļinājumu</span>
+                        </button>
+                    </div>
+                    <div id="vacation-list" class="blocked-list"></div>
+                </div>
+
+                <div class="section-divider"></div>
                 <div class="content-header"><h2 class="content-title">Bloķētie datumi</h2></div>
-                <p class="content-subtitle">Pievienojiet datumus, kad nepieņemat klientus</p>
+                <p class="content-subtitle">Pievienojiet atsevišķus datumus, kad nepieņemat klientus</p>
                 
                 <div class="card">
                     <div class="blocked-date-form">
@@ -331,7 +349,7 @@ import Layout from '../../layouts/Layout.astro';
         </main>
     </div>
 
-    <style>
+    <style is:global>
         :root {
             --color-primary: #1B4332;
             --color-secondary: #D4A574;
@@ -360,6 +378,7 @@ import Layout from '../../layouts/Layout.astro';
             background: var(--color-bg);
             font-family: var(--font-sans);
             color: var(--color-text);
+            font-size: 16px;
         }
 
         /* Header */
@@ -538,7 +557,7 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .content-subtitle {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--color-text-light);
             margin: 0 0 20px 0;
         }
@@ -593,7 +612,7 @@ import Layout from '../../layouts/Layout.astro';
             border: none;
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -607,7 +626,7 @@ import Layout from '../../layouts/Layout.astro';
 
         .btn-primary.btn-sm {
             padding: 10px 16px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .btn-secondary {
@@ -620,7 +639,7 @@ import Layout from '../../layouts/Layout.astro';
             border: 1px solid var(--color-border);
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -641,7 +660,7 @@ import Layout from '../../layouts/Layout.astro';
             border: 1px solid #fecaca;
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -659,7 +678,7 @@ import Layout from '../../layouts/Layout.astro';
             border: 1px solid #bfdbfe;
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -701,7 +720,7 @@ import Layout from '../../layouts/Layout.astro';
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             color: var(--color-primary);
             margin: 0 0 20px 0;
@@ -724,7 +743,7 @@ import Layout from '../../layouts/Layout.astro';
             border: 1px solid var(--color-border);
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             color: var(--color-text);
             background: var(--color-white);
             transition: border-color 0.2s;
@@ -742,7 +761,7 @@ import Layout from '../../layouts/Layout.astro';
 
         .form-label {
             display: block;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--color-text-light);
             margin-bottom: 8px;
@@ -754,7 +773,7 @@ import Layout from '../../layouts/Layout.astro';
             flex-wrap: wrap;
             gap: 16px;
             margin-bottom: 20px;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--color-text-light);
         }
 
@@ -776,137 +795,163 @@ import Layout from '../../layouts/Layout.astro';
             border-radius: 50%;
         }
 
-        .legend-available { background: rgba(45, 106, 79, 0.1); border: 1px solid rgba(45, 106, 79, 0.3); }
+        .legend-available { background: #ffffff; border: 1px solid var(--color-border); }
         .legend-booked { background: #f0fdf4; border-left: 3px solid #4ade80; }
-        .legend-weekend { background: #fef2f2; border: 1px solid #fecaca; }
+        .legend-weekend { background: #fff1f2; border: 1px solid #fecaca; }
         .legend-holiday { background: #fee2e2; border-left: 3px solid #f87171; }
-        .legend-pending { background: #facc15; }
         .legend-confirmed { background: #22c55e; }
+        .legend-pending { background: #facc15; }
+        .legend-cancelled { background: #ef4444; }
 
         /* Calendar */
-        .calendar-wrapper { margin-bottom: 20px; }
+        .calendar-wrapper { 
+            margin-bottom: 20px;
+        }
 
         .calendar-card {
             background: var(--color-white);
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
             overflow: hidden;
+            padding: 0;
         }
 
         .calendar-header-row {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            background: var(--color-cream);
-            border-bottom: 1px solid var(--color-border);
+            background: var(--color-primary);
+            border-bottom: 2px solid var(--color-border);
         }
 
         .calendar-day-name {
-            padding: 12px 4px;
+            padding: 16px 8px;
             text-align: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-muted);
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .calendar-day-name.weekend { color: #dc2626; }
+        .calendar-day-name.weekend { 
+            color: #fecaca; 
+        }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
+            gap: 0;
+            padding: 0;
+            background: var(--color-border);
+            min-height: 600px;
         }
 
         .calendar-cell {
-            min-height: 80px;
-            padding: 8px;
-            border-bottom: 1px solid var(--color-border);
-            border-right: 1px solid var(--color-border);
+            min-height: 120px;
+            padding: 12px;
             cursor: pointer;
-            transition: all 0.15s;
-            font-size: 13px;
+            transition: all 0.2s ease;
+            font-size: 14px;
             position: relative;
+            background: var(--color-white);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 6px;
         }
 
-        .calendar-cell:nth-child(7n) { border-right: none; }
-
-        .calendar-cell:hover { background: var(--color-cream); }
+        .calendar-cell:hover { 
+            box-shadow: inset 0 0 0 3px var(--color-primary);
+            z-index: 10;
+            transform: scale(1.02);
+        }
 
         .calendar-cell.empty {
-            background: #fafafa;
+            background: #f9fafb;
             cursor: default;
+            min-height: 0;
         }
 
-        .calendar-cell.available { background: rgba(45, 106, 79, 0.05); }
-
-        .calendar-cell.available::after {
-            content: '';
-            position: absolute;
-            bottom: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
-            background: var(--color-accent);
-            border-radius: 50%;
+        .calendar-cell.empty:hover {
+            box-shadow: none;
+            transform: none;
         }
 
-        .calendar-cell.booked {
-            background: #f0fdf4;
-            border-left: 3px solid #4ade80;
+        /* Доступные дни - белый фон */
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.available { 
+            background-color: #ffffff !important;
         }
 
-        .calendar-cell.weekend {
-            background: #fef7f7;
-            color: var(--color-muted);
+        /* Дни с записями - светло-зеленый */
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.booked { 
+            background-color: #f0fdf4 !important;
         }
 
-        .calendar-cell.holiday {
-            background: #fef2f2;
-            border-left: 3px solid #f87171;
+        /* Недоступные дни (выходные, нерабочие) - светло-красный фон */
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.weekend { 
+            background-color: #fff1f2 !important;
+        }
+
+        /* Праздники и блокированные - красный фон */
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.holiday { 
+            background-color: #fee2e2 !important;
         }
 
         .calendar-cell .day-number {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--color-text);
+            line-height: 1;
             margin-bottom: 4px;
-            font-size: 14px;
         }
 
         .calendar-cell .day-number.today {
             background: var(--color-secondary);
             color: white;
-            width: 26px;
-            height: 26px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
         }
 
         .calendar-cell .holiday-name {
-            font-size: 10px;
+            font-size: 11px;
             color: #dc2626;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1.3;
         }
 
         .calendar-cell .day-time {
             font-size: 11px;
             color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .calendar-cell .booking-dots {
             display: flex;
-            flex-direction: column;
-            gap: 3px;
-            margin-top: 4px;
+            gap: 6px;
+            margin-top: auto;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .calendar-cell .booking-dot {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 3px;
             font-size: 11px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
         .calendar-cell .booking-dot span {
@@ -914,10 +959,57 @@ import Layout from '../../layouts/Layout.astro';
             height: 8px;
             border-radius: 50%;
             flex-shrink: 0;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.3);
+            display: block;
         }
 
-        .calendar-cell .booking-dot.pending span { background: #facc15; }
-        .calendar-cell .booking-dot.confirmed span { background: #22c55e; }
+        /* Зеленый кружок - активные записи */
+        .calendar-cell .booking-dot.confirmed {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: #22c55e;
+            color: #166534;
+        }
+        
+        .calendar-cell .booking-dot.confirmed span { 
+            background: #22c55e; 
+        }
+        
+        /* Красный кружок - отмененные */
+        .calendar-cell .booking-dot.cancelled {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .calendar-cell .booking-dot.cancelled span { 
+            background: #ef4444; 
+        }
+        
+        /* Желтый кружок - ждут оплаты */
+        .calendar-cell .booking-dot.pending {
+            background: rgba(250, 204, 21, 0.15);
+            border-color: #facc15;
+            color: #854d0e;
+        }
+        
+        .calendar-cell .booking-dot.pending span { 
+            background: #facc15; 
+        }
+
+        .calendar-cell .booking-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--color-primary);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            min-width: 22px;
+            text-align: center;
+        }
 
         /* Day Details Panel */
         .day-details-panel { margin-top: 20px; }
@@ -949,7 +1041,29 @@ import Layout from '../../layouts/Layout.astro';
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 24px;
+        }
+
+        /* Группы записей */
+        .bookings-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid currentColor;
+        }
+
+        .group-title i {
+            font-size: 20px;
         }
 
         .booking-card {
@@ -969,13 +1083,19 @@ import Layout from '../../layouts/Layout.astro';
             align-items: flex-start;
             margin-bottom: 12px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 12px;
+        }
+
+        .booking-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .booking-name {
             font-weight: 600;
-            color: var(--color-text);
-            font-size: 16px;
+            color: var(--color-primary);
+            font-size: 19px;
         }
 
         .booking-status {
@@ -985,6 +1105,8 @@ import Layout from '../../layouts/Layout.astro';
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: inline-block;
+            width: fit-content;
         }
 
         .booking-status.pending { background: #fef3c7; color: #b45309; }
@@ -999,7 +1121,7 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .booking-details {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--color-text-light);
             display: flex;
             flex-direction: column;
@@ -1111,6 +1233,18 @@ import Layout from '../../layouts/Layout.astro';
             padding: 10px 12px;
             font-size: 14px;
             width: auto;
+        }
+
+        .vacation-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .vacation-form .input-field { 
+            width: auto;
+            min-width: 160px;
         }
 
         .blocked-date-form {
@@ -1427,7 +1561,9 @@ import Layout from '../../layouts/Layout.astro';
             .admin-main { padding: 32px; }
             .content-header { flex-direction: row; justify-content: space-between; align-items: center; }
             .content-title { font-size: 32px; }
-            .calendar-cell { min-height: 100px; padding: 10px; }
+            .calendar-cell { min-height: 140px; padding: 14px; }
+            .calendar-cell .day-number { font-size: 22px; }
+            .calendar-grid { min-height: 700px; }
             .settings-grid { grid-template-columns: repeat(2, 1fr); }
             .holidays-grid { grid-template-columns: repeat(2, 1fr); }
             .availability-day { flex-direction: row; align-items: center; justify-content: space-between; }
@@ -1436,20 +1572,32 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         @media (min-width: 1024px) {
-            .calendar-cell { min-height: 110px; }
+            .calendar-cell { min-height: 160px; padding: 16px; }
+            .calendar-grid { min-height: 800px; }
+        }
+
+        @media (min-width: 1280px) {
+            .calendar-cell { min-height: 180px; }
         }
     </style>
 
     <script is:inline>
     (function() {
-        const API_BASE = 'https://sofija-nutrition-api.azurewebsites.net/api';
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:7071/api' 
+            : 'https://sofija-nutrition-api.azurewebsites.net/api';
         let currentDate = new Date();
         let allBookings = [];
         let holidays = {};
         let schedule = {};
         let blockedDates = new Set();
+        let vacationPeriods = [];
         const dayNamesForSchedule = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         const monthNames = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
+
+        function isDateInVacation(dateStr) {
+            return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
+        }
 
         fetch('/.auth/me').then(r => r.json()).then(data => {
             if (data.clientPrincipal) {
@@ -1478,8 +1626,8 @@ import Layout from '../../layouts/Layout.astro';
         tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
         mobileSelect.addEventListener('change', e => switchTab(e.target.value));
 
-        document.getElementById('prev-month').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); loadCalendar(); });
-        document.getElementById('next-month').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); loadCalendar(); });
+        document.getElementById('prev-month').addEventListener('click', () => { currentDate.setDate(1); currentDate.setMonth(currentDate.getMonth() - 1); loadCalendar(); });
+        document.getElementById('next-month').addEventListener('click', () => { currentDate.setDate(1); currentDate.setMonth(currentDate.getMonth() + 1); loadCalendar(); });
         document.getElementById('today-btn').addEventListener('click', () => { currentDate = new Date(); loadCalendar(); });
         document.getElementById('refresh-bookings').addEventListener('click', loadCalendar);
         document.getElementById('close-day-details').addEventListener('click', () => document.getElementById('day-details').classList.add('hidden'));
@@ -1507,6 +1655,8 @@ import Layout from '../../layouts/Layout.astro';
                 if (holidaysData.holidays) holidaysData.holidays.forEach(h => { holidays[h.date] = h.name; });
                 schedule = availabilityData.schedule || {};
                 blockedDates = new Set((availabilityData.blockedDates || []).map(d => d.date));
+                vacationPeriods = availabilityData.vacationPeriods || [];
+                console.log('📅 Loaded vacation periods:', vacationPeriods);
                 renderCalendar();
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
@@ -1528,6 +1678,12 @@ import Layout from '../../layouts/Layout.astro';
             allBookings.forEach(b => { if (!bookingsByDate[b.date]) bookingsByDate[b.date] = []; bookingsByDate[b.date].push(b); });
             const today = new Date();
             const todayStr = today.toISOString().split('T')[0];
+            
+            console.log('📅 Rendering calendar:', { year, month: month + 1, totalBookings: allBookings.length, scheduleLoaded: !!schedule });
+            console.log('📋 Schedule object:', schedule);
+            console.log('🎉 Holidays:', Object.keys(holidays).length, holidays);
+            console.log('🚫 Blocked dates:', blockedDates.size);
+            
             let html = '';
             for (let i = 0; i < startDay; i++) html += '<div class="calendar-cell empty"></div>';
             for (let day = 1; day <= daysInMonth; day++) {
@@ -1538,23 +1694,34 @@ import Layout from '../../layouts/Layout.astro';
                 const dayOfWeek = (startDay + day - 1) % 7;
                 const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
                 const isBlocked = blockedDates.has(dateStr);
+                const isVacation = isDateInVacation(dateStr);
                 const checkDate = new Date(year, month, day);
                 const scheduleDayName = dayNamesForSchedule[checkDate.getDay()];
                 const daySchedule = schedule[scheduleDayName];
                 const isWorkingDay = daySchedule && daySchedule.enabled;
-                const pending = dayBookings.filter(b => b.status === 'pending').length;
-                const confirmed = dayBookings.filter(b => b.status === 'confirmed').length;
+                const pending = dayBookings.filter(b => !b.paymentConfirmed && b.status !== 'cancelled').length;
+                const confirmed = dayBookings.filter(b => b.paymentConfirmed && b.status !== 'cancelled').length;
+                const cancelled = dayBookings.filter(b => b.status === 'cancelled').length;
+                const totalCount = dayBookings.length;
+                
                 let cellClass = 'calendar-cell';
-                if (isHoliday || isBlocked) cellClass += ' holiday';
+                if (isHoliday || isBlocked || isVacation) cellClass += ' holiday';
                 else if (isWeekend || !isWorkingDay) cellClass += ' weekend';
                 else if (confirmed > 0 || pending > 0) cellClass += ' booked';
                 else cellClass += ' available';
-                html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')">
+                
+                html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')" title="${dateStr}">
                     <div class="day-number ${isToday ? 'today' : ''}">${day}</div>
                     ${isHoliday ? `<div class="holiday-name">${isHoliday}</div>` : ''}
-                    ${isBlocked && !isHoliday ? '<div class="holiday-name">Bloķēts</div>' : ''}
-                    ${!isHoliday && !isBlocked && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time">${daySchedule.start}–${daySchedule.end}</div>` : ''}
-                    ${dayBookings.length > 0 ? `<div class="booking-dots">${pending > 0 ? `<div class="booking-dot pending"><span></span>${pending}</div>` : ''}${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}</div>` : ''}
+                    ${isVacation && !isHoliday ? '<div class="holiday-name">Atvaļinājums</div>' : ''}
+                    ${isBlocked && !isHoliday && !isVacation ? '<div class="holiday-name">Bloķēts</div>' : ''}
+                    ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time"><i class="ph ph-clock"></i>${daySchedule.start}–${daySchedule.end}</div>` : ''}
+                    ${totalCount > 0 ? `<div class="booking-count">${totalCount}</div>` : ''}
+                    ${(pending > 0 || confirmed > 0 || cancelled > 0) ? `<div class="booking-dots">
+                        ${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}
+                        ${pending > 0 ? `<div class="booking-dot pending"><span></span>${pending}</div>` : ''}
+                        ${cancelled > 0 ? `<div class="booking-dot cancelled"><span></span>${cancelled}</div>` : ''}
+                    </div>` : ''}
                 </div>`;
             }
             const totalCells = startDay + daysInMonth;
@@ -1572,23 +1739,66 @@ import Layout from '../../layouts/Layout.astro';
             title.textContent = `${dayNames[date.getDay()]}, ${dateStr}`;
             const holidayName = holidays[dateStr];
             const dayBookings = allBookings.filter(b => b.date === dateStr);
+            
             let html = '';
-            if (holidayName) html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;"><div class="booking-details"><div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${holidayName}</div></div></div>`;
-            if (dayBookings.length === 0 && !holidayName) html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-muted);"></i><span>Nav ierakstu šajā dienā</span></div>';
-            else {
-                dayBookings.sort((a, b) => a.time.localeCompare(b.time));
-                html += dayBookings.map(b => `<div class="booking-card ${b.status}">
-                    <div class="booking-header"><div><span class="booking-name">${b.name}</span><span class="booking-status ${b.status}">${getStatusText(b.status)}</span></div><span class="booking-time">${b.time}</span></div>
+            if (holidayName) {
+                html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;">
                     <div class="booking-details">
-                        <div><i class="ph ph-clipboard-text"></i>${b.service === 'initial' ? 'Pirmreizējā konsultācija' : 'Atkārtota konsultācija'}</div>
-                        <div><i class="ph ${b.consultationFormat === 'online' ? 'ph-video-camera' : 'ph-map-pin'}"></i>${b.consultationFormat === 'online' ? 'Online' : 'Klātienē'}</div>
-                        <div><i class="ph ph-envelope"></i>${b.email}</div>
-                        ${b.phone ? `<div><i class="ph ph-phone"></i>${b.phone}</div>` : ''}
-                        ${b.notes ? `<div><i class="ph ph-note"></i>${b.notes}</div>` : ''}
-                        <div><i class="ph ph-currency-eur"></i>€${b.price}</div>
+                        <div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${holidayName}</div>
                     </div>
-                    <div class="booking-actions">${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger"><i class="ph ph-x"></i> Atcelt</button>` : ''}</div>
-                </div>`).join('');
+                </div>`;
+            }
+            
+            if (dayBookings.length === 0 && !holidayName) {
+                html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-muted);"></i><span>Nav ierakstu šajā dienā</span></div>';
+            } else {
+                // Группируем записи по статусу
+                const confirmedBookings = dayBookings.filter(b => b.paymentConfirmed && b.status !== 'cancelled');
+                const pendingBookings = dayBookings.filter(b => !b.paymentConfirmed && b.status !== 'cancelled');
+                const cancelledBookings = dayBookings.filter(b => b.status === 'cancelled');
+                
+                // Функция для рендеринга группы
+                const renderGroup = (bookings, title, icon, color) => {
+                    if (bookings.length === 0) return '';
+                    bookings.sort((a, b) => a.time.localeCompare(b.time));
+                    return `
+                        <div class="bookings-group">
+                            <h4 class="group-title" style="color:${color};">
+                                <i class="ph ${icon}"></i>
+                                ${title} (${bookings.length})
+                            </h4>
+                            ${bookings.map(b => `
+                                <div class="booking-card ${b.status || (b.paymentConfirmed ? 'confirmed' : 'pending')}">
+                                    <div class="booking-header">
+                                        <div class="booking-info">
+                                            <div class="booking-name">${b.name}</div>
+                                            <span class="booking-status ${b.status || (b.paymentConfirmed ? 'confirmed' : 'pending')}">
+                                                ${b.status === 'cancelled' ? 'Atcelts' : b.paymentConfirmed ? 'Apstiprināts' : 'Gaida'}
+                                            </span>
+                                        </div>
+                                        <span class="booking-time">${b.time}</span>
+                                    </div>
+                                    <div class="booking-details">
+                                        <div><i class="ph ph-clipboard-text"></i>${getServiceName(b.service)}</div>
+                                        <div><i class="ph ${b.consultationFormat === 'online' ? 'ph-video-camera' : 'ph-map-pin'}"></i>${b.consultationFormat === 'online' ? 'Online' : 'Klātienē'}</div>
+                                        <div><i class="ph ph-envelope"></i>${b.email}</div>
+                                        ${b.phone ? `<div><i class="ph ph-phone"></i>${b.phone}</div>` : ''}
+                                        ${b.message ? `<div><i class="ph ph-note"></i>${b.message}</div>` : ''}
+                                        <div><i class="ph ph-currency-eur"></i>€${b.price || 0}</div>
+                                    </div>
+                                    <div class="booking-actions">
+                                        ${!b.paymentConfirmed && b.status !== 'cancelled' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}
+                                        ${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger btn-sm"><i class="ph ph-x"></i> Atcelt</button>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                };
+                
+                html += renderGroup(confirmedBookings, 'Apstiprinātie', 'ph-check-circle', '#22c55e');
+                html += renderGroup(pendingBookings, 'Gaida apstiprinājumu', 'ph-clock', '#facc15');
+                html += renderGroup(cancelledBookings, 'Atcelti', 'ph-x-circle', '#ef4444');
             }
             list.innerHTML = html;
             details.classList.remove('hidden');
@@ -1596,7 +1806,24 @@ import Layout from '../../layouts/Layout.astro';
         };
 
         function getStatusText(status) {
-            switch(status) { case 'confirmed': return 'Apstiprināts'; case 'pending': return 'Gaida'; case 'cancelled': return 'Atcelts'; default: return status; }
+            switch(status) { 
+                case 'confirmed': return 'Apstiprināts'; 
+                case 'pending': return 'Gaida'; 
+                case 'cancelled': return 'Atcelts'; 
+                default: return status; 
+            }
+        }
+
+        function getServiceName(service) {
+            const services = {
+                'cgm-diagnostic': 'CGM diagnostika',
+                'consultation': 'Uztura konsultācija',
+                'initial': 'Pirmreizējā konsultācija',
+                'followup': 'Atkārtota konsultācija',
+                'package3': '3 konsultāciju pakete',
+                'package5': '5 konsultāciju pakete'
+            };
+            return services[service] || service;
         }
 
         window.confirmBooking = async function(id) {
@@ -1627,8 +1854,28 @@ import Layout from '../../layouts/Layout.astro';
                     if (endInput) endInput.value = config.end || '17:00';
                 });
                 if (data.blockedDates) renderBlockedDates(data.blockedDates);
+                if (data.vacationPeriods) renderVacationPeriods(data.vacationPeriods);
             }).catch(() => {});
             loadHolidays();
+        }
+
+        function renderVacationPeriods(periods) {
+            const list = document.getElementById('vacation-list');
+            if (!periods || periods.length === 0) { 
+                list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav atvaļinājuma periodu</p>'; 
+                return; 
+            }
+            list.innerHTML = periods.map(v => `
+                <div class="blocked-item" style="background:#eff6ff;">
+                    <span>
+                        <strong>${v.startDate}</strong> — <strong>${v.endDate}</strong>
+                        ${v.reason ? '<span style="color:var(--color-text-light);margin-left:12px;">' + v.reason + '</span>' : ''}
+                    </span>
+                    <button onclick="removeVacation('${v.id}')" class="btn-close" style="width:28px;height:28px;">
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
         function renderBlockedDates(dates) {
@@ -1641,6 +1888,60 @@ import Layout from '../../layouts/Layout.astro';
             const scheduleData = {};
             days.forEach(day => { scheduleData[day] = { enabled: document.getElementById(`day-${day}-enabled`).checked, start: document.getElementById(`day-${day}-start`).value, end: document.getElementById(`day-${day}-end`).value }; });
             try { await fetch(API_BASE + '/dashboard/availability', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule: scheduleData }) }); alert('Pieejamība saglabāta!'); } catch (e) { alert('Kļūda: ' + e.message); }
+        });
+
+        document.getElementById('add-vacation').addEventListener('click', async () => {
+            const startDate = document.getElementById('vacation-start').value;
+            const endDate = document.getElementById('vacation-end').value;
+            const reason = document.getElementById('vacation-reason').value;
+            if (!startDate || !endDate) return alert('Izvēlieties sākuma un beigu datumus');
+            if (new Date(startDate) > new Date(endDate)) return alert('Sākuma datums nevar būt vēlāks par beigu datumu');
+            try { 
+                console.log('💼 Adding vacation:', { startDate, endDate, reason });
+                const response = await fetch(API_BASE + '/dashboard/availability/vacation', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ startDate, endDate, reason }) 
+                });
+                const result = await response.json();
+                console.log('✅ Vacation added:', result);
+                loadAvailability(); 
+                loadCalendar();
+                document.getElementById('vacation-start').value = ''; 
+                document.getElementById('vacation-end').value = ''; 
+                document.getElementById('vacation-reason').value = ''; 
+                alert('Atvaļinājums pievienots!');
+            } catch (e) { 
+                console.error('❌ Error adding vacation:', e);
+                alert('Kļūda: ' + e.message); 
+            }
+        });
+
+        window.removeVacation = async function(id) {
+            if (!confirm('Dzēst šo atvaļinājuma periodu?')) return;
+            try { 
+                await fetch(API_BASE + '/dashboard/availability/vacation', { 
+                    method: 'DELETE', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ id }) 
+                }); 
+                loadAvailability(); 
+                loadCalendar();
+            } catch (e) { alert('Kļūda: ' + e.message); }
+        };
+
+        // Auto-set vacation end date min when start date is selected
+        document.getElementById('vacation-start').addEventListener('change', function() {
+            const startDate = this.value;
+            const endDateInput = document.getElementById('vacation-end');
+            if (startDate) {
+                // Set minimum date for end date to be same as start date
+                endDateInput.min = startDate;
+                // If end date is not set or is before start date, set it to start date
+                if (!endDateInput.value || endDateInput.value < startDate) {
+                    endDateInput.value = startDate;
+                }
+            }
         });
 
         document.getElementById('add-blocked-date').addEventListener('click', async () => {

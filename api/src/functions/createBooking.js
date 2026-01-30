@@ -1,6 +1,7 @@
 const { app } = require('@azure/functions');
 const config = require('../config');
 const translations = require('../translations');
+const { addCorsHeaders } = require('../utils/cors');
 const { saveBooking, generateBookingId, generatePaymentToken, isSlotBooked } = require('../services/bookingRepository');
 const { sendClientConfirmation, sendAdminNotification, isConfigured } = require('../services/emailService');
 const { generateInvoicePDF } = require('../services/pdfService');

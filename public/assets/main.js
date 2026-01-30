@@ -795,8 +795,7 @@
         bookingCalendar = new BookingCalendar('bookingCalendar', {
             lang: 'lv',
             onBookingComplete: (booking) => {
-                console.log('Booking completed:', booking);
-                // Here you could send the booking to a server
+                // Could add analytics tracking here
             }
         });
     }

@@ -33,10 +33,17 @@ async function sendEmail({ to, subject, html, attachments = [] }) {
     const client = getResendClient();
     
     if (!client) {
+        console.error('❌ Email service not configured: RESEND_API_KEY missing');
         return { success: false, error: 'RESEND_API_KEY not configured' };
     }
     
     try {
+        console.log('📧 Sending email...');
+        console.log('  From:', `${config.branding.name} <${config.branding.email}>`);
+        console.log('  To:', to);
+        console.log('  Subject:', subject);
+        console.log('  Attachments:', attachments.length);
+        
         const result = await client.emails.send({
             from: `${config.branding.name} <${config.branding.email}>`,
             to,
@@ -45,9 +52,13 @@ async function sendEmail({ to, subject, html, attachments = [] }) {
             attachments
         });
         
+        console.log('✅ Email sent successfully, ID:', result?.data?.id);
         return { success: true, id: result?.data?.id };
     } catch (error) {
-        console.error('Email sending error:', error);
+        console.error('❌ Email sending error:', error.message);
+        if (error.message.includes('domain')) {
+            console.error('💡 Hint: На бесплатном плане Resend используйте onboarding@resend.dev');
+        }
         return { success: false, error: error.message };
     }
 }

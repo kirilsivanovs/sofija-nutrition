@@ -3,8 +3,10 @@
  * A calendar widget for scheduling appointments
  */
 
-// External API URL (Azure Functions BYOF)
-const API_BASE_URL = 'https://sofija-nutrition-api.azurewebsites.net';
+// Auto-detect API URL based on environment
+const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:7071'
+    : 'https://sofija-nutrition-api.azurewebsites.net';
 
 class BookingCalendar {
     constructor(containerId, options = {}) {
@@ -13,6 +15,7 @@ class BookingCalendar {
         this.selectedDate = null;
         this.selectedTime = null;
         this.availability = null;
+        this.serviceSettings = [];
         this.currentLang = options.lang || 'lv';
         this.onBookingComplete = options.onBookingComplete || (() => {});
         
@@ -95,7 +98,6 @@ class BookingCalendar {
         await this.loadAvailability();
         this.render();
         this.attachEventListeners();
-        console.log('BookingCalendar initialized');
     }
 
     async loadAvailability() {
@@ -113,7 +115,6 @@ class BookingCalendar {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             this.availability = await response.json();
-            console.log('Availability loaded:', this.availability);
         } catch (error) {
             console.error('Failed to load availability:', error);
             this.availability = { slots: {}, booked: [], serviceTypes: [] };
@@ -170,23 +171,23 @@ class BookingCalendar {
                                 
                                 <div class="form-group">
                                     <label>${this.t('serviceLabel')}</label>
-                                    <select name="serviceType" required>
+                                    <select name="serviceType" id="serviceTypeSelect" required>
                                         ${this.renderServiceOptions()}
                                     </select>
                                 </div>
                                 
-                                <div class="form-group">
+                                <div class="form-group" id="formatGroup">
                                     <label>${this.t('formatLabel')}</label>
                                     <div class="format-options">
                                         <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="online" required>
+                                            <input type="radio" name="consultationFormat" value="online" id="formatOnline" required>
                                             <span class="format-label">
                                                 <i class="ph ph-video-camera"></i>
                                                 ${this.t('formatOnline')}
                                             </span>
                                         </label>
                                         <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="in-person">
+                                            <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson">
                                             <span class="format-label">
                                                 <i class="ph ph-map-pin"></i>
                                                 ${this.t('formatInPerson')}
@@ -427,6 +428,9 @@ class BookingCalendar {
                     ${this.formatDateDisplay(this.selectedDate)}, ${this.selectedTime}
                 `;
             }
+            
+            // Apply service format restrictions to initial state
+            this.updateFormatOptions();
         }
     }
 
@@ -448,13 +452,11 @@ class BookingCalendar {
             name: formData.get('name'),
             email: formData.get('email'),
             phone: formData.get('phone'),
-            serviceType: formData.get('serviceType'),
+            service: formData.get('serviceType'),
             consultationFormat: formData.get('consultationFormat'),
             message: formData.get('message'),
             language: this.currentLang
         };
-
-        console.log('Submitting booking:', bookingData);
 
         try {
             // Call external Azure Functions API
@@ -468,7 +470,6 @@ class BookingCalendar {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('Booking API response:', result);
                 
                 if (result.success) {
                     // Update success modal with invoice info
@@ -478,7 +479,6 @@ class BookingCalendar {
                 }
             } else {
                 // Fallback for local development without API
-                console.log('API not available, simulating success');
                 this.simulateLocalBooking(bookingData);
             }
         } catch (error) {
@@ -530,6 +530,7 @@ class BookingCalendar {
                 modal.style.display = 'none';
                 this.render();
                 this.attachEventListeners();
+                this.renderCalendar();
             });
         }
 
@@ -555,8 +556,6 @@ class BookingCalendar {
             price: bookingData.serviceType === 'cgm-diagnostic' ? 150 : 
                    bookingData.serviceType === 'consultation' ? 80 : 50
         };
-
-        console.log('Simulated booking (local dev):', simulatedBooking);
         
         // Add to local booked array
         if (this.availability) {
@@ -593,15 +592,80 @@ class BookingCalendar {
         this.onBookingComplete(simulatedBooking);
     }
 
+    updateFormatOptions() {
+        const serviceSelect = this.container.querySelector('#serviceTypeSelect');
+        if (!serviceSelect) return;
+        
+        const serviceId = serviceSelect.value;
+        const formatOnline = this.container.querySelector('#formatOnline');
+        const formatInPerson = this.container.querySelector('#formatInPerson');
+        
+        // Найти настройки услуги из загруженных данных
+        const serviceSetting = this.serviceSettings?.find(s => s.id === serviceId);
+        
+        if (serviceSetting) {
+            // Использовать настройки из базы данных
+            if (!serviceSetting.allowOnline && serviceSetting.allowInPerson) {
+                // In-person only
+                if (formatOnline && formatInPerson) {
+                    formatOnline.parentElement.style.display = 'none';
+                    formatInPerson.checked = true;
+                    this.selectedFormat = 'in-person';
+                }
+            } else if (serviceSetting.allowOnline && !serviceSetting.allowInPerson) {
+                // Только онлайн
+                if (formatOnline && formatInPerson) {
+                    formatInPerson.parentElement.style.display = 'none';
+                    formatOnline.checked = true;
+                    this.selectedFormat = 'online';
+                }
+            } else {
+                // Оба формата доступны
+                if (formatOnline && formatInPerson) {
+                    formatOnline.parentElement.style.display = 'flex';
+                    formatInPerson.parentElement.style.display = 'flex';
+                    if (!formatOnline.checked && !formatInPerson.checked) {
+                        formatOnline.checked = true;
+                        this.selectedFormat = 'online';
+                    }
+                }
+            }
+        } else {
+            // Fallback to hardcoded list if settings not loaded
+            const inPersonOnly = ['cgm-diagnostic'];
+            
+            if (inPersonOnly.includes(serviceId)) {
+                if (formatOnline && formatInPerson) {
+                    formatOnline.parentElement.style.display = 'none';
+                    formatInPerson.checked = true;
+                    this.selectedFormat = 'in-person';
+                }
+            } else {
+                if (formatOnline && formatInPerson) {
+                    formatOnline.parentElement.style.display = 'flex';
+                    formatInPerson.parentElement.style.display = 'flex';
+                    if (!formatOnline.checked && !formatInPerson.checked) {
+                        formatOnline.checked = true;
+                        this.selectedFormat = 'online';
+                    }
+                }
+            }
+        }
+    }
+
     attachEventListeners() {
         // Previous month
         this.container.querySelector('.cal-nav-btn.prev')?.addEventListener('click', () => {
+            // Set to 1st day to avoid month overflow (e.g., Jan 31 -> Feb 31 = Mar 3)
+            this.currentDate.setDate(1);
             this.currentDate.setMonth(this.currentDate.getMonth() - 1);
             this.renderCalendar();
         });
 
         // Next month
         this.container.querySelector('.cal-nav-btn.next')?.addEventListener('click', () => {
+            // Set to 1st day to avoid month overflow (e.g., Jan 30 -> Feb 30 = Mar 2)
+            this.currentDate.setDate(1);
             this.currentDate.setMonth(this.currentDate.getMonth() + 1);
             this.renderCalendar();
         });
@@ -610,10 +674,8 @@ class BookingCalendar {
         const calendarDays = this.container.querySelector('.calendar-days');
         if (calendarDays) {
             calendarDays.addEventListener('click', (e) => {
-                console.log('Calendar click event', e.target);
                 const dayEl = e.target.closest('.day');
                 if (dayEl) {
-                    console.log('Day clicked:', dayEl.dataset.date, dayEl.classList.toString());
                     if (!dayEl.classList.contains('past') && !dayEl.classList.contains('empty') && !dayEl.classList.contains('unavailable')) {
                         this.selectDate(dayEl.dataset.date);
                     }
@@ -636,6 +698,11 @@ class BookingCalendar {
             this.submitBooking(formData);
         });
 
+        // Service type change - handle format restrictions
+        this.container.querySelector('#serviceTypeSelect')?.addEventListener('change', (e) => {
+            this.updateFormatOptions();
+        });
+
         // Close success modal
         this.container.querySelector('.close-success-btn')?.addEventListener('click', () => {
             const modal = this.container.querySelector('.booking-success-modal');
@@ -643,6 +710,8 @@ class BookingCalendar {
                 modal.style.display = 'none';
             }
             this.render(); // Re-render calendar
+            this.attachEventListeners(); // Re-attach event listeners
+            this.renderCalendar(); // Re-render calendar days
         });
     }
 

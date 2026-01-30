@@ -1,45 +1,92 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
 const { isLatvianHoliday } = require('../services/latvianHolidays');
+const { addCorsHeaders } = require('../utils/cors');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const BOOKINGS_TABLE = 'bookings';
 const SETTINGS_TABLE = 'adminSettings';
+const SERVICES_TABLE = 'Services';
+const PARTITION_KEY = 'SERVICE';
+
+// Кэш для настроек услуг (TTL 5 минут)
+let servicesCache = null;
+let servicesCacheTime = null;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 минут
+
+/**
+ * Загрузить настройки услуг из базы данных
+ * Возвращает только активные услуги (isActive = true)
+ * Использует кэширование для снижения запросов к базе
+ */
+async function getServiceSettings() {
+    // Проверка кэша
+    const now = Date.now();
+    if (servicesCache && servicesCacheTime && (now - servicesCacheTime < CACHE_TTL_MS)) {
+        return servicesCache;
+    }
+    
+    try {
+        const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
+        const services = [];
+        
+        for await (const entity of tableClient.listEntities()) {
+            // Только активные услуги из правильной партиции
+            if (entity.partitionKey === PARTITION_KEY && entity.isActive !== false) {
+                services.push({
+                    id: entity.serviceId,
+                    duration: entity.durationMinutes,
+                    name: {
+                        lv: entity.serviceName_LV,
+                        ru: entity.serviceName_RU,
+                        en: entity.serviceName_EN
+                    }
+                });
+            }
+        }
+        
+        // Сохранение в кэш
+        servicesCache = services;
+        servicesCacheTime = Date.now();
+        
+        return services;
+    } catch (e) {
+        // Fallback to hardcoded values if table doesn't exist
+        return [
+            {
+                id: 'cgm-diagnostic',
+                duration: 60,
+                name: {
+                    lv: 'CGM diagnostika (60 min)',
+                    ru: 'CGM-диагностика (60 мин)',
+                    en: 'CGM Diagnostic (60 min)'
+                }
+            },
+            {
+                id: 'consultation',
+                duration: 60,
+                name: {
+                    lv: 'Uztura konsultācija (60 min)',
+                    ru: 'Консультация по питанию (60 мин)',
+                    en: 'Nutrition Consultation (60 min)'
+                }
+            },
+            {
+                id: 'free-consultation',
+                duration: 15,
+                name: {
+                    lv: 'Bezmaksas konsultācija (15 min)',
+                    ru: 'Бесплатная консультация (15 мин)',
+                    en: 'Free Consultation (15 min)'
+                }
+            }
+        ];
+    }
+}
 
 // Default slots if no schedule is configured
 const defaultSlots = [
     '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
-];
-
-// Service types available
-const serviceTypes = [
-    {
-        id: 'cgm-diagnostic',
-        duration: 60,
-        name: {
-            lv: 'CGM diagnostika (60 min)',
-            ru: 'CGM-диагностика (60 мин)',
-            en: 'CGM Diagnostic (60 min)'
-        }
-    },
-    {
-        id: 'consultation',
-        duration: 60,
-        name: {
-            lv: 'Uztura konsultācija (60 min)',
-            ru: 'Консультация по питанию (60 мин)',
-            en: 'Nutrition Consultation (60 min)'
-        }
-    },
-    {
-        id: 'free-consultation',
-        duration: 15,
-        name: {
-            lv: 'Bezmaksas konsultācija (15 min)',
-            ru: 'Бесплатная консультация (15 мин)',
-            en: 'Free Consultation (15 min)'
-        }
-    }
 ];
 
 // Day name to index mapping (0 = Sunday, 1 = Monday, etc.)
@@ -94,6 +141,22 @@ async function getBlockedDates() {
     }
 }
 
+// Fetch vacation periods
+async function getVacationPeriods() {
+    try {
+        const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+        const entity = await tableClient.getEntity('config', 'vacationPeriods');
+        return JSON.parse(entity.value);
+    } catch (e) {
+        return [];
+    }
+}
+
+// Check if date is within any vacation period
+function isDateInVacation(dateStr, vacationPeriods) {
+    return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
+}
+
 // Fetch booked slots from bookings table (only active bookings)
 async function getBookedSlots(startDate, endDate) {
     const bookedSlots = {};
@@ -138,26 +201,28 @@ app.http('getAvailability', {
             const currentHour = today.getHours();
             const currentMinute = today.getMinutes();
             
-            // Calculate date range
+            // Calculate date range - 90 days ahead for better availability visibility
             const endDate = new Date(today);
-            endDate.setDate(today.getDate() + 30);
+            endDate.setDate(today.getDate() + 90);
             const endDateStr = endDate.toISOString().split('T')[0];
             
             // Fetch all necessary data in parallel
-            const [schedule, blockedDatesArr, bookedSlots] = await Promise.all([
+            const [schedule, blockedDatesArr, vacationPeriods, bookedSlots, serviceTypes] = await Promise.all([
                 getScheduleSettings(),
                 getBlockedDates(),
-                getBookedSlots(todayStr, endDateStr)
+                getVacationPeriods(),
+                getBookedSlots(todayStr, endDateStr),
+                getServiceSettings()
             ]);
             
             // Convert blocked dates array to Set for fast lookup
             const blockedDates = new Set(blockedDatesArr.map(d => d.date));
             
             if (!date) {
-                // Return availability for next 30 days
+                // Return availability for next 90 days
                 const slots = {};
                 
-                for (let i = 0; i <= 30; i++) {
+                for (let i = 0; i <= 90; i++) {
                     const checkDate = new Date(today);
                     checkDate.setDate(today.getDate() + i);
                     const dateStr = checkDate.toISOString().split('T')[0];
@@ -177,6 +242,11 @@ app.http('getAvailability', {
                     
                     // Skip manually blocked dates
                     if (blockedDates.has(dateStr)) {
+                        continue;
+                    }
+                    
+                    // Skip vacation periods
+                    if (isDateInVacation(dateStr, vacationPeriods)) {
                         continue;
                     }
                     
@@ -260,6 +330,20 @@ app.http('getAvailability', {
                 };
             }
             
+            // Check vacation
+            if (isDateInVacation(date, vacationPeriods)) {
+                return {
+                    status: 200,
+                    jsonBody: {
+                        date,
+                        slots: { [date]: [] },
+                        booked: [],
+                        serviceTypes,
+                        reason: 'Vacation period'
+                    }
+                };
+            }
+            
             // Generate available slots
             let availableSlots = generateSlotsFromSchedule(schedule, dayName);
             const booked = bookedSlots[date] || [];
@@ -286,10 +370,10 @@ app.http('getAvailability', {
             
         } catch (error) {
             context.error('Error getting availability:', error);
-            return {
+            return addCorsHeaders({
                 status: 500,
                 jsonBody: { error: 'Internal server error', details: error.message }
-            };
+            }, request);
         }
     }
 });

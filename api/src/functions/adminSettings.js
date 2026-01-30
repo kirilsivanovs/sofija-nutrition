@@ -35,6 +35,7 @@ app.http('adminGetAvailability', {
 
             let schedule = null;
             let blockedDates = [];
+            let vacationPeriods = [];
 
             try {
                 const entity = await tableClient.getEntity(PARTITION_KEY, 'schedule');
@@ -59,9 +60,16 @@ app.http('adminGetAvailability', {
                 // No blocked dates
             }
 
+            try {
+                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                vacationPeriods = JSON.parse(entity.value);
+            } catch (e) {
+                // No vacation periods
+            }
+
             return {
                 status: 200,
-                jsonBody: { schedule, blockedDates }
+                jsonBody: { schedule, blockedDates, vacationPeriods }
             };
         } catch (error) {
             context.error('Error fetching availability:', error);
@@ -317,6 +325,109 @@ app.http('getHolidays', {
             return {
                 status: 500,
                 jsonBody: { error: 'Failed to fetch holidays', details: error.message }
+            };
+        }
+    }
+});
+
+// Add vacation period
+app.http('adminAddVacation', {
+    methods: ['POST'],
+    authLevel: 'anonymous',
+    route: 'dashboard/availability/vacation',
+    handler: async (request, context) => {
+        try {
+            await ensureTable(SETTINGS_TABLE);
+            
+            const body = await request.json();
+            const tableClient = TableClient.fromConnectionString(
+                connectionString,
+                SETTINGS_TABLE
+            );
+
+            // Get existing vacation periods
+            let vacationPeriods = [];
+            try {
+                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                vacationPeriods = JSON.parse(entity.value);
+            } catch (e) {
+                // No vacation periods yet
+            }
+
+            // Add new vacation period
+            const newVacation = {
+                id: Date.now().toString(),
+                startDate: body.startDate,
+                endDate: body.endDate,
+                reason: body.reason || ''
+            };
+            vacationPeriods.push(newVacation);
+            vacationPeriods.sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+            await tableClient.upsertEntity({
+                partitionKey: PARTITION_KEY,
+                rowKey: 'vacationPeriods',
+                value: JSON.stringify(vacationPeriods),
+                updatedAt: new Date().toISOString()
+            });
+
+            return {
+                status: 200,
+                jsonBody: { success: true, vacation: newVacation }
+            };
+        } catch (error) {
+            context.error('Error adding vacation:', error);
+            return {
+                status: 500,
+                jsonBody: { error: 'Failed to add vacation', details: error.message }
+            };
+        }
+    }
+});
+
+// Delete vacation period
+app.http('adminDeleteVacation', {
+    methods: ['DELETE'],
+    authLevel: 'anonymous',
+    route: 'dashboard/availability/vacation',
+    handler: async (request, context) => {
+        try {
+            await ensureTable(SETTINGS_TABLE);
+            
+            const body = await request.json();
+            const tableClient = TableClient.fromConnectionString(
+                connectionString,
+                SETTINGS_TABLE
+            );
+
+            // Get existing vacation periods
+            let vacationPeriods = [];
+            try {
+                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                vacationPeriods = JSON.parse(entity.value);
+            } catch (e) {
+                return { status: 404, jsonBody: { error: 'No vacation periods found' } };
+            }
+
+            // Remove vacation by id
+            vacationPeriods = vacationPeriods.filter(v => v.id !== body.id);
+
+            await tableClient.upsertEntity({
+                partitionKey: PARTITION_KEY,
+                rowKey: 'vacationPeriods',
+                value: JSON.stringify(vacationPeriods),
+                updatedAt: new Date().toISOString()
+            });
+
+            return {
+                status: 200,
+                jsonBody: { success: true }
+            };
+        } catch (error) {
+            context.error('Error deleting vacation:', error);
+            return {
+                status: 500,
+                jsonBody: { error: 'Failed to delete vacation', details: error.message }
             };
         }
     }
