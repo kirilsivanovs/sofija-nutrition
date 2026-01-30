@@ -36,10 +36,13 @@ test('Полное бронирование: от главной страниц�
   const bookingForm = page.locator('#bookingCalendar .booking-form-section');
   await expect(bookingForm).toBeVisible({ timeout: 5000 });
   
-  // 7. Выбираем формат консультации (онлайн)
-  await page.locator('#bookingCalendar label.format-option').first().click();
+  // 7. Скроллим к форме чтобы все элементы были видны
+  await bookingForm.scrollIntoViewIfNeeded();
   
-  // 8. Заполняем обязательные поля
+  // 8. Выбираем формат консультации (кликаем на опцию "Klātienē" в форме)
+  await bookingForm.getByText('Klātienē', { exact: true }).click();
+  
+  // 9. Заполняем обязательные поля
   await page.locator('#bookingCalendar input[name="name"]').fill('E2E Test User');
   await page.locator('#bookingCalendar input[name="email"]').fill('e2e-test@example.com');
   
