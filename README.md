@@ -732,6 +732,277 @@ GET http://localhost:7071/api/availability/2026-02-15
 - `free_consultation_booking` - Бесплатные консультации (ON)
 - `maintenance_mode` - Режим обслуживания (OFF)
 
+---
+
+## 🔒 Git Flow & Защита Main Branch
+
+### Стратегия работы с ветками
+
+**Основной принцип:** Main branch всегда должен содержать только стабильный, протестированный код.
+
+### Процесс разработки новой фичи
+
+#### 1️⃣ Создание feature branch
+
+```powershell
+# Обновить main до последней версии
+git checkout main
+git pull origin main
+
+# Создать новую ветку от main
+git checkout -b feature/название-фичи
+```
+
+**Naming convention для веток:**
+- `feature/` - новая функциональность (например, `feature/sms-notifications`)
+- `fix/` - исправление багов (например, `fix/timezone-issue`)
+- `refactor/` - рефакторинг кода (например, `refactor/booking-service`)
+- `test/` - добавление/улучшение тестов (например, `test/payment-scenarios`)
+
+#### 2️⃣ Разработка в feature branch
+
+```powershell
+# Работаем над фичей, делаем коммиты
+git add .
+git commit -m "feat: добавил функцию X"
+
+# Периодически синхронизируемся с main
+git checkout main
+git pull origin main
+git checkout feature/название-фичи
+git merge main  # Или git rebase main для чистой истории
+```
+
+#### 3️⃣ Pre-merge проверки (обязательно!)
+
+Перед тем как мерджить в main, **обязательно** выполнить все проверки:
+
+**A. Запустить все unit тесты:**
+```powershell
+cd api
+npm test
+```
+✅ **Требование:** Все 483 теста должны пройти успешно
+
+**B. Запустить критические бизнес-сценарии:**
+```powershell
+# Запустить API
+cd api
+func start --cors *
+
+# В другом терминале - запустить критические тесты
+npm test critical-business-scenarios.test.js
+```
+✅ **Требование:** Все 20 критических тестов прошли
+
+**C. Проверить работу в браузере (E2E smoke test):**
+```powershell
+# Запустить полный стек
+# Terminal 1: Backend
+cd api
+func start --cors *
+
+# Terminal 2: Frontend
+npm run dev
+```
+
+**Критические проверки вручную:**
+1. ✅ Открыть http://localhost:4321
+2. ✅ Выбрать услугу и дату
+3. ✅ Проверить что слоты загружаются
+4. ✅ Создать тестовое бронирование
+5. ✅ Проверить что пришел email (в логах)
+6. ✅ Проверить админ-панель (если менялась)
+
+**D. Проверить что нет ошибок линтинга:**
+```powershell
+# Если есть ESLint
+npm run lint
+
+# Проверить TypeScript ошибки (если используется)
+npm run type-check
+```
+
+#### 4️⃣ Создание Pull Request
+
+```powershell
+# Запушить feature branch на GitHub
+git push origin feature/название-фичи
+```
+
+На GitHub:
+1. Открыть Pull Request из `feature/название-фичи` в `main`
+2. **Заполнить описание PR:**
+   - Что изменилось
+   - Зачем это нужно
+   - Какие тесты добавлены/обновлены
+   - Скриншоты (если UI изменения)
+
+**Пример описания PR:**
+```markdown
+## 🎯 Цель
+Добавить SMS уведомления для клиентов
+
+## ✨ Что изменилось
+- Добавлен сервис `smsService.js` с интеграцией Twilio
+- Обновлена функция `createBooking` для отправки SMS
+- Добавлены настройки SMS в admin панель
+
+## ✅ Тесты
+- [x] Все 483 unit теста проходят
+- [x] Все 20 критических бизнес-тестов проходят  
+- [x] Добавлены 5 новых тестов для SMS функциональности
+- [x] Проверено вручную в браузере
+
+## 📸 Скриншоты
+[приложить скриншоты]
+```
+
+#### 5️⃣ Code Review (опционально, если есть команда)
+
+Если работаете один - переходите к шагу 6.
+
+Если есть команда:
+- Дождаться review от коллеги
+- Исправить замечания
+- Получить approve
+
+#### 6️⃣ CI/CD проверки (автоматические)
+
+GitHub Actions автоматически запустит:
+- ✅ Unit тесты (`npm test`)
+- ✅ Build проверка (`npm run build`)
+- ✅ Критические тесты
+
+**ВАЖНО:** Мерджить можно только если все CI checks прошли успешно ✅
+
+#### 7️⃣ Merge в Main
+
+**Только после того как:**
+- ✅ Все unit тесты прошли (483/483)
+- ✅ Все критические тесты прошли (20/20)
+- ✅ E2E smoke test пройден вручную
+- ✅ CI/CD checks прошли на GitHub
+- ✅ Code review пройден (если есть команда)
+
+**Способы merge:**
+
+**A. Через GitHub UI (рекомендуется):**
+1. Нажать "Merge Pull Request"
+2. Выбрать стратегию:
+   - **Squash and merge** - все коммиты сольются в один (рекомендуется для feature веток)
+   - **Rebase and merge** - чистая история, коммиты по одному
+   - **Merge commit** - сохранить все коммиты
+
+**B. Через командную строку:**
+```powershell
+git checkout main
+git pull origin main
+git merge feature/название-фичи --no-ff  # Создаст merge commit
+git push origin main
+```
+
+#### 8️⃣ Очистка
+
+```powershell
+# Удалить локальную feature ветку
+git branch -d feature/название-фичи
+
+# Удалить remote feature ветку
+git push origin --delete feature/название-фичи
+```
+
+### 🚨 Правила защиты Main Branch
+
+**ЗАПРЕЩЕНО:**
+- ❌ Делать `git push` напрямую в main без тестов
+- ❌ Мерджить если хотя бы 1 тест упал
+- ❌ Мерджить если CI/CD check не прошел
+- ❌ Пушить код который не запускается локально
+- ❌ Коммитить закомментированный код или TODO без задачи
+
+**ОБЯЗАТЕЛЬНО:**
+- ✅ Всегда работать в feature ветке
+- ✅ Запускать тесты перед merge
+- ✅ Проверять вручную критические сценарии
+- ✅ Писать осмысленные commit messages
+- ✅ Обновлять документацию при изменении API
+
+### 📊 Чеклист перед Merge в Main
+
+Используйте этот чеклист для каждого PR:
+
+```markdown
+## Pre-Merge Checklist
+
+### Тесты
+- [ ] `npm test` - все 483 unit теста прошли ✅
+- [ ] Критические бизнес-тесты прошли (20/20) ✅
+- [ ] Добавлены тесты для новой функциональности ✅
+- [ ] Coverage не упал (минимум 80%) ✅
+
+### Ручная проверка
+- [ ] Локально работает frontend (http://localhost:4321) ✅
+- [ ] Локально работает API (http://localhost:7071) ✅
+- [ ] Создал тестовое бронирование - работает ✅
+- [ ] Проверил админ-панель - работает ✅
+- [ ] Нет ошибок в консоли браузера ✅
+- [ ] Нет ошибок в логах API ✅
+
+### Код
+- [ ] Код отформатирован ✅
+- [ ] Нет console.log для дебага ✅
+- [ ] Нет закомментированного кода ✅
+- [ ] Переменные названы понятно ✅
+- [ ] Функции не больше 50 строк ✅
+- [ ] Обработаны все ошибки (try/catch) ✅
+
+### Документация
+- [ ] README обновлен (если нужно) ✅
+- [ ] Комментарии к сложным участкам кода ✅
+- [ ] API документация актуальна ✅
+
+### Git
+- [ ] Commit messages осмысленные ✅
+- [ ] Ветка синхронизирована с main ✅
+- [ ] Нет конфликтов ✅
+- [ ] CI/CD проверки прошли на GitHub ✅
+
+### Безопасность
+- [ ] Нет хардкодных паролей/ключей ✅
+- [ ] Секреты в .env/.gitignore ✅
+- [ ] Валидация всех входных данных ✅
+```
+
+### 🔄 Автоматизация (будущее)
+
+**GitHub Branch Protection Rules** (настроить в Settings > Branches):
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass (CI/CD)
+- ✅ Require conversation resolution before merging
+- ✅ Do not allow bypassing the above settings
+
+**Pre-commit hooks** (husky):
+```powershell
+# Установить husky для автоматической проверки
+npm install --save-dev husky
+npx husky init
+
+# В .husky/pre-commit:
+npm test
+```
+
+### 📈 Метрики качества
+
+**Target показатели:**
+- Test coverage: ≥ 80%
+- Tests passing: 100% (483/483)
+- Critical tests: 100% (20/20)
+- Build time: < 2 min
+- Zero console errors in production
+
+---
+
 ## 👀 Полезные ссылки
 
 - [Astro Documentation](https://docs.astro.build)
