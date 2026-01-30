@@ -1665,6 +1665,36 @@ import Layout from '../../layouts/Layout.astro';
             }
         }
 
+        // Находит ближайшую будущую запись и переключает календарь на этот месяц
+        async function navigateToFirstUpcomingBooking() {
+            try {
+                const response = await fetch(API_BASE + '/dashboard/bookings');
+                const data = await response.json();
+                const bookings = data.bookings || [];
+                
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                
+                // Находим ближайшую будущую запись (не отменённую)
+                const upcomingBookings = bookings
+                    .filter(b => b.date >= todayStr && b.status !== 'cancelled')
+                    .sort((a, b) => a.date.localeCompare(b.date));
+                
+                if (upcomingBookings.length > 0) {
+                    const firstBooking = upcomingBookings[0];
+                    const bookingDate = new Date(firstBooking.date);
+                    
+                    // Если запись в другом месяце - переключаемся
+                    if (bookingDate.getMonth() !== today.getMonth() || bookingDate.getFullYear() !== today.getFullYear()) {
+                        currentDate = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), 1);
+                        console.log(`📅 Переключено на месяц с ближайшей записью: ${firstBooking.date}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при поиске ближайших записей:', error);
+            }
+        }
+
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             const year = currentDate.getFullYear();
@@ -1969,7 +1999,8 @@ import Layout from '../../layouts/Layout.astro';
             try { await fetch(API_BASE + '/dashboard/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); alert('Iestatījumi saglabāti!'); } catch (e) { alert('Kļūda: ' + e.message); }
         });
 
-        loadCalendar();
+        // При первой загрузке - переходим к месяцу с ближайшими записями
+        navigateToFirstUpcomingBooking().then(() => loadCalendar());
 
         async function loadHolidays() {
             const year = document.getElementById('holiday-year').value;
