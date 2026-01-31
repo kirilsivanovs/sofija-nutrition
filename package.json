@@ -7,9 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "npm run sync:translations",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "sync:translations": "node -e \"require('fs').copyFileSync('shared/translations.js', 'public/assets/shared-translations.js'); console.log('Translations synced!')\"",
     "test": "jest --verbose",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

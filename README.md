@@ -1462,28 +1462,48 @@ async function saveBooking(booking) {
 
 #### 🟠 HIGH - Убрать дублирование переводов
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (PR #11)
 
-**Проблема:** Переводы есть в нескольких местах:
+**Проблема:** Переводы были в нескольких местах:
 - `api/src/translations.js`
 - `public/assets/booking.js` (hardcoded)
 - Email templates
 
 **Решение:** Единый источник переводов:
 
+```
+shared/translations.js           # Единственный источник истины
+    ↓
+api/src/translations.js          # Импортирует из shared + toLegacyFormat()
+    ↓
+public/assets/shared-translations.js  # Копия для браузера (npm run sync:translations)
+    ↓
+public/assets/booking.js         # Использует window.sharedTranslations с fallback
+```
+
+**Структура:**
 ```javascript
-// shared/translations.js (общий для frontend и backend)
-module.exports = {
+// shared/translations.js
+const sharedTranslations = {
     lv: {
-        services: { ... },
-        booking: { ... },
-        email: { ... },
-        errors: { ... }
+        calendar: { title, selectDate, weekdays[], months[] },
+        form: { serviceLabel, nameLabel, emailLabel... },
+        messages: { successTitle, errorTitle, slotTaken... },
+        format: { online, inPerson },
+        services: { initial, followup, package3... },
+        email: { subject(), greeting(), thankYou... },
+        payment: { info, confirmed... },
+        cancellation: { subject(), title... },
+        pdf: { invoice, date, price... }
     },
     ru: { ... },
     en: { ... }
 };
 ```
+
+**npm scripts:**
+- `npm run sync:translations` - копирует shared → public/assets
+- `npm run prebuild` - автоматически синхронизирует перед build
 
 ---
 
