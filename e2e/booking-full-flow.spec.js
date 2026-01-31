@@ -169,8 +169,8 @@ test('Полное бронирование: клиент + подтвержде
   const calendar = page.locator('#bookingCalendar');
   await expect(calendar).toBeVisible({ timeout: 15000 });
   
-  // 5. Ждём загрузки API календаря - проверяем что есть дни
-  await page.waitForSelector('.calendar-day:not(.empty)', { timeout: 15000 });
+  // 5. Ждём загрузки API календаря - проверяем что есть доступные дни
+  await expect(page.locator('#bookingCalendar .day.available').first()).toBeVisible({ timeout: 15000 });
   
   // Логируем текущий месяц для отладки
   let monthYear = await page.locator('.calendar-month-year').textContent();
