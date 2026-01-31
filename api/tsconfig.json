@@ -18,6 +18,7 @@
     "checkJs": false,
     "noEmit": false,
     "isolatedModules": true,
+    "verbatimModuleSyntax": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,
