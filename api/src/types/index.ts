@@ -190,6 +190,7 @@ export interface EnvConfig {
   apiBaseUrl: string;
   isProduction: boolean;
   isDevelopment: boolean;
+  isTest: boolean;
 }
 
 export interface TableNames {
@@ -198,16 +199,19 @@ export interface TableNames {
   services: string;
   servicesHistory: string;
   featureFlags: string;
+  locks: string;
 }
 
 export interface CacheConfig {
   servicesTtlMs: number;
   featureFlagsTtlMs: number;
+  scheduleTtlMs: number;
 }
 
 export interface BookingConfig {
   slotLockDurationMs: number;
   lockTtlMs: number;
+  defaultSlotDuration: number;
   confirmationCodeLength: number;
   maxBookingsPerDay: number;
   minBookingAdvanceHours: number;

@@ -1,20 +1,67 @@
-const { app } = require('@azure/functions');
-const { TableClient } = require('@azure/data-tables');
-const { getLatvianHolidays, getHolidaysInRange } = require('../services/latvianHolidays');
-const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
+/**
+ * Admin Settings Functions
+ * Handle admin operations for availability and site settings
+ */
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { TableClient } from '@azure/data-tables';
+import { getLatvianHolidays, getHolidaysInRange } from '../services/latvianHolidays';
+import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
+
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 const SETTINGS_TABLE = 'adminSettings';
 const PARTITION_KEY = 'config';
 
+interface DaySchedule {
+    enabled: boolean;
+    start: string;
+    end: string;
+}
+
+interface WeekSchedule {
+    monday: DaySchedule;
+    tuesday: DaySchedule;
+    wednesday: DaySchedule;
+    thursday: DaySchedule;
+    friday: DaySchedule;
+    saturday: DaySchedule;
+    sunday: DaySchedule;
+}
+
+interface BlockedDate {
+    date: string;
+    reason?: string;
+}
+
+interface VacationPeriod {
+    id: string;
+    startDate: string;
+    endDate: string;
+    reason?: string;
+}
+
+interface SettingsEntity {
+    partitionKey: string;
+    rowKey: string;
+    value: string;
+    updatedAt?: string;
+}
+
+interface SiteSettings {
+    prices: { initial: number; followup: number };
+    contact: { email: string; phone: string; address: string };
+    duration: { initial: number; followup: number };
+    bank: { name: string; iban: string };
+}
+
 // Helper to ensure table exists
-async function ensureTable(tableName) {
+async function ensureTable(tableName: string): Promise<void> {
     try {
         const tableClient = TableClient.fromConnectionString(connectionString, tableName);
         await tableClient.createTable();
     } catch (error) {
-        // Table already exists, ignore
-        if (error.statusCode !== 409) {
+        const err = error as { statusCode?: number };
+        if (err.statusCode !== 409) {
             throw error;
         }
     }
@@ -25,8 +72,7 @@ app.http('adminGetAvailability', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/availability',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -35,20 +81,16 @@ app.http('adminGetAvailability', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            let schedule = null;
-            let blockedDates = [];
-            let vacationPeriods = [];
+            let schedule: WeekSchedule;
+            let blockedDates: BlockedDate[] = [];
+            let vacationPeriods: VacationPeriod[] = [];
 
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'schedule');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'schedule');
                 schedule = JSON.parse(entity.value);
-            } catch (e) {
-                // No schedule saved yet, return defaults
+            } catch {
                 schedule = {
                     monday: { enabled: true, start: '09:00', end: '17:00' },
                     tuesday: { enabled: true, start: '09:00', end: '17:00' },
@@ -61,16 +103,16 @@ app.http('adminGetAvailability', {
             }
 
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'blockedDates');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'blockedDates');
                 blockedDates = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No blocked dates
             }
 
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'vacationPeriods');
                 vacationPeriods = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No vacation periods
             }
 
@@ -79,10 +121,11 @@ app.http('adminGetAvailability', {
                 jsonBody: { schedule, blockedDates, vacationPeriods }
             };
         } catch (error) {
-            context.error('Error fetching availability:', error);
+            const err = error as Error;
+            context.error('Error fetching availability:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch availability', details: error.message }
+                jsonBody: { error: 'Failed to fetch availability', details: err.message }
             };
         }
     }
@@ -93,8 +136,7 @@ app.http('adminUpdateAvailability', {
     methods: ['PUT'],
     authLevel: 'anonymous',
     route: 'dashboard/availability',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -103,11 +145,8 @@ app.http('adminUpdateAvailability', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const body = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const body = await request.json() as { schedule: WeekSchedule };
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
             await tableClient.upsertEntity({
                 partitionKey: PARTITION_KEY,
@@ -121,10 +160,11 @@ app.http('adminUpdateAvailability', {
                 jsonBody: { success: true }
             };
         } catch (error) {
-            context.error('Error updating availability:', error);
+            const err = error as Error;
+            context.error('Error updating availability:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to update availability', details: error.message }
+                jsonBody: { error: 'Failed to update availability', details: err.message }
             };
         }
     }
@@ -135,8 +175,7 @@ app.http('adminAddBlockedDate', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'dashboard/availability/block',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -145,22 +184,17 @@ app.http('adminAddBlockedDate', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const body = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const body = await request.json() as BlockedDate;
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            // Get existing blocked dates
-            let blockedDates = [];
+            let blockedDates: BlockedDate[] = [];
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'blockedDates');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'blockedDates');
                 blockedDates = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No blocked dates yet
             }
 
-            // Add new date if not exists
             if (!blockedDates.find(d => d.date === body.date)) {
                 blockedDates.push({
                     date: body.date,
@@ -181,10 +215,11 @@ app.http('adminAddBlockedDate', {
                 jsonBody: { success: true, blockedDates }
             };
         } catch (error) {
-            context.error('Error adding blocked date:', error);
+            const err = error as Error;
+            context.error('Error adding blocked date:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to add blocked date', details: error.message }
+                jsonBody: { error: 'Failed to add blocked date', details: err.message }
             };
         }
     }
@@ -195,8 +230,7 @@ app.http('adminRemoveBlockedDate', {
     methods: ['DELETE'],
     authLevel: 'anonymous',
     route: 'dashboard/availability/block',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -205,22 +239,17 @@ app.http('adminRemoveBlockedDate', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const body = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const body = await request.json() as { date: string };
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            // Get existing blocked dates
-            let blockedDates = [];
+            let blockedDates: BlockedDate[] = [];
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'blockedDates');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'blockedDates');
                 blockedDates = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No blocked dates
             }
 
-            // Remove date
             blockedDates = blockedDates.filter(d => d.date !== body.date);
 
             await tableClient.upsertEntity({
@@ -235,10 +264,11 @@ app.http('adminRemoveBlockedDate', {
                 jsonBody: { success: true, blockedDates }
             };
         } catch (error) {
-            context.error('Error removing blocked date:', error);
+            const err = error as Error;
+            context.error('Error removing blocked date:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to remove blocked date', details: error.message }
+                jsonBody: { error: 'Failed to remove blocked date', details: err.message }
             };
         }
     }
@@ -249,8 +279,7 @@ app.http('adminGetSettings', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/settings',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -259,12 +288,9 @@ app.http('adminGetSettings', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            let settings = {
+            let settings: SiteSettings = {
                 prices: { initial: 65, followup: 45 },
                 contact: { email: '', phone: '', address: '' },
                 duration: { initial: 60, followup: 30 },
@@ -272,9 +298,9 @@ app.http('adminGetSettings', {
             };
 
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'siteSettings');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'siteSettings');
                 settings = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No settings saved yet
             }
 
@@ -283,10 +309,11 @@ app.http('adminGetSettings', {
                 jsonBody: settings
             };
         } catch (error) {
-            context.error('Error fetching settings:', error);
+            const err = error as Error;
+            context.error('Error fetching settings:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch settings', details: error.message }
+                jsonBody: { error: 'Failed to fetch settings', details: err.message }
             };
         }
     }
@@ -297,8 +324,7 @@ app.http('adminUpdateSettings', {
     methods: ['PUT'],
     authLevel: 'anonymous',
     route: 'dashboard/settings',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -307,11 +333,8 @@ app.http('adminUpdateSettings', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const settings = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const settings = await request.json() as SiteSettings;
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
             await tableClient.upsertEntity({
                 partitionKey: PARTITION_KEY,
@@ -325,10 +348,11 @@ app.http('adminUpdateSettings', {
                 jsonBody: { success: true }
             };
         } catch (error) {
-            context.error('Error updating settings:', error);
+            const err = error as Error;
+            context.error('Error updating settings:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to update settings', details: error.message }
+                jsonBody: { error: 'Failed to update settings', details: err.message }
             };
         }
     }
@@ -339,10 +363,10 @@ app.http('getHolidays', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'holidays',
-    handler: async (request, context) => {
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         try {
             const url = new URL(request.url);
-            const year = parseInt(url.searchParams.get('year')) || new Date().getFullYear();
+            const year = parseInt(url.searchParams.get('year') || '') || new Date().getFullYear();
             const startDate = url.searchParams.get('start');
             const endDate = url.searchParams.get('end');
 
@@ -358,10 +382,11 @@ app.http('getHolidays', {
                 jsonBody: { holidays, year }
             };
         } catch (error) {
-            context.error('Error fetching holidays:', error);
+            const err = error as Error;
+            context.error('Error fetching holidays:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch holidays', details: error.message }
+                jsonBody: { error: 'Failed to fetch holidays', details: err.message }
             };
         }
     }
@@ -372,8 +397,7 @@ app.http('adminAddVacation', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'dashboard/availability/vacation',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -382,23 +406,18 @@ app.http('adminAddVacation', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const body = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const body = await request.json() as { startDate: string; endDate: string; reason?: string };
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            // Get existing vacation periods
-            let vacationPeriods = [];
+            let vacationPeriods: VacationPeriod[] = [];
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'vacationPeriods');
                 vacationPeriods = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 // No vacation periods yet
             }
 
-            // Add new vacation period
-            const newVacation = {
+            const newVacation: VacationPeriod = {
                 id: Date.now().toString(),
                 startDate: body.startDate,
                 endDate: body.endDate,
@@ -419,10 +438,11 @@ app.http('adminAddVacation', {
                 jsonBody: { success: true, vacation: newVacation }
             };
         } catch (error) {
-            context.error('Error adding vacation:', error);
+            const err = error as Error;
+            context.error('Error adding vacation:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to add vacation', details: error.message }
+                jsonBody: { error: 'Failed to add vacation', details: err.message }
             };
         }
     }
@@ -433,8 +453,7 @@ app.http('adminDeleteVacation', {
     methods: ['DELETE'],
     authLevel: 'anonymous',
     route: 'dashboard/availability/vacation',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -443,22 +462,17 @@ app.http('adminDeleteVacation', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const body = await request.json();
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                SETTINGS_TABLE
-            );
+            const body = await request.json() as { id: string };
+            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
 
-            // Get existing vacation periods
-            let vacationPeriods = [];
+            let vacationPeriods: VacationPeriod[] = [];
             try {
-                const entity = await tableClient.getEntity(PARTITION_KEY, 'vacationPeriods');
+                const entity = await tableClient.getEntity<SettingsEntity>(PARTITION_KEY, 'vacationPeriods');
                 vacationPeriods = JSON.parse(entity.value);
-            } catch (e) {
+            } catch {
                 return { status: 404, jsonBody: { error: 'No vacation periods found' } };
             }
 
-            // Remove vacation by id
             vacationPeriods = vacationPeriods.filter(v => v.id !== body.id);
 
             await tableClient.upsertEntity({
@@ -473,10 +487,11 @@ app.http('adminDeleteVacation', {
                 jsonBody: { success: true }
             };
         } catch (error) {
-            context.error('Error deleting vacation:', error);
+            const err = error as Error;
+            context.error('Error deleting vacation:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to delete vacation', details: error.message }
+                jsonBody: { error: 'Failed to delete vacation', details: err.message }
             };
         }
     }

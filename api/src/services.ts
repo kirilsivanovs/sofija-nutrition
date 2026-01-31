@@ -5,27 +5,31 @@
  * Import this file once at application startup.
  */
 
-const { container } = require('./container');
+import { container } from './container';
 
 // Services
-const bookingRepository = require('./services/bookingRepository');
-const emailService = require('./services/emailService');
-const pdfService = require('./services/pdfService');
-const { isLatvianHoliday } = require('./services/latvianHolidays');
-const featureFlags = require('./services/featureFlags');
+import * as bookingRepository from './services/bookingRepository';
+import * as emailService from './services/emailService';
+import * as pdfService from './services/pdfService';
+import { isLatvianHoliday } from './services/latvianHolidays';
+import * as featureFlags from './services/featureFlags';
 
 // Import service classes/functions
-const availabilityService = require('./services/availabilityService');
-const bookingService = require('./services/bookingService');
+import * as availabilityService from './services/availabilityService';
+import * as bookingService from './services/bookingService';
 
 // Utils
-const translations = require('./translations');
-const config = require('./config');
+import translations from './translations';
+import config from './config';
+
+export interface HolidayService {
+    isLatvianHoliday: typeof isLatvianHoliday;
+}
 
 /**
  * Register all services
  */
-function registerServices() {
+export function registerServices(): void {
     // Configuration (singleton)
     container.register('config', () => config, { singleton: true });
     container.register('translations', () => translations, { singleton: true });
@@ -35,7 +39,7 @@ function registerServices() {
     container.register('emailService', () => emailService, { singleton: true });
     container.register('pdfService', () => pdfService, { singleton: true });
     container.register('featureFlags', () => featureFlags, { singleton: true });
-    container.register('holidayService', () => ({ isLatvianHoliday }), { singleton: true });
+    container.register<HolidayService>('holidayService', () => ({ isLatvianHoliday }), { singleton: true });
 
     // High-level services (singletons)
     container.register('availabilityService', () => availabilityService, { singleton: true });
@@ -45,4 +49,4 @@ function registerServices() {
 // Auto-register on import
 registerServices();
 
-module.exports = { container, registerServices };
+export { container };

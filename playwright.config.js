@@ -94,6 +94,11 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   // В CI тесты запускаются против задеплоенного preview URL
-  // Локально нужно запустить вручную: npm run dev и cd api && npm start
-  webServer: process.env.CI ? undefined : undefined,
+  // Локально автоматически запускается dev сервер
+  webServer: process.env.CI ? undefined : {
+    command: 'npm run dev',
+    url: 'http://localhost:4321',
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
 });

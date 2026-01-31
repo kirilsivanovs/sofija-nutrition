@@ -5,20 +5,28 @@
  * Supports singleton and factory patterns.
  */
 
-class Container {
-    constructor() {
-        this.services = new Map();
-        this.singletons = new Map();
-    }
+export type ServiceFactory<T> = (container: Container) => T;
+
+export interface ServiceRegistration<T = unknown> {
+    factory: ServiceFactory<T>;
+    singleton: boolean;
+}
+
+export interface RegisterOptions {
+    singleton?: boolean;
+}
+
+export class Container {
+    private services: Map<string, ServiceRegistration> = new Map();
+    private singletons: Map<string, unknown> = new Map();
 
     /**
      * Register a service factory
-     * @param {string} name - Service name
-     * @param {Function} factory - Factory function that receives container
-     * @param {Object} options - Registration options
-     * @param {boolean} options.singleton - Whether to create only one instance
+     * @param name - Service name
+     * @param factory - Factory function that receives container
+     * @param options - Registration options
      */
-    register(name, factory, options = {}) {
+    register<T>(name: string, factory: ServiceFactory<T>, options: RegisterOptions = {}): void {
         this.services.set(name, {
             factory,
             singleton: options.singleton || false
@@ -27,10 +35,10 @@ class Container {
 
     /**
      * Resolve a service by name
-     * @param {string} name - Service name
-     * @returns {*} Service instance
+     * @param name - Service name
+     * @returns Service instance
      */
-    resolve(name) {
+    resolve<T = unknown>(name: string): T {
         const registration = this.services.get(name);
         
         if (!registration) {
@@ -39,11 +47,11 @@ class Container {
 
         // Return existing singleton if available
         if (registration.singleton && this.singletons.has(name)) {
-            return this.singletons.get(name);
+            return this.singletons.get(name) as T;
         }
 
         // Create new instance
-        const instance = registration.factory(this);
+        const instance = registration.factory(this) as T;
 
         // Cache singleton
         if (registration.singleton) {
@@ -55,30 +63,30 @@ class Container {
 
     /**
      * Check if a service is registered
-     * @param {string} name - Service name
-     * @returns {boolean}
+     * @param name - Service name
+     * @returns boolean
      */
-    has(name) {
+    has(name: string): boolean {
         return this.services.has(name);
     }
 
     /**
      * Clear all singletons (useful for testing)
      */
-    clearSingletons() {
+    clearSingletons(): void {
         this.singletons.clear();
     }
 
     /**
      * Clear all registrations (useful for testing)
      */
-    clear() {
+    clear(): void {
         this.services.clear();
         this.singletons.clear();
     }
 }
 
 // Create and export the default container instance
-const container = new Container();
+export const container = new Container();
 
-module.exports = { Container, container };
+export default { Container, container };

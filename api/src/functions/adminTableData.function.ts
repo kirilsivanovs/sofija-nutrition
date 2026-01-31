@@ -1,16 +1,30 @@
-const { app } = require('@azure/functions');
-const { TableClient } = require('@azure/data-tables');
-const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
+/**
+ * Admin Table Data Functions
+ * Handle admin operations for viewing and managing table data
+ */
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { TableClient } from '@azure/data-tables';
+import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
+
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
+
+interface TableEntity {
+    partitionKey: string;
+    rowKey: string;
+    [key: string]: unknown;
+}
+
+interface CleanEntity {
+    [key: string]: unknown;
+}
 
 // List all entities from a table (for admin data viewer)
 app.http('adminGetTableData', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/tables/{tableName}',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -21,24 +35,21 @@ app.http('adminGetTableData', {
             
             // Only allow specific tables for security
             const allowedTables = ['bookings', 'adminSettings'];
-            if (!allowedTables.includes(tableName)) {
+            if (!allowedTables.includes(tableName || '')) {
                 return {
                     status: 400,
                     jsonBody: { error: 'Table not allowed', allowedTables }
                 };
             }
 
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                tableName
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, tableName!);
 
-            const entities = [];
+            const entities: CleanEntity[] = [];
             
             try {
-                for await (const entity of tableClient.listEntities()) {
+                for await (const entity of tableClient.listEntities<TableEntity>()) {
                     // Convert entity to a cleaner format
-                    const cleanEntity = {};
+                    const cleanEntity: CleanEntity = {};
                     for (const [key, value] of Object.entries(entity)) {
                         // Skip internal Azure properties
                         if (key === 'odata.etag' || key === 'odata.metadata') continue;
@@ -53,8 +64,9 @@ app.http('adminGetTableData', {
                     entities.push(cleanEntity);
                 }
             } catch (e) {
+                const err = e as { statusCode?: number };
                 // Table might not exist yet
-                if (e.statusCode === 404) {
+                if (err.statusCode === 404) {
                     return {
                         status: 200,
                         jsonBody: { 
@@ -69,7 +81,7 @@ app.http('adminGetTableData', {
             }
 
             // Get all unique column names
-            const columnsSet = new Set();
+            const columnsSet = new Set<string>();
             entities.forEach(entity => {
                 Object.keys(entity).forEach(key => columnsSet.add(key));
             });
@@ -91,10 +103,11 @@ app.http('adminGetTableData', {
                 }
             };
         } catch (error) {
-            context.error('Error fetching table data:', error);
+            const err = error as Error;
+            context.error('Error fetching table data:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch table data', details: error.message }
+                jsonBody: { error: 'Failed to fetch table data', details: err.message }
             };
         }
     }
@@ -105,8 +118,7 @@ app.http('adminDeleteTableEntity', {
     methods: ['DELETE'],
     authLevel: 'anonymous',
     route: 'dashboard/tables/{tableName}/{partitionKey}/{rowKey}',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -117,29 +129,30 @@ app.http('adminDeleteTableEntity', {
             
             // Only allow specific tables
             const allowedTables = ['bookings', 'adminSettings'];
-            if (!allowedTables.includes(tableName)) {
+            if (!allowedTables.includes(tableName || '')) {
                 return {
                     status: 400,
                     jsonBody: { error: 'Table not allowed' }
                 };
             }
 
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                tableName
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, tableName!);
 
-            await tableClient.deleteEntity(decodeURIComponent(partitionKey), decodeURIComponent(rowKey));
+            await tableClient.deleteEntity(
+                decodeURIComponent(partitionKey || ''), 
+                decodeURIComponent(rowKey || '')
+            );
 
             return {
                 status: 200,
                 jsonBody: { success: true, message: 'Entity deleted' }
             };
         } catch (error) {
-            context.error('Error deleting entity:', error);
+            const err = error as Error;
+            context.error('Error deleting entity:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to delete entity', details: error.message }
+                jsonBody: { error: 'Failed to delete entity', details: err.message }
             };
         }
     }

@@ -28,6 +28,7 @@ export const env: EnvConfig = {
   nodeEnv: process.env.NODE_ENV || 'development',
   isProduction: process.env.NODE_ENV === 'production',
   isDevelopment: process.env.NODE_ENV === 'development',
+  isTest: process.env.NODE_ENV === 'test',
   azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING || '',
   resendApiKey: process.env.RESEND_API_KEY || '',
   apiBaseUrl: process.env.API_BASE_URL || 'https://sofija-nutrition-api.azurewebsites.net'
@@ -42,7 +43,8 @@ export const tables: TableNames = {
   settings: 'adminSettings',
   services: 'Services',
   servicesHistory: 'ServicesHistory',
-  featureFlags: 'FeatureFlags'
+  featureFlags: 'FeatureFlags',
+  locks: 'slotLocks'
 };
 
 // ============================================
@@ -54,7 +56,10 @@ export const cache: CacheConfig = {
   servicesTtlMs: 5 * 60 * 1000,
   
   // Feature flags cache TTL (2 minutes - shorter for faster response to changes)  
-  featureFlagsTtlMs: 2 * 60 * 1000
+  featureFlagsTtlMs: 2 * 60 * 1000,
+  
+  // Schedule cache TTL (5 minutes)
+  scheduleTtlMs: 5 * 60 * 1000
 };
 
 // ============================================
@@ -65,6 +70,9 @@ export const booking: BookingConfig = {
   // Slot lock TTL (30 seconds) - prevents double booking during payment
   slotLockDurationMs: 30000,
   lockTtlMs: 30000,
+  
+  // Default slot duration in minutes
+  defaultSlotDuration: 60,
   
   // Confirmation code length
   confirmationCodeLength: 6,
@@ -248,8 +256,8 @@ export const validServiceIds: readonly string[] = [
 // Legacy Exports (CommonJS compatibility)
 // ============================================
 
-// For backward compatibility with existing JS code
-module.exports = {
+// Config object for default export
+const config = {
   env,
   tables,
   cache,
@@ -284,3 +292,9 @@ module.exports = {
     };
   }
 };
+
+// Default export for ES modules
+export default config;
+
+// For backward compatibility with existing JS code
+module.exports = config;

@@ -1,45 +1,88 @@
-const { app } = require('@azure/functions');
-const { TableClient } = require('@azure/data-tables');
-const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
-const { sendCancellationNotification } = require('../services/emailService');
-const { generateCancellationEmailHTML } = require('../templates/emailTemplates');
-const { getTranslation, servicePrices } = require('../translations');
-const { buildStatusFilter } = require('../utils/odataSanitizer');
+/**
+ * Admin Bookings Functions
+ * Handle admin operations for managing bookings
+ */
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { TableClient } from '@azure/data-tables';
+import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
+import { sendCancellationNotification } from '../services/emailService';
+import { generateCancellationEmailHTML } from '../templates/emailTemplates';
+import { getTranslation } from '../translations';
+import { buildStatusFilter } from '../utils/odataSanitizer';
+
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
+
+interface BookingEntity {
+    partitionKey: string;
+    rowKey: string;
+    name: string;
+    email: string;
+    phone?: string;
+    date: string;
+    time: string;
+    service: string;
+    serviceName?: string;
+    consultationFormat?: string;
+    language?: string;
+    status?: string;
+    createdAt?: string;
+    price?: number;
+    notes?: string;
+    updatedAt?: string;
+}
+
+interface BookingResponse {
+    id: string;
+    partitionKey: string;
+    name: string;
+    email: string;
+    phone: string;
+    date: string;
+    time: string;
+    service: string;
+    consultationFormat?: string;
+    language?: string;
+    status: string;
+    createdAt?: string;
+    price?: number;
+    notes: string;
+}
+
+interface UpdateBookingBody {
+    status?: string;
+    notes?: string;
+    [key: string]: unknown;
+}
 
 // Get all bookings with optional status filter
 app.http('adminGetBookings', {
     methods: ['GET'],
-    authLevel: 'anonymous', // Auth handled by middleware
+    authLevel: 'anonymous',
     route: 'dashboard/bookings',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
         }
-        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+        context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 
         try {
             const url = new URL(request.url);
             const statusFilter = url.searchParams.get('status') || 'all';
 
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                'bookings'
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
 
-            const bookings = [];
-            const queryOptions = {};
+            const bookings: BookingResponse[] = [];
             
-            // Use sanitized filter to prevent OData injection
             const statusFilterQuery = buildStatusFilter(statusFilter);
-            if (statusFilterQuery) {
-                queryOptions.filter = statusFilterQuery;
-            }
 
-            for await (const entity of tableClient.listEntities(queryOptions)) {
+            for await (const entity of tableClient.listEntities<BookingEntity>()) {
+                // Apply status filter manually if needed
+                if (statusFilterQuery && statusFilter !== 'all') {
+                    const entityStatus = entity.status || 'pending';
+                    if (entityStatus !== statusFilter) continue;
+                }
                 bookings.push({
                     id: entity.rowKey,
                     partitionKey: entity.partitionKey,
@@ -62,7 +105,7 @@ app.http('adminGetBookings', {
             bookings.sort((a, b) => {
                 const dateA = new Date(a.date + 'T' + a.time);
                 const dateB = new Date(b.date + 'T' + b.time);
-                return dateB - dateA;
+                return dateB.getTime() - dateA.getTime();
             });
 
             return {
@@ -70,10 +113,11 @@ app.http('adminGetBookings', {
                 jsonBody: { bookings }
             };
         } catch (error) {
-            context.error('Error fetching bookings:', error);
+            const err = error as Error;
+            context.error('Error fetching bookings:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch bookings', details: error.message }
+                jsonBody: { error: 'Failed to fetch bookings', details: err.message }
             };
         }
     }
@@ -84,26 +128,22 @@ app.http('adminUpdateBooking', {
     methods: ['PATCH'],
     authLevel: 'anonymous',
     route: 'dashboard/bookings/{id}',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
         }
-        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+        context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 
         try {
             const bookingId = request.params.id;
-            const body = await request.json();
+            const body = await request.json() as UpdateBookingBody;
 
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                'bookings'
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
 
-            // Find the booking by iterating (RowKey filter doesn't work reliably in listEntities)
-            let existingBooking = null;
-            for await (const entity of tableClient.listEntities()) {
+            // Find the booking by iterating
+            let existingBooking: BookingEntity | null = null;
+            for await (const entity of tableClient.listEntities<BookingEntity>()) {
                 if (entity.rowKey === bookingId) {
                     existingBooking = entity;
                     break;
@@ -135,7 +175,6 @@ app.http('adminUpdateBooking', {
                     const lang = existingBooking.language || 'lv';
                     const t = getTranslation(lang);
                     
-                    // Prepare booking data for email
                     const bookingData = {
                         id: existingBooking.rowKey,
                         name: existingBooking.name,
@@ -165,7 +204,8 @@ app.http('adminUpdateBooking', {
                         context.warn(`⚠️ Failed to send cancellation email: ${emailResult.error}`);
                     }
                 } catch (emailError) {
-                    context.warn(`⚠️ Error sending cancellation email: ${emailError.message}`);
+                    const err = emailError as Error;
+                    context.warn(`⚠️ Error sending cancellation email: ${err.message}`);
                 }
             }
 
@@ -174,10 +214,11 @@ app.http('adminUpdateBooking', {
                 jsonBody: { success: true, booking: updatedBooking, emailSent }
             };
         } catch (error) {
-            context.error('Error updating booking:', error);
+            const err = error as Error;
+            context.error('Error updating booking:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to update booking', details: error.message }
+                jsonBody: { error: 'Failed to update booking', details: err.message }
             };
         }
     }
@@ -188,25 +229,20 @@ app.http('adminGetBooking', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/bookings/{id}',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
         }
-        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+        context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 
         try {
             const bookingId = request.params.id;
 
-            const tableClient = TableClient.fromConnectionString(
-                connectionString,
-                'bookings'
-            );
+            const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
 
-            // Find the booking by iterating
-            let booking = null;
-            for await (const entity of tableClient.listEntities()) {
+            let booking: BookingEntity | null = null;
+            for await (const entity of tableClient.listEntities<BookingEntity>()) {
                 if (entity.rowKey === bookingId) {
                     booking = entity;
                     break;
@@ -225,10 +261,11 @@ app.http('adminGetBooking', {
                 jsonBody: { booking }
             };
         } catch (error) {
-            context.error('Error fetching booking:', error);
+            const err = error as Error;
+            context.error('Error fetching booking:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch booking', details: error.message }
+                jsonBody: { error: 'Failed to fetch booking', details: err.message }
             };
         }
     }
