@@ -713,3 +713,87 @@
         font-size: 20px;
     }
 }
+
+/* ========== Form Validation Styles ========== */
+
+/* Error state for inputs */
+.input-error {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.input-error:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Valid state for inputs */
+.input-valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1) !important;
+}
+
+.input-valid:focus {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Error message styling */
+.field-error-message {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: 6px;
+    border-left: 3px solid #ef4444;
+    animation: slideIn 0.2s ease-out;
+}
+
+.field-error-message i {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Format options error state */
+.format-options .field-error-message {
+    margin-top: 12px;
+}
+
+/* Improve form-group spacing for validation */
+.form-group {
+    position: relative;
+}
+
+/* Shake animation for invalid fields on submit */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.input-error.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Transition for smooth state changes */
+.booking-form input,
+.booking-form select {
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
