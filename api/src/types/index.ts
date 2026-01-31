@@ -310,3 +310,69 @@ export type DeepPartial<T> = {
 };
 
 export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+// ============================================
+// Translation Types
+// ============================================
+
+export interface TranslationObject {
+  // Email translations
+  emailSubject: (id: string) => string;
+  emailGreeting: (name: string) => string;
+  emailThankYou: string;
+  emailConfirmed: string;
+  emailBookingId: string;
+  emailService: string;
+  emailFormat: string;
+  emailDate: string;
+  emailTime: string;
+  emailPrice: string;
+  emailInvoiceAttached: string;
+  emailQuestions: string;
+  emailRegards: string;
+  emailSubtitle: string;
+  
+  // Formats
+  formatOnline: string;
+  formatInPerson: string;
+  
+  // Payment
+  paymentConfirmedSubject: (id: string) => string;
+  paymentConfirmedTitle: string;
+  paymentConfirmedText: string;
+  paymentWaitingText: string;
+  
+  // Cancellation
+  cancellationSubject: (id: string) => string;
+  cancellationTitle: string;
+  cancellationText: string;
+  cancellationDetails: string;
+  cancellationQuestions: string;
+  
+  // PDF
+  pdfSubtitle: string;
+  pdfInvoice: string;
+  pdfNumber: string;
+  pdfDate: string;
+  pdfClient: string;
+  pdfName: string;
+  pdfEmail: string;
+  pdfPhone: string;
+  pdfFormat: string;
+  pdfService: string;
+  pdfTime: string;
+  pdfPrice: string;
+  pdfTotal: string;
+  pdfPaymentInfo: string;
+  pdfBank: string;
+  pdfReference: string;
+  pdfNotes: string;
+  pdfThankYou: string;
+  pdfNotProvided: string;
+  
+  // Services
+  services: Record<string, string>;
+  
+  // Allow additional properties
+  [key: string]: unknown;
+}

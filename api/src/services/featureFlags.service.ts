@@ -3,7 +3,8 @@
  * Handles feature flag management with caching
  */
 
-import { TableClient, TableEntity } from '@azure/data-tables';
+import { TableClient } from '@azure/data-tables';
+import type { TableEntity } from '@azure/data-tables';
 import type { FeatureFlag } from '../types';
 import { env, tables, cache } from '../config';
 

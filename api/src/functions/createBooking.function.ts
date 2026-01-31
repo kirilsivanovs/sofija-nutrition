@@ -5,7 +5,8 @@
  * Business logic is delegated to BookingService.
  */
 
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { app, HttpRequest, InvocationContext } from '@azure/functions';
+import type { HttpResponseInit } from '@azure/functions';
 import { checkRateLimit, rateLimitExceededResponse } from '../utils/rateLimiter';
 import { validateBookingInput, validationErrorResponse } from '../utils/validation';
 import { createBooking, BookingError } from '../services/bookingService';

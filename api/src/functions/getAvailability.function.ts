@@ -5,7 +5,8 @@
  * Business logic is delegated to AvailabilityService.
  */
 
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { app, HttpRequest, InvocationContext } from '@azure/functions';
+import type { HttpResponseInit } from '@azure/functions';
 import { getAvailability } from '../services/availabilityService';
 import { addCorsHeaders } from '../utils/cors';
 

@@ -2,13 +2,14 @@
  * confirmPayment HTTP Handler (TypeScript)
  */
 
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { app, HttpRequest, InvocationContext } from '@azure/functions';
+import type { HttpResponseInit } from '@azure/functions';
 import { branding, colors } from '../config';
 import translations from '../translations';
 import { getBooking, updateBooking, verifyPaymentToken } from '../services/bookingRepository';
 import { sendPaymentConfirmation, isConfigured } from '../services/emailService';
 import { generatePaymentConfirmedEmailHTML, generateConfirmationPageHTML } from '../templates/emailTemplates';
-import type { Language } from '../types';
+import type { Language, TranslationObject } from '../types';
 
 // ============================================
 // Types
@@ -72,7 +73,7 @@ async function confirmPaymentHandler(
 
     // Check if already confirmed
     if (booking.paymentConfirmed) {
-      const t = translations.getTranslation((booking.language as Language) || 'lv');
+      const t = translations.getTranslation((booking.language as Language) || 'lv') as TranslationObject;
       return {
         status: 200,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
@@ -91,7 +92,7 @@ async function confirmPaymentHandler(
     context.log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);
 
     // Get translation object
-    const t = translations.getTranslation((booking.language as Language) || 'lv');
+    const t = translations.getTranslation((booking.language as Language) || 'lv') as TranslationObject;
 
     // Send confirmation email to client
     if (isConfigured()) {

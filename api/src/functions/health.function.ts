@@ -2,7 +2,8 @@
  * Health Check HTTP Handler (TypeScript)
  */
 
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { app, HttpRequest, InvocationContext } from '@azure/functions';
+import type { HttpResponseInit } from '@azure/functions';
 
 // ============================================
 // Types
