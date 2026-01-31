@@ -536,7 +536,7 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 
 **Вся необходимая информация находится в этом README.**
 
-- [TESTS_COVERAGE.md](TESTS_COVERAGE.md) - 📊 Тестовое покрытие критических бизнес-сценариев (98.2%, 483/492 тестов)
+- [TESTS_COVERAGE.md](TESTS_COVERAGE.md) - 📊 Тестовое покрытие критических бизнес-сценариев (98.2%, 896 unit + 10 integration + 16 snapshot = 922 тестов)
 
 Для углубленного изучения:
 - [Astro Documentation](https://docs.astro.build)
@@ -549,14 +549,22 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 
 **Стек:** Astro (frontend) + Azure Functions v4 (backend) + Azure Table Storage (5 таблиц, €0.10/мес)
 
-**Тестовое покрытие:** 98.2% (483/492 тестов) ✅ Все критические сценарии покрыты
+**Тестовое покрытие:** 98.2% (896 unit + 10 integration + 16 snapshot = 922 тестов) ✅ Все критические сценарии покрыты
+
+**Архитектура (Service Layer + DI):**
+- HTTP handlers (тонкие) → Services (бизнес-логика) → Repository (данные)
+- DI Container для управления зависимостями (`api/src/container.js`)
+- Централизованная конфигурация (`api/src/config/index.js`)
 
 **Главные файлы:**
-- `api/src/functions/createBooking.js` - создание бронирования
-- `api/src/functions/getAvailability.js` - доступные слоты (кэш 5 мин)
-- `api/src/services/featureFlags.js` - feature toggles (кэш 2 мин)
-- `api/src/services/bookingRepository.js` - работа с БД
-- `api/src/services/emailService.js` - отправка email
+- `api/src/functions/createBooking.js` - HTTP handler для бронирования
+- `api/src/services/bookingService.js` - бизнес-логика бронирования
+- `api/src/services/availabilityService.js` - расчёт доступных слотов
+- `api/src/services/emailService.js` - отправка email через Resend
+- `api/src/services/pdfService.js` - генерация PDF счетов
+- `api/src/utils/securityLogger.js` - логирование безопасности
+- `api/src/utils/apiResponse.js` - унифицированный формат ответов
+- `shared/translations.js` - единый источник переводов (lv/ru/en)
 
 **Таблицы:**
 1. `bookings` - бронирования (PK: date, RK: guid)
@@ -565,9 +573,16 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 4. `FeatureFlags` - вкл/выкл функций (PK: "FEATURE", кэш 2 мин)
 5. `ServicesHistory` - история изменений (PK: serviceId)
 
+**Безопасность:**
+- SWA Auth (Microsoft OAuth) + E2E Token для админки
+- Rate Limiting (5 бронирований/мин, 60 availability/мин)
+- Slot Locking (защита от race condition)
+- Security Logger (auth failures, rate limits, injection attempts)
+- CSP, HSTS, X-Frame-Options, XSS Protection
+
 **Важно знать:**
 - Один админ (Софья), авторизация через Azure AD
-- Мультиязычность: lv/ru/en
+- Мультиязычность: lv/ru/en (единый источник — `shared/translations.js`)
 - Feature flags позволяют вкл/выкл без деплоя
 - Кэширование: Services 5 мин, FeatureFlags 2 мин
 - Валидация на уровне API обязательна
@@ -793,7 +808,7 @@ git merge main  # Или git rebase main для чистой истории
 cd api
 npm test
 ```
-✅ **Требование:** Все 483 теста должны пройти успешно
+✅ **Требование:** Все 896 unit тестов должны пройти успешно
 
 **B. Запустить критические бизнес-сценарии:**
 ```powershell
@@ -897,7 +912,7 @@ GitHub Actions автоматически запустит:
 #### 7️⃣ Merge в Main
 
 **Только после того как:**
-- ✅ Все unit тесты прошли (483/483)
+- ✅ Все unit тесты прошли (896/896)
 - ✅ Все критические тесты прошли (20/20)
 - ✅ E2E smoke test пройден вручную
 - ✅ CI/CD checks прошли на GitHub
@@ -954,7 +969,7 @@ git push origin --delete feature/название-фичи
 ## Pre-Merge Checklist
 
 ### Тесты
-- [ ] `npm test` - все 483 unit теста прошли ✅
+- [ ] `npm test` - все 896 unit тестов прошли ✅
 - [ ] Критические бизнес-тесты прошли (20/20) ✅
 - [ ] **E2E тесты прошли (`npm run test:e2e`) ✅**
 - [ ] Добавлены тесты для новой функциональности ✅
@@ -1012,7 +1027,9 @@ npm test
 
 **Target показатели:**
 - Test coverage: ≥ 80%
-- Unit tests passing: 100% (483/483)
+- Unit tests passing: 100% (896/896)
+- Integration tests passing: 100% (10/10)
+- Snapshot tests passing: 100% (16/16)
 - Critical tests: 100% (20/20)
 - **E2E tests passing: 100% (5 critical flows)**
 - Build time: < 2 min
@@ -1822,33 +1839,42 @@ jobs:
 
 ---
 
-### 📋 6. Приоритеты на ближайшие спринты
+### 📋 6. Выполненные спринты
 
-#### Sprint 1 (1-2 недели) - Безопасность
+#### ✅ Sprint 1 - Безопасность (DONE)
 
-1. ✅ Настроить Branch Protection Rules
-2. ⏳ Добавить Rate Limiting
-3. ⏳ Добавить валидацию с `validator`
-4. ⏳ Защита от race condition
+1. ✅ Настроить Branch Protection Rules (PR #1)
+2. ✅ Добавить Rate Limiting (PR #4)
+3. ✅ Добавить валидацию с `validator` (PR #4)
+4. ✅ Защита от race condition (PR #4)
 
-#### Sprint 2 (2-3 недели) - Архитектура
+#### ✅ Sprint 2 - Архитектура (DONE)
 
-1. ⏳ Централизованная обработка ошибок
-2. ⏳ Выделить BookingService
-3. ⏳ Унифицировать ответы API
-4. ⏳ Вынести конфигурацию
+1. ✅ Централизованная обработка ошибок (PR #5)
+2. ✅ Выделить BookingService (PR #9)
+3. ✅ Унифицировать ответы API (PR #16)
+4. ✅ Вынести конфигурацию (PR #13)
 
-#### Sprint 3 (1-2 недели) - Рефакторинг
+#### ✅ Sprint 3 - Рефакторинг (DONE)
 
-1. ⏳ Единый источник переводов
-2. ⏳ Убрать magic numbers
-3. ⏳ Добавить JSDoc типизацию
+1. ✅ Единый источник переводов (PR #11)
+2. ✅ Убрать magic numbers (PR #13)
+3. ✅ DI Container (PR #10)
+4. ✅ Security Logger (PR #16)
+5. ✅ Email Snapshot Tests (PR #16)
 
-#### Sprint 4 (1 неделя) - DevOps
+#### ✅ Sprint 4 - DevOps (DONE)
 
-1. ⏳ Staging окружение
-2. ⏳ Мониторинг
-3. ⏳ Автоматические релизы
+1. ✅ Staging окружение (автоматический Preview URL в PR)
+2. ✅ Azure staging cleanup (автоудаление orphaned environments)
+3. ✅ Интеграционные тесты с Azurite (PR #13)
+
+### ⏳ Оставшиеся задачи (долгосрочно)
+
+1. ⏳ **TypeScript миграция** — поэтапная типизация критичных модулей
+2. ⏳ **Нагрузочное тестирование** — k6/Artillery для stress testing
+3. ⏳ **Автоматические релизы** — release-please + semantic versioning
+4. ⏳ **Мониторинг и алерты** — Azure Application Insights
 
 ---
 
@@ -1857,13 +1883,13 @@ jobs:
 - ✅ **Авторизация:** SWA Auth (Microsoft OAuth) + E2E Token
 - ✅ **CI/CD:** GitHub Actions с unit + E2E тестами
 - ✅ **Auto-merge:** PR автоматически мерджится после успешных тестов
-- ✅ **Тестовое покрытие:** 896 unit тестов + 10 интеграционных + 16 snapshot
-- ✅ **Email уведомления:** Подтверждение, отмена бронирования
+- ✅ **Тестовое покрытие:** 896 unit тестов + 10 интеграционных + 16 snapshot = 922 тестов
+- ✅ **Email уведомления:** Подтверждение, отмена бронирования + PDF счета
 - ✅ **Feature Flags:** Управление функциями без деплоя
 - ✅ **Кэширование:** Services 5 мин, FeatureFlags 2 мин (TTL в конфиге)
 - ✅ **Мультиязычность:** LV, RU, EN (единый источник — `shared/translations.js`)
 - ✅ **CORS:** Настроен для всех окружений
-- ✅ **Security Headers:** X-Frame-Options, X-Content-Type-Options
+- ✅ **Security Headers:** HSTS, CSP, X-Frame-Options, X-Content-Type-Options, XSS Protection
 - ✅ **Централизованная конфигурация:** `api/src/config/index.js`
 - ✅ **Service Layer:** Бизнес-логика отделена от HTTP handlers
 - ✅ **DI Container:** `api/src/container.js`
@@ -1871,8 +1897,26 @@ jobs:
 - ✅ **Azure staging cleanup:** Автоматическое удаление orphaned environments
 - ✅ **Security Logger:** Логирование безопасности (`api/src/utils/securityLogger.js`)
 - ✅ **API Response Helper:** Унифицированный формат ответов (`api/src/utils/apiResponse.js`)
-- ✅ **Snapshot тесты:** Защита email шаблонов от случайных изменений
+- ✅ **Snapshot тесты:** Защита email шаблонов от случайных изменений (16 snapshots)
 - ✅ **Staging Preview:** Автоматический Preview URL в комментариях к PR
+- ✅ **Rate Limiting:** Защита от спама (5 booking/min, 60 availability/min)
+- ✅ **Slot Locking:** Защита от race condition с ETag
+- ✅ **Input Validation:** XSS/injection защита, санитизация всех полей
+
+---
+
+## 📝 История Pull Requests
+
+| PR | Название | Что добавлено |
+|----|----------|---------------|
+| #1 | Branch Protection | Защита main от прямых пушей |
+| #4 | Security Foundation | Rate limiting, валидация, slot locking |
+| #5 | Error Handling | Централизованная обработка ошибок |
+| #9 | Service Layer | BookingService, AvailabilityService |
+| #10 | DI Container | Dependency Injection |
+| #11 | Shared Translations | Единый источник переводов |
+| #13 | Config Centralization | Централизованная конфигурация + интеграционные тесты |
+| #16 | Final Improvements | Security Logger, API Response Helper, Email Snapshots |
 
 ---
 
