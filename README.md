@@ -1092,22 +1092,19 @@ npm run test:e2e:report
 
 ---
 
-#### 🔴 CRITICAL - Rate Limiting для API
+#### ✅ DONE - Rate Limiting для API
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ Реализовано (PR #4)
 
-**Проблема:** Нет защиты от DDoS и спама бронирований. Злоумышленник может создать тысячи бронирований.
-
-**Решение:**
+**Решение реализовано в:** `api/src/utils/rateLimiter.js`
 
 ```javascript
-// api/src/utils/rateLimiter.js
-const requestCounts = new Map();
-const WINDOW_MS = 60000; // 1 минута
-const MAX_REQUESTS = {
-    'createBooking': 5,     // 5 бронирований в минуту с одного IP
-    'getAvailability': 30,  // 30 запросов в минуту
-    'default': 100
+const RATE_LIMITS = {
+    createBooking: { windowMs: 60000, maxRequests: 5 },    // 5 бронирований/мин
+    getAvailability: { windowMs: 60000, maxRequests: 60 }, // 60 запросов/мин
+    admin: { windowMs: 60000, maxRequests: 100 },
+    default: { windowMs: 60000, maxRequests: 100 }
+};
 };
 
 function checkRateLimit(request, endpoint) {
@@ -1134,38 +1131,26 @@ function checkRateLimit(request, endpoint) {
 
 ---
 
-#### 🔴 CRITICAL - Валидация и санитизация входных данных
+#### ✅ DONE - Валидация и санитизация входных данных
 
-**Статус:** ⚠️ Частично реализовано
+**Статус:** ✅ Реализовано (PR #4)
 
-**Проблема:** Базовая валидация есть, но нет защиты от XSS и SQL injection.
+**Решение реализовано в:** `api/src/utils/validation.js`
 
-**Решение:** Добавить библиотеку `validator` и строгую санитизацию:
-
-```bash
-cd api && npm install validator
-```
+Функции:
+- `escapeHtml()` - защита от XSS
+- `stripDangerous()` - удаление script тегов и event handlers
+- `sanitizeName()`, `sanitizeEmail()`, `sanitizePhone()` - валидация полей
+- `validateBookingInput()` - комплексная валидация бронирования
 
 ```javascript
-// api/src/utils/validation.js
-const validator = require('validator');
+// Пример использования в createBooking.js
+const { validateBookingInput, validationErrorResponse } = require('../utils/validation');
 
-function sanitizeBookingInput(body) {
-    return {
-        name: validator.escape(validator.trim(body.name || '')),
-        email: validator.normalizeEmail(body.email || ''),
-        phone: body.phone ? validator.whitelist(body.phone, '+0123456789 ') : '',
-        // ... остальные поля
-    };
-}
-
-function validateEmail(email) {
-    return validator.isEmail(email);
-}
-
-function validatePhone(phone) {
-    // Латвийский формат: +371 XXXXXXXX
-    return /^\+?371?\s?\d{8}$/.test(phone.replace(/\s/g, ''));
+const validation = validateBookingInput(body);
+if (!validation.valid) {
+    return validationErrorResponse(validation.errors);
+});
 }
 ```
 
