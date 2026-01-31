@@ -7,6 +7,7 @@ const {
     generateClientEmailHTML,
     generateAdminEmailHTML,
     generatePaymentConfirmedEmailHTML,
+    generateCancellationEmailHTML,
     generateConfirmationPageHTML
 } = require('../src/templates/emailTemplates');
 
@@ -203,6 +204,84 @@ describe('Email Templates', () => {
         it('should show checkmark icon', () => {
             const html = generatePaymentConfirmedEmailHTML(t, booking);
             expect(html).toContain('✓');
+        });
+    });
+
+    describe('generateCancellationEmailHTML', () => {
+        const t = translations.getTranslation('lv');
+        const booking = {
+            id: 'SN-CANCEL123',
+            name: 'Jānis Bērziņš',
+            serviceName: 'Sākotnējā konsultācija',
+            consultationFormat: 'online',
+            date: '2026-02-01',
+            time: '10:00'
+        };
+
+        it('should generate cancellation email', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('<!DOCTYPE html>');
+            expect(html).toContain('</html>');
+        });
+
+        it('should show cancellation title', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain(t.cancellationTitle);
+        });
+
+        it('should include greeting with name', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('Jānis Bērziņš');
+        });
+
+        it('should show booking ID', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('SN-CANCEL123');
+        });
+
+        it('should include booking details with strikethrough', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('2026-02-01');
+            expect(html).toContain('10:00');
+            expect(html).toContain('line-through');
+        });
+
+        it('should have red error styling', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('#c62828'); // error red
+        });
+
+        it('should show X icon', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('✕');
+        });
+
+        it('should show format icon for online', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain('💻');
+        });
+
+        it('should show format icon for in-person', () => {
+            const inPersonBooking = { ...booking, consultationFormat: 'in-person' };
+            const html = generateCancellationEmailHTML(t, inPersonBooking);
+            expect(html).toContain('📍');
+        });
+
+        it('should include contact information', () => {
+            const html = generateCancellationEmailHTML(t, booking);
+            expect(html).toContain(t.cancellationQuestions);
+        });
+
+        it('should generate cancellation email in English', () => {
+            const enT = translations.getTranslation('en');
+            const html = generateCancellationEmailHTML(enT, booking);
+            expect(html).toContain('Booking Cancelled');
+        });
+
+        it('should generate cancellation email in Russian', () => {
+            const ruT = translations.getTranslation('ru');
+            const html = generateCancellationEmailHTML(ruT, booking);
+            expect(html).toContain('Бронирование отменено');
         });
     });
 

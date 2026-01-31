@@ -111,6 +111,21 @@ async function sendPaymentConfirmation(to, subject, html) {
 }
 
 /**
+ * Send cancellation notification to client
+ * @param {string} to - Recipient email
+ * @param {string} subject - Email subject
+ * @param {string} html - Email HTML content
+ * @returns {Promise<{success: boolean, id?: string, error?: string}>}
+ */
+async function sendCancellationNotification(to, subject, html) {
+    return sendEmail({
+        to,
+        subject,
+        html
+    });
+}
+
+/**
  * Check if email service is configured
  * @returns {boolean}
  */
@@ -123,5 +138,6 @@ module.exports = {
     sendClientConfirmation,
     sendAdminNotification,
     sendPaymentConfirmation,
+    sendCancellationNotification,
     isConfigured
 };
