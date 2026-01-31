@@ -31,7 +31,6 @@ import Layout from '../../layouts/Layout.astro';
                 <option value="availability">Pieejamība</option>
                 <option value="settings">Iestatījumi</option>
                 <option value="data">Dati</option>
-                <option value="monitoring">Monitoring</option>
             </select>
         </div>
 
@@ -53,10 +52,6 @@ import Layout from '../../layouts/Layout.astro';
                 <button class="admin-tab" data-tab="data">
                     <i class="ph ph-database"></i>
                     <span>Dati</span>
-                </button>
-                <button class="admin-tab" data-tab="monitoring">
-                    <i class="ph ph-chart-line"></i>
-                    <span>Monitoring</span>
                 </button>
             </div>
         </nav>
@@ -298,52 +293,6 @@ import Layout from '../../layouts/Layout.astro';
                 <div id="table-empty" class="hidden empty-state">
                     <i class="ph ph-tray empty-icon"></i>
                     <span>Tabula ir tukša</span>
-                </div>
-            </div>
-
-            <!-- Monitoring Tab -->
-            <div id="tab-monitoring" class="admin-content hidden">
-                <div class="content-header">
-                    <h2 class="content-title">Azure Functions Monitoring</h2>
-                    <div class="monitoring-controls">
-                        <span id="last-check" class="last-check-text"></span>
-                        <button id="refresh-monitoring" class="btn-secondary">
-                            <i class="ph ph-arrows-clockwise"></i>
-                            <span>Pārbaudīt</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="monitoring-status" class="status-card">
-                    <div class="status-main">
-                        <div class="status-info">
-                            <h3>Kopējais statuss</h3>
-                            <p id="status-text" class="status-value">Pārbauda...</p>
-                        </div>
-                        <div id="status-indicator" class="status-badge">
-                            <i class="ph ph-circle-notch spinning"></i>
-                        </div>
-                    </div>
-                    <div class="status-stats">
-                        <div class="stat-item"><span class="stat-value" id="stat-total">-</span><span class="stat-label">Kopā</span></div>
-                        <div class="stat-item"><span class="stat-value stat-healthy" id="stat-healthy">-</span><span class="stat-label">Veselīgi</span></div>
-                        <div class="stat-item"><span class="stat-value stat-degraded" id="stat-degraded">-</span><span class="stat-label">Degradēti</span></div>
-                        <div class="stat-item"><span class="stat-value stat-unhealthy" id="stat-unhealthy">-</span><span class="stat-label">Neveselīgi</span></div>
-                    </div>
-                </div>
-
-                <div id="monitoring-loading" class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <span>Pārbauda funkciju statusu...</span>
-                </div>
-
-                <div id="endpoints-container" class="hidden">
-                    <h3 class="section-title">API Endpoints</h3>
-                    <div id="endpoints-list" class="endpoints-list"></div>
-                    <div class="environment-card">
-                        <h4>Vide</h4>
-                        <div id="environment-info" class="env-info"></div>
-                    </div>
                 </div>
             </div>
         </main>
@@ -1425,125 +1374,6 @@ import Layout from '../../layouts/Layout.astro';
             letter-spacing: 0.5px;
         }
 
-        .monitoring-controls {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .last-check-text {
-            font-size: 13px;
-            color: var(--color-text-light);
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-primary);
-            margin: 0 0 16px 0;
-        }
-
-        .endpoints-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .endpoint-card {
-            background: var(--color-white);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-sm);
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .endpoint-card.unhealthy {
-            border-color: #fecaca;
-            background: #fef2f2;
-        }
-
-        .endpoint-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .endpoint-icon { font-size: 24px; }
-        .endpoint-icon.healthy { color: #16a34a; }
-        .endpoint-icon.degraded { color: #ca8a04; }
-        .endpoint-icon.unhealthy { color: #dc2626; }
-
-        .endpoint-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .endpoint-path {
-            font-size: 13px;
-            color: var(--color-text-light);
-        }
-
-        .endpoint-path code {
-            background: var(--color-cream);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 12px;
-        }
-
-        .endpoint-critical {
-            color: #dc2626;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .endpoint-status { text-align: right; }
-
-        .endpoint-code {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .endpoint-code.healthy { background: #dcfce7; color: #16a34a; }
-        .endpoint-code.degraded { background: #fef3c7; color: #b45309; }
-        .endpoint-code.unhealthy { background: #fee2e2; color: #dc2626; }
-
-        .endpoint-time {
-            font-size: 13px;
-            color: var(--color-text-light);
-            margin-top: 4px;
-        }
-
-        .environment-card {
-            margin-top: 24px;
-            padding: 20px;
-            background: var(--color-cream);
-            border-radius: var(--radius-sm);
-        }
-
-        .environment-card h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-primary);
-            margin: 0 0 12px 0;
-        }
-
-        .env-info {
-            font-size: 14px;
-            color: var(--color-text-light);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
         .section-divider {
             height: 1px;
             background: var(--color-border);
@@ -1663,7 +1493,6 @@ import Layout from '../../layouts/Layout.astro';
             if (tabId === 'availability') loadAvailability();
             if (tabId === 'settings') loadSettings();
             if (tabId === 'data') loadTableData();
-            if (tabId === 'monitoring') loadMonitoring();
         }
 
         tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -2100,43 +1929,6 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('table-select').addEventListener('change', loadTableData);
         document.getElementById('refresh-table').addEventListener('click', loadTableData);
         document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
-
-        async function loadMonitoring() {
-            const loading = document.getElementById('monitoring-loading');
-            const container = document.getElementById('endpoints-container');
-            const statusIndicator = document.getElementById('status-indicator');
-            statusIndicator.innerHTML = '<i class="ph ph-circle-notch spinning"></i>';
-            statusIndicator.className = 'status-badge';
-            loading.classList.remove('hidden'); container.classList.add('hidden');
-            try {
-                const response = await fetch(API_BASE + '/dashboard/monitoring');
-                const data = await response.json();
-                const statusText = document.getElementById('status-text');
-                const statusConfig = { healthy: { text: 'Viss darbojas', icon: 'ph-check-circle', cssClass: 'healthy' }, degraded: { text: 'Daļēji degradēts', icon: 'ph-warning', cssClass: 'degraded' }, unhealthy: { text: 'Problēmas!', icon: 'ph-x-circle', cssClass: 'unhealthy' } };
-                const config = statusConfig[data.overallStatus] || statusConfig.unhealthy;
-                statusText.textContent = config.text;
-                statusIndicator.innerHTML = `<i class="ph ${config.icon}"></i>`;
-                statusIndicator.className = 'status-badge ' + config.cssClass;
-                document.getElementById('stat-total').textContent = data.summary.total;
-                document.getElementById('stat-healthy').textContent = data.summary.healthy;
-                document.getElementById('stat-degraded').textContent = data.summary.degraded;
-                document.getElementById('stat-unhealthy').textContent = data.summary.unhealthy;
-                document.getElementById('last-check').textContent = `${new Date(data.checkedAt).toLocaleTimeString('lv-LV')} (${data.totalCheckTime}ms)`;
-                const endpointsList = document.getElementById('endpoints-list');
-                const statusIcons = { healthy: 'ph-check-circle', degraded: 'ph-warning', unhealthy: 'ph-x-circle' };
-                endpointsList.innerHTML = data.endpoints.map(ep => `<div class="endpoint-card ${ep.status === 'unhealthy' ? 'unhealthy' : ''}"><div class="endpoint-info"><i class="ph ${statusIcons[ep.status]} endpoint-icon ${ep.status}"></i><div><div class="endpoint-name">${ep.name}</div><div class="endpoint-path"><code>${ep.method}</code> <code>${ep.path}</code>${ep.critical ? '<span class="endpoint-critical"> • Kritisks</span>' : ''}</div></div></div><div class="endpoint-status"><span class="endpoint-code ${ep.status}">${ep.httpStatus > 0 ? ep.httpStatus : 'Kļūda'}</span><div class="endpoint-time">${ep.responseTime}ms</div></div></div>`).join('');
-                document.getElementById('environment-info').innerHTML = `<div><strong>Function App:</strong> ${data.environment.functionApp}</div><div><strong>Node.js:</strong> ${data.environment.nodeVersion}</div><div><strong>Vidējais atbildes laiks:</strong> ${data.avgResponseTime}ms</div>`;
-                loading.classList.add('hidden');
-                container.classList.remove('hidden');
-            } catch (error) {
-                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>';
-                document.getElementById('status-text').textContent = 'Kļūda!';
-                statusIndicator.innerHTML = '<i class="ph ph-x-circle"></i>';
-                statusIndicator.className = 'status-badge unhealthy';
-            }
-        }
-
-        document.getElementById('refresh-monitoring').addEventListener('click', loadMonitoring);
     })();
     </script>
 </Layout>
