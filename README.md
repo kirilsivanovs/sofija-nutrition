@@ -246,6 +246,8 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 sofija-nutrition-astro/
 ├── api/                           # Azure Functions (Backend)
 │   ├── src/
+│   │   ├── config/                # Централизованная конфигурация
+│   │   │   └── index.js           # Все настройки: cache TTL, rate limits, schedule
 │   │   ├── functions/             # HTTP функции
 │   │   │   ├── createBooking.js   # Создание бронирования
 │   │   │   ├── getAvailability.js # Получение доступных слотов
@@ -255,14 +257,22 @@ sofija-nutrition-astro/
 │   │   │   ├── bookingRepository.js
 │   │   │   ├── emailService.js
 │   │   │   ├── featureFlags.js
+│   │   │   ├── availabilityService.js
+│   │   │   └── ...
+│   │   ├── utils/                 # Утилиты
+│   │   │   ├── rateLimiter.js     # Rate limiting
+│   │   │   ├── validation.js      # Валидация входных данных
 │   │   │   └── ...
 │   │   └── templates/             # Email шаблоны
 │   ├── scripts/                   # Утилиты
 │   │   ├── create-tables.js       # Создание таблиц
 │   │   └── list-tables.js         # Список таблиц
-│   ├── tests/                     # Интеграционные тесты
+│   ├── tests/                     # Unit и интеграционные тесты
 │   ├── host.json                  # Конфигурация Functions
 │   └── local.settings.json        # Локальные переменные (не в git)
+│
+├── shared/                        # Общий код frontend/backend
+│   └── translations.js            # Единый источник переводов (lv/ru/en)
 │
 ├── src/
 │   ├── components/                # Astro компоненты
@@ -275,6 +285,7 @@ sofija-nutrition-astro/
 │
 ├── public/                        # Статика
 │   ├── assets/                    # JS, CSS, images
+│   │   └── shared-translations.js # Переводы для браузера
 │   └── data/                      # JSON данные
 │
 └── README.md                      # Этот файл

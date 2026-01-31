@@ -6,66 +6,32 @@
 
 const { TableClient } = require('@azure/data-tables');
 const { isLatvianHoliday } = require('./latvianHolidays');
+const { 
+    env, 
+    tables, 
+    cache, 
+    schedule: scheduleConfig, 
+    defaultServices: DEFAULT_SERVICES 
+} = require('../config');
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-const BOOKINGS_TABLE = 'bookings';
-const SETTINGS_TABLE = 'adminSettings';
-const SERVICES_TABLE = 'Services';
+const connectionString = env.azureStorageConnectionString;
+const BOOKINGS_TABLE = tables.bookings;
+const SETTINGS_TABLE = tables.settings;
+const SERVICES_TABLE = tables.services;
 const PARTITION_KEY = 'SERVICE';
 
-// Cache for service settings (TTL 5 minutes)
+// Cache for service settings
 let servicesCache = null;
 let servicesCacheTime = null;
-const CACHE_TTL_MS = 5 * 60 * 1000;
+const CACHE_TTL_MS = cache.servicesTtlMs;
 
 // Day name to index mapping (0 = Sunday, 1 = Monday, etc.)
 const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 /**
- * Default schedule configuration
+ * Default schedule configuration from centralized config
  */
-const DEFAULT_SCHEDULE = {
-    monday: { enabled: true, start: '09:00', end: '18:00' },
-    tuesday: { enabled: true, start: '09:00', end: '18:00' },
-    wednesday: { enabled: true, start: '09:00', end: '18:00' },
-    thursday: { enabled: true, start: '09:00', end: '18:00' },
-    friday: { enabled: true, start: '09:00', end: '18:00' },
-    saturday: { enabled: false, start: '09:00', end: '14:00' },
-    sunday: { enabled: false, start: '09:00', end: '14:00' }
-};
-
-/**
- * Default service types for fallback
- */
-const DEFAULT_SERVICES = [
-    {
-        id: 'cgm-diagnostic',
-        duration: 60,
-        name: {
-            lv: 'CGM diagnostika (60 min)',
-            ru: 'CGM-диагностика (60 мин)',
-            en: 'CGM Diagnostic (60 min)'
-        }
-    },
-    {
-        id: 'consultation',
-        duration: 60,
-        name: {
-            lv: 'Uztura konsultācija (60 min)',
-            ru: 'Консультация по питанию (60 мин)',
-            en: 'Nutrition Consultation (60 min)'
-        }
-    },
-    {
-        id: 'free-consultation',
-        duration: 15,
-        name: {
-            lv: 'Bezmaksas konsultācija (15 min)',
-            ru: 'Бесплатная консультация (15 мин)',
-            en: 'Free Consultation (15 min)'
-        }
-    }
-];
+const DEFAULT_SCHEDULE = scheduleConfig.defaultWorkingHours;
 
 /**
  * Load service settings from database

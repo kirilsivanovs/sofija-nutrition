@@ -5,15 +5,16 @@
 
 const { TableClient } = require('@azure/data-tables');
 const { sanitizeODataValue, validateDateFormat, validateTimeFormat } = require('../utils/odataSanitizer');
+const { env, tables, booking: bookingConfig } = require('../config');
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const connectionString = env.azureStorageConnectionString;
 let tableClient = null;
 let lockTableClient = null;
 const inMemoryBookings = new Map();
 const inMemoryLocks = new Map();
 
-// Lock configuration
-const LOCK_TTL_MS = 30000; // 30 seconds lock expiration
+// Lock configuration from centralized config
+const LOCK_TTL_MS = bookingConfig.lockTtlMs;
 
 console.log('📦 BookingRepository initialized');
 console.log('   Azure Storage:', connectionString ? '✅ Configured' : '⚠️ Not configured (using in-memory)');

@@ -3,6 +3,8 @@
  * Защита от XSS, SQL Injection и невалидных данных
  */
 
+const { validServiceIds } = require('../config');
+
 /**
  * Escape HTML специальных символов (защита от XSS)
  */
@@ -188,16 +190,9 @@ function sanitizeServiceId(serviceId) {
         return { valid: false, value: '', error: 'Service is required' };
     }
     
-    const validServices = [
-        'free-consultation',
-        'nutrition-consultation-basic', 
-        'nutrition-consultation-extended',
-        'nutrition-program'
-    ];
-    
     const cleaned = serviceId.trim().toLowerCase();
     
-    if (!validServices.includes(cleaned)) {
+    if (!validServiceIds.includes(cleaned)) {
         return { valid: false, value: cleaned, error: 'Invalid service' };
     }
     

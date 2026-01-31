@@ -1,14 +1,15 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
+const { env, tables, cache } = require('../config');
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-const FEATURE_FLAGS_TABLE = 'FeatureFlags';
+const connectionString = env.azureStorageConnectionString;
+const FEATURE_FLAGS_TABLE = tables.featureFlags;
 const PARTITION_KEY = 'FEATURE';
 
-// Кэш для feature flags (TTL 2 минуты - короткое время для быстрого отклика на изменения)
+// Кэш для feature flags
 let featureFlagsCache = null;
 let featureFlagsCacheTime = null;
-const CACHE_TTL_MS = 2 * 60 * 1000; // 2 минуты
+const CACHE_TTL_MS = cache.featureFlagsTtlMs;
 
 /**
  * Проверить, включен ли feature flag
