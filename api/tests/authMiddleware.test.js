@@ -194,8 +194,10 @@ describe('Auth Middleware', () => {
             const response = unauthorizedResponse('Test error');
 
             expect(response.status).toBe(401);
-            expect(response.jsonBody.error).toBe('Test error');
-            expect(response.jsonBody.hint).toBe('Use SWA auth or provide X-E2E-Token header');
+            expect(response.jsonBody.success).toBe(false);
+            expect(response.jsonBody.error.code).toBe('UNAUTHORIZED');
+            expect(response.jsonBody.error.message).toBe('Test error');
+            expect(response.jsonBody.meta.hint).toBe('Use SWA auth or provide X-E2E-Token header');
         });
     });
 

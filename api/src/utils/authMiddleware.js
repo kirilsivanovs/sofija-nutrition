@@ -6,12 +6,20 @@
  * 2. E2E Token Auth - через X-E2E-Token header (только для тестов)
  */
 
+const { 
+    logAuthFailure, 
+    logAuthSuccess, 
+    logAdminAccessDenied, 
+    logAdminAccessGranted 
+} = require('./securityLogger');
+
 /**
  * Проверяет авторизацию запроса
  * @param {object} request - HTTP request
+ * @param {object} [context] - Azure Functions context for logging
  * @returns {{ authorized: boolean, user?: object, method?: string, error?: string }}
  */
-function checkAuthorization(request) {
+function checkAuthorization(request, context = null) {
     // Метод 1: SWA Built-in Auth
     const clientPrincipal = request.headers.get('x-ms-client-principal');
     if (clientPrincipal) {
@@ -79,19 +87,47 @@ function checkAuthorization(request) {
 }
 
 /**
+ * Проверяет авторизацию с логированием
+ * @param {object} request - HTTP request
+ * @param {object} context - Azure Functions context for logging
+ * @returns {{ authorized: boolean, user?: object, method?: string, error?: string }}
+ */
+function checkAuthorizationWithLogging(request, context) {
+    const result = checkAuthorization(request, context);
+    
+    if (context) {
+        if (result.authorized) {
+            logAdminAccessGranted(context, request, result.user, result.method);
+        } else {
+            logAdminAccessDenied(context, request, result.error);
+        }
+    }
+    
+    return result;
+}
+
+/**
  * Создаёт HTTP response для неавторизованного запроса
  */
 function unauthorizedResponse(message = 'Unauthorized') {
     return {
         status: 401,
         jsonBody: { 
-            error: message,
-            hint: 'Use SWA auth or provide X-E2E-Token header'
+            success: false,
+            error: {
+                code: 'UNAUTHORIZED',
+                message
+            },
+            meta: {
+                timestamp: new Date().toISOString(),
+                hint: 'Use SWA auth or provide X-E2E-Token header'
+            }
         }
     };
 }
 
 module.exports = {
     checkAuthorization,
+    checkAuthorizationWithLogging,
     unauthorizedResponse
 };

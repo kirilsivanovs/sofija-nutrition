@@ -7,6 +7,7 @@
  */
 
 const { rateLimits: RATE_LIMITS } = require('../config');
+const { logRateLimitExceeded } = require('./securityLogger');
 
 const requestCounts = new Map();
 
@@ -99,8 +100,18 @@ function checkRateLimit(request, endpoint) {
 
 /**
  * Создать HTTP response для rate limit exceeded
+ * @param {Object} result - Rate limit check result
+ * @param {Object} [context] - Azure Functions context for logging
+ * @param {Request} [request] - HTTP request for logging
+ * @param {string} [endpoint] - Endpoint name for logging
  */
-function rateLimitExceededResponse(result) {
+function rateLimitExceededResponse(result, context = null, request = null, endpoint = null) {
+    // Log security event if context provided
+    if (context && request && endpoint) {
+        const config = RATE_LIMITS[endpoint] || RATE_LIMITS.default;
+        logRateLimitExceeded(context, request, endpoint, config.maxRequests);
+    }
+    
     return {
         status: 429,
         headers: {
@@ -109,9 +120,15 @@ function rateLimitExceededResponse(result) {
             'X-RateLimit-Reset': result.resetTime.toString()
         },
         jsonBody: {
-            error: 'Too Many Requests',
-            message: result.message,
-            retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000)
+            success: false,
+            error: {
+                code: 'RATE_LIMIT_EXCEEDED',
+                message: result.message || 'Too many requests'
+            },
+            meta: {
+                timestamp: new Date().toISOString(),
+                retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000)
+            }
         }
     };
 }
