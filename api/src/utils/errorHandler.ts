@@ -280,12 +280,49 @@ export function createSlotLockedError(date: string, time: string): AppError {
 }
 
 // ============================================
+// Errors Factory Object (for backward compatibility)
+// ============================================
+
+export const Errors = {
+  validation: (message: string, details?: AppErrorDetails) => 
+    new AppError(message, 400, ErrorCodes.VALIDATION_ERROR, details),
+  
+  unauthorized: (message = 'Authentication required') => 
+    new AppError(message, 401, ErrorCodes.UNAUTHORIZED),
+  
+  forbidden: (message = 'Access denied') => 
+    new AppError(message, 403, ErrorCodes.FORBIDDEN),
+  
+  notFound: (resource: string) => 
+    new AppError(`${resource} not found`, 404, ErrorCodes.NOT_FOUND),
+  
+  slotTaken: (date: string, time: string) => 
+    new AppError('Time slot already booked', 409, ErrorCodes.SLOT_TAKEN, { date, time }),
+  
+  slotLocked: (date: string, time: string) => 
+    new AppError('Time slot is being booked by another user', 409, ErrorCodes.SLOT_LOCKED, { date, time }),
+  
+  rateLimitExceeded: (retryAfter = 60) => 
+    new AppError('Rate limit exceeded', 429, ErrorCodes.RATE_LIMIT_EXCEEDED, { retryAfter }),
+  
+  weekendBooking: () => 
+    new AppError('Bookings are not available on weekends', 400, ErrorCodes.WEEKEND_BOOKING),
+  
+  holidayBooking: (holiday: string) => 
+    new AppError(`Bookings are not available on ${holiday}`, 400, ErrorCodes.HOLIDAY_BOOKING, { holiday }),
+  
+  internal: (message = 'Internal server error') => 
+    new AppError(message, 500, ErrorCodes.INTERNAL_ERROR)
+};
+
+// ============================================
 // CommonJS exports for backward compatibility
 // ============================================
 
 module.exports = {
   AppError,
   ErrorCodes,
+  Errors,
   withErrorHandling,
   generateRequestId,
   createValidationError,

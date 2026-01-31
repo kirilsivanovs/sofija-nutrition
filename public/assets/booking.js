@@ -81,7 +81,16 @@ const fallbackTranslations = {
         successText: "Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.",
         closeBtn: "Aizvērt",
         selectedLabel: "Izvēlēts",
-        today: "Šodien"
+        today: "Šodien",
+        // Validation messages
+        validation: {
+            nameRequired: "Lūdzu, ievadiet savu vārdu",
+            nameMinLength: "Vārdam jābūt vismaz 2 simboliem",
+            emailRequired: "Lūdzu, ievadiet e-pasta adresi",
+            emailInvalid: "Lūdzu, ievadiet derīgu e-pasta adresi",
+            phoneInvalid: "Lūdzu, ievadiet derīgu telefona numuru",
+            formatRequired: "Lūdzu, izvēlieties konsultācijas formātu"
+        }
     },
     ru: {
         title: "Выберите дату и время",
@@ -104,7 +113,16 @@ const fallbackTranslations = {
         successText: "Мы свяжемся с Вами в течение 24 часов для подтверждения визита.",
         closeBtn: "Закрыть",
         selectedLabel: "Выбрано",
-        today: "Сегодня"
+        today: "Сегодня",
+        // Validation messages
+        validation: {
+            nameRequired: "Пожалуйста, введите ваше имя",
+            nameMinLength: "Имя должно содержать минимум 2 символа",
+            emailRequired: "Пожалуйста, введите email",
+            emailInvalid: "Пожалуйста, введите корректный email",
+            phoneInvalid: "Пожалуйста, введите корректный номер телефона",
+            formatRequired: "Пожалуйста, выберите формат консультации"
+        }
     },
     en: {
         title: "Select date and time",
@@ -127,7 +145,16 @@ const fallbackTranslations = {
         successText: "We will contact you within 24 hours to confirm your appointment.",
         closeBtn: "Close",
         selectedLabel: "Selected",
-        today: "Today"
+        today: "Today",
+        // Validation messages
+        validation: {
+            nameRequired: "Please enter your name",
+            nameMinLength: "Name must be at least 2 characters",
+            emailRequired: "Please enter your email",
+            emailInvalid: "Please enter a valid email address",
+            phoneInvalid: "Please enter a valid phone number",
+            formatRequired: "Please select a consultation format"
+        }
     }
 };
 
@@ -735,6 +762,148 @@ class BookingCalendar {
         toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
     }
 
+    // ========== Form Validation Methods ==========
+    
+    getValidationTranslations() {
+        const t = this.translations;
+        return t.validation || fallbackTranslations[this.currentLang]?.validation || fallbackTranslations.lv.validation;
+    }
+
+    validateField(fieldName, value) {
+        const v = this.getValidationTranslations();
+        
+        switch (fieldName) {
+            case 'name':
+                if (!value || value.trim() === '') {
+                    return { valid: false, message: v.nameRequired };
+                }
+                if (value.trim().length < 2) {
+                    return { valid: false, message: v.nameMinLength };
+                }
+                return { valid: true, message: '' };
+                
+            case 'email':
+                if (!value || value.trim() === '') {
+                    return { valid: false, message: v.emailRequired };
+                }
+                // Email regex pattern
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(value.trim())) {
+                    return { valid: false, message: v.emailInvalid };
+                }
+                return { valid: true, message: '' };
+                
+            case 'phone':
+                // Phone is optional, but if provided must be valid
+                if (!value || value.trim() === '') {
+                    return { valid: true, message: '' }; // Phone is optional
+                }
+                // Accept formats: +371 20000000, 20000000, +371-20-000-000, etc.
+                const phonePattern = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/;
+                if (!phonePattern.test(value.replace(/\s/g, ''))) {
+                    return { valid: false, message: v.phoneInvalid };
+                }
+                return { valid: true, message: '' };
+                
+            case 'consultationFormat':
+                if (!value) {
+                    return { valid: false, message: v.formatRequired };
+                }
+                return { valid: true, message: '' };
+                
+            default:
+                return { valid: true, message: '' };
+        }
+    }
+
+    showFieldError(inputElement, message) {
+        // Remove any existing error
+        this.clearFieldError(inputElement);
+        
+        // Add error class to input
+        inputElement.classList.add('input-error');
+        inputElement.classList.remove('input-valid');
+        
+        // Create error message element
+        const errorEl = document.createElement('div');
+        errorEl.className = 'field-error-message';
+        errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${message}`;
+        
+        // Insert after input or its parent (for select wrappers)
+        const parent = inputElement.closest('.form-group') || inputElement.parentElement;
+        parent.appendChild(errorEl);
+    }
+
+    clearFieldError(inputElement) {
+        inputElement.classList.remove('input-error');
+        
+        const parent = inputElement.closest('.form-group') || inputElement.parentElement;
+        const existingError = parent.querySelector('.field-error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+    }
+
+    showFieldValid(inputElement) {
+        this.clearFieldError(inputElement);
+        inputElement.classList.add('input-valid');
+    }
+
+    validateAndShowError(inputElement) {
+        const fieldName = inputElement.name;
+        const value = inputElement.value;
+        
+        const result = this.validateField(fieldName, value);
+        
+        if (!result.valid) {
+            this.showFieldError(inputElement, result.message);
+        } else if (value && value.trim() !== '') {
+            this.showFieldValid(inputElement);
+        } else {
+            this.clearFieldError(inputElement);
+        }
+        
+        return result.valid;
+    }
+
+    validateAllFields() {
+        const form = this.container.querySelector('#bookingForm');
+        if (!form) return false;
+        
+        let isValid = true;
+        
+        // Validate each required field
+        const nameInput = form.querySelector('input[name="name"]');
+        const emailInput = form.querySelector('input[name="email"]');
+        const phoneInput = form.querySelector('input[name="phone"]');
+        const formatInput = form.querySelector('input[name="consultationFormat"]:checked');
+        
+        if (!this.validateAndShowError(nameInput)) isValid = false;
+        if (!this.validateAndShowError(emailInput)) isValid = false;
+        if (phoneInput) this.validateAndShowError(phoneInput); // Phone is optional
+        
+        // Validate radio buttons separately
+        if (!formatInput) {
+            const v = this.getValidationTranslations();
+            const formatGroup = form.querySelector('.format-options');
+            if (formatGroup) {
+                // Remove existing error
+                const existingError = formatGroup.querySelector('.field-error-message');
+                if (existingError) existingError.remove();
+                
+                // Add error
+                const errorEl = document.createElement('div');
+                errorEl.className = 'field-error-message';
+                errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.formatRequired}`;
+                formatGroup.appendChild(errorEl);
+            }
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+    // ========== End Validation Methods ==========
+
     showSuccessWithInvoice(booking) {
         // Add to local booked array
         if (this.availability) {
@@ -985,9 +1154,71 @@ class BookingCalendar {
         // Form submission
         this.container.querySelector('#bookingForm')?.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Validate all fields before submission
+            if (!this.validateAllFields()) {
+                // Add shake animation to invalid fields
+                const invalidInputs = this.container.querySelectorAll('.input-error');
+                invalidInputs.forEach(input => {
+                    input.classList.add('shake');
+                    setTimeout(() => input.classList.remove('shake'), 500);
+                });
+                
+                // Scroll to first error
+                const firstError = this.container.querySelector('.input-error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return;
+            }
+            
             const formData = new FormData(e.target);
             this.submitBooking(formData);
         });
+
+        // Real-time validation on blur (when user leaves field)
+        const form = this.container.querySelector('#bookingForm');
+        if (form) {
+            const nameInput = form.querySelector('input[name="name"]');
+            const emailInput = form.querySelector('input[name="email"]');
+            const phoneInput = form.querySelector('input[name="phone"]');
+            
+            // Validate on blur
+            nameInput?.addEventListener('blur', () => this.validateAndShowError(nameInput));
+            emailInput?.addEventListener('blur', () => this.validateAndShowError(emailInput));
+            phoneInput?.addEventListener('blur', () => this.validateAndShowError(phoneInput));
+            
+            // Clear error on input (but don't validate until blur)
+            nameInput?.addEventListener('input', () => {
+                if (nameInput.classList.contains('input-error')) {
+                    this.validateAndShowError(nameInput);
+                }
+            });
+            emailInput?.addEventListener('input', () => {
+                if (emailInput.classList.contains('input-error')) {
+                    this.validateAndShowError(emailInput);
+                }
+            });
+            phoneInput?.addEventListener('input', () => {
+                if (phoneInput.classList.contains('input-error')) {
+                    this.validateAndShowError(phoneInput);
+                }
+            });
+            
+            // Validate format selection on change
+            const formatInputs = form.querySelectorAll('input[name="consultationFormat"]');
+            formatInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    // Clear format error when selected
+                    const formatGroup = form.querySelector('.format-options');
+                    if (formatGroup) {
+                        const errorEl = formatGroup.querySelector('.field-error-message');
+                        if (errorEl) errorEl.remove();
+                    }
+                });
+            });
+        }
 
         // Service type change - handle format restrictions
         this.container.querySelector('#serviceTypeSelect')?.addEventListener('change', (e) => {
