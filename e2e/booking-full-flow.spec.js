@@ -161,12 +161,16 @@ test('Полное бронирование: клиент + подтвержде
   await page.goto('/#contact');
   await page.waitForLoadState('domcontentloaded');
   
-  // 3. Ждём появления календаря
-  const calendar = page.locator('#bookingCalendar');
-  await expect(calendar).toBeVisible({ timeout: 10000 });
+  // 3. Ждём появления секции контактов (статический HTML)
+  const contactSection = page.locator('#contact');
+  await expect(contactSection).toBeVisible({ timeout: 10000 });
   
-  // 4. Ждём загрузки API календаря
-  await page.waitForTimeout(3000);
+  // 4. Ждём появления календаря (динамический контент от JS)
+  const calendar = page.locator('#bookingCalendar');
+  await expect(calendar).toBeVisible({ timeout: 15000 });
+  
+  // 5. Ждём загрузки API календаря - проверяем что есть дни
+  await page.waitForSelector('.calendar-day:not(.empty)', { timeout: 15000 });
   
   // Логируем текущий месяц для отладки
   let monthYear = await page.locator('.calendar-month-year').textContent();
