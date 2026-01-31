@@ -105,6 +105,31 @@ test('Полное бронирование: клиент + подтвержде
   test.setTimeout(120000);
   
   // ============================================
+  // ЧАСТЬ 0: ПРОВЕРЯЕМ ДОСТУПНОСТЬ ЧЕРЕЗ API
+  // ============================================
+  
+  const apiBase = 'https://sofija-nutrition-api.azurewebsites.net/api';
+  
+  // Получаем данные о доступности напрямую из API
+  const availabilityResponse = await request.get(`${apiBase}/availability`);
+  expect(availabilityResponse.ok()).toBeTruthy();
+  const availability = await availabilityResponse.json();
+  
+  // Находим первую доступную дату
+  const availableDates = Object.keys(availability.slots || {})
+    .filter(dateStr => availability.slots[dateStr]?.length > 0)
+    .sort();
+  
+  if (availableDates.length === 0) {
+    throw new Error('❌ API не возвращает доступных дат! Проверьте настройки расписания.');
+  }
+  
+  const firstAvailableDate = availableDates[0];
+  const targetMonth = new Date(firstAvailableDate).getMonth(); // 0-11
+  const targetYear = new Date(firstAvailableDate).getFullYear();
+  console.log(`📅 API: Первая доступная дата: ${firstAvailableDate} (${targetMonth + 1}/${targetYear})`);
+  
+  // ============================================
   // ЧАСТЬ 1: КЛИЕНТ ДЕЛАЕТ БРОНИРОВАНИЕ
   // ============================================
   
@@ -121,38 +146,58 @@ test('Полное бронирование: клиент + подтвержде
   const calendar = page.locator('#bookingCalendar');
   await expect(calendar).toBeVisible({ timeout: 10000 });
   
-  // 4. Ждём загрузки доступных дат (API) - увеличиваем время ожидания для CI
-  await page.waitForTimeout(5000); // Даём время на загрузку API и навигацию к первому доступному месяцу
+  // 4. Ждём загрузки API календаря
+  await page.waitForTimeout(3000);
   
   // Логируем текущий месяц для отладки
-  const monthYear = await page.locator('.calendar-month-year').textContent();
+  let monthYear = await page.locator('.calendar-month-year').textContent();
   console.log(`📅 Текущий месяц в календаре: ${monthYear}`);
   
-  // Проверяем доступные дни
+  // 5. Навигируем к месяцу с доступными датами
+  const nextMonthBtn = page.locator('.cal-nav-btn.next');
+  const currentDate = new Date();
+  let currentMonth = currentDate.getMonth();
+  let currentYear = currentDate.getFullYear();
+  
+  // Переключаем месяцы пока не достигнем целевого
+  let attempts = 0;
+  const maxAttempts = 12; // Максимум на год вперёд
+  
+  while ((currentYear < targetYear || (currentYear === targetYear && currentMonth < targetMonth)) && attempts < maxAttempts) {
+    console.log(`📅 Переключаем с ${currentMonth + 1}/${currentYear} на следующий месяц...`);
+    await expect(nextMonthBtn).toBeVisible({ timeout: 5000 });
+    await nextMonthBtn.click();
+    await page.waitForTimeout(1000);
+    
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    attempts++;
+    
+    monthYear = await page.locator('.calendar-month-year').textContent();
+    console.log(`📅 Сейчас: ${monthYear}`);
+  }
+  
+  // 6. Ждём появления доступных дней
+  await page.waitForTimeout(2000);
   let availableDays = page.locator('#bookingCalendar .day.available');
   let availableCount = await availableDays.count();
   console.log(`📅 Найдено доступных дней: ${availableCount}`);
   
-  // Кнопка переключения на следующий месяц
-  const nextMonthBtn = page.locator('.cal-nav-btn.next');
-  
-  // Если нет доступных дней - переключаем месяц (до 3 раз)
-  for (let attempt = 0; attempt < 3 && availableCount === 0; attempt++) {
-    console.log(`📅 Попытка ${attempt + 1}: В текущем месяце нет доступных дней, переключаем на следующий...`);
-    
-    // Ждём пока кнопка станет видимой и кликабельной
-    await expect(nextMonthBtn).toBeVisible({ timeout: 5000 });
+  // Если всё ещё нет - пробуем ещё раз переключить
+  for (let retry = 0; retry < 3 && availableCount === 0; retry++) {
+    console.log(`📅 Попытка ${retry + 1}: Переключаем на следующий месяц...`);
     await nextMonthBtn.click();
-    await page.waitForTimeout(3000); // Ждём загрузку нового месяца и API
-    
-    // Пересчитываем доступные дни
+    await page.waitForTimeout(2000);
     availableDays = page.locator('#bookingCalendar .day.available');
     availableCount = await availableDays.count();
-    const newMonth = await page.locator('.calendar-month-year').textContent();
-    console.log(`📅 После переключения на ${newMonth}: ${availableCount} доступных дней`);
+    monthYear = await page.locator('.calendar-month-year').textContent();
+    console.log(`📅 ${monthYear}: ${availableCount} доступных дней`);
   }
   
-  await expect(availableDays.first()).toBeVisible({ timeout: 15000 });
+  expect(availableCount).toBeGreaterThan(0);
   
   // Кликаем на первый доступный день и проверяем, что есть слоты
   let bookedDate = null;
@@ -229,7 +274,39 @@ test('Полное бронирование: клиент + подтвержде
   
   // Ждём загрузки календаря
   await expect(page.locator('#bookingCalendar')).toBeVisible({ timeout: 10000 });
-  await page.waitForTimeout(2000); // Даём время на загрузку API
+  await page.waitForTimeout(3000); // Даём время на загрузку API
+  
+  // Нужно переключить на месяц с забронированной датой
+  const bookedDateObj = new Date(bookedDate);
+  const bookedMonth = bookedDateObj.getMonth();
+  const bookedYear = bookedDateObj.getFullYear();
+  
+  console.log(`📅 Забронированная дата: ${bookedDate} (месяц ${bookedMonth + 1}/${bookedYear})`);
+  
+  // Проверяем текущий месяц календаря после reload
+  let calendarMonthText = await page.locator('.calendar-month-year').textContent();
+  console.log(`📅 Календарь после reload: ${calendarMonthText}`);
+  
+  const reloadNextBtn = page.locator('.cal-nav-btn.next');
+  
+  // Переключаем на месяц бронирования пока не найдём нужную дату
+  let maxTries = 12;
+  while (maxTries > 0) {
+    const dateCell = page.locator(`#bookingCalendar .day[data-date="${bookedDate}"]`);
+    if (await dateCell.count() > 0) {
+      console.log(`📅 Найдена ячейка для ${bookedDate}`);
+      break;
+    }
+    
+    console.log(`📅 Переключаем на следующий месяц...`);
+    await reloadNextBtn.click();
+    await page.waitForTimeout(500);
+    calendarMonthText = await page.locator('.calendar-month-year').textContent();
+    console.log(`📅 Сейчас: ${calendarMonthText}`);
+    maxTries--;
+  }
+  
+  await page.waitForTimeout(1000);
   
   // Находим забронированный день и кликаем на него
   const bookedDayCell = page.locator(`#bookingCalendar .day[data-date="${bookedDate}"]`);
@@ -262,7 +339,7 @@ test('Полное бронирование: клиент + подтвержде
   }
   
   // Используем API напрямую с E2E токеном (обходит SWA auth)
-  const apiBase = 'https://sofija-nutrition-api.azurewebsites.net/api';
+  // apiBase уже определён в начале теста
   
   await performAdminActionsViaAPI(request, apiBase, e2eToken, bookedDate, testUserName);
 });
