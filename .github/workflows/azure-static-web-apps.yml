@@ -66,35 +66,74 @@ jobs:
             echo "needs_cleanup=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Close stale environments via SWA action
-        if: steps.check_limit.outputs.needs_cleanup == 'true' || github.event_name == 'schedule'
-        continue-on-error: true
+      - name: Find orphaned staging environments
+        id: find_orphaned
         uses: actions/github-script@v7
         with:
           script: |
-            // Get closed PRs from last 7 days that might have orphaned environments
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            
-            const { data: closedPRs } = await github.rest.pulls.list({
+            // Get open PR numbers
+            const { data: openPRs } = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'closed',
-              sort: 'updated',
-              direction: 'desc',
-              per_page: 20
+              state: 'open'
             });
+            const openPRNumbers = openPRs.map(pr => pr.number);
+            console.log('Open PRs:', openPRNumbers);
+            core.setOutput('open_prs', JSON.stringify(openPRNumbers));
+
+      - name: Azure Login
+        if: steps.check_limit.outputs.needs_cleanup == 'true' || github.event_name == 'schedule'
+        uses: azure/login@v2
+        continue-on-error: true
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Cleanup orphaned environments via Azure CLI
+        if: steps.check_limit.outputs.needs_cleanup == 'true' || github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          OPEN_PRS: ${{ steps.find_orphaned.outputs.open_prs }}
+        run: |
+          echo "🔍 Checking for orphaned staging environments..."
+          
+          # Get list of staging environments
+          ENVS=$(az staticwebapp environment list \
+            --name "sofija-nutrition" \
+            --resource-group "PersonalProjects" \
+            --query "[?name != 'default'].name" -o tsv 2>/dev/null || echo "")
+          
+          if [ -z "$ENVS" ]; then
+            echo "✅ No staging environments found"
+            exit 0
+          fi
+          
+          echo "Found staging environments: $ENVS"
+          
+          # Parse open PR numbers
+          OPEN_PR_ARRAY=$(echo "$OPEN_PRS" | jq -r '.[]' 2>/dev/null || echo "")
+          
+          # Delete environments that don't match open PRs
+          for ENV in $ENVS; do
+            IS_ORPHANED=true
+            for PR in $OPEN_PR_ARRAY; do
+              if [ "$ENV" == "$PR" ]; then
+                IS_ORPHANED=false
+                echo "✅ Environment $ENV matches open PR #$PR - keeping"
+                break
+              fi
+            done
             
-            console.log(`Found ${closedPRs.length} recently closed PRs`);
-            
-            // For each closed PR, trigger the close action by re-running the workflow
-            // This is a workaround since we can't directly call Azure API without credentials
-            for (const pr of closedPRs.slice(0, 5)) {
-              console.log(`PR #${pr.number}: ${pr.title} (closed at ${pr.closed_at})`);
-            }
-            
-            console.log('Note: Orphaned environments will be cleaned on next PR close event');
-            console.log('To manually clean, close and reopen a PR or use Azure Portal');
+            if [ "$IS_ORPHANED" = true ]; then
+              echo "🧹 Deleting orphaned environment: $ENV"
+              az staticwebapp environment delete \
+                --name "sofija-nutrition" \
+                --resource-group "PersonalProjects" \
+                --environment-name "$ENV" \
+                --yes 2>/dev/null || echo "Failed to delete $ENV"
+            fi
+          done
+          
+          echo "✅ Cleanup complete"
 
   # ============================================
   # ЭТАП 1: Unit тесты API (быстрые, без деплоя)
