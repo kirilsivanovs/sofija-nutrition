@@ -27,104 +27,82 @@ permissions:
 
 jobs:
   # ============================================
-  # CLEANUP: Удаление orphaned staging environments
+  # CLEANUP: Принудительное удаление staging environments перед deploy
+  # Free tier Azure SWA: максимум 3 staging environments
   # ============================================
-  cleanup_stale_environments:
-    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup_only == 'true') || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  cleanup_staging:
+    # Запускается для ВСЕХ PR (кроме close) и по расписанию
+    if: |
+      github.event_name == 'schedule' || 
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: 🧹 Cleanup Stale Environments
+    name: 🧹 Cleanup Staging Environments
     steps:
       - uses: actions/checkout@v4
       
-      - name: Get open PR numbers
-        id: get_prs
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
-            const prNumbers = prs.map(pr => pr.number);
-            console.log('Open PRs:', prNumbers);
-            core.setOutput('pr_numbers', JSON.stringify(prNumbers));
-            core.setOutput('count', prNumbers.length);
-            return prNumbers;
-
-      - name: Check environment limit
-        id: check_limit
-        run: |
-          OPEN_PRS=${{ steps.get_prs.outputs.count }}
-          # Azure Static Web Apps Free tier: 3 staging environments max
-          # If we have 3+ open PRs, we need to close oldest ones
-          if [ "$OPEN_PRS" -ge 3 ]; then
-            echo "⚠️ Warning: $OPEN_PRS open PRs - approaching staging limit (3)"
-            echo "needs_cleanup=true" >> $GITHUB_OUTPUT
-          else
-            echo "✅ $OPEN_PRS open PRs - within limits"
-            echo "needs_cleanup=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Find orphaned staging environments
-        id: find_orphaned
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Get open PR numbers
-            const { data: openPRs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
-            const openPRNumbers = openPRs.map(pr => pr.number);
-            console.log('Open PRs:', openPRNumbers);
-            core.setOutput('open_prs', JSON.stringify(openPRNumbers));
-
       - name: Azure Login
-        if: steps.check_limit.outputs.needs_cleanup == 'true' || github.event_name == 'schedule'
         uses: azure/login@v2
-        continue-on-error: true
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Cleanup orphaned environments via Azure CLI
-        if: steps.check_limit.outputs.needs_cleanup == 'true' || github.event_name == 'schedule'
-        continue-on-error: true
+      - name: Get staging environments and cleanup
+        id: cleanup
         env:
-          OPEN_PRS: ${{ steps.find_orphaned.outputs.open_prs }}
+          CURRENT_PR: ${{ github.event.pull_request.number }}
         run: |
-          echo "🔍 Checking for orphaned staging environments..."
+          echo "🔍 Fetching staging environments..."
           
-          # Get list of staging environments
+          # Get all staging environments (excluding 'default' which is production)
           ENVS=$(az staticwebapp environment list \
             --name "sofija-nutrition" \
             --resource-group "PersonalProjects" \
-            --query "[?name != 'default'].name" -o tsv 2>/dev/null || echo "")
+            --query "[?name != 'default'].{name: name, createdOn: properties.createdOn}" \
+            -o json 2>/dev/null || echo "[]")
           
-          if [ -z "$ENVS" ]; then
-            echo "✅ No staging environments found"
-            exit 0
+          echo "Current environments: $ENVS"
+          
+          # Count environments
+          ENV_COUNT=$(echo "$ENVS" | jq 'length')
+          echo "📊 Found $ENV_COUNT staging environment(s)"
+          
+          # Azure SWA Free tier limit: 3 staging environments
+          # If we have 3 or more, we need to delete the oldest one to make room
+          if [ "$ENV_COUNT" -ge 3 ]; then
+            echo "⚠️ At limit ($ENV_COUNT/3 staging environments)"
+            
+            # Get the oldest environment (sort by createdOn ascending, take first)
+            OLDEST_ENV=$(echo "$ENVS" | jq -r 'sort_by(.createdOn) | .[0].name')
+            
+            if [ -n "$OLDEST_ENV" ] && [ "$OLDEST_ENV" != "null" ]; then
+              echo "🧹 Deleting oldest environment: $OLDEST_ENV"
+              az staticwebapp environment delete \
+                --name "sofija-nutrition" \
+                --resource-group "PersonalProjects" \
+                --environment-name "$OLDEST_ENV" \
+                --yes
+              echo "✅ Deleted environment $OLDEST_ENV"
+            fi
+          else
+            echo "✅ Within limits ($ENV_COUNT/3 staging environments)"
           fi
           
-          echo "Found staging environments: $ENVS"
+          # Also cleanup any environments for closed PRs
+          echo "🔍 Checking for orphaned environments..."
           
-          # Parse open PR numbers
-          OPEN_PR_ARRAY=$(echo "$OPEN_PRS" | jq -r '.[]' 2>/dev/null || echo "")
+          # Get open PR numbers
+          OPEN_PRS=$(gh pr list --state open --json number --jq '.[].number' || echo "")
+          echo "Open PRs: $OPEN_PRS"
           
-          # Delete environments that don't match open PRs
-          for ENV in $ENVS; do
-            IS_ORPHANED=true
-            for PR in $OPEN_PR_ARRAY; do
-              if [ "$ENV" == "$PR" ]; then
-                IS_ORPHANED=false
-                echo "✅ Environment $ENV matches open PR #$PR - keeping"
-                break
-              fi
-            done
-            
-            if [ "$IS_ORPHANED" = true ]; then
-              echo "🧹 Deleting orphaned environment: $ENV"
+          # Get all environment names
+          ENV_NAMES=$(echo "$ENVS" | jq -r '.[].name')
+          
+          for ENV in $ENV_NAMES; do
+            # Environment names are PR numbers
+            if echo "$OPEN_PRS" | grep -q "^${ENV}$"; then
+              echo "✅ Environment $ENV has open PR - keeping"
+            else
+              echo "🧹 Environment $ENV is orphaned - deleting"
               az staticwebapp environment delete \
                 --name "sofija-nutrition" \
                 --resource-group "PersonalProjects" \
@@ -134,6 +112,17 @@ jobs:
           done
           
           echo "✅ Cleanup complete"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Verify cleanup
+        run: |
+          echo "📊 Current staging environments after cleanup:"
+          az staticwebapp environment list \
+            --name "sofija-nutrition" \
+            --resource-group "PersonalProjects" \
+            --query "[?name != 'default'].name" \
+            -o tsv || echo "None"
 
   # ============================================
   # ЭТАП 1: Unit тесты API (быстрые, без деплоя)
@@ -172,8 +161,8 @@ jobs:
   # ЭТАП 2: Deploy to Staging (Preview для PR)
   # ============================================
   build_and_deploy:
-    needs: [test_api, cleanup_stale_environments]
-    if: always() && (needs.test_api.result == 'success' || needs.test_api.result == 'skipped') && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.inputs.cleanup_only != 'true'
+    needs: [test_api, cleanup_staging]
+    if: always() && needs.test_api.result == 'success' && (needs.cleanup_staging.result == 'success' || needs.cleanup_staging.result == 'skipped') && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.inputs.cleanup_only != 'true'
     runs-on: ubuntu-latest
     name: Build and Deploy
     outputs:
