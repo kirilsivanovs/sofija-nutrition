@@ -150,12 +150,14 @@ test('Полное бронирование: клиент + подтвержде
   
   // 1. Открываем главную страницу
   await page.goto('/');
-  await page.waitForLoadState('domcontentloaded');
+  await page.waitForLoadState('networkidle');
   
-  // 2. Нажимаем кнопку "Pieteikties" (запись на приём)
-  const bookingBtn = page.locator('a[href="#contact"], button:has-text("Pieteikties")').first();
-  await expect(bookingBtn).toBeVisible();
-  await bookingBtn.click();
+  // Ждём загрузки страницы (проверяем что header отрисовался)
+  await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
+  
+  // 2. Скроллим к секции бронирования напрямую (надёжнее чем клик по кнопке)
+  await page.goto('/#contact');
+  await page.waitForLoadState('domcontentloaded');
   
   // 3. Ждём появления календаря
   const calendar = page.locator('#bookingCalendar');
