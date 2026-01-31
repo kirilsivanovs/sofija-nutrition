@@ -306,7 +306,9 @@ jobs:
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT to trigger push workflow after merge
+          # Falls back to GITHUB_TOKEN if PAT not set
+          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
   # ============================================
   # Cleanup staging при закрытии PR
