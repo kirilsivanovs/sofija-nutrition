@@ -251,7 +251,26 @@
 
             "footer_role": "Sertificēta uztura speciāliste, PhD doktorante",
             "footer_nav": "Navigācija",
-            "footer_rights": "© 2026 Sofija Ivanova. Visas tiesības aizsargātas."
+            "footer_rights": "© 2026 Sofija Ivanova. Visas tiesības aizsargātas.",
+            
+            // Missing translations
+            "header_subtitle": "Uztura speciāliste · PhD",
+            "cgm_unique_title": "Jūsu organisms reaģē atšķirīgi",
+            "cgm_unique_desc": "Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.",
+            "chart_glucose_response": "Glikozes reakcija",
+            "chart_after": "Pēc programmas",
+            "chart_before": "Pirms",
+            "cgm_how_helps": "Kā CGM palīdz?",
+            "cgm_benefit_1_title": "Reāllaika monitorings",
+            "cgm_benefit_1_desc": "Redzat, kā organisms reaģē uz katru maltīti",
+            "cgm_benefit_2_title": "20 000+ mērījumu",
+            "cgm_benefit_2_desc": "Pilnīgs priekšstats par 14 dienām",
+            "cgm_benefit_3_title": "Precīzas rekomendācijas",
+            "cgm_benefit_3_desc": "Zinām, ko mainīt tieši Jums",
+            "reg_number_label": "Reģistrācijas Nr.",
+            "clients_count": "500+ klienti",
+            "clients_improved": "ar uzlabotiem rādītājiem",
+            "footer_subtitle": "Uztura speciāliste · PhD · Reģ. Nr. 75650061277"
         },
         ru: {
             // Navigation
@@ -497,7 +516,26 @@
 
             "footer_role": "Сертифицированный специалист по питанию, PhD",
             "footer_nav": "Навигация",
-            "footer_rights": "© 2026 Sofija Ivanova. Все права защищены."
+            "footer_rights": "© 2026 Sofija Ivanova. Все права защищены.",
+            
+            // Missing translations
+            "header_subtitle": "Специалист по питанию · PhD",
+            "cgm_unique_title": "Ваш организм реагирует по-разному",
+            "cgm_unique_desc": "Один и тот же продукт для одного человека идеален, для другого — вызывает скачок сахара. CGM сенсор 14 дней фиксирует каждую реакцию.",
+            "chart_glucose_response": "Реакция глюкозы",
+            "chart_after": "После программы",
+            "chart_before": "До",
+            "cgm_how_helps": "Как помогает CGM?",
+            "cgm_benefit_1_title": "Мониторинг в реальном времени",
+            "cgm_benefit_1_desc": "Видите, как организм реагирует на каждый приём пищи",
+            "cgm_benefit_2_title": "20 000+ измерений",
+            "cgm_benefit_2_desc": "Полная картина за 14 дней",
+            "cgm_benefit_3_title": "Точные рекомендации",
+            "cgm_benefit_3_desc": "Знаем, что изменить именно для Вас",
+            "reg_number_label": "Рег. номер",
+            "clients_count": "500+ клиентов",
+            "clients_improved": "с улучшенными показателями",
+            "footer_subtitle": "Специалист по питанию · PhD · Рег. № 75650061277"
         },
         en: {
             // Navigation
@@ -743,7 +781,26 @@
 
             "footer_role": "Certified Nutritionist, PhD Student",
             "footer_nav": "Navigation",
-            "footer_rights": "© 2026 Sofija Ivanova. All rights reserved."
+            "footer_rights": "© 2026 Sofija Ivanova. All rights reserved.",
+            
+            // Missing translations
+            "header_subtitle": "Nutrition Specialist · PhD",
+            "cgm_unique_title": "Your body responds differently",
+            "cgm_unique_desc": "The same product can be ideal for one person, but cause a sugar spike for another. A CGM sensor records every reaction for 14 days.",
+            "chart_glucose_response": "Glucose response",
+            "chart_after": "After program",
+            "chart_before": "Before",
+            "cgm_how_helps": "How does CGM help?",
+            "cgm_benefit_1_title": "Real-time monitoring",
+            "cgm_benefit_1_desc": "See how your body responds to each meal",
+            "cgm_benefit_2_title": "20,000+ measurements",
+            "cgm_benefit_2_desc": "Complete picture over 14 days",
+            "cgm_benefit_3_title": "Precise recommendations",
+            "cgm_benefit_3_desc": "We know what to change specifically for you",
+            "reg_number_label": "Registration No.",
+            "clients_count": "500+ clients",
+            "clients_improved": "with improved results",
+            "footer_subtitle": "Nutrition Specialist · PhD · Reg. No. 75650061277"
         }
     };
 

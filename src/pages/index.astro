@@ -13,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
                         <img src="/assets/img/logo.svg" alt="SI Logo" class="h-8 md:h-10 w-auto">
                         <div class="flex flex-col">
                             <span class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors">Sofija Ivanova</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest">Uztura speciāliste · PhD</span>
+                            <span class="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest" data-i18n="header_subtitle">Uztura speciāliste · PhD</span>
                         </div>
                     </div>
                 </a>
@@ -354,17 +354,17 @@ import Layout from '../layouts/Layout.astro';
                 <div class="bg-cream rounded-2xl p-6 md:p-10 lg:p-12">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-4">Jūsu organisms reaģē atšķirīgi</h3>
-                            <p class="text-gray-600 leading-relaxed">Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.</p>
+                            <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-4" data-i18n="cgm_unique_title">Jūsu organisms reaģē atšķirīgi</h3>
+                            <p class="text-gray-600 leading-relaxed" data-i18n="cgm_unique_desc">Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.</p>
                         </div>
                         
                         <!-- Chart -->
                         <div class="bg-white rounded-xl p-4 md:p-6 shadow-sm">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
-                                <span class="text-sm font-medium text-gray-700">Glikozes reakcija</span>
+                                <span class="text-sm font-medium text-gray-700" data-i18n="chart_glucose_response">Glikozes reakcija</span>
                                 <div class="flex gap-4 text-xs">
-                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent shrink-0"></span> Pēc programmas</span>
-                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span> Pirms</span>
+                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent shrink-0"></span> <span data-i18n="chart_after">Pēc programmas</span></span>
+                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span> <span data-i18n="chart_before">Pirms</span></span>
                                 </div>
                             </div>
                             <svg viewBox="0 0 400 150" class="w-full h-auto" role="img" aria-label="Glikozes līmeņa grafiks">
@@ -395,15 +395,15 @@ import Layout from '../layouts/Layout.astro';
                     
                     <!-- Benefits -->
                     <div class="bg-primary/5 rounded-2xl p-6 md:p-8">
-                        <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-6">Kā CGM palīdz?</h3>
+                        <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-6" data-i18n="cgm_how_helps">Kā CGM palīdz?</h3>
                         <ul class="space-y-4">
                             <li class="flex items-start gap-4">
                                 <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
                                     <i class="ph ph-chart-line-up text-white text-lg"></i>
                                 </div>
                                 <div>
-                                    <strong class="text-primary block mb-1">Reāllaika monitorings</strong>
-                                    <span class="text-gray-600 text-sm">Redzat, kā organisms reaģē uz katru maltīti</span>
+                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_1_title">Reāllaika monitorings</strong>
+                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_1_desc">Redzat, kā organisms reaģē uz katru maltīti</span>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
@@ -411,8 +411,8 @@ import Layout from '../layouts/Layout.astro';
                                     <i class="ph ph-database text-white text-lg"></i>
                                 </div>
                                 <div>
-                                    <strong class="text-primary block mb-1">20 000+ mērījumu</strong>
-                                    <span class="text-gray-600 text-sm">Pilnīgs priekšstats par 14 dienām</span>
+                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_2_title">20 000+ mērījumu</strong>
+                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_2_desc">Pilnīgs priekšstats par 14 dienām</span>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
@@ -420,8 +420,8 @@ import Layout from '../layouts/Layout.astro';
                                     <i class="ph ph-target text-white text-lg"></i>
                                 </div>
                                 <div>
-                                    <strong class="text-primary block mb-1">Precīzas rekomendācijas</strong>
-                                    <span class="text-gray-600 text-sm">Zinām, ko mainīt tieši Jums</span>
+                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_3_title">Precīzas rekomendācijas</strong>
+                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_3_desc">Zinām, ko mainīt tieši Jums</span>
                                 </div>
                             </li>
                         </ul>
@@ -546,7 +546,7 @@ import Layout from '../layouts/Layout.astro';
                                 <i class="ph ph-seal-check text-white text-xl"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 block">Reģistrācijas Nr.</span>
+                                <span class="text-xs text-gray-500 block" data-i18n="reg_number_label">Reģistrācijas Nr.</span>
                                 <span class="text-primary font-semibold">75650061277</span>
                             </div>
                         </div>
@@ -593,8 +593,8 @@ import Layout from '../layouts/Layout.astro';
                                 <i class="ph ph-heart-half text-primary text-lg"></i>
                             </div>
                             <div>
-                                <strong class="text-primary font-semibold">500+ klienti</strong>
-                                <span class="text-gray-500 text-sm block">ar uzlabotiem rādītājiem</span>
+                                <strong class="text-primary font-semibold" data-i18n="clients_count">500+ klienti</strong>
+                                <span class="text-gray-500 text-sm block" data-i18n="clients_improved">ar uzlabotiem rādītājiem</span>
                             </div>
                         </div>
                     </div>
@@ -737,7 +737,7 @@ import Layout from '../layouts/Layout.astro';
                 <!-- Brand -->
                 <div class="text-center md:text-left">
                     <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
-                    <p class="text-white/70 text-sm">Uztura speciāliste · PhD · Reģ. Nr. 75650061277</p>
+                    <p class="text-white/70 text-sm" data-i18n="footer_subtitle">Uztura speciāliste · PhD · Reģ. Nr. 75650061277</p>
                 </div>
                 
                 <!-- Contact Links -->
