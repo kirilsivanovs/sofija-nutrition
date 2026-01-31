@@ -104,7 +104,9 @@ class BookingCalendar {
     async loadAvailability() {
         try {
             // Try external Azure Functions API first
-            let response = await fetch(`${API_BASE_URL}/api/availability`);
+            let response = await fetch(`${API_BASE_URL}/api/availability`, {
+                signal: AbortSignal.timeout(10000) // 10 second timeout
+            });
             
             // Fallback to static JSON for local development
             if (!response.ok) {
@@ -116,9 +118,57 @@ class BookingCalendar {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             this.availability = await response.json();
+            this.apiAvailable = true;
         } catch (error) {
             console.error('Failed to load availability:', error);
             this.availability = { slots: {}, booked: [], serviceTypes: [] };
+            this.apiAvailable = false;
+            
+            // Show inline error message instead of redirecting
+            this.showApiError();
+        }
+    }
+
+    showApiError() {
+        const errorMessages = {
+            lv: {
+                title: 'Sistēma īslaicīgi nepieejama',
+                message: 'Lūdzu, mēģiniet vēlāk vai sazinieties pa e-pastu:',
+                email: 'info@sofija-nutrition.lv',
+                retry: 'Mēģināt vēlreiz'
+            },
+            en: {
+                title: 'System temporarily unavailable',
+                message: 'Please try again later or contact us via email:',
+                email: 'info@sofija-nutrition.lv',
+                retry: 'Try again'
+            },
+            ru: {
+                title: 'Система временно недоступна',
+                message: 'Пожалуйста, попробуйте позже или напишите нам:',
+                email: 'info@sofija-nutrition.lv',
+                retry: 'Попробовать снова'
+            }
+        };
+        
+        const t = errorMessages[this.currentLang] || errorMessages.lv;
+        
+        if (this.container) {
+            this.container.innerHTML = `
+                <div class="booking-error">
+                    <div class="error-icon">
+                        <i class="ph ph-warning-circle"></i>
+                    </div>
+                    <h3>${t.title}</h3>
+                    <p>${t.message}</p>
+                    <a href="mailto:${t.email}" class="error-email-link">
+                        <i class="ph ph-envelope"></i> ${t.email}
+                    </a>
+                    <button class="error-retry-btn" onclick="location.reload()">
+                        <i class="ph ph-arrow-clockwise"></i> ${t.retry}
+                    </button>
+                </div>
+            `;
         }
     }
 
@@ -509,7 +559,8 @@ class BookingCalendar {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(bookingData)
+                body: JSON.stringify(bookingData),
+                signal: AbortSignal.timeout(15000) // 15 second timeout for booking
             });
 
             if (response.ok) {
@@ -521,14 +572,30 @@ class BookingCalendar {
                 } else {
                     throw new Error(result.error || 'Booking failed');
                 }
+            } else if (response.status === 409) {
+                // Slot already taken - show specific error
+                this.showBookingError('slotTaken');
+            } else if (response.status === 429) {
+                // Rate limited
+                this.showBookingError('rateLimit');
+            } else if (response.status >= 500) {
+                // Server error - show friendly message
+                this.showBookingError('serverError');
             } else {
                 // Fallback for local development without API
                 this.simulateLocalBooking(bookingData);
             }
         } catch (error) {
             console.error('Booking error:', error);
-            // Fallback for local development
-            this.simulateLocalBooking(bookingData);
+            
+            if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+                this.showBookingError('timeout');
+            } else if (!navigator.onLine) {
+                this.showBookingError('offline');
+            } else {
+                // Fallback for local development
+                this.simulateLocalBooking(bookingData);
+            }
         } finally {
             // Reset button state
             if (submitBtn) {
@@ -536,6 +603,78 @@ class BookingCalendar {
                 submitBtn.innerHTML = originalBtnText;
             }
         }
+    }
+
+    showBookingError(errorType) {
+        const errorMessages = {
+            slotTaken: {
+                lv: { title: 'Laiks jau aizņemts', message: 'Šis laiks tikko tika rezervēts. Lūdzu, izvēlieties citu laiku.' },
+                en: { title: 'Time slot taken', message: 'This slot was just booked. Please select another time.' },
+                ru: { title: 'Время уже занято', message: 'Это время только что забронировали. Пожалуйста, выберите другое.' }
+            },
+            rateLimit: {
+                lv: { title: 'Pārāk daudz pieprasījumu', message: 'Lūdzu, uzgaidiet minūti un mēģiniet vēlreiz.' },
+                en: { title: 'Too many requests', message: 'Please wait a minute and try again.' },
+                ru: { title: 'Слишком много запросов', message: 'Пожалуйста, подождите минуту и попробуйте снова.' }
+            },
+            serverError: {
+                lv: { title: 'Servera kļūda', message: 'Notikusi kļūda. Lūdzu, mēģiniet vēlāk vai rakstiet uz info@sofija-nutrition.lv' },
+                en: { title: 'Server error', message: 'An error occurred. Please try later or email info@sofija-nutrition.lv' },
+                ru: { title: 'Ошибка сервера', message: 'Произошла ошибка. Попробуйте позже или напишите info@sofija-nutrition.lv' }
+            },
+            timeout: {
+                lv: { title: 'Savienojums pārtrūka', message: 'Pieprasījums ilga pārāk ilgi. Lūdzu, mēģiniet vēlreiz.' },
+                en: { title: 'Connection timeout', message: 'The request took too long. Please try again.' },
+                ru: { title: 'Время ожидания истекло', message: 'Запрос занял слишком много времени. Попробуйте ещё раз.' }
+            },
+            offline: {
+                lv: { title: 'Nav interneta savienojuma', message: 'Lūdzu, pārbaudiet interneta savienojumu un mēģiniet vēlreiz.' },
+                en: { title: 'No internet connection', message: 'Please check your connection and try again.' },
+                ru: { title: 'Нет подключения к интернету', message: 'Проверьте подключение и попробуйте снова.' }
+            }
+        };
+
+        const error = errorMessages[errorType] || errorMessages.serverError;
+        const t = error[this.currentLang] || error.lv;
+
+        // Show error toast/notification
+        this.showErrorToast(t.title, t.message);
+        
+        // If slot taken, refresh availability
+        if (errorType === 'slotTaken') {
+            this.loadAvailability().then(() => {
+                this.renderCalendar();
+            });
+        }
+    }
+
+    showErrorToast(title, message) {
+        // Remove existing toast if any
+        const existingToast = document.querySelector('.booking-error-toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'booking-error-toast';
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="ph ph-warning-circle"></i>
+                <div>
+                    <strong>${title}</strong>
+                    <p>${message}</p>
+                </div>
+                <button class="toast-close" aria-label="Close">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Auto-close after 5 seconds
+        setTimeout(() => toast.remove(), 5000);
+        
+        // Close on click
+        toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
     }
 
     showSuccessWithInvoice(booking) {

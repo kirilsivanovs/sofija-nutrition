@@ -32,6 +32,18 @@
         "401": {
             "redirect": "/.auth/login/aad?post_login_redirect_uri=/admin",
             "statusCode": 302
+        },
+        "500": {
+            "rewrite": "/error.html"
+        },
+        "502": {
+            "rewrite": "/error.html"
+        },
+        "503": {
+            "rewrite": "/error.html"
+        },
+        "504": {
+            "rewrite": "/error.html"
         }
     },
     "globalHeaders": {
