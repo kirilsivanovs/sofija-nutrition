@@ -1218,12 +1218,27 @@ async function lockTimeSlot(date, time) {
 
 #### 🟡 MEDIUM - Логирование безопасности
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (PR #14)
 
-**Решение:** Логировать подозрительные активности:
-- Множественные неудачные попытки авторизации
-- Попытки доступа к admin API без токена
-- Необычно большое количество запросов с одного IP
+**Реализовано в:** `api/src/utils/securityLogger.js`
+
+**Функции:**
+- `logAuthFailure()` — неудачные попытки авторизации
+- `logAuthSuccess()` — успешные входы (audit trail)
+- `logAdminAccessDenied()` — попытки доступа к admin API без токена
+- `logAdminAccessGranted()` — успешный доступ к admin
+- `logRateLimitExceeded()` — превышение rate limit
+- `logSuspiciousRequest()` — подозрительные паттерны
+- `logPotentialInjection()` — потенциальные SQL/XSS инъекции
+- `isSuspiciousInput()` — детекция injection паттернов
+
+**Severity levels:** LOW, MEDIUM, HIGH, CRITICAL
+
+**Интеграция:**
+- `authMiddleware.js` — логирует auth события
+- `rateLimiter.js` — логирует rate limit exceeded
+
+**Тесты:** 26 тестов в `api/tests/securityLogger.test.js`
 
 ---
 
@@ -1520,47 +1535,79 @@ const sharedTranslations = {
 
 #### 🟠 HIGH - Выделить конфигурацию
 
-**Статус:** ⚠️ Частично
+**Статус:** ✅ DONE (PR #13)
 
 **Проблема:** Часть конфигов в `config.js`, часть захардкожена.
 
-**Решение:** Все конфиги в одном месте:
+**Решение:** Все конфиги централизованы в `api/src/config/index.js`:
 
 ```javascript
 // api/src/config/index.js
 module.exports = {
-    app: {
-        name: 'Sofija Nutrition',
-        timezone: 'Europe/Riga',
-        defaultLanguage: 'lv'
+    env: {
+        isProduction, isDevelopment, isTest,
+        azureStorageConnectionString,
+        allowInsecureConnection  // для Azurite
+    },
+    tables: {
+        bookings: 'bookings',
+        settings: 'adminSettings',
+        services: 'Services',
+        featureFlags: 'FeatureFlags',
+        locks: 'slotLocks'
     },
     cache: {
-        servicesTTL: 5 * 60 * 1000,      // 5 минут
-        featureFlagsTTL: 2 * 60 * 1000,  // 2 минуты
-        availabilityTTL: 60 * 1000       // 1 минута
+        servicesTtlMs: 5 * 60 * 1000,      // 5 минут
+        featureFlagsTtlMs: 2 * 60 * 1000,  // 2 минуты
+        scheduleTtlMs: 5 * 60 * 1000
     },
     booking: {
-        workingHours: { start: '09:00', end: '18:00' },
-        slotDuration: 30,                 // минут
-        maxBookingsPerDay: 8,
-        bookingWindowDays: 60             // на сколько дней вперед
+        lockTtlMs: 30000,      // 30 секунд
+        defaultSlotDuration: 60,
+        minAdvanceHours: 2,
+        maxAdvanceDays: 90
     },
-    rateLimit: {
-        createBooking: { max: 5, windowMs: 60000 },
-        getAvailability: { max: 30, windowMs: 60000 }
-    }
+    schedule: {
+        defaultWorkingHours: { monday: {...}, ... },
+        timezone: 'Europe/Riga'
+    },
+    rateLimits: {
+        createBooking: { windowMs: 60000, maxRequests: 5 },
+        getAvailability: { windowMs: 60000, maxRequests: 60 },
+        admin: { windowMs: 60000, maxRequests: 100 }
+    },
+    branding, payment, servicePrices, colors,
+    defaultServices, validServiceIds
 };
 ```
+
+**Что обновлено:**
+- `rateLimiter.js` — использует `rateLimits` из конфига
+- `bookingRepository.js` — использует `booking.lockTtlMs` и `tables`
+- `availabilityService.js` — использует `schedule`, `tables`, `cache`
+- `featureFlags.js` — использует `tables`, `cache.featureFlagsTtlMs`
+- `validation.js` — использует `validServiceIds`
+- 30 тестов для конфига в `api/tests/config.test.js`
 
 ---
 
 #### 🟡 MEDIUM - Унифицировать формат ответов API
 
-**Статус:** ⚠️ Частично
+**Статус:** ✅ DONE (PR #14)
 
-**Проблема:** Разные endpoints возвращают данные по-разному.
+**Реализовано в:** `api/src/utils/apiResponse.js`
 
-**Решение:** Стандартный формат:
+**Функции:**
+- `successResponse(data, options)` — успешный ответ (200)
+- `errorResponse(code, message, options)` — ошибка с кодом
+- `paginatedResponse(items, pagination)` — с пагинацией
+- `createdResponse(data)` — 201 Created
+- `noContentResponse()` — 204 No Content
+- `CommonErrors.*` — готовые ошибки (validation, unauthorized, notFound и т.д.)
+- `transformLegacyResponse()` — миграция старых ответов
+- `withStandardResponse()` — wrapper для handlers
+
+**Стандартный формат:**
 
 ```javascript
 // Успешный ответ
@@ -1569,7 +1616,7 @@ module.exports = {
     "data": { ... },
     "meta": {
         "timestamp": "2026-01-31T10:00:00Z",
-        "requestId": "abc123"
+        "requestId": "req-abc123"
     }
 }
 
@@ -1579,30 +1626,37 @@ module.exports = {
     "error": {
         "code": "VALIDATION_ERROR",
         "message": "Email is required",
-        "details": [
-            { "field": "email", "message": "Email is required" }
-        ]
+        "details": [...]
     },
     "meta": { ... }
 }
 ```
 
+**Обновлены:**
+- `authMiddleware.js` — `unauthorizedResponse()` использует новый формат
+- `rateLimiter.js` — `rateLimitExceededResponse()` использует новый формат
+
+**Тесты:** 32 теста в `api/tests/apiResponse.test.js`
+
 ---
 
 #### 🟡 MEDIUM - Вынести magic numbers в константы
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (включено в PR #13)
+
+Все magic numbers вынесены в `api/src/config/index.js`:
 
 ```javascript
-// До
+// Было разбросано по коду:
+const LOCK_TTL_MS = 30000;
+const CACHE_TTL_MS = 5 * 60 * 1000;
 if (dayOfWeek === 0 || dayOfWeek === 6) { ... }
-const cache = new Map(); // TTL 5 * 60 * 1000
 
-// После
-const DAYS = { SUNDAY: 0, MONDAY: 1, ..., SATURDAY: 6 };
-const CACHE_TTL = { SERVICES: 5 * 60 * 1000, FEATURES: 2 * 60 * 1000 };
-
-if (dayOfWeek === DAYS.SUNDAY || dayOfWeek === DAYS.SATURDAY) { ... }
+// Теперь централизовано:
+const { booking, cache, schedule } = require('./config');
+const lockTtl = booking.lockTtlMs;           // 30000
+const cacheTtl = cache.servicesTtlMs;        // 300000
+const weekendDays = schedule.defaultWorkingHours.saturday.enabled; // false
 ```
 
 ---
@@ -1611,34 +1665,58 @@ if (dayOfWeek === DAYS.SUNDAY || dayOfWeek === DAYS.SATURDAY) { ... }
 
 #### 🟠 HIGH - Integration тесты с реальной БД
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (включено в PR #13)
 
-**Проблема:** Unit тесты используют моки. Нужны тесты с Azurite (локальный эмулятор).
+**Решение:** Azurite (локальный эмулятор Azure Storage) + Jest интеграционные тесты.
 
-**Решение:**
+**Файлы:**
+- `api/tests/integration/azurite.test.js` — 10 интеграционных тестов
+- `api/jest.integration.config.js` — отдельная конфигурация (без моков)
+- `api/tests/integration/setup.js` — настройка для интеграционных тестов
+
+**Что тестируется:**
+- Table CRUD операции
+- `bookingRepository` с реальным Azure SDK
+- `availabilityService` — запросы слотов
+- `getServiceSettings()` — получение услуг из БД
+
+**Запуск:**
 ```bash
-# Запуск Azurite
-npm install -g azurite
-azurite --silent --location ./azurite-data
+# Unit тесты (с моками)
+npm test
 
-# Тесты с реальным storage
-npm run test:integration
+# Интеграционные тесты (с Azurite)
+cd api && npm run test:integration
 ```
+
+**Особенности:**
+- Azurite запускается автоматически перед тестами
+- Используется `allowInsecureConnection` для HTTP подключений
+- Тесты изолированы — каждый создаёт чистые таблицы
 
 ---
 
 #### 🟡 MEDIUM - Snapshot тесты для email templates
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (PR #14)
 
-```javascript
-// api/tests/email-templates.snapshot.test.js
-const { generateClientEmailHTML } = require('../src/templates/emailTemplates');
+**Реализовано в:** `api/tests/emailTemplates.snapshot.test.js`
 
-test('client email matches snapshot', () => {
-    const html = generateClientEmailHTML(mockTranslations, mockBooking);
-    expect(html).toMatchSnapshot();
-});
+**Покрытие:**
+- `generateClientEmailHTML` — подтверждение для клиента (3 варианта: online, in-person, free)
+- `generateAdminEmailHTML` — уведомление админу (4 варианта)
+- `generatePaymentConfirmedEmailHTML` — подтверждение оплаты
+- `generateCancellationEmailHTML` — отмена бронирования
+- `generateConfirmationPageHTML` — страница подтверждения (success, error, already)
+
+**Проверки:**
+- 16 snapshot тестов
+- Валидация структуры HTML (DOCTYPE, charset, viewport)
+- Проверка XSS-экранирования пользовательского ввода
+
+**Обновление snapshot'ов:**
+```bash
+npm test -- -u  # при intentional изменениях шаблонов
 ```
 
 ---
@@ -1678,25 +1756,33 @@ export default function () {
 
 #### 🟠 HIGH - Staging окружение
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE (уже реализовано)
 
-**Проблема:** Сейчас только production. Нет возможности тестировать перед релизом.
+**Реализовано в:** `.github/workflows/azure-static-web-apps.yml` (строки 161-211)
 
-**Решение:** Azure Static Web Apps автоматически создает Preview environments для PR.
+**Как работает:**
+1. При создании PR автоматически создаётся Preview environment
+2. После деплоя бот добавляет комментарий с Preview URL
+3. При закрытии PR environment автоматически удаляется
 
-Добавить в workflow:
-```yaml
-- name: Comment PR with preview URL
-  if: github.event_name == 'pull_request'
-  uses: actions/github-script@v7
-  with:
-    script: |
-      github.rest.issues.createComment({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        body: `🚀 Preview deployed: ${process.env.PREVIEW_URL}`
-      })
+**Функции:**
+- 🔗 Preview URL в комментарии к PR
+- 📋 Test Checklist в комментарии
+- 🧹 Автоматическая очистка orphaned environments
+- ⚠️ Предупреждение при приближении к лимиту (3 staging environments)
+
+**Пример комментария:**
+```
+## 🚀 Preview Deployment Ready!
+
+| Environment | URL |
+|------------|-----|
+| 🔗 Preview | https://xxx.azurestaticapps.net |
+
+📋 Test Checklist:
+- [ ] Booking flow works correctly
+- [ ] Admin panel accessible
+- [ ] Mobile responsive
 ```
 
 ---
@@ -1771,13 +1857,22 @@ jobs:
 - ✅ **Авторизация:** SWA Auth (Microsoft OAuth) + E2E Token
 - ✅ **CI/CD:** GitHub Actions с unit + E2E тестами
 - ✅ **Auto-merge:** PR автоматически мерджится после успешных тестов
-- ✅ **Тестовое покрытие:** 495 unit тестов, E2E для критических сценариев
+- ✅ **Тестовое покрытие:** 896 unit тестов + 10 интеграционных + 16 snapshot
 - ✅ **Email уведомления:** Подтверждение, отмена бронирования
 - ✅ **Feature Flags:** Управление функциями без деплоя
-- ✅ **Кэширование:** Services 5 мин, FeatureFlags 2 мин
-- ✅ **Мультиязычность:** LV, RU, EN
+- ✅ **Кэширование:** Services 5 мин, FeatureFlags 2 мин (TTL в конфиге)
+- ✅ **Мультиязычность:** LV, RU, EN (единый источник — `shared/translations.js`)
 - ✅ **CORS:** Настроен для всех окружений
 - ✅ **Security Headers:** X-Frame-Options, X-Content-Type-Options
+- ✅ **Централизованная конфигурация:** `api/src/config/index.js`
+- ✅ **Service Layer:** Бизнес-логика отделена от HTTP handlers
+- ✅ **DI Container:** `api/src/container.js`
+- ✅ **Интеграционные тесты:** Azurite + `npm run test:integration`
+- ✅ **Azure staging cleanup:** Автоматическое удаление orphaned environments
+- ✅ **Security Logger:** Логирование безопасности (`api/src/utils/securityLogger.js`)
+- ✅ **API Response Helper:** Унифицированный формат ответов (`api/src/utils/apiResponse.js`)
+- ✅ **Snapshot тесты:** Защита email шаблонов от случайных изменений
+- ✅ **Staging Preview:** Автоматический Preview URL в комментариях к PR
 
 ---
 

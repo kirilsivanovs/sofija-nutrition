@@ -1,0 +1,1464 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot for booking without notes 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jauna rezervācija - BK-2026-001</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 25px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
+                <tr>
+                    <td style="padding: 20px;">
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #2d5a4a; ">BK-2026-001</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Jānis Bērziņš</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; word-break: break-all;">janis@example.com</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">+371 20000000</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Uztura konsultācija</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #2196F3; ">💻 Attālināti</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">2026-02-15</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">10:00</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
+            <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a; ">€45</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style=" padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">LV</p>
+        </td></tr>
+    </table>
+                        
+                    </td>
+                </tr>
+            </table>
+            
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" style="padding: 15px 0;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Kad maksājums saņemts, nospied pogu:</p>
+                        <a href="https://example.com/api/confirm?id=BK-2026-001&token=abc123" style="display: inline-block; padding: 14px 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600;">
+                            ✓ Apstiprināt maksājumu
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
+            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot for free booking 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jauna rezervācija - BK-2026-003</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 25px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
+                <tr>
+                    <td style="padding: 20px;">
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #2d5a4a; ">BK-2026-003</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Jānis Bērziņš</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; word-break: break-all;">janis@example.com</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">+371 20000000</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Bezmaksas iepazīšanās zvans</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #2196F3; ">💻 Attālināti</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">2026-02-15</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">10:00</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
+            <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a; ">BEZMAKSAS</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">LV</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style=" padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Piezīmes</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Vēlos konsultēties par veselīgu uzturu.</p>
+        </td></tr>
+    </table>
+                    </td>
+                </tr>
+            </table>
+            
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" style="padding: 15px 0;">
+                        <p style="margin: 0; padding: 12px 20px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;">
+                            ✓ Bezmaksas konsultācija - maksājums nav nepieciešams
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
+            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot for in-person booking 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jauna rezervācija - BK-2026-002</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 25px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
+                <tr>
+                    <td style="padding: 20px;">
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #2d5a4a; ">BK-2026-002</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Jānis Bērziņš</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; word-break: break-all;">janis@example.com</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">+371 20000000</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Uztura konsultācija</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #4CAF50; ">📍 Klātienē</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">2026-02-15</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">10:00</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
+            <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a; ">€55</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">LV</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style=" padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Piezīmes</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Vēlos konsultēties par veselīgu uzturu.</p>
+        </td></tr>
+    </table>
+                    </td>
+                </tr>
+            </table>
+            
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" style="padding: 15px 0;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Kad maksājums saņemts, nospied pogu:</p>
+                        <a href="https://example.com/api/confirm?id=BK-2026-002&token=abc123" style="display: inline-block; padding: 14px 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600;">
+                            ✓ Apstiprināt maksājumu
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
+            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot for paid booking 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jauna rezervācija - BK-2026-001</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 25px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
+                <tr>
+                    <td style="padding: 20px;">
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #2d5a4a; ">BK-2026-001</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Jānis Bērziņš</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; word-break: break-all;">janis@example.com</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">+371 20000000</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Uztura konsultācija</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #2196F3; ">💻 Attālināti</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">2026-02-15</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">10:00</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
+            <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a; ">€45</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">LV</p>
+        </td></tr>
+    </table>
+                        
+    <table role="presentation" width="100%" style=" padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Piezīmes</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Vēlos konsultēties par veselīgu uzturu.</p>
+        </td></tr>
+    </table>
+                    </td>
+                </tr>
+            </table>
+            
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" style="padding: 15px 0;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Kad maksājums saņemts, nospied pogu:</p>
+                        <a href="https://example.com/api/confirm?id=BK-2026-001&token=abc123" style="display: inline-block; padding: 14px 30px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600;">
+                            ✓ Apstiprināt maksājumu
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
+            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateCancellationEmailHTML should match snapshot for cancelled booking 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija atcelta - BK-2026-001</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #c62828 0%, #c62828 100%); padding: 35px 20px; text-align: center;">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✕</div>
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Rezervācija atcelta</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px;">
+            <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
+            <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir atcelta.</p>
+            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Detaļas:</p>
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+                <tr>
+                    <td style="padding: 25px; text-align: center;">
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Rezervācijas numurs</p>
+                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">BK-2026-001</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
+                            💻 Attālināti
+                        </p>
+                        
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" style="text-align: center; padding: 10px;">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Datums</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">2026-02-15</p>
+                                </td>
+                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(0, 0, 0, 0.1);">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Laiks</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">10:00</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                Ja jums ir jautājumi, lūdzu sazinieties.
+            </p>
+            
+            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                Ar cieņu,<br>
+                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+            </p>
+        </td>
+    </tr>
+    
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateCancellationEmailHTML should match snapshot for in-person cancelled booking 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija atcelta - BK-2026-002</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #c62828 0%, #c62828 100%); padding: 35px 20px; text-align: center;">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✕</div>
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Rezervācija atcelta</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px;">
+            <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
+            <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir atcelta.</p>
+            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Detaļas:</p>
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+                <tr>
+                    <td style="padding: 25px; text-align: center;">
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Rezervācijas numurs</p>
+                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">BK-2026-002</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
+                            📍 Klātienē
+                        </p>
+                        
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" style="text-align: center; padding: 10px;">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Datums</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">2026-02-15</p>
+                                </td>
+                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(0, 0, 0, 0.1);">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Laiks</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">10:00</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                Ja jums ir jautājumi, lūdzu sazinieties.
+            </p>
+            
+            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                Ar cieņu,<br>
+                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+            </p>
+        </td>
+    </tr>
+    
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateClientEmailHTML should escape HTML in user input 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija BK-XSS-001 - Sofija Nutrition</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+        
+    <tr>
+        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 30px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">Veselīga dzīvesveida konsultācijas</p>
+            <div style="width: 50px; height: 3px; background-color: #d4a574; margin: 16px auto 0; border-radius: 2px;"></div>
+        </td>
+    </tr>
+        <tr>
+            <td style="padding: 30px 20px;">
+                <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
+                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, &lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;!</p>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
+                
+                
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+        <tr>
+            <td style="padding: 20px;">
+                
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Rezervācijas numurs</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">BK-XSS-001</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pakalpojums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Test&lt;img src=x onerror=alert(1)&gt;</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Formāts</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Online</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Datums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">2026-01-01</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Laiks</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">10:00</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Summa</p>
+                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">€50</p>
+                </td>
+            </tr>
+        </table>
+            </td>
+        </tr>
+    </table>
+                
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    📎 Rēķins pievienots pielikumā
+                </p>
+                <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    Ja jums ir jautājumi, lūdzu sazinieties ar mums.
+                </p>
+                
+                <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                    Ar cieņu,<br>
+                    <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                </p>
+            </td>
+        </tr>
+        
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot for free consultation 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija BK-2026-003 - Sofija Nutrition</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+        
+    <tr>
+        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 30px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">Veselīga dzīvesveida konsultācijas</p>
+            <div style="width: 50px; height: 3px; background-color: #d4a574; margin: 16px auto 0; border-radius: 2px;"></div>
+        </td>
+    </tr>
+        <tr>
+            <td style="padding: 30px 20px;">
+                <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
+                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
+                
+                
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+        <tr>
+            <td style="padding: 20px;">
+                
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Rezervācijas numurs</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">BK-2026-003</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pakalpojums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Bezmaksas iepazīšanās zvans</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Formāts</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Attālināti</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Datums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">2026-02-15</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Laiks</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">10:00</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Summa</p>
+                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">FREE</p>
+                </td>
+            </tr>
+        </table>
+            </td>
+        </tr>
+    </table>
+                
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    📎 Rēķins pievienots pielikumā
+                </p>
+                <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    Ja jums ir jautājumi, lūdzu sazinieties ar mums.
+                </p>
+                
+                <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                    Ar cieņu,<br>
+                    <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                </p>
+            </td>
+        </tr>
+        
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot for in-person consultation 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija BK-2026-002 - Sofija Nutrition</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+        
+    <tr>
+        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 30px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">Veselīga dzīvesveida konsultācijas</p>
+            <div style="width: 50px; height: 3px; background-color: #d4a574; margin: 16px auto 0; border-radius: 2px;"></div>
+        </td>
+    </tr>
+        <tr>
+            <td style="padding: 30px 20px;">
+                <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
+                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
+                
+                
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+        <tr>
+            <td style="padding: 20px;">
+                
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Rezervācijas numurs</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">BK-2026-002</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pakalpojums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Formāts</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Klātienē</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Datums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">2026-02-15</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Laiks</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">10:00</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Summa</p>
+                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">€55</p>
+                </td>
+            </tr>
+        </table>
+            </td>
+        </tr>
+    </table>
+                
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    📎 Rēķins pievienots pielikumā
+                </p>
+                <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    Ja jums ir jautājumi, lūdzu sazinieties ar mums.
+                </p>
+                
+                <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                    Ar cieņu,<br>
+                    <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                </p>
+            </td>
+        </tr>
+        
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot for online consultation 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rezervācija BK-2026-001 - Sofija Nutrition</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+        
+    <tr>
+        <td style="background: linear-gradient(135deg, #2d5a4a 0%, #3a7365 100%); padding: 30px 20px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 600; letter-spacing: -0.5px;">Sofija Ivanova</h1>
+            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 400;">Veselīga dzīvesveida konsultācijas</p>
+            <div style="width: 50px; height: 3px; background-color: #d4a574; margin: 16px auto 0; border-radius: 2px;"></div>
+        </td>
+    </tr>
+        <tr>
+            <td style="padding: 30px 20px;">
+                <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
+                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
+                
+                
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+        <tr>
+            <td style="padding: 20px;">
+                
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Rezervācijas numurs</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">BK-2026-001</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pakalpojums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Formāts</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">Attālināti</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Datums</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">2026-02-15</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Laiks</p>
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 500;">10:00</p>
+                </td>
+            </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
+            <tr>
+                <td>
+                    <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Summa</p>
+                    <p style="margin: 0; color: #2d5a4a; font-size: 24px; font-weight: 700;">€45</p>
+                </td>
+            </tr>
+        </table>
+            </td>
+        </tr>
+    </table>
+                
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    📎 Rēķins pievienots pielikumā
+                </p>
+                <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                    Ja jums ir jautājumi, lūdzu sazinieties ar mums.
+                </p>
+                
+                <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                    Ar cieņu,<br>
+                    <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+                </p>
+            </td>
+        </tr>
+        
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateConfirmationPageHTML should match snapshot for already confirmed status 1`] = `
+"
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksājuma apstiprinājums</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: #fff3e0; padding: 30px 20px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: #ef6c00; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; color: white; margin-bottom: 15px;">!</div>
+            <h1 style="margin: 0; color: #ef6c00; font-size: 20px;">Jau apstiprināts</h1>
+        </div>
+        <div style="padding: 25px 20px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Šī rezervācija jau ir apstiprināta iepriekš.</p>
+            
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+        </div>
+    </div>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateConfirmationPageHTML should match snapshot for error status 1`] = `
+"
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksājuma apstiprinājums</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: #ffebee; padding: 30px 20px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: #c62828; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; color: white; margin-bottom: 15px;">✕</div>
+            <h1 style="margin: 0; color: #c62828; font-size: 20px;">Kļūda</h1>
+        </div>
+        <div style="padding: 25px 20px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Kļūda: rezervācija nav atrasta.</p>
+            
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+        </div>
+    </div>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateConfirmationPageHTML should match snapshot for success status 1`] = `
+"
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksājuma apstiprinājums</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: #e8f5e9; padding: 30px 20px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: #2e7d32; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; color: white; margin-bottom: 15px;">✓</div>
+            <h1 style="margin: 0; color: #2e7d32; font-size: 20px;">Maksājums apstiprināts!</h1>
+        </div>
+        <div style="padding: 25px 20px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Rezervācija BK-2026-001 ir apstiprināta!</p>
+            <p style="margin: 0 0 20px 0; padding: 10px 15px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosūtīts!</p>
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+        </div>
+    </div>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generateConfirmationPageHTML should match snapshot without email sent 1`] = `
+"
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksājuma apstiprinājums</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div style="width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background: #e8f5e9; padding: 30px 20px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: #2e7d32; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; color: white; margin-bottom: 15px;">✓</div>
+            <h1 style="margin: 0; color: #2e7d32; font-size: 20px;">Maksājums apstiprināts!</h1>
+        </div>
+        <div style="padding: 25px 20px; text-align: center;">
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Maksājums apstiprināts!</p>
+            
+            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+        </div>
+    </div>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should match snapshot for in-person consultation 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Maksājums apstiprināts - BK-2026-002</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 35px 20px; text-align: center;">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✓</div>
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Maksājums apstiprināts!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px;">
+            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Jūsu maksājums ir saņemts. Gaidīsim jūs konsultācijā!</p>
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; margin-bottom: 25px;">
+                <tr>
+                    <td style="padding: 25px; text-align: center;">
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
+                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">Uztura konsultācija</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
+                            📍 Klātienē
+                        </p>
+                        
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" style="text-align: center; padding: 10px;">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Datums</p>
+                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">2026-02-15</p>
+                                </td>
+                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Laiks</p>
+                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">10:00</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                Ar cieņu,<br>
+                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+            </p>
+        </td>
+    </tr>
+    
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;
+
+exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should match snapshot for online consultation 1`] = `
+"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Maksājums apstiprināts - BK-2026-001</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+    <tr>
+        <td style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 35px 20px; text-align: center;">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✓</div>
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Maksājums apstiprināts!</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px;">
+            <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Jūsu maksājums ir saņemts. Gaidīsim jūs konsultācijā!</p>
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; margin-bottom: 25px;">
+                <tr>
+                    <td style="padding: 25px; text-align: center;">
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
+                        <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">Uztura konsultācija</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
+                            💻 Attālināti
+                        </p>
+                        
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" style="text-align: center; padding: 10px;">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Datums</p>
+                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">2026-02-15</p>
+                                </td>
+                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">Laiks</p>
+                                    <p style="margin: 0; color: #2d5a4a; font-size: 20px; font-weight: 700;">10:00</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                Ar cieņu,<br>
+                <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
+            </p>
+        </td>
+    </tr>
+    
+    <tr>
+        <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
+            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
+        </td>
+    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"
+`;

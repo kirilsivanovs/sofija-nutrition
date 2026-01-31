@@ -146,8 +146,9 @@ describe('Rate Limiter', () => {
             const response = rateLimitExceededResponse(result);
             
             expect(response.status).toBe(429);
-            expect(response.jsonBody.error).toBe('Too Many Requests');
-            expect(response.jsonBody.message).toBe('Too many requests');
+            expect(response.jsonBody.success).toBe(false);
+            expect(response.jsonBody.error.code).toBe('RATE_LIMIT_EXCEEDED');
+            expect(response.jsonBody.error.message).toBe('Too many requests');
             expect(response.headers['Retry-After']).toBeDefined();
         });
     });
