@@ -4,6 +4,7 @@
  */
 
 const { TableClient } = require('@azure/data-tables');
+const { sanitizeODataValue, validateDateFormat, validateTimeFormat } = require('../utils/odataSanitizer');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 let tableClient = null;
@@ -204,11 +205,18 @@ async function saveBooking(booking) {
  * @returns {Promise<Object|null>} - Booking data or null
  */
 async function getBooking(bookingId) {
+    // Sanitize bookingId to prevent OData injection
+    const sanitizedId = sanitizeODataValue(bookingId);
+    if (!sanitizedId) {
+        console.warn('Invalid booking ID format:', bookingId);
+        return null;
+    }
+    
     const client = await getTableClient();
     
     if (client) {
         const entities = client.listEntities({
-            queryOptions: { filter: `RowKey eq '${bookingId}'` }
+            queryOptions: { filter: `RowKey eq '${sanitizedId}'` }
         });
         for await (const entity of entities) {
             return entity;
@@ -273,17 +281,26 @@ function isUsingAzureStorage() {
  * @returns {Promise<boolean>} - true if slot is already booked
  */
 async function isSlotBooked(date, time) {
+    // Validate and sanitize inputs to prevent OData injection
+    const sanitizedDate = validateDateFormat(date);
+    const sanitizedTime = validateTimeFormat(time);
+    
+    if (!sanitizedDate) {
+        console.warn('Invalid date format for slot check:', date);
+        return false; // Invalid date format - treat as not booked
+    }
+    
     const client = await getTableClient();
     
     if (client) {
-        // Query all bookings for this date
+        // Query all bookings for this date using sanitized value
         const entities = client.listEntities({
-            queryOptions: { filter: `PartitionKey eq '${date}'` }
+            queryOptions: { filter: `PartitionKey eq '${sanitizedDate}'` }
         });
         
         for await (const entity of entities) {
             // Check if same time and not cancelled
-            if (entity.time === time && entity.status !== 'cancelled') {
+            if (entity.time === sanitizedTime && entity.status !== 'cancelled') {
                 return true;
             }
         }
