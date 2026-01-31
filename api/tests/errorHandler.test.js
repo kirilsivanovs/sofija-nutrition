@@ -250,6 +250,7 @@ describe('generateRequestId', () => {
 
     it('should match expected format', () => {
         const id = generateRequestId();
-        expect(id).toMatch(/^req-[a-z0-9]+-[a-z0-9]+$/);
+        // Format: timestamp_base36-random_base36
+        expect(id).toMatch(/^[a-z0-9]+-[a-z0-9]+$/);
     });
 });

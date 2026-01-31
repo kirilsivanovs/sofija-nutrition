@@ -9,6 +9,7 @@
 export interface Booking {
   partitionKey: string;  // date (YYYY-MM-DD)
   rowKey: string;        // guid
+  id?: string;           // alias for rowKey (for backward compatibility)
   name: string;
   email: string;
   phone?: string;
@@ -18,6 +19,7 @@ export interface Booking {
   serviceName?: string;
   servicePrice?: number;
   format: 'online' | 'in-person';
+  consultationFormat?: 'online' | 'in-person'; // alias for format
   notes?: string;
   status: BookingStatus;
   confirmationCode: string;
@@ -27,6 +29,7 @@ export interface Booking {
   cancelReason?: string;
   language: Language;
   paymentStatus?: PaymentStatus;
+  paymentConfirmed?: boolean;  // flag for payment confirmation
   reminderSent?: boolean;
   reminder2hSent?: boolean;
 }
