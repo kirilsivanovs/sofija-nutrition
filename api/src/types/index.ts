@@ -207,6 +207,7 @@ export interface CacheConfig {
 
 export interface BookingConfig {
   slotLockDurationMs: number;
+  lockTtlMs: number;
   confirmationCodeLength: number;
   maxBookingsPerDay: number;
   minBookingAdvanceHours: number;
@@ -217,10 +218,7 @@ export interface ScheduleConfig {
   timezone: string;
   slotDurationMinutes: number;
   breakBetweenSlotsMinutes: number;
-  defaultWorkingHours: {
-    start: string;
-    end: string;
-  };
+  defaultWorkingHours: DaySchedule;
 }
 
 export interface RateLimitsConfig {
@@ -229,6 +227,7 @@ export interface RateLimitsConfig {
   getAvailability: RateLimitRule;
   admin: RateLimitRule;
   default: RateLimitRule;
+  [endpoint: string]: RateLimitRule;
 }
 
 export interface RateLimitRule {
@@ -249,6 +248,7 @@ export interface BrandingConfig {
 }
 
 export interface PaymentConfig {
+  bank: string;
   bankName: string;
   iban: string;
   swift: string;

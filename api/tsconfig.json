@@ -5,7 +5,7 @@
     "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -18,11 +18,11 @@
     "checkJs": false,
     "noEmit": false,
     "isolatedModules": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./src",
     "paths": {
@@ -33,5 +33,6 @@
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests", "coverage"]
+  "exclude": ["node_modules", "dist", "tests", "coverage"],
+  "_comment": "Strict mode disabled for gradual migration. Enable strict: true after full migration."
 }

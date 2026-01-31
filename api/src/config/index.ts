@@ -10,6 +10,7 @@ import type {
   TableNames,
   CacheConfig,
   BookingConfig,
+  ScheduleConfig,
   RateLimitsConfig,
   BrandingConfig,
   PaymentConfig,
@@ -63,6 +64,7 @@ export const cache: CacheConfig = {
 export const booking: BookingConfig = {
   // Slot lock TTL (30 seconds) - prevents double booking during payment
   slotLockDurationMs: 30000,
+  lockTtlMs: 30000,
   
   // Confirmation code length
   confirmationCodeLength: 6,
@@ -80,13 +82,6 @@ export const booking: BookingConfig = {
 // ============================================
 // Working Hours Configuration
 // ============================================
-
-interface ScheduleConfig {
-  timezone: string;
-  slotDurationMinutes: number;
-  breakBetweenSlotsMinutes: number;
-  defaultWorkingHours: DaySchedule;
-}
 
 export const schedule: ScheduleConfig = {
   timezone: 'Europe/Riga',
@@ -164,6 +159,7 @@ export const branding: BrandingConfig = {
 // ============================================
 
 export const payment: PaymentConfig = {
+  bank: 'Swedbank',
   bankName: 'Swedbank',
   iban: 'LV00HABA0000000000000', // Replace with real IBAN
   swift: 'HABALV22',
