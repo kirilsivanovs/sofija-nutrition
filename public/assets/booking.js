@@ -325,12 +325,12 @@ class BookingCalendar {
                         </div>
                         
                         <div class="booking-form-section" style="display: none;">
-                            <form class="booking-form" id="bookingForm">
+                            <form class="booking-form" id="bookingForm" novalidate>
                                 <div class="selected-datetime"></div>
                                 
                                 <div class="form-group">
                                     <label>${this.t('serviceLabel')}</label>
-                                    <select name="serviceType" id="serviceTypeSelect" required>
+                                    <select name="serviceType" id="serviceTypeSelect">
                                         ${this.renderServiceOptions()}
                                     </select>
                                 </div>
@@ -339,7 +339,7 @@ class BookingCalendar {
                                     <label>${this.t('formatLabel')}</label>
                                     <div class="format-options">
                                         <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="online" id="formatOnline" required>
+                                            <input type="radio" name="consultationFormat" value="online" id="formatOnline">
                                             <span class="format-label">
                                                 <i class="ph ph-video-camera"></i>
                                                 ${this.t('formatOnline')}
@@ -357,12 +357,12 @@ class BookingCalendar {
                                 
                                 <div class="form-group">
                                     <label>${this.t('nameLabel')}</label>
-                                    <input type="text" name="name" required placeholder="Anna">
+                                    <input type="text" name="name" placeholder="Anna">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>${this.t('emailLabel')}</label>
-                                    <input type="email" name="email" required placeholder="anna@email.com">
+                                    <input type="email" name="email" placeholder="anna@email.com">
                                 </div>
                                 
                                 <div class="form-group">
