@@ -1052,6 +1052,677 @@ npm run test:e2e:report
 
 ---
 
+---
+
+## 🗺️ Roadmap: План развития проекта
+
+### Приоритеты и статусы
+
+| Приоритет | Обозначение |
+|-----------|-------------|
+| 🔴 **CRITICAL** | Блокирует production / безопасность |
+| 🟠 **HIGH** | Важно для стабильности и качества |
+| 🟡 **MEDIUM** | Улучшение DX и maintainability |
+| 🟢 **LOW** | Nice-to-have, будущие улучшения |
+
+---
+
+### 🔒 1. Безопасность (Security)
+
+#### 🔴 CRITICAL - Защита main branch от прямых пушей
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Сейчас можно делать `git push origin main` без проверок, что опасно для production.
+
+**Решение:** Настроить GitHub Branch Protection Rules.
+
+**Шаги:**
+1. GitHub → Settings → Branches → Add rule
+2. Branch name pattern: `main`
+3. Включить:
+   - ✅ Require a pull request before merging
+   - ✅ Require approvals (1 если работает команда)
+   - ✅ Require status checks to pass before merging
+     - Выбрать: `test_api`, `test_e2e`
+   - ✅ Require branches to be up to date before merging
+   - ✅ Do not allow bypassing the above settings
+
+**Результат:** Невозможно запушить в main без прохождения CI/CD.
+
+---
+
+#### 🔴 CRITICAL - Rate Limiting для API
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Нет защиты от DDoS и спама бронирований. Злоумышленник может создать тысячи бронирований.
+
+**Решение:**
+
+```javascript
+// api/src/utils/rateLimiter.js
+const requestCounts = new Map();
+const WINDOW_MS = 60000; // 1 минута
+const MAX_REQUESTS = {
+    'createBooking': 5,     // 5 бронирований в минуту с одного IP
+    'getAvailability': 30,  // 30 запросов в минуту
+    'default': 100
+};
+
+function checkRateLimit(request, endpoint) {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const key = `${ip}:${endpoint}`;
+    const now = Date.now();
+    
+    // Очистить старые записи
+    if (requestCounts.has(key)) {
+        const { count, firstRequest } = requestCounts.get(key);
+        if (now - firstRequest > WINDOW_MS) {
+            requestCounts.delete(key);
+        }
+    }
+    
+    const current = requestCounts.get(key) || { count: 0, firstRequest: now };
+    current.count++;
+    requestCounts.set(key, current);
+    
+    const limit = MAX_REQUESTS[endpoint] || MAX_REQUESTS.default;
+    return current.count <= limit;
+}
+```
+
+---
+
+#### 🔴 CRITICAL - Валидация и санитизация входных данных
+
+**Статус:** ⚠️ Частично реализовано
+
+**Проблема:** Базовая валидация есть, но нет защиты от XSS и SQL injection.
+
+**Решение:** Добавить библиотеку `validator` и строгую санитизацию:
+
+```bash
+cd api && npm install validator
+```
+
+```javascript
+// api/src/utils/validation.js
+const validator = require('validator');
+
+function sanitizeBookingInput(body) {
+    return {
+        name: validator.escape(validator.trim(body.name || '')),
+        email: validator.normalizeEmail(body.email || ''),
+        phone: body.phone ? validator.whitelist(body.phone, '+0123456789 ') : '',
+        // ... остальные поля
+    };
+}
+
+function validateEmail(email) {
+    return validator.isEmail(email);
+}
+
+function validatePhone(phone) {
+    // Латвийский формат: +371 XXXXXXXX
+    return /^\+?371?\s?\d{8}$/.test(phone.replace(/\s/g, ''));
+}
+```
+
+---
+
+#### 🟠 HIGH - Защита от двойного бронирования (Race Condition)
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Два пользователя могут одновременно забронировать один слот.
+
+**Решение:** Использовать Azure Table Storage ETag для оптимистичной блокировки:
+
+```javascript
+// Создать "lock" запись перед бронированием
+async function lockTimeSlot(date, time) {
+    const lockEntity = {
+        partitionKey: 'LOCK',
+        rowKey: `${date}_${time}`,
+        lockedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 30000).toISOString() // 30 сек
+    };
+    
+    try {
+        await tableClient.createEntity(lockEntity);
+        return true; // Успешно заблокировали
+    } catch (error) {
+        if (error.statusCode === 409) {
+            return false; // Уже заблокировано другим запросом
+        }
+        throw error;
+    }
+}
+```
+
+---
+
+#### 🟠 HIGH - HTTPS принудительно
+
+**Статус:** ✅ Частично (Azure SWA автоматически)
+
+**Дополнительно:** Добавить HSTS header в staticwebapp.config.json:
+
+```json
+"globalHeaders": {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+}
+```
+
+---
+
+#### 🟡 MEDIUM - Логирование безопасности
+
+**Статус:** ⏳ TODO
+
+**Решение:** Логировать подозрительные активности:
+- Множественные неудачные попытки авторизации
+- Попытки доступа к admin API без токена
+- Необычно большое количество запросов с одного IP
+
+---
+
+### 🏗️ 2. Архитектура (Architecture)
+
+#### 🟠 HIGH - Централизованная обработка ошибок
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Каждая функция имеет свой try/catch с дублированием кода.
+
+**Решение:** Создать middleware для обработки ошибок:
+
+```javascript
+// api/src/utils/errorHandler.js
+class AppError extends Error {
+    constructor(message, statusCode, errorCode) {
+        super(message);
+        this.statusCode = statusCode;
+        this.errorCode = errorCode;
+        this.isOperational = true;
+    }
+}
+
+function withErrorHandling(handler) {
+    return async (request, context) => {
+        try {
+            return await handler(request, context);
+        } catch (error) {
+            context.error('Unhandled error:', error);
+            
+            if (error.isOperational) {
+                return {
+                    status: error.statusCode,
+                    jsonBody: { 
+                        success: false, 
+                        error: error.message,
+                        code: error.errorCode 
+                    }
+                };
+            }
+            
+            // Не показывать детали внутренних ошибок
+            return {
+                status: 500,
+                jsonBody: { 
+                    success: false, 
+                    error: 'Internal server error',
+                    code: 'INTERNAL_ERROR'
+                }
+            };
+        }
+    };
+}
+
+module.exports = { AppError, withErrorHandling };
+```
+
+**Использование:**
+```javascript
+app.http('createBooking', {
+    handler: withErrorHandling(async (request, context) => {
+        // Теперь можно просто throw new AppError(...)
+        if (!body.email) {
+            throw new AppError('Email is required', 400, 'VALIDATION_ERROR');
+        }
+    })
+});
+```
+
+---
+
+#### 🟠 HIGH - Слой сервисов (Service Layer)
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Бизнес-логика смешана с HTTP handlers. Сложно тестировать и переиспользовать.
+
+**Решение:** Выделить бизнес-логику в отдельные сервисы:
+
+```
+api/src/
+├── functions/           # HTTP handlers (тонкие, только routing)
+│   └── createBooking.js # Парсинг request, вызов service, формирование response
+├── services/            # Бизнес-логика
+│   ├── bookingService.js     # createBooking(), cancelBooking()
+│   ├── availabilityService.js # getAvailableSlots()
+│   └── notificationService.js # sendConfirmation(), sendReminder()
+├── repositories/        # Работа с данными
+│   └── bookingRepository.js
+└── utils/               # Хелперы
+```
+
+**Пример refactoring:**
+
+```javascript
+// api/src/services/bookingService.js
+class BookingService {
+    constructor(bookingRepo, notificationService, availabilityService) {
+        this.bookingRepo = bookingRepo;
+        this.notificationService = notificationService;
+        this.availabilityService = availabilityService;
+    }
+    
+    async createBooking(bookingData) {
+        // 1. Валидация
+        this.validateBookingData(bookingData);
+        
+        // 2. Проверка доступности
+        const isAvailable = await this.availabilityService.isSlotAvailable(
+            bookingData.date, 
+            bookingData.time
+        );
+        if (!isAvailable) {
+            throw new AppError('Slot not available', 409, 'SLOT_TAKEN');
+        }
+        
+        // 3. Создание бронирования
+        const booking = await this.bookingRepo.save(bookingData);
+        
+        // 4. Уведомления
+        await this.notificationService.sendConfirmation(booking);
+        
+        return booking;
+    }
+}
+```
+
+---
+
+#### 🟡 MEDIUM - Dependency Injection
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Зависимости создаются внутри модулей, сложно тестировать и подменять.
+
+**Решение:** Простой DI container:
+
+```javascript
+// api/src/container.js
+const container = {
+    services: new Map(),
+    
+    register(name, factory) {
+        this.services.set(name, factory);
+    },
+    
+    resolve(name) {
+        const factory = this.services.get(name);
+        if (!factory) throw new Error(`Service ${name} not found`);
+        return factory(this);
+    }
+};
+
+// Регистрация
+container.register('bookingRepository', () => new BookingRepository());
+container.register('emailService', () => new EmailService());
+container.register('bookingService', (c) => new BookingService(
+    c.resolve('bookingRepository'),
+    c.resolve('emailService')
+));
+
+module.exports = container;
+```
+
+---
+
+#### 🟡 MEDIUM - Типизация (TypeScript)
+
+**Статус:** ⏳ TODO (долгосрочно)
+
+**Проблема:** JavaScript без типов → ошибки обнаруживаются в runtime.
+
+**Решение поэтапно:**
+1. Добавить JSDoc для всех функций (быстро)
+2. Добавить `@ts-check` в критичные файлы
+3. Постепенно мигрировать на TypeScript
+
+```javascript
+// С JSDoc уже получаем подсказки в IDE
+/**
+ * @typedef {Object} Booking
+ * @property {string} id
+ * @property {string} name
+ * @property {string} email
+ * @property {string} date
+ * @property {string} time
+ * @property {'pending'|'confirmed'|'cancelled'} status
+ */
+
+/**
+ * Save booking to storage
+ * @param {Booking} booking
+ * @returns {Promise<boolean>}
+ */
+async function saveBooking(booking) {
+    // ...
+}
+```
+
+---
+
+### 🔄 3. Рефакторинг (Refactoring)
+
+#### 🟠 HIGH - Убрать дублирование переводов
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Переводы есть в нескольких местах:
+- `api/src/translations.js`
+- `public/assets/booking.js` (hardcoded)
+- Email templates
+
+**Решение:** Единый источник переводов:
+
+```javascript
+// shared/translations.js (общий для frontend и backend)
+module.exports = {
+    lv: {
+        services: { ... },
+        booking: { ... },
+        email: { ... },
+        errors: { ... }
+    },
+    ru: { ... },
+    en: { ... }
+};
+```
+
+---
+
+#### 🟠 HIGH - Выделить конфигурацию
+
+**Статус:** ⚠️ Частично
+
+**Проблема:** Часть конфигов в `config.js`, часть захардкожена.
+
+**Решение:** Все конфиги в одном месте:
+
+```javascript
+// api/src/config/index.js
+module.exports = {
+    app: {
+        name: 'Sofija Nutrition',
+        timezone: 'Europe/Riga',
+        defaultLanguage: 'lv'
+    },
+    cache: {
+        servicesTTL: 5 * 60 * 1000,      // 5 минут
+        featureFlagsTTL: 2 * 60 * 1000,  // 2 минуты
+        availabilityTTL: 60 * 1000       // 1 минута
+    },
+    booking: {
+        workingHours: { start: '09:00', end: '18:00' },
+        slotDuration: 30,                 // минут
+        maxBookingsPerDay: 8,
+        bookingWindowDays: 60             // на сколько дней вперед
+    },
+    rateLimit: {
+        createBooking: { max: 5, windowMs: 60000 },
+        getAvailability: { max: 30, windowMs: 60000 }
+    }
+};
+```
+
+---
+
+#### 🟡 MEDIUM - Унифицировать формат ответов API
+
+**Статус:** ⚠️ Частично
+
+**Проблема:** Разные endpoints возвращают данные по-разному.
+
+**Решение:** Стандартный формат:
+
+```javascript
+// Успешный ответ
+{
+    "success": true,
+    "data": { ... },
+    "meta": {
+        "timestamp": "2026-01-31T10:00:00Z",
+        "requestId": "abc123"
+    }
+}
+
+// Ошибка
+{
+    "success": false,
+    "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Email is required",
+        "details": [
+            { "field": "email", "message": "Email is required" }
+        ]
+    },
+    "meta": { ... }
+}
+```
+
+---
+
+#### 🟡 MEDIUM - Вынести magic numbers в константы
+
+**Статус:** ⏳ TODO
+
+```javascript
+// До
+if (dayOfWeek === 0 || dayOfWeek === 6) { ... }
+const cache = new Map(); // TTL 5 * 60 * 1000
+
+// После
+const DAYS = { SUNDAY: 0, MONDAY: 1, ..., SATURDAY: 6 };
+const CACHE_TTL = { SERVICES: 5 * 60 * 1000, FEATURES: 2 * 60 * 1000 };
+
+if (dayOfWeek === DAYS.SUNDAY || dayOfWeek === DAYS.SATURDAY) { ... }
+```
+
+---
+
+### 🧪 4. Тестирование (Testing)
+
+#### 🟠 HIGH - Integration тесты с реальной БД
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Unit тесты используют моки. Нужны тесты с Azurite (локальный эмулятор).
+
+**Решение:**
+```bash
+# Запуск Azurite
+npm install -g azurite
+azurite --silent --location ./azurite-data
+
+# Тесты с реальным storage
+npm run test:integration
+```
+
+---
+
+#### 🟡 MEDIUM - Snapshot тесты для email templates
+
+**Статус:** ⏳ TODO
+
+```javascript
+// api/tests/email-templates.snapshot.test.js
+const { generateClientEmailHTML } = require('../src/templates/emailTemplates');
+
+test('client email matches snapshot', () => {
+    const html = generateClientEmailHTML(mockTranslations, mockBooking);
+    expect(html).toMatchSnapshot();
+});
+```
+
+---
+
+#### 🟡 MEDIUM - Нагрузочное тестирование
+
+**Статус:** ⏳ TODO
+
+**Инструмент:** k6 или Artillery
+
+```javascript
+// load-test.js
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export const options = {
+    vus: 50,           // 50 виртуальных пользователей
+    duration: '1m',    // 1 минута
+};
+
+export default function () {
+    const res = http.get('https://api.sofija-nutrition.lv/api/availability');
+    check(res, { 'status was 200': (r) => r.status === 200 });
+    sleep(1);
+}
+```
+
+---
+
+### 🚀 5. DevOps & CI/CD
+
+#### 🔴 CRITICAL - Настроить Branch Protection (повтор для видимости)
+
+См. раздел "Безопасность" выше.
+
+---
+
+#### 🟠 HIGH - Staging окружение
+
+**Статус:** ⏳ TODO
+
+**Проблема:** Сейчас только production. Нет возможности тестировать перед релизом.
+
+**Решение:** Azure Static Web Apps автоматически создает Preview environments для PR.
+
+Добавить в workflow:
+```yaml
+- name: Comment PR with preview URL
+  if: github.event_name == 'pull_request'
+  uses: actions/github-script@v7
+  with:
+    script: |
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: `🚀 Preview deployed: ${process.env.PREVIEW_URL}`
+      })
+```
+
+---
+
+#### 🟡 MEDIUM - Автоматические релизы
+
+**Статус:** ⏳ TODO
+
+**Решение:** Semantic versioning + автоматические release notes:
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: node
+```
+
+---
+
+#### 🟡 MEDIUM - Мониторинг и алерты
+
+**Статус:** ⏳ TODO
+
+**Решение:** Azure Application Insights:
+- Трекинг ошибок
+- Performance метрики
+- Алерты при проблемах
+
+---
+
+### 📋 6. Приоритеты на ближайшие спринты
+
+#### Sprint 1 (1-2 недели) - Безопасность
+
+1. ✅ Настроить Branch Protection Rules
+2. ⏳ Добавить Rate Limiting
+3. ⏳ Добавить валидацию с `validator`
+4. ⏳ Защита от race condition
+
+#### Sprint 2 (2-3 недели) - Архитектура
+
+1. ⏳ Централизованная обработка ошибок
+2. ⏳ Выделить BookingService
+3. ⏳ Унифицировать ответы API
+4. ⏳ Вынести конфигурацию
+
+#### Sprint 3 (1-2 недели) - Рефакторинг
+
+1. ⏳ Единый источник переводов
+2. ⏳ Убрать magic numbers
+3. ⏳ Добавить JSDoc типизацию
+
+#### Sprint 4 (1 неделя) - DevOps
+
+1. ⏳ Staging окружение
+2. ⏳ Мониторинг
+3. ⏳ Автоматические релизы
+
+---
+
+### ✅ Уже реализовано
+
+- ✅ **Авторизация:** SWA Auth (Microsoft OAuth) + E2E Token
+- ✅ **CI/CD:** GitHub Actions с unit + E2E тестами
+- ✅ **Auto-merge:** PR автоматически мерджится после успешных тестов
+- ✅ **Тестовое покрытие:** 495 unit тестов, E2E для критических сценариев
+- ✅ **Email уведомления:** Подтверждение, отмена бронирования
+- ✅ **Feature Flags:** Управление функциями без деплоя
+- ✅ **Кэширование:** Services 5 мин, FeatureFlags 2 мин
+- ✅ **Мультиязычность:** LV, RU, EN
+- ✅ **CORS:** Настроен для всех окружений
+- ✅ **Security Headers:** X-Frame-Options, X-Content-Type-Options
+
+---
+
 ## 👀 Полезные ссылки
 
 - [Astro Documentation](https://docs.astro.build)
