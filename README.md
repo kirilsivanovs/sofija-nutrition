@@ -181,8 +181,7 @@ npm run dev
 - `PUT /api/dashboard/features/{featureId}` - Изменить флаг
 - `POST /api/dashboard/features/initialize` - Инициализация флагов
 
-**Мониторинг:**
-- `GET /api/dashboard/monitoring` - Метрики и статистика
+**Таблицы:**
 - `GET /api/dashboard/tables/{tableName}` - Содержимое таблицы
 - `DELETE /api/dashboard/tables/{tableName}/{pk}/{rk}` - Удалить запись
 
@@ -694,9 +693,6 @@ POST http://localhost:7071/api/dashboard/availability/vacation
 ```bash
 # Health check
 GET http://localhost:7071/api/health
-
-# Мониторинг (статистика бронирований)
-GET http://localhost:7071/api/dashboard/monitoring
 
 # Проверить что в таблице
 GET http://localhost:7071/api/dashboard/tables/Services
