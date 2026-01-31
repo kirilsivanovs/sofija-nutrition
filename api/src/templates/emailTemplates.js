@@ -270,6 +270,74 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
 /**
  * Generate confirmation page HTML (shown after admin clicks confirm button)
  */
+/**
+ * Generate cancellation email for client
+ */
+function generateCancellationEmailHTML(t, booking) {
+    const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
+    const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
+    
+    const content = `
+    <tr>
+        <td style="background: linear-gradient(135deg, ${colors.error} 0%, #c62828 100%); padding: 35px 20px; text-align: center;">
+            <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 15px; line-height: 70px; font-size: 35px;">✕</div>
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">${t.cancellationTitle}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px;">
+            <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(booking.name)}</p>
+            <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">${t.cancellationText}</p>
+            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">${t.cancellationDetails}</p>
+            
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
+                <tr>
+                    <td style="padding: 25px; text-align: center;">
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailBookingId}</p>
+                        <p style="margin: 0 0 20px 0; color: ${colors.primary}; font-size: 18px; font-weight: 600;">${booking.id}</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailService}</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">${booking.serviceName}</p>
+                        
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailFormat}</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
+                            ${formatIcon} ${formatLabel}
+                        </p>
+                        
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" style="text-align: center; padding: 10px;">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailDate}</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${booking.date}</p>
+                                </td>
+                                <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(0, 0, 0, 0.1);">
+                                    <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailTime}</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${booking.time}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
+                ${t.cancellationQuestions}
+            </p>
+            
+            <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
+                ${t.emailRegards}<br>
+                <strong style="color: ${colors.primary};">${branding.name}</strong>
+            </p>
+        </td>
+    </tr>
+    ${emailFooter()}`;
+    
+    return emailWrapper(content, { title: t.cancellationSubject(booking.id) });
+}
+
+/**
+ * Generate confirmation page HTML (shown after admin clicks confirm button)
+ */
 function generateConfirmationPageHTML(status, message, emailSent = false) {
     const statusConfig = {
         success: { bg: '#e8f5e9', color: '#2e7d32', icon: '✓', title: 'Maksājums apstiprināts!' },
@@ -306,5 +374,6 @@ module.exports = {
     generateClientEmailHTML,
     generateAdminEmailHTML,
     generatePaymentConfirmedEmailHTML,
+    generateCancellationEmailHTML,
     generateConfirmationPageHTML
 };
