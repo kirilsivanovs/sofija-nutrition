@@ -73,11 +73,10 @@ async function confirmPaymentHandler(
 
     // Check if already confirmed
     if (booking.paymentConfirmed) {
-      const t = translations.getTranslation((booking.language as Language) || 'lv') as TranslationObject;
       return {
         status: 200,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
-        body: generateConfirmationPageHTML(booking as any, t, true)
+        body: generateConfirmationPageHTML('already', 'Maksājums jau ir apstiprināts')
       };
     }
 
@@ -95,20 +94,32 @@ async function confirmPaymentHandler(
     const t = translations.getTranslation((booking.language as Language) || 'lv') as TranslationObject;
 
     // Send confirmation email to client
+    let emailSent = false;
     if (isConfigured()) {
-      const emailHtml = generatePaymentConfirmedEmailHTML(booking as any, t);
+      const bookingData = {
+        id: booking.rowKey || booking.id || '',
+        name: booking.name,
+        email: booking.email,
+        date: booking.date,
+        time: booking.time,
+        service: booking.service,
+        serviceName: booking.serviceName || t.services[booking.service] || booking.service,
+        consultationFormat: booking.consultationFormat || 'online'
+      };
+      const emailHtml = generatePaymentConfirmedEmailHTML(t, bookingData);
       await sendPaymentConfirmation(
         booking.email,
         t.paymentConfirmedSubject(booking.rowKey || booking.id || ''),
         emailHtml
       );
+      emailSent = true;
       context.log('Payment confirmation email sent to client');
     }
 
     return {
       status: 200,
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
-      body: generateConfirmationPageHTML(booking as any, t, false)
+      body: generateConfirmationPageHTML('success', 'Maksājums veiksmīgi apstiprināts!', emailSent)
     };
 
   } catch (error: unknown) {
