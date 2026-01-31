@@ -1380,38 +1380,46 @@ app.http('createBooking', {
 
 #### 🟡 MEDIUM - Dependency Injection
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE
 
 **Проблема:** Зависимости создаются внутри модулей, сложно тестировать и подменять.
 
-**Решение:** Простой DI container:
+**Решение:** Простой DI container реализован в `api/src/container.js`:
 
 ```javascript
 // api/src/container.js
-const container = {
-    services: new Map(),
-    
-    register(name, factory) {
-        this.services.set(name, factory);
-    },
-    
-    resolve(name) {
-        const factory = this.services.get(name);
-        if (!factory) throw new Error(`Service ${name} not found`);
-        return factory(this);
-    }
-};
+const { Container, container } = require('./container');
 
-// Регистрация
-container.register('bookingRepository', () => new BookingRepository());
-container.register('emailService', () => new EmailService());
-container.register('bookingService', (c) => new BookingService(
-    c.resolve('bookingRepository'),
-    c.resolve('emailService')
-));
+// Регистрация сервиса
+container.register('config', () => require('./config'), { singleton: true });
+container.register('bookingService', () => require('./services/bookingService'), { singleton: true });
 
-module.exports = container;
+// Резолвинг
+const bookingService = container.resolve('bookingService');
 ```
+
+**Что реализовано:**
+
+1. **Container класс** (`api/src/container.js`):
+   - `register(name, factory, { singleton })` - регистрация фабрики
+   - `resolve(name)` - получение экземпляра
+   - `has(name)` - проверка регистрации
+   - `clear()` / `clearSingletons()` - очистка для тестов
+
+2. **Регистрация сервисов** (`api/src/services.js`):
+   - Автоматическая регистрация всех сервисов при импорте
+   - config, translations, bookingRepository, emailService, pdfService
+   - availabilityService, bookingService, featureFlags
+
+3. **Тесты** (`api/tests/container.test.js`, `api/tests/services-registration.test.js`):
+   - 22 новых теста для DI container
+   - Покрытие singleton, factory, dependency chain
+
+**Преимущества:**
+- Легко подменять зависимости в тестах
+- Централизованная конфигурация сервисов
+- Поддержка singleton паттерна
+- Минимальный overhead (~80 строк кода)
 
 ---
 
