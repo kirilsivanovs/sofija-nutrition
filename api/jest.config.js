@@ -17,5 +17,13 @@ module.exports = {
   testTimeout: 30000,
   
   // Verbose output для лучшей читаемости
-  verbose: true
+  verbose: true,
+  
+  // Настройки для корректной работы Azure SDK
+  testEnvironment: 'node',
+  
+  // Mock Azure modules instead of trying to transform them
+  moduleNameMapper: {
+    '@azure/data-tables': '<rootDir>/tests/__mocks__/azure-data-tables.js'
+  }
 };

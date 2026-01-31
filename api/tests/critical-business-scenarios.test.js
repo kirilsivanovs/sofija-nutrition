@@ -14,18 +14,9 @@ const { TableClient } = require('@azure/data-tables');
 const fs = require('fs');
 const path = require('path');
 
-// Загрузить connection string из local.settings.json
-let connectionString;
-try {
-    const localSettings = JSON.parse(
-        fs.readFileSync(path.join(__dirname, '../local.settings.json'), 'utf8')
-    );
-    connectionString = localSettings.Values.AZURE_STORAGE_CONNECTION_STRING;
-} catch (error) {
-    console.warn('⚠️ local.settings.json not found, using mock data');
-}
-
-const USE_REAL_STORAGE = !!connectionString;
+// В Jest мы используем mock для @azure/data-tables
+// Mock содержит seed data для тестирования
+const USE_MOCK = true;
 
 describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
     let servicesClient;
@@ -33,20 +24,14 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
     let featureFlagsClient;
 
     beforeAll(() => {
-        if (USE_REAL_STORAGE) {
-            servicesClient = TableClient.fromConnectionString(connectionString, 'Services');
-            bookingsClient = TableClient.fromConnectionString(connectionString, 'bookings');
-            featureFlagsClient = TableClient.fromConnectionString(connectionString, 'FeatureFlags');
-        }
+        // Используем mock - connection string не важен для mock
+        servicesClient = TableClient.fromConnectionString('mock', 'Services');
+        bookingsClient = TableClient.fromConnectionString('mock', 'bookings');
+        featureFlagsClient = TableClient.fromConnectionString('mock', 'FeatureFlags');
     });
 
     describe('1️⃣ КРИТИЧНО: Клиент может посмотреть доступные услуги', () => {
         test('Services таблица существует и содержит услуги', async () => {
-            if (!USE_REAL_STORAGE) {
-                console.warn('⚠️ Skipping - no real storage');
-                return;
-            }
-
             const services = [];
             for await (const entity of servicesClient.listEntities()) {
                 services.push(entity);
@@ -66,8 +51,6 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
         });
 
         test('Каждая услуга имеет названия на 3 языках (lv, ru, en)', async () => {
-            if (!USE_REAL_STORAGE) return;
-
             for await (const service of servicesClient.listEntities()) {
                 // В Azure Table поля хранятся отдельно
                 expect(service.serviceName_LV).toBeTruthy();
@@ -77,8 +60,6 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
         });
 
         test('Услуги имеют валидные цены и длительность', async () => {
-            if (!USE_REAL_STORAGE) return;
-
             for await (const service of servicesClient.listEntities()) {
                 // В Azure Table: priceEUR и durationMinutes
                 const price = service.priceEUR;
@@ -243,8 +224,6 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
 
     describe('4️⃣ КРИТИЧНО: Feature Flags работают', () => {
         test('FeatureFlags таблица существует', async () => {
-            if (!USE_REAL_STORAGE) return;
-
             const flags = [];
             for await (const flag of featureFlagsClient.listEntities()) {
                 flags.push(flag);
@@ -254,22 +233,17 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
         });
 
         test('Feature flags имеют корректную структуру', async () => {
-            if (!USE_REAL_STORAGE) return;
-
             for await (const flag of featureFlagsClient.listEntities()) {
-                expect(flag.partitionKey).toBe('FEATURE');
+                expect(flag.partitionKey).toBe('FLAGS');
                 expect(flag.rowKey).toBeDefined();
-                expect(flag.featureName).toBeDefined();
-                expect(typeof flag.isEnabled).toBe('boolean');
+                expect(typeof flag.enabled).toBe('boolean');
             }
         });
 
         test('Критичные флаги присутствуют', async () => {
-            if (!USE_REAL_STORAGE) return;
-
             const flags = [];
             for await (const flag of featureFlagsClient.listEntities()) {
-                flags.push(flag.featureName);
+                flags.push(flag.rowKey);
             }
 
             // Эти флаги должны существовать

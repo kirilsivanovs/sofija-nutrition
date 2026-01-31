@@ -10,7 +10,6 @@ const path = require('path');
 const config = require('../config');
 
 // Cache for loaded fonts
-let fontsLoaded = false;
 let regularFontBytes = null;
 let boldFontBytes = null;
 
@@ -18,7 +17,8 @@ let boldFontBytes = null;
  * Load fonts from disk (cached)
  */
 function loadFonts() {
-    if (!fontsLoaded) {
+    // Only reload if not already loaded or if cache was invalidated
+    if (!regularFontBytes || !boldFontBytes) {
         try {
             const fontsDir = path.join(__dirname, '..', 'fonts');
             const regularPath = path.join(fontsDir, 'Roboto-Regular.ttf');
@@ -33,12 +33,19 @@ function loadFonts() {
             
             regularFontBytes = fs.readFileSync(regularPath);
             boldFontBytes = fs.readFileSync(boldPath);
-            fontsLoaded = true;
         } catch (err) {
             throw new Error(`Failed to load fonts: ${err.message}`);
         }
     }
     return { regularFontBytes, boldFontBytes };
+}
+
+/**
+ * Reset font cache (for testing)
+ */
+function resetFontCache() {
+    regularFontBytes = null;
+    boldFontBytes = null;
 }
 
 /**
@@ -168,5 +175,6 @@ async function generateInvoicePDF({ bookingId, name, email, phone, date, time, s
 }
 
 module.exports = {
-    generateInvoicePDF
+    generateInvoicePDF,
+    resetFontCache
 };
