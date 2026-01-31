@@ -74,11 +74,7 @@ describe('Cancellation Email', () => {
     });
 
     describe('Email Content Validation', () => {
-        // TODO: Это выявленная уязвимость XSS! 
-        // Сейчас тест документирует текущее (небезопасное) поведение.
-        // После добавления экранирования HTML в шаблонах, 
-        // этот тест должен проверять что <script> НЕ появляется в HTML.
-        test.skip('should escape HTML in client name (KNOWN VULNERABILITY)', () => {
+        test('should escape HTML in client name (XSS protection)', () => {
             const t = translations.lv;
             const maliciousBooking = {
                 id: 'SN-XSS123',
@@ -86,13 +82,14 @@ describe('Cancellation Email', () => {
                 date: '2026-02-15',
                 time: '14:00',
                 serviceName: 'Test Service',
-                formatLabel: 'Online'
+                consultationFormat: 'online'
             };
 
             const html = generateCancellationEmailHTML(t, maliciousBooking);
             
-            // Script tag должен быть экранирован или удалён
+            // Script tag должен быть экранирован
             expect(html).not.toContain('<script>');
+            expect(html).toContain('&lt;script&gt;');
         });
 
         test('should handle missing optional fields', () => {

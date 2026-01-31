@@ -153,68 +153,88 @@ describe('API Endpoints', () => {
 
         it('should reject request without name', async () => {
             const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+            mockContext.log.warn = jest.fn();
             const mockRequest = {
                 json: jest.fn().mockResolvedValue({
                     email: 'test@test.com',
                     date: '2026-02-01',
                     time: '10:00',
-                    service: 'initial'
-                })
+                    service: 'free-consultation'
+                }),
+                headers: {
+                    get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.1' : null)
+                }
             };
             
             const response = await createBookingHandler(mockRequest, mockContext);
             
             expect(response.status).toBe(400);
-            expect(response.jsonBody.error).toContain('name');
+            expect(response.jsonBody.error).toBe('Validation Error');
+            expect(response.jsonBody.details.name).toBeDefined();
         });
 
         it('should reject request without email', async () => {
             const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+            mockContext.log.warn = jest.fn();
             const mockRequest = {
                 json: jest.fn().mockResolvedValue({
                     name: 'Test User',
                     date: '2026-02-01',
                     time: '10:00',
-                    service: 'initial'
-                })
+                    service: 'free-consultation'
+                }),
+                headers: {
+                    get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.2' : null)
+                }
             };
             
             const response = await createBookingHandler(mockRequest, mockContext);
             
             expect(response.status).toBe(400);
-            expect(response.jsonBody.error).toContain('email');
+            expect(response.jsonBody.error).toBe('Validation Error');
+            expect(response.jsonBody.details.email).toBeDefined();
         });
 
         it('should reject request without date', async () => {
             const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+            mockContext.log.warn = jest.fn();
             const mockRequest = {
                 json: jest.fn().mockResolvedValue({
                     name: 'Test User',
                     email: 'test@test.com',
                     time: '10:00',
-                    service: 'initial'
-                })
+                    service: 'free-consultation'
+                }),
+                headers: {
+                    get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.3' : null)
+                }
             };
             
             const response = await createBookingHandler(mockRequest, mockContext);
             
             expect(response.status).toBe(400);
+            expect(response.jsonBody.details.date).toBeDefined();
         });
 
         it('should reject request without service', async () => {
             const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+            mockContext.log.warn = jest.fn();
             const mockRequest = {
                 json: jest.fn().mockResolvedValue({
                     name: 'Test User',
                     email: 'test@test.com',
                     date: '2026-02-01',
                     time: '10:00'
-                })
+                }),
+                headers: {
+                    get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.4' : null)
+                }
             };
             
             const response = await createBookingHandler(mockRequest, mockContext);
             
             expect(response.status).toBe(400);
+            expect(response.jsonBody.details.serviceId).toBeDefined();
         });
     });
 });
