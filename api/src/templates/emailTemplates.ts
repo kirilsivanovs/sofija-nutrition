@@ -3,15 +3,82 @@
  * HTML templates for all email types
  */
 
-const config = require('../config');
-const { escapeHtml } = require('../utils/validation');
+import config from '../config';
+import { escapeHtml } from '../utils/validation';
 
 const { colors, branding } = config;
+
+export interface BookingEmailData {
+    id: string;
+    name: string;
+    email: string;
+    date: string;
+    time: string;
+    service: string;
+    serviceName: string;
+    consultationFormat: string;
+    language?: string;
+    price?: number;
+    phone?: string;
+    notes?: string;
+}
+
+export interface TranslationObject {
+    emailSubject: (id: string) => string;
+    emailGreeting: (name: string) => string;
+    emailThankYou: string;
+    emailConfirmed: string;
+    emailBookingId: string;
+    emailService: string;
+    emailFormat: string;
+    emailDate: string;
+    emailTime: string;
+    emailPrice: string;
+    emailInvoiceAttached: string;
+    emailQuestions: string;
+    emailRegards: string;
+    emailSubtitle: string;
+    formatOnline: string;
+    formatInPerson: string;
+    paymentConfirmedSubject: (id: string) => string;
+    paymentConfirmedTitle: string;
+    paymentConfirmedText: string;
+    paymentWaitingText: string;
+    cancellationSubject: (id: string) => string;
+    cancellationTitle: string;
+    cancellationText: string;
+    cancellationDetails: string;
+    cancellationQuestions: string;
+    services: Record<string, string>;
+}
+
+interface EmailWrapperOptions {
+    title?: string;
+}
+
+interface HeaderOptions {
+    gradient?: boolean;
+    bgColor?: string;
+}
+
+interface DetailCardItem {
+    label: string;
+    value: string;
+    highlight?: boolean;
+}
+
+interface AdminDetailOptions {
+    bold?: boolean;
+    color?: string;
+    noBorder?: boolean;
+    wordBreak?: boolean;
+    size?: string;
+}
 
 /**
  * Common email wrapper with header and footer
  */
-function emailWrapper(content, { title = '' } = {}) {
+function emailWrapper(content: string, { title = '' }: EmailWrapperOptions = {}): string {
     return `
 <!DOCTYPE html>
 <html>
@@ -43,7 +110,7 @@ function emailWrapper(content, { title = '' } = {}) {
 /**
  * Standard header with branding
  */
-function emailHeader(subtitle, { gradient = true, bgColor = colors.primary } = {}) {
+function emailHeader(subtitle: string, { gradient = true, bgColor = colors.primary }: HeaderOptions = {}): string {
     const bgStyle = gradient 
         ? `background: linear-gradient(135deg, ${colors.primary} 0%, #3a7365 100%);`
         : `background-color: ${bgColor};`;
@@ -61,7 +128,7 @@ function emailHeader(subtitle, { gradient = true, bgColor = colors.primary } = {
 /**
  * Standard footer
  */
-function emailFooter() {
+function emailFooter(): string {
     return `
     <tr>
         <td style="background-color: ${colors.primary}; padding: 20px; text-align: center;">
@@ -74,7 +141,7 @@ function emailFooter() {
 /**
  * Booking details card
  */
-function bookingDetailsCard(items) {
+function bookingDetailsCard(items: DetailCardItem[]): string {
     const rows = items.map(({ label, value, highlight = false }) => `
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; margin-bottom: 12px;">
             <tr>
@@ -96,11 +163,23 @@ function bookingDetailsCard(items) {
     </table>`;
 }
 
+interface ClientEmailParams {
+    name: string;
+    bookingId: string;
+    serviceName: string;
+    formatLabel: string;
+    date: string;
+    time: string;
+    price: number;
+}
+
 /**
  * Generate client booking confirmation email
  */
-function generateClientEmailHTML(t, { name, bookingId, serviceName, formatLabel, date, time, price }) {
-    // Escape user-provided data to prevent XSS
+export function generateClientEmailHTML(
+    t: TranslationObject, 
+    { name, bookingId, serviceName, formatLabel, date, time, price }: ClientEmailParams
+): string {
     const safeName = escapeHtml(name);
     const safeServiceName = escapeHtml(serviceName);
     const safeFormatLabel = escapeHtml(formatLabel);
@@ -140,15 +219,28 @@ function generateClientEmailHTML(t, { name, bookingId, serviceName, formatLabel,
     return emailWrapper(content, { title: t.emailSubject(escapeHtml(bookingId)) });
 }
 
+function adminDetailRow(
+    label: string, 
+    value: string, 
+    { bold = false, color = '#333', noBorder = false, wordBreak = false, size = '14px' }: AdminDetailOptions = {}
+): string {
+    return `
+    <table role="presentation" width="100%" style="${noBorder ? '' : 'border-bottom: 1px solid #e0e0e0;'} padding-bottom: 10px; margin-bottom: 10px;">
+        <tr><td>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">${label}</p>
+            <p style="margin: 0; font-size: ${size}; font-weight: ${bold ? '700' : '500'}; color: ${color}; ${wordBreak ? 'word-break: break-all;' : ''}">${value}</p>
+        </td></tr>
+    </table>`;
+}
+
 /**
  * Generate admin notification email
  */
-function generateAdminEmailHTML(booking, confirmUrl) {
+export function generateAdminEmailHTML(booking: BookingEmailData, confirmUrl: string): string {
     const formatLabel = booking.consultationFormat === 'online' ? 'Attālināti' : 'Klātienē';
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     const formatColor = booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50';
     
-    // Escape all user-provided data
     const safeName = escapeHtml(booking.name);
     const safeEmail = escapeHtml(booking.email);
     const safePhone = escapeHtml(booking.phone || 'Nav norādīts');
@@ -158,6 +250,8 @@ function generateAdminEmailHTML(booking, confirmUrl) {
     const safeDate = escapeHtml(booking.date);
     const safeTime = escapeHtml(booking.time);
     const safeLanguage = escapeHtml((booking.language || 'lv').toUpperCase());
+    
+    const price = booking.price || 0;
     
     const content = `
     <tr>
@@ -178,14 +272,14 @@ function generateAdminEmailHTML(booking, confirmUrl) {
                         ${adminDetailRow('Formāts', `${formatIcon} ${formatLabel}`, { color: formatColor })}
                         ${adminDetailRow('Datums', safeDate)}
                         ${adminDetailRow('Laiks', safeTime)}
-                        ${adminDetailRow('Summa', booking.price > 0 ? '€' + booking.price : 'BEZMAKSAS', { bold: true, color: colors.primary, size: '20px' })}
+                        ${adminDetailRow('Summa', price > 0 ? '€' + price : 'BEZMAKSAS', { bold: true, color: colors.primary, size: '20px' })}
                         ${adminDetailRow('Valoda', safeLanguage, { noBorder: !booking.notes })}
                         ${safeNotes ? adminDetailRow('Piezīmes', safeNotes, { noBorder: true }) : ''}
                     </td>
                 </tr>
             </table>
             
-            ${booking.price > 0 ? `
+            ${price > 0 ? `
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="center" style="padding: 15px 0;">
@@ -218,28 +312,16 @@ function generateAdminEmailHTML(booking, confirmUrl) {
     return emailWrapper(content, { title: `Jauna rezervācija - ${booking.id}` });
 }
 
-function adminDetailRow(label, value, { bold = false, color = '#333', noBorder = false, wordBreak = false, size = '14px' } = {}) {
-    return `
-    <table role="presentation" width="100%" style="${noBorder ? '' : 'border-bottom: 1px solid #e0e0e0;'} padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">${label}</p>
-            <p style="margin: 0; font-size: ${size}; font-weight: ${bold ? '700' : '500'}; color: ${color}; ${wordBreak ? 'word-break: break-all;' : ''}">${value}</p>
-        </td></tr>
-    </table>`;
-}
-
 /**
  * Generate payment confirmation email for client
  */
-function generatePaymentConfirmedEmailHTML(t, booking) {
+export function generatePaymentConfirmedEmailHTML(t: TranslationObject, booking: BookingEmailData): string {
     const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     
-    // Escape all user-provided data
     const safeServiceName = escapeHtml(booking.serviceName);
     const safeDate = escapeHtml(booking.date);
     const safeTime = escapeHtml(booking.time);
-    const safeId = escapeHtml(booking.id);
     
     const content = `
     <tr>
@@ -291,16 +373,12 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
 }
 
 /**
- * Generate confirmation page HTML (shown after admin clicks confirm button)
- */
-/**
  * Generate cancellation email for client
  */
-function generateCancellationEmailHTML(t, booking) {
+export function generateCancellationEmailHTML(t: TranslationObject, booking: BookingEmailData): string {
     const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     
-    // Escape all user-provided data
     const safeName = escapeHtml(booking.name);
     const safeId = escapeHtml(booking.id);
     const safeServiceName = escapeHtml(booking.serviceName);
@@ -368,7 +446,7 @@ function generateCancellationEmailHTML(t, booking) {
 /**
  * Generate confirmation page HTML (shown after admin clicks confirm button)
  */
-function generateConfirmationPageHTML(status, message, emailSent = false) {
+export function generateConfirmationPageHTML(status: 'success' | 'error' | 'already', message: string, emailSent = false): string {
     const statusConfig = {
         success: { bg: '#e8f5e9', color: '#2e7d32', icon: '✓', title: 'Maksājums apstiprināts!' },
         error: { bg: '#ffebee', color: colors.error, icon: '✕', title: 'Kļūda' },
@@ -399,11 +477,3 @@ function generateConfirmationPageHTML(status, message, emailSent = false) {
 </body>
 </html>`;
 }
-
-module.exports = {
-    generateClientEmailHTML,
-    generateAdminEmailHTML,
-    generatePaymentConfirmedEmailHTML,
-    generateCancellationEmailHTML,
-    generateConfirmationPageHTML
-};

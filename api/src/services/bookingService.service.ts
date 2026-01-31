@@ -482,12 +482,14 @@ export async function cancelBooking(
     try {
       const t = translations.getTranslation((booking.language as Language) || 'lv');
       const emailHtml = generateCancellationEmailHTML(t, {
+        id: booking.rowKey || booking.id || '',
         name: booking.name,
-        bookingId: booking.rowKey || booking.id,
+        email: booking.email,
         serviceName: booking.serviceName || booking.service,
+        service: booking.service,
         date: booking.date,
         time: booking.time,
-        reason
+        consultationFormat: booking.consultationFormat || 'online'
       });
 
       await sendClientConfirmation(

@@ -8,8 +8,8 @@ module.exports = {
   
   // Покрытие кода
   collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/index.js',
+    'src/**/*.{js,ts}',
+    '!src/index.ts',
     '!**/node_modules/**'
   ],
   
@@ -22,8 +22,21 @@ module.exports = {
   // Настройки для корректной работы Azure SDK
   testEnvironment: 'node',
   
+  // TypeScript support
+  preset: 'ts-jest',
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: 'tsconfig.json',
+      isolatedModules: true
+    }],
+    '^.+\\.jsx?$': 'babel-jest'
+  },
+  
   // Mock Azure modules instead of trying to transform them
   moduleNameMapper: {
     '@azure/data-tables': '<rootDir>/tests/__mocks__/azure-data-tables.js'
-  }
+  },
+  
+  // Расширения файлов для резолвинга модулей
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
 };

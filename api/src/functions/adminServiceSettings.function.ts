@@ -1,22 +1,86 @@
-const { app } = require('@azure/functions');
-const { TableClient } = require('@azure/data-tables');
-const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
-const { sanitizeODataValue } = require('../utils/odataSanitizer');
-
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-const SERVICES_TABLE = 'Services'; // Понятное название таблицы
-const PARTITION_KEY = 'SERVICE'; // Все услуги в одной группе
-
 /**
- * Получить все активные услуги из базы данных
- * GET /api/dashboard/services
+ * Admin Service Settings Functions
+ * Handle admin operations for managing services
  */
+
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { TableClient } from '@azure/data-tables';
+import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
+import { sanitizeODataValue } from '../utils/odataSanitizer';
+
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
+const SERVICES_TABLE = 'Services';
+const PARTITION_KEY = 'SERVICE';
+
+interface ServiceName {
+    lv: string;
+    ru: string;
+    en: string;
+}
+
+interface ServiceEntity {
+    partitionKey: string;
+    rowKey: string;
+    serviceId: string;
+    serviceName_LV: string;
+    serviceName_RU: string;
+    serviceName_EN: string;
+    priceEUR: number;
+    durationMinutes: number;
+    allowOnlineFormat: boolean;
+    allowInPersonFormat: boolean;
+    isActive: boolean;
+    displayOrder: number;
+    version?: number;
+    createdAt?: string;
+    lastModifiedAt?: string;
+}
+
+interface ServiceResponse {
+    id: string;
+    name: ServiceName;
+    price: number;
+    duration: number;
+    allowOnline: boolean;
+    allowInPerson: boolean;
+    isActive: boolean;
+    displayOrder: number;
+    createdAt?: string;
+    lastModifiedAt?: string;
+}
+
+interface UpdateServiceBody {
+    name: ServiceName;
+    price: number;
+    duration: number;
+    allowOnline: boolean;
+    allowInPerson: boolean;
+    isActive?: boolean;
+    displayOrder?: number;
+}
+
+interface ServiceHistoryEntry {
+    version: number;
+    modifiedAt?: string;
+    modifiedBy: string;
+    changeType: string;
+    data: {
+        name: ServiceName;
+        price: number;
+        duration: number;
+        allowOnline: boolean;
+        allowInPerson: boolean;
+        isActive: boolean;
+        displayOrder: number;
+    };
+}
+
+// Get all active services
 app.http('adminGetServiceSettings', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/services',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -24,9 +88,9 @@ app.http('adminGetServiceSettings', {
 
         try {
             const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
-            const services = [];
+            const services: ServiceResponse[] = [];
             
-            for await (const entity of tableClient.listEntities()) {
+            for await (const entity of tableClient.listEntities<ServiceEntity>()) {
                 if (entity.partitionKey === PARTITION_KEY) {
                     services.push({
                         id: entity.serviceId,
@@ -47,7 +111,6 @@ app.http('adminGetServiceSettings', {
                 }
             }
             
-            // Сортировка по порядку отображения
             services.sort((a, b) => a.displayOrder - b.displayOrder);
             
             return { 
@@ -55,35 +118,22 @@ app.http('adminGetServiceSettings', {
                 jsonBody: { services }
             };
         } catch (error) {
-            context.error('Error fetching services:', error);
+            const err = error as Error;
+            context.error('Error fetching services:', err);
             return {
                 status: 500,
-                jsonBody: { error: error.message }
+                jsonBody: { error: err.message }
             };
         }
     }
 });
 
-/**
- * Обновить настройки услуги
- * PUT /api/dashboard/services/{serviceId}
- * 
- * Body: {
- *   name: { lv, ru, en },
- *   price: number,
- *   duration: number,
- *   allowOnline: boolean,
- *   allowInPerson: boolean,
- *   isActive: boolean,
- *   displayOrder: number
- * }
- */
+// Update service settings
 app.http('adminUpdateServiceSettings', {
     methods: ['PUT'],
     authLevel: 'anonymous',
     route: 'dashboard/services/{serviceId}',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -91,32 +141,27 @@ app.http('adminUpdateServiceSettings', {
 
         try {
             const serviceId = request.params.serviceId;
-            const body = await request.json();
+            const body = await request.json() as UpdateServiceBody;
             
-            // Валидация входных данных
-            const errors = [];
+            // Validation
+            const errors: string[] = [];
             
-            // Проверка названий
             if (!body.name || !body.name.lv || !body.name.ru || !body.name.en) {
                 errors.push('Service name is required in all languages (lv, ru, en)');
             }
             
-            // Проверка цены
             if (typeof body.price !== 'number' || body.price < 0) {
                 errors.push('Price must be a positive number');
             }
             
-            // Проверка длительности
             if (typeof body.duration !== 'number' || body.duration < 5 || body.duration > 180) {
                 errors.push('Duration must be between 5 and 180 minutes');
             }
             
-            // Проверка форматов - должен быть хоть один доступный
             if (!body.allowOnline && !body.allowInPerson) {
                 errors.push('At least one format (online or in-person) must be enabled');
             }
             
-            // Проверка порядка отображения
             if (body.displayOrder !== undefined && (typeof body.displayOrder !== 'number' || body.displayOrder < 0)) {
                 errors.push('Display order must be a non-negative number');
             }
@@ -133,60 +178,42 @@ app.http('adminUpdateServiceSettings', {
             
             const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
             
-            // Проверяем есть ли уже такая услуга (для createdAt)
-            let existingEntity;
+            let existingEntity: ServiceEntity | null = null;
             try {
-                existingEntity = await tableClient.getEntity(PARTITION_KEY, serviceId);
-            } catch (e) {
+                existingEntity = await tableClient.getEntity<ServiceEntity>(PARTITION_KEY, serviceId!);
+            } catch {
                 existingEntity = null;
             }
             
             const now = new Date().toISOString();
             
-            const entity = {
+            const entity: ServiceEntity = {
                 partitionKey: PARTITION_KEY,
-                rowKey: serviceId,
-                serviceId: serviceId,
-                
-                // Названия на всех языках
+                rowKey: serviceId!,
+                serviceId: serviceId!,
                 serviceName_LV: body.name.lv,
                 serviceName_RU: body.name.ru,
                 serviceName_EN: body.name.en,
-                
-                // Параметры услуги
                 priceEUR: body.price,
                 durationMinutes: body.duration,
-                
-                // Доступные форматы
                 allowOnlineFormat: body.allowOnline === true,
                 allowInPersonFormat: body.allowInPerson === true,
-                
-                // Статус и порядок
                 isActive: body.isActive !== false,
                 displayOrder: body.displayOrder || 0,
-                
-                // Версионирование
                 version: (existingEntity?.version || 0) + 1,
-                
-                // Даты
                 createdAt: existingEntity?.createdAt || now,
                 lastModifiedAt: now
             };
             
-            // Сохранение в основную таблицу
             await tableClient.upsertEntity(entity, 'Replace');
             
-            // Сохранение в историю изменений (только при обновлении)
+            // Save to history if updating
             if (existingEntity) {
                 const historyTableClient = TableClient.fromConnectionString(connectionString, 'ServicesHistory');
                 const historyEntry = {
-                    partitionKey: serviceId,
+                    partitionKey: serviceId!,
                     rowKey: `v${entity.version}_${Date.now()}`,
-                    
-                    // Копируем все данные
                     ...entity,
-                    
-                    // Дополнительные поля для истории
                     modifiedBy: 'admin',
                     changeType: 'update'
                 };
@@ -212,25 +239,22 @@ app.http('adminUpdateServiceSettings', {
                 }
             };
         } catch (error) {
-            context.error('Error updating service:', error);
+            const err = error as Error;
+            context.error('Error updating service:', err);
             return {
                 status: 500,
-                jsonBody: { error: error.message }
+                jsonBody: { error: err.message }
             };
         }
     }
 });
 
-/**
- * Получить историю изменений услуги
- * GET /api/dashboard/services/{serviceId}/history
- */
+// Get service history
 app.http('adminGetServiceHistory', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'dashboard/services/{serviceId}/history',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -239,8 +263,7 @@ app.http('adminGetServiceHistory', {
         try {
             const serviceId = request.params.serviceId;
             
-            // Sanitize serviceId to prevent OData injection
-            const sanitizedServiceId = sanitizeODataValue(serviceId);
+            const sanitizedServiceId = sanitizeODataValue(serviceId || '');
             if (!sanitizedServiceId) {
                 return {
                     status: 400,
@@ -249,17 +272,16 @@ app.http('adminGetServiceHistory', {
             }
             
             const historyTableClient = TableClient.fromConnectionString(connectionString, 'ServicesHistory');
-            const history = [];
+            const history: ServiceHistoryEntry[] = [];
             
-            // Получаем все записи для этой услуги (using sanitized value)
-            const queryOptions = { filter: `PartitionKey eq '${sanitizedServiceId}'` };
-            
-            for await (const entity of historyTableClient.listEntities({ queryOptions })) {
+            for await (const entity of historyTableClient.listEntities<ServiceEntity & { modifiedBy?: string; changeType?: string }>()) {
+                // Filter by partition key manually
+                if (entity.partitionKey !== sanitizedServiceId) continue;
                 history.push({
-                    version: entity.version,
+                    version: entity.version || 0,
                     modifiedAt: entity.lastModifiedAt,
                     modifiedBy: entity.modifiedBy || 'admin',
-                    changeType: entity.changeType,
+                    changeType: entity.changeType || 'update',
                     data: {
                         name: {
                             lv: entity.serviceName_LV,
@@ -276,7 +298,6 @@ app.http('adminGetServiceHistory', {
                 });
             }
             
-            // Сортировка по версии (новые первые)
             history.sort((a, b) => b.version - a.version);
             
             return {
@@ -288,22 +309,22 @@ app.http('adminGetServiceHistory', {
                 }
             };
         } catch (error) {
-            context.error('Error fetching service history:', error);
+            const err = error as Error;
+            context.error('Error fetching service history:', err);
             return {
                 status: 500,
-                jsonBody: { error: error.message }
+                jsonBody: { error: err.message }
             };
         }
     }
 });
 
-// Initialize default services (migration)
+// Initialize default services
 app.http('adminInitializeServices', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'dashboard/services/initialize',
-    handler: async (request, context) => {
-        // Проверяем авторизацию (SWA auth или E2E token)
+    handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
             return unauthorizedResponse(auth.error);
@@ -314,11 +335,10 @@ app.http('adminInitializeServices', {
             
             const now = new Date().toISOString();
             
-            const defaultServices = [
+            const defaultServices: ServiceEntity[] = [
                 {
                     partitionKey: PARTITION_KEY,
                     rowKey: 'cgm-diagnostic',
-                    serviceId: 'cgm-diagnostic',
                     serviceId: 'cgm-diagnostic',
                     serviceName_LV: 'CGM diagnostika (60 min)',
                     serviceName_RU: 'CGM-диагностика (60 мін)',
@@ -375,7 +395,8 @@ app.http('adminInitializeServices', {
                     await tableClient.createEntity(service);
                     createdCount++;
                 } catch (e) {
-                    if (e.statusCode === 409) {
+                    const err = e as { statusCode?: number };
+                    if (err.statusCode === 409) {
                         context.log(`Service already exists: ${service.serviceId}`);
                     } else {
                         throw e;
@@ -398,10 +419,11 @@ app.http('adminInitializeServices', {
                 }
             };
         } catch (error) {
-            context.error('Error initializing services:', error);
+            const err = error as Error;
+            context.error('Error initializing services:', err);
             return {
                 status: 500,
-                jsonBody: { error: error.message }
+                jsonBody: { error: err.message }
             };
         }
     }
