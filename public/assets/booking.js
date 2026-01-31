@@ -88,7 +88,7 @@ const fallbackTranslations = {
             nameMinLength: "Vārdam jābūt vismaz 2 simboliem",
             emailRequired: "Lūdzu, ievadiet e-pasta adresi",
             emailInvalid: "Lūdzu, ievadiet derīgu e-pasta adresi",
-            phoneInvalid: "Lūdzu, ievadiet derīgu telefona numuru",
+            phoneInvalid: "Lūdzu, ievadiet 8 ciparu telefona numuru",
             formatRequired: "Lūdzu, izvēlieties konsultācijas formātu"
         }
     },
@@ -120,7 +120,7 @@ const fallbackTranslations = {
             nameMinLength: "Имя должно содержать минимум 2 символа",
             emailRequired: "Пожалуйста, введите email",
             emailInvalid: "Пожалуйста, введите корректный email",
-            phoneInvalid: "Пожалуйста, введите корректный номер телефона",
+            phoneInvalid: "Введите 8 цифр номера телефона",
             formatRequired: "Пожалуйста, выберите формат консультации"
         }
     },
@@ -152,7 +152,7 @@ const fallbackTranslations = {
             nameMinLength: "Name must be at least 2 characters",
             emailRequired: "Please enter your email",
             emailInvalid: "Please enter a valid email address",
-            phoneInvalid: "Please enter a valid phone number",
+            phoneInvalid: "Please enter 8 digit phone number",
             formatRequired: "Please select a consultation format"
         }
     }
@@ -367,7 +367,10 @@ class BookingCalendar {
                                 
                                 <div class="form-group">
                                     <label>${this.t('phoneLabel')}</label>
-                                    <input type="tel" name="phone" placeholder="+371 20000000">
+                                    <div class="phone-input-wrapper">
+                                        <span class="phone-prefix">+371</span>
+                                        <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
+                                    </div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -794,13 +797,13 @@ class BookingCalendar {
                 return { valid: true, message: '' };
                 
             case 'phone':
-                // Phone is optional, but if provided must be valid
+                // Phone is optional, but if provided must be exactly 8 digits (Latvian format)
                 if (!value || value.trim() === '') {
                     return { valid: true, message: '' }; // Phone is optional
                 }
-                // Accept formats: +371 20000000, 20000000, +371-20-000-000, etc.
-                const phonePattern = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/;
-                if (!phonePattern.test(value.replace(/\s/g, ''))) {
+                // Only allow 8 digits (Latvian phone number without country code)
+                const digitsOnly = value.replace(/\D/g, '');
+                if (digitsOnly.length !== 8 || !/^[0-9]{8}$/.test(digitsOnly)) {
                     return { valid: false, message: v.phoneInvalid };
                 }
                 return { valid: true, message: '' };
@@ -820,9 +823,16 @@ class BookingCalendar {
         // Remove any existing error
         this.clearFieldError(inputElement);
         
-        // Add error class to input
-        inputElement.classList.add('input-error');
-        inputElement.classList.remove('input-valid');
+        // For phone input, add error class to wrapper instead
+        const phoneWrapper = inputElement.closest('.phone-input-wrapper');
+        if (phoneWrapper) {
+            phoneWrapper.classList.add('input-error');
+            phoneWrapper.classList.remove('input-valid');
+        } else {
+            // Add error class to input
+            inputElement.classList.add('input-error');
+            inputElement.classList.remove('input-valid');
+        }
         
         // Create error message element
         const errorEl = document.createElement('div');
@@ -837,6 +847,12 @@ class BookingCalendar {
     clearFieldError(inputElement) {
         inputElement.classList.remove('input-error');
         
+        // Also clear from phone wrapper if exists
+        const phoneWrapper = inputElement.closest('.phone-input-wrapper');
+        if (phoneWrapper) {
+            phoneWrapper.classList.remove('input-error');
+        }
+        
         const parent = inputElement.closest('.form-group') || inputElement.parentElement;
         const existingError = parent.querySelector('.field-error-message');
         if (existingError) {
@@ -846,7 +862,14 @@ class BookingCalendar {
 
     showFieldValid(inputElement) {
         this.clearFieldError(inputElement);
-        inputElement.classList.add('input-valid');
+        
+        // For phone input, add valid class to wrapper
+        const phoneWrapper = inputElement.closest('.phone-input-wrapper');
+        if (phoneWrapper) {
+            phoneWrapper.classList.add('input-valid');
+        } else {
+            inputElement.classList.add('input-valid');
+        }
     }
 
     validateAndShowError(inputElement) {
@@ -1200,7 +1223,12 @@ class BookingCalendar {
                     this.validateAndShowError(emailInput);
                 }
             });
-            phoneInput?.addEventListener('input', () => {
+            // Phone input - only allow digits and limit to 8
+            phoneInput?.addEventListener('input', (e) => {
+                // Remove non-digits and limit to 8 characters
+                const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 8);
+                e.target.value = digitsOnly;
+                
                 if (phoneInput.classList.contains('input-error')) {
                     this.validateAndShowError(phoneInput);
                 }

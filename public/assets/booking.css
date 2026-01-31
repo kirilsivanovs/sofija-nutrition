@@ -268,6 +268,48 @@
     margin-bottom: 5px;
 }
 
+/* Phone input with +371 prefix */
+.phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: white;
+    transition: border-color 0.2s ease;
+    overflow: hidden;
+}
+
+.phone-input-wrapper:focus-within {
+    border-color: var(--color-primary);
+}
+
+.phone-input-wrapper .phone-prefix {
+    padding: 12px 0 12px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: #f8f9fa;
+    border-right: 1px solid var(--color-border);
+    padding-right: 10px;
+    user-select: none;
+}
+
+.phone-input-wrapper input[name="phone"] {
+    border: none;
+    border-radius: 0;
+    padding-left: 10px;
+    flex: 1;
+}
+
+.phone-input-wrapper input[name="phone"]:focus {
+    outline: none;
+    border: none;
+}
+
+.phone-input-wrapper.input-error {
+    border-color: #e74c3c;
+}
+
 .booking-form input,
 .booking-form select,
 .booking-form textarea {
@@ -738,6 +780,18 @@
 .input-valid:focus {
     border-color: #22c55e !important;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Phone input wrapper states */
+.phone-input-wrapper.input-valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1) !important;
+}
+
+.phone-input-wrapper.input-valid .phone-prefix {
+    background-color: #dcfce7 !important;
+    border-color: #86efac !important;
 }
 
 /* Error message styling */
