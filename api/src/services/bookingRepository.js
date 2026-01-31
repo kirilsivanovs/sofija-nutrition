@@ -7,13 +7,18 @@ const { TableClient } = require('@azure/data-tables');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 let tableClient = null;
+let lockTableClient = null;
 const inMemoryBookings = new Map();
+const inMemoryLocks = new Map();
+
+// Lock configuration
+const LOCK_TTL_MS = 30000; // 30 seconds lock expiration
 
 console.log('📦 BookingRepository initialized');
 console.log('   Azure Storage:', connectionString ? '✅ Configured' : '⚠️ Not configured (using in-memory)');
 
 /**
- * Get or create the Azure Table client
+ * Get or create the Azure Table client for bookings
  */
 async function getTableClient() {
     if (!tableClient && connectionString) {
@@ -28,6 +33,140 @@ async function getTableClient() {
         }
     }
     return tableClient;
+}
+
+/**
+ * Get or create the Azure Table client for slot locks
+ */
+async function getLockTableClient() {
+    if (!lockTableClient && connectionString) {
+        lockTableClient = TableClient.fromConnectionString(connectionString, 'slotlocks');
+        try {
+            await lockTableClient.createTable();
+        } catch (error) {
+            // 409 = table already exists, which is fine
+            if (error.statusCode !== 409) {
+                console.error('Error creating locks table:', error.message);
+            }
+        }
+    }
+    return lockTableClient;
+}
+
+/**
+ * Acquire a lock on a time slot to prevent race conditions
+ * Uses optimistic locking - only one request can acquire the lock
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @param {string} time - Time in HH:MM format
+ * @returns {Promise<{success: boolean, lockId: string|null}>}
+ */
+async function acquireSlotLock(date, time) {
+    const lockKey = `${date}_${time}`;
+    const lockId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const now = Date.now();
+    
+    const client = await getLockTableClient();
+    
+    if (client) {
+        try {
+            // Try to create a new lock entity
+            // If it already exists, Azure will throw 409 Conflict
+            const lockEntity = {
+                partitionKey: 'LOCK',
+                rowKey: lockKey,
+                lockId,
+                createdAt: new Date().toISOString(),
+                expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+            };
+            
+            await client.createEntity(lockEntity);
+            console.log(`🔒 Lock acquired for ${lockKey}`);
+            return { success: true, lockId };
+        } catch (error) {
+            if (error.statusCode === 409) {
+                // Lock already exists - check if expired
+                try {
+                    const existingLock = await client.getEntity('LOCK', lockKey);
+                    const expiresAt = new Date(existingLock.expiresAt).getTime();
+                    
+                    if (now > expiresAt) {
+                        // Lock expired, try to replace it
+                        const newLock = {
+                            partitionKey: 'LOCK',
+                            rowKey: lockKey,
+                            lockId,
+                            createdAt: new Date().toISOString(),
+                            expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+                        };
+                        await client.updateEntity(newLock, 'Replace', { etag: existingLock.etag });
+                        console.log(`🔒 Expired lock replaced for ${lockKey}`);
+                        return { success: true, lockId };
+                    }
+                } catch (replaceError) {
+                    // Another request beat us to it
+                    console.log(`⚠️ Could not replace expired lock for ${lockKey}`);
+                }
+                
+                console.log(`🔒 Lock already held for ${lockKey}`);
+                return { success: false, lockId: null };
+            }
+            throw error;
+        }
+    } else {
+        // In-memory locking
+        const existingLock = inMemoryLocks.get(lockKey);
+        
+        if (existingLock) {
+            // Check if expired
+            if (now > existingLock.expiresAt) {
+                inMemoryLocks.delete(lockKey);
+            } else {
+                console.log(`🔒 In-memory lock already held for ${lockKey}`);
+                return { success: false, lockId: null };
+            }
+        }
+        
+        inMemoryLocks.set(lockKey, {
+            lockId,
+            expiresAt: now + LOCK_TTL_MS
+        });
+        console.log(`🔒 In-memory lock acquired for ${lockKey}`);
+        return { success: true, lockId };
+    }
+}
+
+/**
+ * Release a slot lock
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @param {string} time - Time in HH:MM format
+ * @param {string} lockId - The lock ID returned from acquireSlotLock
+ */
+async function releaseSlotLock(date, time, lockId) {
+    const lockKey = `${date}_${time}`;
+    
+    const client = await getLockTableClient();
+    
+    if (client) {
+        try {
+            const existingLock = await client.getEntity('LOCK', lockKey);
+            
+            // Only release if we own the lock
+            if (existingLock.lockId === lockId) {
+                await client.deleteEntity('LOCK', lockKey, { etag: existingLock.etag });
+                console.log(`🔓 Lock released for ${lockKey}`);
+            }
+        } catch (error) {
+            // Lock might have expired or been replaced
+            console.log(`⚠️ Could not release lock for ${lockKey}:`, error.message);
+        }
+    } else {
+        // In-memory lock release
+        const existingLock = inMemoryLocks.get(lockKey);
+        if (existingLock && existingLock.lockId === lockId) {
+            inMemoryLocks.delete(lockKey);
+            console.log(`🔓 In-memory lock released for ${lockKey}`);
+        }
+    }
 }
 
 /**
@@ -177,5 +316,8 @@ module.exports = {
     verifyPaymentToken,
     isUsingAzureStorage,
     isSlotBooked,
-    getAllInMemoryBookings
+    getAllInMemoryBookings,
+    acquireSlotLock,
+    releaseSlotLock,
+    LOCK_TTL_MS
 };
