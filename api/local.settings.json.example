@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "",
+    "AZURE_STORAGE_CONNECTION_STRING": "<your-azure-storage-connection-string>",
+    "RESEND_API_KEY": "<your-resend-api-key>",
+    "E2E_TEST_TOKEN": "<generate-with: openssl rand -hex 32>",
+    "BUSINESS_EMAIL": "your-email@example.com",
+    "BUSINESS_NAME": "Your Business Name",
+    "FUNCTIONS_CORS_ALLOWED_ORIGINS": "http://localhost:4321,http://localhost:3000,https://your-domain.com"
+  },
+  "ConnectionStrings": {},
+  "Host": {}
+}

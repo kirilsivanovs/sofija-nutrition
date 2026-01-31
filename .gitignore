@@ -12,10 +12,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
+
+# Local settings with secrets
+local.settings.json
+api/local.settings.json
 
 # macOS-specific files
 .DS_Store
@@ -26,4 +30,11 @@ pnpm-debug.log*
 # Playwright E2E test artifacts
 /playwright-report/
 /playwright/.cache/
-/test-results//.auth/
+/test-results/
+/api/test-results/
+
+# Authentication state (contains tokens!)
+/.auth/
+
+# Coverage reports (may contain code paths)
+/api/coverage/
