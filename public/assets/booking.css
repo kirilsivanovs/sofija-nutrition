@@ -527,3 +527,189 @@
         padding: 40px 25px;
     }
 }
+
+/* =============================================================================
+   Error States & Toast Notifications
+   ============================================================================= */
+
+/* API Error - Inline Error Message */
+.booking-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 30px;
+    text-align: center;
+    min-height: 400px;
+    background: linear-gradient(135deg, #f8faf9 0%, #f0f4f2 100%);
+    border-radius: 16px;
+}
+
+.booking-error .error-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    animation: pulse 2s infinite;
+}
+
+.booking-error .error-icon i {
+    font-size: 40px;
+    color: white;
+}
+
+.booking-error h3 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+
+.booking-error p {
+    color: var(--color-text-light);
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.booking-error .error-email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(27, 67, 50, 0.3);
+    margin-bottom: 16px;
+}
+
+.booking-error .error-email-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(27, 67, 50, 0.4);
+}
+
+.booking-error .error-email-link i {
+    font-size: 18px;
+}
+
+.booking-error .error-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--color-primary);
+    padding: 10px 20px;
+    border: 1px solid var(--color-primary);
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.booking-error .error-retry-btn:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Toast Notification */
+.booking-error-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.booking-error-toast .toast-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid #ef4444;
+    max-width: 380px;
+}
+
+.booking-error-toast .toast-content > i {
+    font-size: 24px;
+    color: #ef4444;
+    flex-shrink: 0;
+}
+
+.booking-error-toast .toast-content div {
+    flex: 1;
+}
+
+.booking-error-toast .toast-content strong {
+    display: block;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+
+.booking-error-toast .toast-content p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.booking-error-toast .toast-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.booking-error-toast .toast-close:hover {
+    color: #333;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@media (max-width: 480px) {
+    .booking-error-toast {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+    }
+    
+    .booking-error-toast .toast-content {
+        max-width: none;
+    }
+    
+    .booking-error {
+        padding: 40px 20px;
+        min-height: 300px;
+    }
+    
+    .booking-error h3 {
+        font-size: 20px;
+    }
+}
