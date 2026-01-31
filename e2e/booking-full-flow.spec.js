@@ -152,18 +152,13 @@ test('Полное бронирование: клиент + подтвержде
   await page.goto('/');
   await page.waitForLoadState('domcontentloaded');
   
-  // Ждём загрузки страницы - используем более надёжный селектор
-  // Проверяем что body имеет контент (страница загрузилась)
-  await page.waitForSelector('body', { state: 'attached' });
-  await page.waitForTimeout(2000); // Даём время на рендеринг
-  
-  // 2. Скроллим к секции бронирования напрямую (надёжнее чем клик по кнопке)
-  await page.goto('/#contact');
-  await page.waitForLoadState('domcontentloaded');
-  
-  // 3. Ждём появления секции контактов (статический HTML)
+  // 2. Ждём появления секции контактов (статический HTML)
   const contactSection = page.locator('#contact');
-  await expect(contactSection).toBeVisible({ timeout: 10000 });
+  await expect(contactSection).toBeAttached({ timeout: 10000 });
+  
+  // 3. Скроллим к секции бронирования
+  await contactSection.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500); // Даём время на плавный скролл
   
   // 4. Ждём появления календаря (динамический контент от JS)
   const calendar = page.locator('#bookingCalendar');
@@ -176,7 +171,7 @@ test('Полное бронирование: клиент + подтвержде
   let monthYear = await page.locator('.calendar-month-year').textContent();
   console.log(`📅 Текущий месяц в календаре: ${monthYear}`);
   
-  // 5. Навигируем к месяцу с доступными датами
+  // 6. Навигируем к месяцу с доступными датами
   const nextMonthBtn = page.locator('.cal-nav-btn.next');
   const currentDate = new Date();
   let currentMonth = currentDate.getMonth();
@@ -203,7 +198,7 @@ test('Полное бронирование: клиент + подтвержде
     console.log(`📅 Сейчас: ${monthYear}`);
   }
   
-  // 6. Ждём появления доступных дней
+  // 7. Ждём появления доступных дней
   await page.waitForTimeout(2000);
   let availableDays = page.locator('#bookingCalendar .day.available');
   let availableCount = await availableDays.count();
@@ -255,33 +250,33 @@ test('Полное бронирование: клиент + подтвержде
     throw new Error('Не найден рабочий день с доступными слотами');
   }
   
-  // 5. Выбираем первый доступный слот времени
+  // 8. Выбираем первый доступный слот времени
   const timeSlot = page.locator('#bookingCalendar .time-slot').first();
   await expect(timeSlot).toBeVisible({ timeout: 5000 });
   const bookedTime = await timeSlot.textContent();
   console.log(`🕐 Бронируем время: ${bookedTime}`);
   await timeSlot.click();
   
-  // 6. Форма должна появиться
+  // 9. Форма должна появиться
   const bookingForm = page.locator('#bookingCalendar .booking-form-section');
   await expect(bookingForm).toBeVisible({ timeout: 5000 });
   
-  // 7. Скроллим к форме чтобы все элементы были видны
+  // 10. Скроллим к форме чтобы все элементы были видны
   await bookingForm.scrollIntoViewIfNeeded();
   
-  // 8. Выбираем формат консультации (кликаем на опцию "Klātienē" в форме)
+  // 11. Выбираем формат консультации (кликаем на опцию "Klātienē" в форме)
   await bookingForm.getByText('Klātienē', { exact: true }).click();
   
-  // 9. Заполняем обязательные поля - уникальное имя для поиска
+  // 12. Заполняем обязательные поля - уникальное имя для поиска
   const testUserName = `E2E Test ${Date.now()}`;
   await page.locator('#bookingCalendar input[name="name"]').fill(testUserName);
   await page.locator('#bookingCalendar input[name="email"]').fill('e2e-test@example.com');
   
-  // 10. Нажимаем кнопку подтверждения
+  // 13. Нажимаем кнопку подтверждения
   const submitBtn = page.locator('#bookingCalendar .booking-submit-btn');
   await submitBtn.click();
   
-  // 11. Проверяем появление модального окна успеха
+  // 14. Проверяем появление модального окна успеха
   const successModal = page.locator('#bookingCalendar .booking-success-modal');
   await expect(successModal).toBeVisible({ timeout: 10000 });
   
