@@ -4,6 +4,7 @@ const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddl
 const { sendCancellationNotification } = require('../services/emailService');
 const { generateCancellationEmailHTML } = require('../templates/emailTemplates');
 const { getTranslation, servicePrices } = require('../translations');
+const { buildStatusFilter } = require('../utils/odataSanitizer');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 
@@ -32,8 +33,10 @@ app.http('adminGetBookings', {
             const bookings = [];
             const queryOptions = {};
             
-            if (statusFilter !== 'all') {
-                queryOptions.filter = `status eq '${statusFilter}'`;
+            // Use sanitized filter to prevent OData injection
+            const statusFilterQuery = buildStatusFilter(statusFilter);
+            if (statusFilterQuery) {
+                queryOptions.filter = statusFilterQuery;
             }
 
             for await (const entity of tableClient.listEntities(queryOptions)) {

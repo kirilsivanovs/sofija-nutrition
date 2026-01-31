@@ -1,6 +1,7 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
 const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
+const { sanitizeODataValue } = require('../utils/odataSanitizer');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const SERVICES_TABLE = 'Services'; // Понятное название таблицы
@@ -237,11 +238,21 @@ app.http('adminGetServiceHistory', {
 
         try {
             const serviceId = request.params.serviceId;
+            
+            // Sanitize serviceId to prevent OData injection
+            const sanitizedServiceId = sanitizeODataValue(serviceId);
+            if (!sanitizedServiceId) {
+                return {
+                    status: 400,
+                    jsonBody: { success: false, error: 'Invalid service ID format' }
+                };
+            }
+            
             const historyTableClient = TableClient.fromConnectionString(connectionString, 'ServicesHistory');
             const history = [];
             
-            // Получаем все записи для этой услуги
-            const queryOptions = { filter: `PartitionKey eq '${serviceId}'` };
+            // Получаем все записи для этой услуги (using sanitized value)
+            const queryOptions = { filter: `PartitionKey eq '${sanitizedServiceId}'` };
             
             for await (const entity of historyTableClient.listEntities({ queryOptions })) {
                 history.push({
