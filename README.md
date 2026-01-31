@@ -1069,26 +1069,16 @@ npm run test:e2e:report
 
 ### 🔒 1. Безопасность (Security)
 
-#### 🔴 CRITICAL - Защита main branch от прямых пушей
+#### ✅ DONE - Защита main branch от прямых пушей
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ Выполнено
 
-**Проблема:** Сейчас можно делать `git push origin main` без проверок, что опасно для production.
-
-**Решение:** Настроить GitHub Branch Protection Rules.
-
-**Шаги:**
-1. GitHub → Settings → Branches → Add rule
-2. Branch name pattern: `main`
-3. Включить:
-   - ✅ Require a pull request before merging
-   - ✅ Require approvals (1 если работает команда)
-   - ✅ Require status checks to pass before merging
-     - Выбрать: `test_api`, `test_e2e`
-   - ✅ Require branches to be up to date before merging
-   - ✅ Do not allow bypassing the above settings
-
-**Результат:** Невозможно запушить в main без прохождения CI/CD.
+**Реализовано:**
+- ✅ Require a pull request before merging
+- ✅ Require status checks: "Build and Deploy"
+- ✅ Require branches to be up to date
+- ✅ enforce_admins: true (даже админ не может обойти правила)
+- ✅ delete_branch_on_merge: true (автоудаление feature веток)
 
 ---
 
@@ -1156,11 +1146,18 @@ if (!validation.valid) {
 
 ---
 
-#### 🟠 HIGH - Защита от двойного бронирования (Race Condition)
+#### ✅ DONE - Защита от двойного бронирования (Race Condition)
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ Реализовано
 
-**Проблема:** Два пользователя могут одновременно забронировать один слот.
+**Решение реализовано в:** `api/src/services/bookingRepository.js`
+
+- `acquireSlotLock(date, time)` — создаёт LOCK запись с ETag
+- `releaseSlotLock(date, time)` — удаляет блокировку
+- TTL 30 секунд для автоматического освобождения
+- 13 тестов в `api/tests/slotLocking.test.js`
+
+**Проблема (решена):** Два пользователя могут одновременно забронировать один слот.
 
 **Решение:** Использовать Azure Table Storage ETag для оптимистичной блокировки:
 
@@ -1188,19 +1185,21 @@ async function lockTimeSlot(date, time) {
 
 ---
 
-#### 🟠 HIGH - HTTPS принудительно
+#### ✅ DONE - HTTPS и Security Headers
 
-**Статус:** ✅ Частично (Azure SWA автоматически)
+**Статус:** ✅ Полностью реализовано
 
-**Дополнительно:** Добавить HSTS header в staticwebapp.config.json:
+**Реализовано в:** `public/staticwebapp.config.json`
 
 ```json
 "globalHeaders": {
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "X-XSS-Protection": "1; mode=block",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; ..."
 }
 ```
 
@@ -1219,11 +1218,18 @@ async function lockTimeSlot(date, time) {
 
 ### 🏗️ 2. Архитектура (Architecture)
 
-#### 🟠 HIGH - Централизованная обработка ошибок
+#### ✅ DONE - Централизованная обработка ошибок
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ Реализовано
 
-**Проблема:** Каждая функция имеет свой try/catch с дублированием кода.
+**Реализовано в:** `api/src/utils/errorHandler.js`
+
+- `AppError` класс для operational errors
+- `withErrorHandling()` wrapper для Azure Functions
+- `Errors` фабрика: `validation()`, `unauthorized()`, `slotTaken()`, `notFound()`
+- 25 тестов в `api/tests/errorHandler.test.js`
+
+**Проблема (решена):** Каждая функция имеет свой try/catch с дублированием кода.
 
 **Решение:** Создать middleware для обработки ошибок:
 
@@ -1288,58 +1294,86 @@ app.http('createBooking', {
 
 #### 🟠 HIGH - Слой сервисов (Service Layer)
 
-**Статус:** ⏳ TODO
+**Статус:** ✅ DONE
 
 **Проблема:** Бизнес-логика смешана с HTTP handlers. Сложно тестировать и переиспользовать.
 
-**Решение:** Выделить бизнес-логику в отдельные сервисы:
+**Решение:** Выделена бизнес-логика в отдельные сервисы:
 
 ```
 api/src/
 ├── functions/           # HTTP handlers (тонкие, только routing)
-│   └── createBooking.js # Парсинг request, вызов service, формирование response
+│   ├── createBooking.js # ~70 строк (было 234) - только HTTP concerns
+│   └── getAvailability.js # ~40 строк (было 380) - только HTTP concerns
 ├── services/            # Бизнес-логика
-│   ├── bookingService.js     # createBooking(), cancelBooking()
-│   ├── availabilityService.js # getAvailableSlots()
-│   └── notificationService.js # sendConfirmation(), sendReminder()
-├── repositories/        # Работа с данными
-│   └── bookingRepository.js
+│   ├── bookingService.js     # createBooking(), confirmPayment(), cancelBooking(), BookingError
+│   ├── availabilityService.js # getAvailability(), isSlotAvailable(), getServiceSettings()
+│   ├── bookingRepository.js   # CRUD операции с Azure Table Storage
+│   ├── emailService.js        # Отправка email через Resend
+│   ├── pdfService.js          # Генерация PDF счетов
+│   └── latvianHolidays.js     # Проверка праздничных дней
 └── utils/               # Хелперы
 ```
 
-**Пример refactoring:**
+**Что сделано:**
+
+1. **BookingService** (`api/src/services/bookingService.js`):
+   - `createBooking(input, options)` - полный флоу создания бронирования
+   - `confirmPayment(token)` - подтверждение оплаты
+   - `cancelBooking(id, reason)` - отмена с email уведомлением
+   - `BookingError` - типизированные ошибки с кодами и локализацией
+   - `BookingErrorCodes` - константы ошибок (SLOT_ALREADY_BOOKED, WEEKEND_NOT_ALLOWED и т.д.)
+
+2. **AvailabilityService** (`api/src/services/availabilityService.js`):
+   - `getAvailability({ specificDate, daysAhead })` - получение доступных слотов
+   - `isSlotAvailable(date, time)` - проверка конкретного слота
+   - `getServiceSettings()` - загрузка услуг с кэшированием (5 мин TTL)
+   - `getScheduleSettings()` - расписание работы
+   - `getBlockedDates()` / `getVacationPeriods()` - заблокированные даты
+
+3. **HTTP Handlers** стали тонкими (~70 строк вместо 234):
+   - Парсинг request
+   - Rate limiting
+   - Валидация
+   - Вызов сервиса
+   - Формирование response
+
+4. **Тесты** (`api/tests/bookingService.test.js`, `api/tests/availabilityService.test.js`):
+   - 23 новых теста для сервисов
+   - Покрытие BookingError, BookingErrorCodes
+   - Покрытие generateSlotsFromSchedule, isDateInVacation
+
+**Пример использования:**
 
 ```javascript
-// api/src/services/bookingService.js
-class BookingService {
-    constructor(bookingRepo, notificationService, availabilityService) {
-        this.bookingRepo = bookingRepo;
-        this.notificationService = notificationService;
-        this.availabilityService = availabilityService;
-    }
-    
-    async createBooking(bookingData) {
-        // 1. Валидация
-        this.validateBookingData(bookingData);
+// api/src/functions/createBooking.js - тонкий HTTP handler
+const { createBooking, BookingError } = require('../services/bookingService');
+
+app.http('createBooking', {
+    handler: async (request, context) => {
+        // Rate limiting и валидация (HTTP concerns)
+        const rateCheck = checkRateLimit(request, 'createBooking');
+        if (!rateCheck.allowed) return rateLimitExceededResponse(rateCheck);
         
-        // 2. Проверка доступности
-        const isAvailable = await this.availabilityService.isSlotAvailable(
-            bookingData.date, 
-            bookingData.time
-        );
-        if (!isAvailable) {
-            throw new AppError('Slot not available', 409, 'SLOT_TAKEN');
+        const validation = validateBookingInput(await request.json());
+        if (!validation.valid) return validationErrorResponse(validation.errors);
+
+        try {
+            // Делегирование бизнес-логики сервису
+            const result = await createBooking(validation.data, {
+                onLog: (msg) => context.log(msg),
+                onError: (msg) => context.log.error(msg)
+            });
+            
+            return { status: 200, jsonBody: result };
+        } catch (error) {
+            if (error instanceof BookingError) {
+                return error.toResponse(); // { status: 409, jsonBody: { code: 'SLOT_TAKEN', ... } }
+            }
+            return { status: 500, jsonBody: { error: 'Internal error' } };
         }
-        
-        // 3. Создание бронирования
-        const booking = await this.bookingRepo.save(bookingData);
-        
-        // 4. Уведомления
-        await this.notificationService.sendConfirmation(booking);
-        
-        return booking;
     }
-}
+});
 ```
 
 ---
