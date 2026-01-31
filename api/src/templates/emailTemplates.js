@@ -4,6 +4,7 @@
  */
 
 const config = require('../config');
+const { escapeHtml } = require('../utils/validation');
 
 const { colors, branding } = config;
 
@@ -99,20 +100,25 @@ function bookingDetailsCard(items) {
  * Generate client booking confirmation email
  */
 function generateClientEmailHTML(t, { name, bookingId, serviceName, formatLabel, date, time, price }) {
+    // Escape user-provided data to prevent XSS
+    const safeName = escapeHtml(name);
+    const safeServiceName = escapeHtml(serviceName);
+    const safeFormatLabel = escapeHtml(formatLabel);
+    
     const content = `
         ${emailHeader(t.emailSubtitle)}
         <tr>
             <td style="padding: 30px 20px;">
                 <h2 style="margin: 0 0 15px 0; color: ${colors.primary}; font-size: 22px; font-weight: 600; text-align: center;">${t.emailThankYou}</h2>
-                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(name)}</p>
+                <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(safeName)}</p>
                 <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">${t.emailConfirmed}</p>
                 
                 ${bookingDetailsCard([
-                    { label: t.emailBookingId, value: bookingId },
-                    { label: t.emailService, value: serviceName },
-                    { label: t.emailFormat, value: formatLabel },
-                    { label: t.emailDate, value: date },
-                    { label: t.emailTime, value: time },
+                    { label: t.emailBookingId, value: escapeHtml(bookingId) },
+                    { label: t.emailService, value: safeServiceName },
+                    { label: t.emailFormat, value: safeFormatLabel },
+                    { label: t.emailDate, value: escapeHtml(date) },
+                    { label: t.emailTime, value: escapeHtml(time) },
                     { label: t.emailPrice, value: price > 0 ? '€' + price : 'FREE', highlight: true }
                 ])}
                 
@@ -131,7 +137,7 @@ function generateClientEmailHTML(t, { name, bookingId, serviceName, formatLabel,
         </tr>
         ${emailFooter()}`;
     
-    return emailWrapper(content, { title: t.emailSubject(bookingId) });
+    return emailWrapper(content, { title: t.emailSubject(escapeHtml(bookingId)) });
 }
 
 /**
@@ -141,6 +147,17 @@ function generateAdminEmailHTML(booking, confirmUrl) {
     const formatLabel = booking.consultationFormat === 'online' ? 'Attālināti' : 'Klātienē';
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     const formatColor = booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50';
+    
+    // Escape all user-provided data
+    const safeName = escapeHtml(booking.name);
+    const safeEmail = escapeHtml(booking.email);
+    const safePhone = escapeHtml(booking.phone || 'Nav norādīts');
+    const safeNotes = booking.notes ? escapeHtml(booking.notes) : '';
+    const safeId = escapeHtml(booking.id);
+    const safeServiceName = escapeHtml(booking.serviceName);
+    const safeDate = escapeHtml(booking.date);
+    const safeTime = escapeHtml(booking.time);
+    const safeLanguage = escapeHtml((booking.language || 'lv').toUpperCase());
     
     const content = `
     <tr>
@@ -153,17 +170,17 @@ function generateAdminEmailHTML(booking, confirmUrl) {
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
                 <tr>
                     <td style="padding: 20px;">
-                        ${adminDetailRow('Numurs', booking.id, { bold: true, color: colors.primary })}
-                        ${adminDetailRow('Klients', booking.name)}
-                        ${adminDetailRow('E-pasts', booking.email, { wordBreak: true })}
-                        ${adminDetailRow('Telefons', booking.phone || 'Nav norādīts')}
-                        ${adminDetailRow('Pakalpojums', booking.serviceName)}
+                        ${adminDetailRow('Numurs', safeId, { bold: true, color: colors.primary })}
+                        ${adminDetailRow('Klients', safeName)}
+                        ${adminDetailRow('E-pasts', safeEmail, { wordBreak: true })}
+                        ${adminDetailRow('Telefons', safePhone)}
+                        ${adminDetailRow('Pakalpojums', safeServiceName)}
                         ${adminDetailRow('Formāts', `${formatIcon} ${formatLabel}`, { color: formatColor })}
-                        ${adminDetailRow('Datums', booking.date)}
-                        ${adminDetailRow('Laiks', booking.time)}
+                        ${adminDetailRow('Datums', safeDate)}
+                        ${adminDetailRow('Laiks', safeTime)}
                         ${adminDetailRow('Summa', booking.price > 0 ? '€' + booking.price : 'BEZMAKSAS', { bold: true, color: colors.primary, size: '20px' })}
-                        ${adminDetailRow('Valoda', booking.language.toUpperCase(), { noBorder: !booking.notes })}
-                        ${booking.notes ? adminDetailRow('Piezīmes', booking.notes, { noBorder: true }) : ''}
+                        ${adminDetailRow('Valoda', safeLanguage, { noBorder: !booking.notes })}
+                        ${safeNotes ? adminDetailRow('Piezīmes', safeNotes, { noBorder: true }) : ''}
                     </td>
                 </tr>
             </table>
@@ -218,6 +235,12 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
     const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     
+    // Escape all user-provided data
+    const safeServiceName = escapeHtml(booking.serviceName);
+    const safeDate = escapeHtml(booking.date);
+    const safeTime = escapeHtml(booking.time);
+    const safeId = escapeHtml(booking.id);
+    
     const content = `
     <tr>
         <td style="background: linear-gradient(135deg, ${colors.success} 0%, #45a049 100%); padding: 35px 20px; text-align: center;">
@@ -233,7 +256,7 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailService}</p>
-                        <p style="margin: 0 0 20px 0; color: ${colors.primary}; font-size: 18px; font-weight: 600;">${booking.serviceName}</p>
+                        <p style="margin: 0 0 20px 0; color: ${colors.primary}; font-size: 18px; font-weight: 600;">${safeServiceName}</p>
                         
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailFormat}</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
@@ -244,11 +267,11 @@ function generatePaymentConfirmedEmailHTML(t, booking) {
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
                                     <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailDate}</p>
-                                    <p style="margin: 0; color: ${colors.primary}; font-size: 20px; font-weight: 700;">${booking.date}</p>
+                                    <p style="margin: 0; color: ${colors.primary}; font-size: 20px; font-weight: 700;">${safeDate}</p>
                                 </td>
                                 <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(45, 90, 74, 0.2);">
                                     <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailTime}</p>
-                                    <p style="margin: 0; color: ${colors.primary}; font-size: 20px; font-weight: 700;">${booking.time}</p>
+                                    <p style="margin: 0; color: ${colors.primary}; font-size: 20px; font-weight: 700;">${safeTime}</p>
                                 </td>
                             </tr>
                         </table>
@@ -277,6 +300,13 @@ function generateCancellationEmailHTML(t, booking) {
     const formatLabel = booking.consultationFormat === 'online' ? t.formatOnline : t.formatInPerson;
     const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
     
+    // Escape all user-provided data
+    const safeName = escapeHtml(booking.name);
+    const safeId = escapeHtml(booking.id);
+    const safeServiceName = escapeHtml(booking.serviceName);
+    const safeDate = escapeHtml(booking.date);
+    const safeTime = escapeHtml(booking.time);
+    
     const content = `
     <tr>
         <td style="background: linear-gradient(135deg, ${colors.error} 0%, #c62828 100%); padding: 35px 20px; text-align: center;">
@@ -286,7 +316,7 @@ function generateCancellationEmailHTML(t, booking) {
     </tr>
     <tr>
         <td style="padding: 30px 20px;">
-            <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(booking.name)}</p>
+            <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">${t.emailGreeting(safeName)}</p>
             <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">${t.cancellationText}</p>
             <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">${t.cancellationDetails}</p>
             
@@ -294,10 +324,10 @@ function generateCancellationEmailHTML(t, booking) {
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailBookingId}</p>
-                        <p style="margin: 0 0 20px 0; color: ${colors.primary}; font-size: 18px; font-weight: 600;">${booking.id}</p>
+                        <p style="margin: 0 0 20px 0; color: ${colors.primary}; font-size: 18px; font-weight: 600;">${safeId}</p>
                         
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailService}</p>
-                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">${booking.serviceName}</p>
+                        <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">${safeServiceName}</p>
                         
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">${t.emailFormat}</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
@@ -308,11 +338,11 @@ function generateCancellationEmailHTML(t, booking) {
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
                                     <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailDate}</p>
-                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${booking.date}</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${safeDate}</p>
                                 </td>
                                 <td width="50%" style="text-align: center; padding: 10px; border-left: 2px solid rgba(0, 0, 0, 0.1);">
                                     <p style="margin: 0 0 5px 0; color: #666; font-size: 12px;">${t.emailTime}</p>
-                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${booking.time}</p>
+                                    <p style="margin: 0; color: #999; font-size: 18px; font-weight: 500; text-decoration: line-through;">${safeTime}</p>
                                 </td>
                             </tr>
                         </table>

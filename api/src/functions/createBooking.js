@@ -2,6 +2,8 @@ const { app } = require('@azure/functions');
 const config = require('../config');
 const translations = require('../translations');
 const { addCorsHeaders } = require('../utils/cors');
+const { checkRateLimit, rateLimitExceededResponse, addRateLimitHeaders } = require('../utils/rateLimiter');
+const { validateBookingInput, validationErrorResponse } = require('../utils/validation');
 const { saveBooking, generateBookingId, generatePaymentToken, isSlotBooked } = require('../services/bookingRepository');
 const { sendClientConfirmation, sendAdminNotification, isConfigured } = require('../services/emailService');
 const { generateInvoicePDF } = require('../services/pdfService');
@@ -16,16 +18,28 @@ app.http('createBooking', {
         context.log('Processing booking request');
         
         try {
-            const body = await request.json();
-            const { name, email, phone, date, time, service, language = 'lv', consultationFormat = 'online' } = body;
-
-            // Validation
-            if (!name || !email || !date || !time || !service) {
-                return {
-                    status: 400,
-                    jsonBody: { error: 'Missing required fields: name, email, date, time, service' }
-                };
+            // Rate limiting
+            const rateCheck = checkRateLimit(request, 'createBooking');
+            if (!rateCheck.allowed) {
+                context.log.warn('Rate limit exceeded for createBooking');
+                return rateLimitExceededResponse(rateCheck);
             }
+
+            const body = await request.json();
+            
+            // Input validation & sanitization
+            const validation = validateBookingInput({
+                ...body,
+                serviceId: body.service // map service -> serviceId
+            });
+            
+            if (!validation.valid) {
+                context.log.warn('Validation failed:', validation.errors);
+                return validationErrorResponse(validation.errors);
+            }
+            
+            // Use sanitized data
+            const { name, email, phone, date, time, serviceId, consultationFormat, notes, language } = validation.data;
 
             // Check if date is a weekend
             const bookingDate = new Date(date);
@@ -78,6 +92,9 @@ app.http('createBooking', {
             // Generate booking data
             const bookingId = generateBookingId();
             const paymentToken = generatePaymentToken(bookingId);
+            
+            // Map serviceId back to service for compatibility
+            const service = serviceId;
             const price = config.servicePrices[service] || 65;
             
             // Get localized service name and format label
