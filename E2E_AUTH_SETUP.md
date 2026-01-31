@@ -2,144 +2,125 @@
 
 ## Проблема
 
-E2E тесты требуют авторизации в админ-панели через Microsoft OAuth. В CI окружении невозможно выполнить интерактивную авторизацию, и после редиректа Microsoft приложение не может подключиться к localhost.
+E2E тесты требуют авторизации для выполнения админ-действий (подтверждение/отмена бронирований). 
+Стандартная Microsoft OAuth авторизация не работает в CI из-за:
+- Windows Hello/Passkey нативных диалогов
+- Невозможности интерактивной авторизации в headless режиме
 
-## Решение: Authentication State
+## Решение: API Token Authentication
 
-Используем подход **Authentication State** от Playwright - авторизуемся один раз локально, сохраняем сессию и переиспользуем её во всех тестах.
+E2E тесты используют **двойной подход**:
+1. **Клиентская часть** (бронирование) - тестируется через UI
+2. **Админ-часть** (подтверждение/отмена) - тестируется **напрямую через API** с E2E токеном
 
 ### Преимущества
-- ✅ Тесты запускаются быстрее (нет повторных авторизаций)
-- ✅ Работает в CI без интерактивной авторизации
-- ✅ Нет проблем с редиректами на localhost
-- ✅ Более стабильные тесты
+- ✅ Токен никогда не истекает (пока не сменишь вручную)
+- ✅ Полностью автоматизированные тесты без ручного вмешательства
+- ✅ Безопасно - токен хранится в секретах
+- ✅ Обходит SWA auth (работает напрямую с API)
+- ✅ Тестируется и UI (клиент) и API (админ)
 
-## Настройка
+## Настройка (одноразовая)
 
-### 1. Локальная подготовка Auth State
-
-Запустите один раз локально в headed режиме:
+### Шаг 1: Сгенерируйте токен
 
 ```bash
-npx playwright test e2e/auth.setup.js --headed
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-Это:
-1. Откроет браузер
-2. Перейдёт в админку
-3. Попросит вас войти вручную через Microsoft
-4. Сохранит сессию в `.auth/admin.json`
+Пример результата: `f1b101f3ac3dbb3bda8204f1892a031ebbaccf4c5a6e023e348ed3e517d8abc0`
 
-### 2. Настройка GitHub Actions
+### Шаг 2: Добавьте токен в Azure Function App
 
-#### Шаг 1: Получите содержимое auth state
+1. Откройте [Azure Portal](https://portal.azure.com)
+2. Перейдите в **Function App** → `sofija-nutrition-api`
+3. **Settings** → **Environment variables** (или Configuration)
+4. Добавьте переменную:
+   - **Name:** `E2E_TEST_TOKEN`
+   - **Value:** `<ваш токен из шага 1>`
+5. Нажмите **Save** и подождите перезапуска
 
-После выполнения setup скрипта, скопируйте содержимое файла:
+### Шаг 3: Добавьте токен в GitHub Secrets
 
-**Windows PowerShell:**
-```powershell
-Get-Content .auth/admin.json | Set-Clipboard
-```
+1. Откройте репозиторий на GitHub
+2. **Settings** → **Secrets and variables** → **Actions**
+3. Нажмите **New repository secret**
+4. Добавьте:
+   - **Name:** `E2E_TEST_TOKEN`
+   - **Secret:** `<тот же токен из шага 1>`
+5. Нажмите **Add secret**
 
-**macOS/Linux:**
+## Готово! 🎉
+
+Теперь E2E тесты будут автоматически использовать токен:
+
 ```bash
-cat .auth/admin.json | pbcopy  # macOS
-cat .auth/admin.json | xclip -selection clipboard  # Linux
-```
+# Локально (с токеном в env)
+E2E_TEST_TOKEN=<токен> npm run test:e2e
 
-#### Шаг 2: Добавьте GitHub Secret
-
-1. Откройте Settings → Secrets and variables → Actions
-2. Нажмите "New repository secret"
-3. Name: `AUTH_STATE`
-4. Value: Вставьте содержимое `.auth/admin.json`
-5. Сохраните
-
-#### Шаг 3: Обновите GitHub Workflow
-
-В вашем `.github/workflows/*.yml` файле добавьте environment variable:
-
-```yaml
-- name: Run E2E Tests
-  env:
-    AUTH_STATE: ${{ secrets.AUTH_STATE }}
-  run: npm run test:e2e
+# В CI - токен берётся из GitHub Secret автоматически
 ```
 
 ## Как это работает
 
-### Локально
-
-1. `playwright.config.js` определяет setup проект
-2. Перед запуском тестов выполняется `e2e/auth.setup.js`
-3. Setup проверяет наличие `.auth/admin.json`
-4. Если файл существует - переиспользует его
-5. Если нет - запрашивает интерактивную авторизацию
-6. Все тесты получают авторизованную сессию через `storageState`
-
-### В CI (GitHub Actions)
-
-1. `e2e/auth.setup.js` получает `AUTH_STATE` из переменной окружения
-2. Записывает её в `.auth/admin.json`
-3. Все тесты используют этот файл через `storageState`
-4. Microsoft OAuth не вызывается - тесты сразу авторизованы
-
-## Обновление Auth State
-
-Когда сессия Microsoft истечёт (обычно через несколько недель/месяцев), вам нужно:
-
-1. Запустить локально: `npx playwright test e2e/auth.setup.js --headed`
-2. Войти заново
-3. Обновить GitHub Secret `AUTH_STATE` новым содержимым `.auth/admin.json`
-
-## Структура файлов
-
 ```
-e2e/
-  ├── auth.setup.js          # Setup проект для сохранения auth state
-  └── booking-full-flow.spec.js  # Тест использует сохранённую сессию
-
-.auth/
-  └── admin.json             # Сохранённая сессия (в .gitignore)
-
-playwright.config.js         # Конфигурация с setup проектом
+┌─────────────────────────────────────────────────────────────────┐
+│                        E2E ТЕСТ                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  ЧАСТЬ 1: Клиентское бронирование (UI)                         │
+│  ├─ Открывает сайт в браузере                                   │
+│  ├─ Выбирает дату/время                                         │
+│  ├─ Заполняет форму                                             │
+│  └─ Отправляет бронирование                                     │
+├─────────────────────────────────────────────────────────────────┤
+│  ЧАСТЬ 2: Админ-действия (API с X-E2E-Token)                   │
+│  ├─ GET /api/dashboard/bookings → находит бронирование          │
+│  ├─ PATCH /api/dashboard/bookings/{id} → подтверждает           │
+│  └─ PATCH /api/dashboard/bookings/{id} → отменяет               │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Безопасность
 
-⚠️ **ВАЖНО:**
-- `.auth/admin.json` содержит cookies и токены авторизации
-- Файл добавлен в `.gitignore` - НЕ коммитьте его в репозиторий
-- В CI используйте GitHub Secrets для безопасной передачи
-- Регулярно обновляйте auth state
+- ✅ Токен хранится только в Azure и GitHub Secrets
+- ✅ API проверяет токен через middleware (`authMiddleware.js`)
+- ✅ Продакшн админ-панель остаётся защищённой Microsoft OAuth
+- ✅ Токен можно сменить в любой момент
+
+## Смена токена
+
+Если нужно обновить токен:
+
+1. Сгенерируйте новый: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+2. Обновите в Azure Function App Settings
+3. Обновите в GitHub Secrets
 
 ## Troubleshooting
 
-### Тест падает с ошибкой авторизации в CI
+### Тесты пропускают админ-часть
 
-**Причина:** Auth state не настроен или истёк
+Если видите "E2E_TEST_TOKEN не настроен - пропускаем админ-часть теста":
+- Проверьте что токен добавлен в Azure Function App
+- Проверьте что токен добавлен в GitHub Secrets
+- Подождите ~2 минуты после добавления в Azure (нужен restart)
 
-**Решение:**
-1. Проверьте наличие GitHub Secret `AUTH_STATE`
-2. Проверьте workflow файл - добавлена ли переменная окружения
-3. Обновите auth state локально и обновите секрет
+### API возвращает 401 Unauthorized
 
-### Локально тест просит авторизацию каждый раз
+- Проверьте что токены совпадают в Azure и в GitHub/локально
+- Токен передаётся в header `X-E2E-Token`
 
-**Причина:** Файл `.auth/admin.json` не найден или повреждён
+### Локальное тестирование
 
-**Решение:**
 ```bash
-npx playwright test e2e/auth.setup.js --headed
+# Установите токен в переменную окружения
+$env:E2E_TEST_TOKEN = "ваш-токен"
+
+# Запустите тесты
+npm run test:e2e
 ```
-
-### Ошибка "element(s) not found" на password input
-
-**Причина:** Это старая проблема, которая решена через auth state
-
-**Решение:** Используйте новый подход с auth state - проблема исчезнет
 
 ## Дополнительные ресурсы
 
 - [Playwright Authentication Docs](https://playwright.dev/docs/auth)
+- [Azure Functions Environment Variables](https://learn.microsoft.com/en-us/azure/azure-functions/functions-how-to-use-azure-function-app-settings)
 - [GitHub Actions Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)

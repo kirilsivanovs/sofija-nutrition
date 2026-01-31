@@ -1586,6 +1586,32 @@ import Layout from '../../layouts/Layout.astro';
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
             : 'https://sofija-nutrition-api.azurewebsites.net/api';
+        
+        // E2E Test Token Support
+        // Если в URL есть ?e2e_token=xxx, проверяем его и сохраняем
+        const urlParams = new URLSearchParams(window.location.search);
+        const e2eToken = urlParams.get('e2e_token') || sessionStorage.getItem('e2e_token');
+        
+        if (e2eToken) {
+            sessionStorage.setItem('e2e_token', e2eToken);
+            // Убираем токен из URL для безопасности
+            if (urlParams.has('e2e_token')) {
+                urlParams.delete('e2e_token');
+                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                window.history.replaceState({}, '', newUrl);
+            }
+        }
+        
+        // Функция для добавления токена к API запросам
+        window.getAuthHeaders = function() {
+            const headers = { 'Content-Type': 'application/json' };
+            const token = sessionStorage.getItem('e2e_token');
+            if (token) {
+                headers['X-E2E-Token'] = token;
+            }
+            return headers;
+        };
+        
         let currentDate = new Date();
         let allBookings = [];
         let holidays = {};
@@ -1599,11 +1625,28 @@ import Layout from '../../layouts/Layout.astro';
             return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
         }
 
-        fetch('/.auth/me').then(r => r.json()).then(data => {
-            if (data.clientPrincipal) {
-                document.getElementById('user-info').textContent = data.clientPrincipal.userDetails || data.clientPrincipal.userId;
-            }
-        }).catch(() => {});
+        // Проверяем авторизацию - Microsoft OAuth или E2E Token
+        const e2eTokenStored = sessionStorage.getItem('e2e_token');
+        if (e2eTokenStored) {
+            // E2E режим - проверяем токен через API
+            fetch(API_BASE + '/test/auth', {
+                headers: { 'X-E2E-Token': e2eTokenStored }
+            }).then(r => r.json()).then(data => {
+                if (data.clientPrincipal) {
+                    document.getElementById('user-info').textContent = data.clientPrincipal.userDetails + ' (E2E)';
+                }
+            }).catch(() => {
+                // Токен невалиден - очищаем
+                sessionStorage.removeItem('e2e_token');
+            });
+        } else {
+            // Стандартная Microsoft авторизация
+            fetch('/.auth/me').then(r => r.json()).then(data => {
+                if (data.clientPrincipal) {
+                    document.getElementById('user-info').textContent = data.clientPrincipal.userDetails || data.clientPrincipal.userId;
+                }
+            }).catch(() => {});
+        }
 
         const tabBtns = document.querySelectorAll('.admin-tab');
         const tabContents = document.querySelectorAll('.admin-content');
