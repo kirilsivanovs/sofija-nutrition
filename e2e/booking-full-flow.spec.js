@@ -123,11 +123,29 @@ test('Полное бронирование: клиент + подтвержде
   
   // 4. Ждём загрузки доступных дат (API)
   // Ждём пока появится хотя бы один доступный день
-  await page.waitForTimeout(2000); // Даём время на загрузку API
+  await page.waitForTimeout(3000); // Даём время на загрузку API
   
-  // Выбираем первый рабочий день (пропускаем выходные)
-  // API не возвращает слоты для выходных, поэтому ищем день с data-date, который есть в API
-  const availableDays = page.locator('#bookingCalendar .day.available');
+  // Если сегодня выходной (суббота/воскресенье), переключаемся на следующий месяц
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
+    console.log('📅 Сегодня выходной, проверяем следующую неделю...');
+  }
+  
+  // Проверяем доступные дни, если нет - переключаем месяц
+  let availableDays = page.locator('#bookingCalendar .day.available');
+  let availableCount = await availableDays.count();
+  
+  if (availableCount === 0) {
+    console.log('📅 В текущем месяце нет доступных дней, переключаем на следующий...');
+    const nextMonthBtn = page.locator('#bookingCalendar button:has-text("›"), #bookingCalendar .nav-btn.next, #bookingCalendar [class*="next"]').first();
+    if (await nextMonthBtn.isVisible()) {
+      await nextMonthBtn.click();
+      await page.waitForTimeout(2000); // Ждём загрузку нового месяца
+      availableDays = page.locator('#bookingCalendar .day.available');
+    }
+  }
+  
   await expect(availableDays.first()).toBeVisible({ timeout: 15000 });
   
   // Кликаем на первый доступный день и проверяем, что есть слоты
