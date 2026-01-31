@@ -121,29 +121,35 @@ test('Полное бронирование: клиент + подтвержде
   const calendar = page.locator('#bookingCalendar');
   await expect(calendar).toBeVisible({ timeout: 10000 });
   
-  // 4. Ждём загрузки доступных дат (API)
-  // Ждём пока появится хотя бы один доступный день
-  await page.waitForTimeout(3000); // Даём время на загрузку API
+  // 4. Ждём загрузки доступных дат (API) - увеличиваем время ожидания для CI
+  await page.waitForTimeout(5000); // Даём время на загрузку API и навигацию к первому доступному месяцу
   
-  // Если сегодня выходной (суббота/воскресенье), переключаемся на следующий месяц
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  if (dayOfWeek === 0 || dayOfWeek === 6) {
-    console.log('📅 Сегодня выходной, проверяем следующую неделю...');
-  }
+  // Логируем текущий месяц для отладки
+  const monthYear = await page.locator('.calendar-month-year').textContent();
+  console.log(`📅 Текущий месяц в календаре: ${monthYear}`);
   
-  // Проверяем доступные дни, если нет - переключаем месяц
+  // Проверяем доступные дни
   let availableDays = page.locator('#bookingCalendar .day.available');
   let availableCount = await availableDays.count();
+  console.log(`📅 Найдено доступных дней: ${availableCount}`);
   
-  if (availableCount === 0) {
-    console.log('📅 В текущем месяце нет доступных дней, переключаем на следующий...');
-    const nextMonthBtn = page.locator('#bookingCalendar button:has-text("›"), #bookingCalendar .nav-btn.next, #bookingCalendar [class*="next"]').first();
-    if (await nextMonthBtn.isVisible()) {
-      await nextMonthBtn.click();
-      await page.waitForTimeout(2000); // Ждём загрузку нового месяца
-      availableDays = page.locator('#bookingCalendar .day.available');
-    }
+  // Кнопка переключения на следующий месяц
+  const nextMonthBtn = page.locator('.cal-nav-btn.next');
+  
+  // Если нет доступных дней - переключаем месяц (до 3 раз)
+  for (let attempt = 0; attempt < 3 && availableCount === 0; attempt++) {
+    console.log(`📅 Попытка ${attempt + 1}: В текущем месяце нет доступных дней, переключаем на следующий...`);
+    
+    // Ждём пока кнопка станет видимой и кликабельной
+    await expect(nextMonthBtn).toBeVisible({ timeout: 5000 });
+    await nextMonthBtn.click();
+    await page.waitForTimeout(3000); // Ждём загрузку нового месяца и API
+    
+    // Пересчитываем доступные дни
+    availableDays = page.locator('#bookingCalendar .day.available');
+    availableCount = await availableDays.count();
+    const newMonth = await page.locator('.calendar-month-year').textContent();
+    console.log(`📅 После переключения на ${newMonth}: ${availableCount} доступных дней`);
   }
   
   await expect(availableDays.first()).toBeVisible({ timeout: 15000 });
