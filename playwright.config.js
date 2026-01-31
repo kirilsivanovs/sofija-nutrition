@@ -59,9 +59,20 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Setup project для сохранения auth state
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.js/,
+    },
+    
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Используем сохранённое auth state
+        storageState: '.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
 
     // Раскомментировать для тестирования в Firefox и Safari

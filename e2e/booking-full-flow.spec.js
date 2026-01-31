@@ -1,10 +1,4 @@
 import { test, expect } from '@playwright/test';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Вспомогательная функция для выполнения действий в админке
@@ -109,18 +103,6 @@ async function performAdminActions(page, bookedDate, bookedTime, testUserName) {
 test('Полное бронирование: клиент + подтверждение/отмена в админке', async ({ page, context }) => {
   // Увеличиваем таймаут для медленных соединений
   test.setTimeout(120000);
-  
-  // В CI используем сохранённую сессию авторизации
-  const authFile = path.join(__dirname, '../.auth/admin.json');
-  const isCI = !!process.env.CI;
-  
-  // Если есть сохранённая сессия - загружаем её
-  if (isCI && process.env.AUTH_STATE) {
-    // В CI сессия передаётся через environment variable
-    const authState = JSON.parse(process.env.AUTH_STATE);
-    fs.mkdirSync(path.dirname(authFile), { recursive: true });
-    fs.writeFileSync(authFile, JSON.stringify(authState));
-  }
   
   // ============================================
   // ЧАСТЬ 1: КЛИЕНТ ДЕЛАЕТ БРОНИРОВАНИЕ
@@ -246,75 +228,11 @@ test('Полное бронирование: клиент + подтвержде
   // ЧАСТЬ 2: АДМИН ПОДТВЕРЖДАЕТ БРОНИРОВАНИЕ
   // ============================================
   
-  // 13. В CI используем сохранённую сессию для админки
-  if (isCI && fs.existsSync(authFile)) {
-    console.log('🔑 Используем сохранённую сессию авторизации...');
-    // Создаём новый контекст с сохранённой сессией
-    const authContext = await context.browser().newContext({
-      storageState: authFile
-    });
-    const adminPage = await authContext.newPage();
-    
-    // Переходим в админку с авторизацией
-    await adminPage.goto('/admin');
-    await adminPage.waitForLoadState('domcontentloaded');
-    
-    // Заменяем page на adminPage для дальнейших действий
-    await performAdminActions(adminPage, bookedDate, bookedTime, testUserName);
-    await authContext.close();
-    return;
-  }
-  
-  // 14. Переходим в админку (потребуется авторизация Microsoft)
+  // Переходим в админку (auth state загружается автоматически из playwright.config.js)
+  console.log('🔐 Переход в админку с сохранённой авторизацией...');
   await page.goto('/admin');
   await page.waitForLoadState('domcontentloaded');
   
-  // 15. Если нужна авторизация Microsoft
-  // Проверяем, попали ли мы на страницу входа Microsoft
-  const currentUrl = page.url();
-  if (currentUrl.includes('login.microsoftonline.com') || currentUrl.includes('login.live.com')) {
-    console.log('🔐 Авторизация Microsoft...');
-    
-    // Ждём загрузки страницы входа
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
-    
-    // Проверяем, есть ли экран "Pick an account" (выбор аккаунта)
-    const pickAccount = page.locator('[data-test-id="ivanovs.kirils95@gmail.com"], .table[role="presentation"] div:has-text("ivanovs.kirils95@gmail.com")');
-    if (await pickAccount.isVisible({ timeout: 3000 }).catch(() => false)) {
-      console.log('📋 Выбираем аккаунт...');
-      await pickAccount.click();
-    } else {
-      // Вводим email если нет экрана выбора
-      const emailInput = page.locator('input[type="email"], input[name="loginfmt"]');
-      if (await emailInput.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await emailInput.fill('ivanovs.kirils95@gmail.com');
-        await page.locator('input[type="submit"], button[type="submit"], #idSIButton9').click();
-      }
-    }
-    
-    // Ждём перехода на страницу пароля
-    await page.waitForTimeout(3000);
-    
-    // Вводим пароль
-    const passwordInput = page.locator('input[type="password"], input[name="passwd"]');
-    await expect(passwordInput).toBeVisible({ timeout: 15000 });
-    await passwordInput.fill('Natavasja1!');
-    await page.locator('input[type="submit"], button[type="submit"], #idSIButton9').click();
-    
-    // Ждём возможных промежуточных экранов
-    await page.waitForTimeout(3000);
-    
-    // Если спросит "Stay signed in?" - нажимаем No
-    const staySignedIn = page.locator('#idBtn_Back, input[value="No"], button:has-text("No")');
-    if (await staySignedIn.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await staySignedIn.click();
-    }
-    
-    // Ждём перенаправления обратно в админку
-    await page.waitForURL('**/admin**', { timeout: 30000 });
-    console.log('🔓 Авторизация успешна!');
-  }
-  
-  // Выполняем действия в админке
+  // Выполняем действия в админке (уже авторизованы благодаря storageState)
   await performAdminActions(page, bookedDate, bookedTime, testUserName);
 });

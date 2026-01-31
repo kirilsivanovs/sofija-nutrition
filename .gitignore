@@ -26,4 +26,4 @@ pnpm-debug.log*
 # Playwright E2E test artifacts
 /playwright-report/
 /playwright/.cache/
-/test-results/
+/test-results//.auth/
