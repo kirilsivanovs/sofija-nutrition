@@ -48,6 +48,7 @@ jobs:
       
       - name: Get staging environments and cleanup
         id: cleanup
+        continue-on-error: true  # Don't block deploy if cleanup fails (permission issues)
         env:
           CURRENT_PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -115,6 +116,7 @@ jobs:
           echo "✅ Cleanup complete"
       
       - name: Verify cleanup
+        continue-on-error: true
         run: |
           echo "📊 Current staging environments after cleanup:"
           az staticwebapp environment list \
