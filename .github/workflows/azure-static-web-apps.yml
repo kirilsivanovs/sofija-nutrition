@@ -50,6 +50,7 @@ jobs:
         id: cleanup
         env:
           CURRENT_PR: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "🔍 Fetching staging environments..."
           
@@ -112,8 +113,6 @@ jobs:
           done
           
           echo "✅ Cleanup complete"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Verify cleanup
         run: |
