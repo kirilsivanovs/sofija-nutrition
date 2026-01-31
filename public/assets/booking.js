@@ -283,6 +283,26 @@ class BookingCalendar {
             monthYearEl.textContent = `${this.t('months')[month]} ${year}`;
         }
 
+        // Обновляем состояние кнопки "назад"
+        const prevBtn = this.container.querySelector('.cal-nav-btn.prev');
+        if (prevBtn) {
+            const firstAvailable = this.getFirstAvailableMonth();
+            if (firstAvailable) {
+                const currentTime = new Date(year, month, 1).getTime();
+                const firstAvailableTime = new Date(firstAvailable.year, firstAvailable.month, 1).getTime();
+                
+                if (currentTime <= firstAvailableTime) {
+                    prevBtn.disabled = true;
+                    prevBtn.style.opacity = '0.3';
+                    prevBtn.style.cursor = 'not-allowed';
+                } else {
+                    prevBtn.disabled = false;
+                    prevBtn.style.opacity = '1';
+                    prevBtn.style.cursor = 'pointer';
+                }
+            }
+        }
+
         // Render weekdays
         const weekdaysEl = this.container.querySelector('.calendar-weekdays');
         if (weekdaysEl) {
@@ -677,10 +697,60 @@ class BookingCalendar {
         }
     }
 
+    /**
+     * Проверяет, есть ли доступные даты в указанном месяце
+     */
+    hasAvailableDatesInMonth(year, month) {
+        if (!this.availability || !this.availability.slots) return false;
+        
+        return Object.keys(this.availability.slots).some(dateStr => {
+            const slots = this.availability.slots[dateStr];
+            if (!slots || slots.length === 0) return false;
+            
+            const date = new Date(dateStr);
+            return date.getFullYear() === year && date.getMonth() === month;
+        });
+    }
+
+    /**
+     * Получает первый месяц с доступными датами
+     */
+    getFirstAvailableMonth() {
+        if (!this.availability || !this.availability.slots) return null;
+        
+        const availableDates = Object.keys(this.availability.slots)
+            .filter(dateStr => {
+                const slots = this.availability.slots[dateStr];
+                return slots && slots.length > 0;
+            })
+            .sort();
+        
+        if (availableDates.length === 0) return null;
+        
+        const firstDate = new Date(availableDates[0]);
+        return { year: firstDate.getFullYear(), month: firstDate.getMonth() };
+    }
+
     attachEventListeners() {
-        // Previous month
+        // Previous month - only if there are available dates
         this.container.querySelector('.cal-nav-btn.prev')?.addEventListener('click', () => {
-            // Set to 1st day to avoid month overflow (e.g., Jan 31 -> Feb 31 = Mar 3)
+            const prevMonth = this.currentDate.getMonth() - 1;
+            const prevYear = prevMonth < 0 ? this.currentDate.getFullYear() - 1 : this.currentDate.getFullYear();
+            const normalizedMonth = prevMonth < 0 ? 11 : prevMonth;
+            
+            // Проверяем, есть ли доступные даты в предыдущем месяце
+            // или это первый месяц с доступными датами
+            const firstAvailable = this.getFirstAvailableMonth();
+            if (firstAvailable) {
+                const firstAvailableTime = new Date(firstAvailable.year, firstAvailable.month, 1).getTime();
+                const targetTime = new Date(prevYear, normalizedMonth, 1).getTime();
+                
+                // Не позволяем уйти раньше первого доступного месяца
+                if (targetTime < firstAvailableTime) {
+                    return;
+                }
+            }
+            
             this.currentDate.setDate(1);
             this.currentDate.setMonth(this.currentDate.getMonth() - 1);
             this.renderCalendar();
