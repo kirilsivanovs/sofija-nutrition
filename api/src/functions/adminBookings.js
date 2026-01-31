@@ -1,14 +1,22 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
+const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 
 // Get all bookings with optional status filter
 app.http('adminGetBookings', {
     methods: ['GET'],
-    authLevel: 'anonymous', // SWA handles auth
+    authLevel: 'anonymous', // Auth handled by middleware
     route: 'dashboard/bookings',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+
         try {
             const url = new URL(request.url);
             const statusFilter = url.searchParams.get('status') || 'all';
@@ -71,6 +79,13 @@ app.http('adminUpdateBooking', {
     authLevel: 'anonymous',
     route: 'dashboard/bookings/{id}',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+
         try {
             const bookingId = request.params.id;
             const body = await request.json();
@@ -127,6 +142,13 @@ app.http('adminGetBooking', {
     authLevel: 'anonymous',
     route: 'dashboard/bookings/{id}',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+        context.log(`Auth: ${auth.method} - ${auth.user.name}`);
+
         try {
             const bookingId = request.params.id;
 

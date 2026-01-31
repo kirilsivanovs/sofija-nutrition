@@ -1,4 +1,5 @@
 const { app } = require('@azure/functions');
+const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
 
 // List of all API endpoints to monitor (excluding self to avoid recursion)
 const endpoints = [
@@ -60,6 +61,12 @@ app.http('adminGetMonitoring', {
     authLevel: 'anonymous',
     route: 'dashboard/monitoring',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         context.log('Monitoring health check requested');
         
         const startTime = Date.now();

@@ -1,5 +1,6 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
+const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const SERVICES_TABLE = 'Services'; // Понятное название таблицы
@@ -14,6 +15,12 @@ app.http('adminGetServiceSettings', {
     authLevel: 'anonymous',
     route: 'dashboard/services',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
             const services = [];
@@ -75,6 +82,12 @@ app.http('adminUpdateServiceSettings', {
     authLevel: 'anonymous',
     route: 'dashboard/services/{serviceId}',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const serviceId = request.params.serviceId;
             const body = await request.json();
@@ -216,6 +229,12 @@ app.http('adminGetServiceHistory', {
     authLevel: 'anonymous',
     route: 'dashboard/services/{serviceId}/history',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const serviceId = request.params.serviceId;
             const historyTableClient = TableClient.fromConnectionString(connectionString, 'ServicesHistory');
@@ -273,6 +292,12 @@ app.http('adminInitializeServices', {
     authLevel: 'anonymous',
     route: 'dashboard/services/initialize',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
             

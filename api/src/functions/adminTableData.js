@@ -1,5 +1,6 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
+const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 
@@ -9,6 +10,12 @@ app.http('adminGetTableData', {
     authLevel: 'anonymous',
     route: 'dashboard/tables/{tableName}',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const tableName = request.params.tableName;
             
@@ -99,6 +106,12 @@ app.http('adminDeleteTableEntity', {
     authLevel: 'anonymous',
     route: 'dashboard/tables/{tableName}/{partitionKey}/{rowKey}',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             const { tableName, partitionKey, rowKey } = request.params;
             

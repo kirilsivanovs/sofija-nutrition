@@ -1,6 +1,7 @@
 const { app } = require('@azure/functions');
 const { TableClient } = require('@azure/data-tables');
 const { getLatvianHolidays, getHolidaysInRange } = require('../services/latvianHolidays');
+const { checkAuthorization, unauthorizedResponse } = require('../utils/authMiddleware');
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const SETTINGS_TABLE = 'adminSettings';
@@ -25,6 +26,12 @@ app.http('adminGetAvailability', {
     authLevel: 'anonymous',
     route: 'dashboard/availability',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -87,6 +94,12 @@ app.http('adminUpdateAvailability', {
     authLevel: 'anonymous',
     route: 'dashboard/availability',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -123,6 +136,12 @@ app.http('adminAddBlockedDate', {
     authLevel: 'anonymous',
     route: 'dashboard/availability/block',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -177,6 +196,12 @@ app.http('adminRemoveBlockedDate', {
     authLevel: 'anonymous',
     route: 'dashboard/availability/block',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -225,6 +250,12 @@ app.http('adminGetSettings', {
     authLevel: 'anonymous',
     route: 'dashboard/settings',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -267,6 +298,12 @@ app.http('adminUpdateSettings', {
     authLevel: 'anonymous',
     route: 'dashboard/settings',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -336,6 +373,12 @@ app.http('adminAddVacation', {
     authLevel: 'anonymous',
     route: 'dashboard/availability/vacation',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
@@ -391,6 +434,12 @@ app.http('adminDeleteVacation', {
     authLevel: 'anonymous',
     route: 'dashboard/availability/vacation',
     handler: async (request, context) => {
+        // Проверяем авторизацию (SWA auth или E2E token)
+        const auth = checkAuthorization(request);
+        if (!auth.authorized) {
+            return unauthorizedResponse(auth.error);
+        }
+
         try {
             await ensureTable(SETTINGS_TABLE);
             
