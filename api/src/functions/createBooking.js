@@ -4,7 +4,7 @@ const translations = require('../translations');
 const { addCorsHeaders } = require('../utils/cors');
 const { checkRateLimit, rateLimitExceededResponse, addRateLimitHeaders } = require('../utils/rateLimiter');
 const { validateBookingInput, validationErrorResponse } = require('../utils/validation');
-const { saveBooking, generateBookingId, generatePaymentToken, isSlotBooked } = require('../services/bookingRepository');
+const { saveBooking, generateBookingId, generatePaymentToken, isSlotBooked, acquireSlotLock, releaseSlotLock } = require('../services/bookingRepository');
 const { sendClientConfirmation, sendAdminNotification, isConfigured } = require('../services/emailService');
 const { generateInvoicePDF } = require('../services/pdfService');
 const { generateClientEmailHTML, generateAdminEmailHTML } = require('../templates/emailTemplates');
@@ -71,19 +71,36 @@ app.http('createBooking', {
                 };
             }
 
-            // Check if slot is already booked
-            const slotTaken = await isSlotBooked(date, time);
-            if (slotTaken) {
+            // Acquire slot lock to prevent race conditions (double booking)
+            const lock = await acquireSlotLock(date, time);
+            if (!lock.success) {
+                context.log.warn(`Race condition prevented: slot ${date} ${time} is being booked by another request`);
                 return {
                     status: 409,
                     jsonBody: { 
-                        error: 'Time slot already booked',
-                        errorLv: 'Šis laiks jau ir aizņemts. Lūdzu, izvēlieties citu laiku.',
-                        errorRu: 'Это время уже занято. Пожалуйста, выберите другое время.',
-                        errorEn: 'This time slot is already booked. Please choose another time.'
+                        error: 'Time slot is being booked',
+                        errorLv: 'Šis laiks tiek rezervēts. Lūdzu, mēģiniet vēlreiz vai izvēlieties citu laiku.',
+                        errorRu: 'Это время бронируется. Пожалуйста, попробуйте снова или выберите другое время.',
+                        errorEn: 'This time slot is being booked. Please try again or choose another time.'
                     }
                 };
             }
+
+            try {
+                // Check if slot is already booked (inside lock to prevent race condition)
+                const slotTaken = await isSlotBooked(date, time);
+                if (slotTaken) {
+                    await releaseSlotLock(date, time, lock.lockId);
+                    return {
+                        status: 409,
+                        jsonBody: { 
+                            error: 'Time slot already booked',
+                            errorLv: 'Šis laiks jau ir aizņemts. Lūdzu, izvēlieties citu laiku.',
+                            errorRu: 'Это время уже занято. Пожалуйста, выберите другое время.',
+                            errorEn: 'This time slot is already booked. Please choose another time.'
+                        }
+                    };
+                }
 
             // Get translation object
             const t = translations.getTranslation(language);
@@ -199,6 +216,11 @@ app.http('createBooking', {
                     bookingId
                 }
             };
+            
+            } finally {
+                // Always release the lock when done (success or failure)
+                await releaseSlotLock(date, time, lock.lockId);
+            }
 
         } catch (error) {
             context.error('Booking error:', error);
