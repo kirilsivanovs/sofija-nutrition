@@ -6,43 +6,9 @@
  * Для multi-instance deployment нужен Redis или Azure Cache
  */
 
-const requestCounts = new Map();
+const { rateLimits: RATE_LIMITS } = require('../config');
 
-// Конфигурация лимитов
-const RATE_LIMITS = {
-    // Критичные эндпоинты с низкими лимитами
-    createBooking: {
-        windowMs: 60000,      // 1 минута
-        maxRequests: 5,       // 5 бронирований в минуту с одного IP
-        message: 'Too many booking attempts. Please try again in a minute.'
-    },
-    confirmPayment: {
-        windowMs: 60000,
-        maxRequests: 10,
-        message: 'Too many confirmation attempts.'
-    },
-    
-    // Публичные эндпоинты со средними лимитами
-    getAvailability: {
-        windowMs: 60000,
-        maxRequests: 60,      // 60 запросов в минуту (обновление календаря)
-        message: 'Too many requests. Please slow down.'
-    },
-    
-    // Admin эндпоинты (защищены auth, но всё равно лимитируем)
-    admin: {
-        windowMs: 60000,
-        maxRequests: 100,
-        message: 'Rate limit exceeded for admin operations.'
-    },
-    
-    // Дефолт для неизвестных эндпоинтов
-    default: {
-        windowMs: 60000,
-        maxRequests: 100,
-        message: 'Too many requests.'
-    }
-};
+const requestCounts = new Map();
 
 /**
  * Получить IP адрес клиента
