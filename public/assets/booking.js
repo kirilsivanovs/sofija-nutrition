@@ -1,12 +1,135 @@
 /**
  * Booking Calendar Component
  * A calendar widget for scheduling appointments
+ * 
+ * Uses shared translations from shared-translations.js
  */
 
 // Auto-detect API URL based on environment
 const API_BASE_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:7071'
     : 'https://sofija-nutrition-api.azurewebsites.net';
+
+/**
+ * Build UI translations from shared translations
+ * Maps shared translation structure to flat UI format
+ */
+function buildUITranslations(lang) {
+    // Check if shared translations are loaded
+    if (typeof window.sharedTranslations === 'undefined') {
+        console.warn('Shared translations not loaded, using fallback');
+        return null;
+    }
+    
+    const t = window.sharedTranslations[lang];
+    if (!t) return null;
+    
+    return {
+        title: t.calendar.title,
+        selectDate: t.calendar.selectDate,
+        selectTime: t.calendar.selectTime,
+        noSlots: t.calendar.noSlots,
+        weekdays: t.calendar.weekdays,
+        months: t.calendar.months,
+        today: t.calendar.today,
+        selectedLabel: t.calendar.selectedLabel,
+        serviceLabel: t.form.serviceLabel,
+        formatLabel: t.form.formatLabel,
+        formatOnline: t.format.online,
+        formatInPerson: t.format.inPerson,
+        nameLabel: t.form.nameLabel,
+        emailLabel: t.form.emailLabel,
+        phoneLabel: t.form.phoneLabel,
+        messageLabel: t.form.messageLabel,
+        submitBtn: t.form.submitBtn,
+        successTitle: t.messages.successTitle,
+        successText: t.messages.successText,
+        closeBtn: t.messages.closeBtn,
+        errorTitle: t.messages.errorTitle,
+        errorMessage: t.messages.errorMessage,
+        errorRetry: t.messages.errorRetry,
+        slotTaken: t.messages.slotTaken,
+        rateLimit: t.messages.rateLimit,
+        serverError: t.messages.serverError,
+        timeout: t.messages.timeout,
+        offline: t.messages.offline
+    };
+}
+
+/**
+ * Fallback translations (used if shared translations not available)
+ */
+const fallbackTranslations = {
+    lv: {
+        title: "Izvēlieties datumu un laiku",
+        selectDate: "Izvēlieties datumu",
+        selectTime: "Pieejamie laiki",
+        noSlots: "Šajā dienā nav pieejamu laiku",
+        weekdays: ["Sv", "P", "O", "T", "C", "Pk", "S"],
+        months: ["Janvāris", "Februāris", "Marts", "Aprīlis", "Maijs", "Jūnijs", 
+                 "Jūlijs", "Augusts", "Septembris", "Oktobris", "Novembris", "Decembris"],
+        serviceLabel: "Pakalpojuma veids",
+        formatLabel: "Konsultācijas formāts",
+        formatOnline: "Attālināti (Zoom/Google Meet)",
+        formatInPerson: "Klātienē",
+        nameLabel: "Jūsu vārds",
+        emailLabel: "E-pasts",
+        phoneLabel: "Telefons",
+        messageLabel: "Komentārs (neobligāts)",
+        submitBtn: "Apstiprināt rezervāciju",
+        successTitle: "Rezervācija veiksmīga!",
+        successText: "Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.",
+        closeBtn: "Aizvērt",
+        selectedLabel: "Izvēlēts",
+        today: "Šodien"
+    },
+    ru: {
+        title: "Выберите дату и время",
+        selectDate: "Выберите дату",
+        selectTime: "Доступное время",
+        noSlots: "В этот день нет свободного времени",
+        weekdays: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                 "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        serviceLabel: "Тип услуги",
+        formatLabel: "Формат консультации",
+        formatOnline: "Онлайн (Zoom/Google Meet)",
+        formatInPerson: "Очно",
+        nameLabel: "Ваше имя",
+        emailLabel: "Email",
+        phoneLabel: "Телефон",
+        messageLabel: "Комментарий (необязательно)",
+        submitBtn: "Подтвердить запись",
+        successTitle: "Запись успешна!",
+        successText: "Мы свяжемся с Вами в течение 24 часов для подтверждения визита.",
+        closeBtn: "Закрыть",
+        selectedLabel: "Выбрано",
+        today: "Сегодня"
+    },
+    en: {
+        title: "Select date and time",
+        selectDate: "Select a date",
+        selectTime: "Available times",
+        noSlots: "No available slots on this day",
+        weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+        months: ["January", "February", "March", "April", "May", "June",
+                 "July", "August", "September", "October", "November", "December"],
+        serviceLabel: "Service type",
+        formatLabel: "Consultation format",
+        formatOnline: "Online (Zoom/Google Meet)",
+        formatInPerson: "In-person",
+        nameLabel: "Your name",
+        emailLabel: "Email",
+        phoneLabel: "Phone",
+        messageLabel: "Comment (optional)",
+        submitBtn: "Confirm booking",
+        successTitle: "Booking successful!",
+        successText: "We will contact you within 24 hours to confirm your appointment.",
+        closeBtn: "Close",
+        selectedLabel: "Selected",
+        today: "Today"
+    }
+};
 
 class BookingCalendar {
     constructor(containerId, options = {}) {
@@ -19,76 +142,11 @@ class BookingCalendar {
         this.currentLang = options.lang || 'lv';
         this.onBookingComplete = options.onBookingComplete || (() => {});
         
+        // Try to use shared translations, fallback to embedded
         this.translations = {
-            lv: {
-                title: "Izvēlieties datumu un laiku",
-                selectDate: "Izvēlieties datumu",
-                selectTime: "Pieejamie laiki",
-                noSlots: "Šajā dienā nav pieejamu laiku",
-                weekdays: ["Sv", "P", "O", "T", "C", "Pk", "S"],
-                months: ["Janvāris", "Februāris", "Marts", "Aprīlis", "Maijs", "Jūnijs", 
-                         "Jūlijs", "Augusts", "Septembris", "Oktobris", "Novembris", "Decembris"],
-                serviceLabel: "Pakalpojuma veids",
-                formatLabel: "Konsultācijas formāts",
-                formatOnline: "Attālināti (Zoom/Google Meet)",
-                formatInPerson: "Klātienē",
-                nameLabel: "Jūsu vārds",
-                emailLabel: "E-pasts",
-                phoneLabel: "Telefons",
-                messageLabel: "Komentārs (neobligāts)",
-                submitBtn: "Apstiprināt rezervāciju",
-                successTitle: "Rezervācija veiksmīga!",
-                successText: "Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.",
-                closeBtn: "Aizvērt",
-                selectedLabel: "Izvēlēts",
-                today: "Šodien"
-            },
-            ru: {
-                title: "Выберите дату и время",
-                selectDate: "Выберите дату",
-                selectTime: "Доступное время",
-                noSlots: "В этот день нет свободного времени",
-                weekdays: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-                         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-                serviceLabel: "Тип услуги",
-                formatLabel: "Формат консультации",
-                formatOnline: "Онлайн (Zoom/Google Meet)",
-                formatInPerson: "Очно",
-                nameLabel: "Ваше имя",
-                emailLabel: "Email",
-                phoneLabel: "Телефон",
-                messageLabel: "Комментарий (необязательно)",
-                submitBtn: "Подтвердить запись",
-                successTitle: "Запись успешна!",
-                successText: "Мы свяжемся с Вами в течение 24 часов для подтверждения визита.",
-                closeBtn: "Закрыть",
-                selectedLabel: "Выбрано",
-                today: "Сегодня"
-            },
-            en: {
-                title: "Select date and time",
-                selectDate: "Select a date",
-                selectTime: "Available times",
-                noSlots: "No available slots on this day",
-                weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-                months: ["January", "February", "March", "April", "May", "June",
-                         "July", "August", "September", "October", "November", "December"],
-                serviceLabel: "Service type",
-                formatLabel: "Consultation format",
-                formatOnline: "Online (Zoom/Google Meet)",
-                formatInPerson: "In-person",
-                nameLabel: "Your name",
-                emailLabel: "Email",
-                phoneLabel: "Phone",
-                messageLabel: "Comment (optional)",
-                submitBtn: "Confirm booking",
-                successTitle: "Booking successful!",
-                successText: "We will contact you within 24 hours to confirm your appointment.",
-                closeBtn: "Close",
-                selectedLabel: "Selected",
-                today: "Today"
-            }
+            lv: buildUITranslations('lv') || fallbackTranslations.lv,
+            ru: buildUITranslations('ru') || fallbackTranslations.ru,
+            en: buildUITranslations('en') || fallbackTranslations.en
         };
 
         this.init();
