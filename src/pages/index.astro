@@ -181,58 +181,55 @@ import Layout from '../layouts/Layout.astro';
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-20 md:py-28 bg-gradient-to-b from-bg-light to-white/50">
+    <section id="how-it-works" class="py-16 md:py-24 bg-white/95">
         
-        <div class="max-w-7xl mx-auto px-6 md:px-8">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
             <!-- Section Header -->
-            <div class="text-center mb-16 md:mb-20">
-                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-5" data-i18n="how_title">Kā tas strādā?</h2>
-                <p class="text-text-light text-base md:text-lg max-w-2xl mx-auto leading-relaxed" data-i18n="how_subtitle">Vienkāršs process, ko varēsiet iekļaut savā ikdienā</p>
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3" data-i18n="how_title">Kā tas strādā?</h2>
+                <p class="text-gray-700 text-base md:text-lg max-w-2xl mx-auto" data-i18n="how_subtitle">Vienkāršs process, ko varēsiet iekļaut savā ikdienā</p>
             </div>
 
             <!-- Process Steps -->
-            <div class="relative max-w-6xl mx-auto">
-                <!-- Connection Line (desktop only) -->
-                <div class="hidden lg:block absolute top-12 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-secondary/30 to-transparent"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-syringe text-primary text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-primary text-base mb-2" data-i18n="step_1_title">1. Uzliekam CGM sensoru</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_1_desc">Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.</p>
+                </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-10 lg:gap-8">
-                    <!-- Step 1 -->
-                    <div class="relative flex flex-col items-center text-center">
-                        <!-- Icon -->
-                        <div class="relative z-10 w-20 h-20 bg-gradient-to-br from-cream to-secondary/10 border-2 border-secondary/40 rounded-full flex items-center justify-center mb-6 shadow-[0_8px_20px_rgba(201,163,106,0.15)]">
-                            <i class="ph ph-syringe text-secondary text-3xl"></i>
-                        </div>
-                        
-                        <!-- Content -->
-                        <h4 class="font-serif text-xl md:text-2xl font-semibold text-primary mb-4 leading-tight" data-i18n="step_1_title">Uzliekam CGM sensoru</h4>
-                        <p class="text-text-light text-sm md:text-base leading-relaxed max-w-xs mx-auto" data-i18n="step_1_desc">Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.</p>
-                        
-                        <!-- Divider (mobile/tablet) -->
-                        <div class="lg:hidden w-20 h-[1px] bg-gradient-to-r from-transparent via-secondary/30 to-transparent mx-auto mt-10"></div>
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-calendar-check text-primary text-2xl"></i>
                     </div>
-                    
-                    <!-- Step 2 -->
-                    <div class="relative flex flex-col items-center text-center">
-                        <div class="relative z-10 w-20 h-20 bg-gradient-to-br from-cream to-secondary/10 border-2 border-secondary/40 rounded-full flex items-center justify-center mb-6 shadow-[0_8px_20px_rgba(201,163,106,0.15)]">
-                            <i class="ph ph-calendar-check text-secondary text-3xl"></i>
-                        </div>
-                        
-                        <h4 class="font-serif text-xl md:text-2xl font-semibold text-primary mb-4 leading-tight" data-i18n="step_2_title">Dzīvojiet savu ierasto dzīvi</h4>
-                        <p class="text-text-light text-sm md:text-base leading-relaxed max-w-xs mx-auto" data-i18n="step_2_desc">Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.</p>
-                        
-                        <div class="lg:hidden w-20 h-[1px] bg-gradient-to-r from-transparent via-secondary/30 to-transparent mx-auto mt-10"></div>
+                    <h4 class="font-semibold text-primary text-base mb-2" data-i18n="step_2_title">2. Dzīvojiet savu ierasto dzīvi</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_2_desc">Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-chart-line text-primary text-2xl"></i>
                     </div>
-                    
-                    <!-- Step 3 -->
-                    <div class="relative flex flex-col items-center text-center">
-                        <div class="relative z-10 w-20 h-20 bg-gradient-to-br from-cream to-secondary/10 border-2 border-secondary/40 rounded-full flex items-center justify-center mb-6 shadow-[0_8px_20px_rgba(201,163,106,0.15)]">
-                            <i class="ph ph-chart-line text-secondary text-3xl"></i>
-                        </div>
-                        
-                        <h4 class="font-serif text-xl md:text-2xl font-semibold text-primary mb-4 leading-tight" data-i18n="step_3_title">Analizējam datus kopā</h4>
-                        <p class="text-text-light text-sm md:text-base leading-relaxed max-w-xs mx-auto" data-i18n="step_3_desc">Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.</p>
-                        
-                        <div class="lg:hidden w-20 h-[1px] bg-gradient-to-r from-transparent via-secondary/30 to-transparent mx-auto mt-10"></div>
+                    <h4 class="font-semibold text-primary text-base mb-2" data-i18n="step_3_title">3. Analizējam datus kopā</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_3_desc">Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-list-checks text-primary text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-primary text-base mb-2" data-i18n="step_4_title">4. Saņemat personalizētu plānu</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_4_desc">Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
                     </div>
                     
                     <!-- Step 4 -->

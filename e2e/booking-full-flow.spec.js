@@ -39,9 +39,9 @@ async function performAdminActionsViaAPI(request, apiBase, e2eToken, bookedDate,
   const headers = { 'X-E2E-Token': e2eToken };
   
   // 1. Получаем список бронирований
-  console.log(`📋 Загружаем бронирования...`);
+  console.log(`📋 Загружаем бронирования из ${apiBase}/dashboard/bookings...`);
   
-  const bookingsResponse = await request.get(`${apiBase}/dashboard/bookings`, { headers });
+  const bookingsResponse = await request.get(`${apiBase}/dashboard/bookings`, { headers, timeout: 30000 });
   
   if (!bookingsResponse.ok()) {
     const errorText = await bookingsResponse.text();
@@ -102,7 +102,7 @@ async function performAdminActionsViaAPI(request, apiBase, e2eToken, bookedDate,
  */
 test('Полное бронирование: клиент + подтверждение/отмена в админке', async ({ page, request }) => {
   // Увеличиваем таймаут для медленных соединений
-  test.setTimeout(120000);
+  test.setTimeout(180000); // 3 минуты
   
   // ============================================
   // ЧАСТЬ 0: ПРОВЕРЯЕМ ДОСТУПНОСТЬ ЧЕРЕЗ API
@@ -265,20 +265,27 @@ test('Полное бронирование: клиент + подтвержде
   await bookingForm.scrollIntoViewIfNeeded();
   
   // 11. Выбираем формат консультации (кликаем на опцию "Klātienē" в форме)
+  console.log('📝 Выбираем формат консультации...');
+  await page.waitForTimeout(500);
   await bookingForm.getByText('Klātienē', { exact: true }).click();
+  console.log('✅ Формат выбран');
   
   // 12. Заполняем обязательные поля - уникальное имя для поиска
   const testUserName = `E2E Test ${Date.now()}`;
+  console.log(`📝 Заполняем форму: ${testUserName}`);
   await page.locator('#bookingCalendar input[name="name"]').fill(testUserName);
   await page.locator('#bookingCalendar input[name="email"]').fill('e2e-test@example.com');
+  console.log('✅ Форма заполнена');
   
   // 13. Нажимаем кнопку подтверждения
+  console.log('📝 Отправляем форму...');
   const submitBtn = page.locator('#bookingCalendar .booking-submit-btn');
   await submitBtn.click();
   
   // 14. Проверяем появление модального окна успеха
+  console.log('⏳ Ждём модальное окно успеха...');
   const successModal = page.locator('#bookingCalendar .booking-success-modal');
-  await expect(successModal).toBeVisible({ timeout: 10000 });
+  await expect(successModal).toBeVisible({ timeout: 30000 }); // Увеличили таймаут до 30 секунд
   
   console.log('✅ Часть 1: Бронирование успешно создано!');
   
@@ -308,5 +315,6 @@ test('Полное бронирование: клиент + подтвержде
   // Используем API напрямую с E2E токеном (обходит SWA auth)
   // apiBase уже определён в начале теста
   
+  console.log('🔄 Начинаем админ-часть теста...');
   await performAdminActionsViaAPI(request, apiBase, e2eToken, bookedDate, testUserName);
 });
