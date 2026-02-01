@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "func start --cors \"*\"",
-    "build": "tsc && node -e \"require('fs').cpSync('src/fonts', 'dist/fonts', {recursive: true})\"",
+    "build": "tsc && node -e \"require('fs').cpSync('src/fonts', 'dist/fonts', {recursive: true})\" && node -e \"require('fs').copyFileSync('host.json', 'dist/host.json')\" && node -e \"require('fs').copyFileSync('package.json', 'dist/package.json')\"",
     "build:watch": "tsc --watch",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
