@@ -152,6 +152,33 @@ test('Полное бронирование: клиент + подтвержде
   await page.goto('/');
   await page.waitForLoadState('domcontentloaded');
   
+  // 1.5. Принимаем cookies чтобы убрать overlay
+  console.log('🍪 Проверяем cookie consent...');
+  const cookieBanner = page.locator('#cookie-consent-banner');
+  const cookieOverlay = page.locator('.cookie-consent-overlay');
+  
+  // Если баннер видим - принимаем cookies
+  if (await cookieBanner.isVisible().catch(() => false)) {
+    console.log('🍪 Принимаем все cookies для E2E теста');
+    const acceptAllBtn = page.locator('#cookie-consent-banner button:has-text("Принять все")').or(
+      page.locator('#cookie-consent-banner button').filter({ hasText: /Принять|Accept/ }).first()
+    );
+    await acceptAllBtn.click({ timeout: 5000 }).catch(() => {
+      console.log('⚠️ Не удалось найти кнопку принятия cookies, пробуем закрыть overlay');
+    });
+    
+    // Ждём пока overlay исчезнет
+    await expect(cookieOverlay).toBeHidden({ timeout: 3000 }).catch(() => {
+      console.log('⚠️ Cookie overlay всё ещё виден, но продолжаем тест');
+    });
+  } else {
+    console.log('✅ Cookie баннер уже скрыт');
+  }
+  
+  // 2. Ждём появления секции контактов (статический HTML)
+  const contactSection = page.locator('#contact');
+  await expect(contactSection).toBeAttached({ timeout: 10000 });
+  
   // 2. Ждём появления секции контактов (статический HTML)
   const contactSection = page.locator('#contact');
   await expect(contactSection).toBeAttached({ timeout: 10000 });
