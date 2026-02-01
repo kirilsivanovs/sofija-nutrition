@@ -10,8 +10,21 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
     '!src/index.ts',
+    '!src/functions/**', // Exclude Azure Functions handlers (covered by E2E tests)
     '!**/node_modules/**'
   ],
+  
+  // Coverage thresholds - CI/CD gate
+  // Note: Functions are excluded as they're covered by E2E tests
+  // Focus on business logic in services, utils, templates
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70
+    }
+  },
   
   // Таймаут для тестов
   testTimeout: 30000,
