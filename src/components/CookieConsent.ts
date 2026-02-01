@@ -249,10 +249,59 @@ class CookieConsent {
         border-radius: 16px;
         max-width: 600px;
         width: 90%;
-        max-height: 90vh;
+        max-height: 85vh;
         overflow-y: auto;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         animation: slideUp 0.3s ease-out;
+      }
+      
+      /* Mobile optimization */
+      @media (max-width: 640px) {
+        .cookie-consent-modal {
+          width: 95%;
+          max-height: 80vh;
+          border-radius: 12px;
+        }
+        
+        .cookie-consent-header {
+          padding: 20px 16px 12px;
+        }
+        
+        .cookie-consent-header h3 {
+          font-size: 20px;
+        }
+        
+        .cookie-consent-body {
+          padding: 16px;
+        }
+        
+        .cookie-consent-body > p {
+          font-size: 14px;
+          margin-bottom: 16px;
+        }
+        
+        .cookie-category {
+          padding: 12px;
+        }
+        
+        .cookie-category-description {
+          font-size: 13px;
+        }
+        
+        .cookie-consent-footer {
+          padding: 16px;
+          flex-direction: column;
+        }
+        
+        .cookie-consent-footer button {
+          padding: 14px 20px;
+          font-size: 15px;
+          width: 100%;
+        }
+        
+        .btn-text {
+          padding: 12px;
+        }
       }
       
       @keyframes slideUp {

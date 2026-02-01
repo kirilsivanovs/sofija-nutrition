@@ -81,6 +81,12 @@ const sharedTranslations = {
             subtitle: 'Uztura speciāliste · PhD'
         },
         
+        // Testimonials
+        testimonials: {
+            sectionTitle: 'Atsauksmes',
+            sectionSubtitle: 'Ko saka mani klienti'
+        },
+        
         // Payment
         payment: {
             confirmedSubject: (id) => `Maksājums apstiprināts - ${id}`,
@@ -197,6 +203,12 @@ const sharedTranslations = {
             subtitle: 'Nutrition Specialist · PhD'
         },
         
+        // Testimonials
+        testimonials: {
+            sectionTitle: 'Testimonials',
+            sectionSubtitle: 'What my clients say'
+        },
+        
         // Payment
         payment: {
             confirmedSubject: (id) => `Payment Confirmed - ${id}`,
@@ -311,6 +323,12 @@ const sharedTranslations = {
             questions: 'Если у вас есть вопросы, пожалуйста, свяжитесь с нами.',
             regards: 'С уважением,',
             subtitle: 'Специалист по питанию · PhD'
+        },
+        
+        // Testimonials
+        testimonials: {
+            sectionTitle: 'Отзывы',
+            sectionSubtitle: 'Что говорят мои клиенты'
         },
         
         // Payment
