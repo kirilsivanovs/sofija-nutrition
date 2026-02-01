@@ -40,8 +40,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* All clickable elements - minimum 44x44px touch target (Apple HIG) */
+/* Checkboxes and radios excluded - they have their own sizing */
 a, button, [role="button"], .btn-primary, .lang-btn, .mobile-menu-btn,
-input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"] {
+input[type="submit"], input[type="button"] {
     cursor: pointer;
     min-height: 44px;
     min-width: 44px;
