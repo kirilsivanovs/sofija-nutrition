@@ -30,6 +30,10 @@ export const DAY_NAMES_LATVIAN = [
 ];
 
 export const SERVICE_NAMES: Record<string, string> = {
-    'cgm-diagnostic': 'CGM diagnostikas programma',
-    'consultation': 'Konsultācija uztura jautājumos'
+    'cgm-diagnostic': 'CGM diagnostika',
+    'consultation': 'Uztura konsultācija',
+    'initial': 'Pirmreizējā konsultācija',
+    'followup': 'Atkārtota konsultācija',
+    'package3': '3 konsultāciju pakete',
+    'package5': '5 konsultāciju pakete'
 };
