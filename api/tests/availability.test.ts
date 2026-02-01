@@ -3,7 +3,7 @@
  * Testing vacation period filtering, date range generation, and slot availability
  */
 
-const { isLatvianHoliday } = require('../src/services/latvianHolidays');
+import { isLatvianHoliday } from '../src/services/latvianHolidays');
 
 describe('Availability API Logic', () => {
     // Helper function to check if date is in vacation period
@@ -246,7 +246,7 @@ describe('Availability API Logic', () => {
         };
 
         function shouldIncludeDate(dateStr, config) {
-            const { schedule, blockedDates, vacationPeriods } = config;
+            import { schedule, blockedDates, vacationPeriods } = config;
             const date = new Date(dateStr + 'T12:00:00');
             const dayOfWeek = date.getDay();
             const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -342,3 +342,4 @@ describe('Availability API Logic', () => {
         });
     });
 });
+

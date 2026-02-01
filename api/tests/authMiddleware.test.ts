@@ -3,7 +3,7 @@
  * 🔴 CRITICAL: Защита admin API от несанкционированного доступа
  */
 
-const { checkAuthorization, unauthorizedResponse } = require('../src/utils/authMiddleware');
+import { checkAuthorization, unauthorizedResponse } from '../src/utils/authMiddleware');
 
 describe('Auth Middleware', () => {
     const originalEnv = process.env;
@@ -228,3 +228,4 @@ describe('Auth Middleware', () => {
         });
     });
 });
+

@@ -2,7 +2,7 @@
  * Input Validation Tests
  */
 
-const {
+import {
     escapeHtml,
     stripDangerous,
     sanitizeName,
@@ -15,7 +15,7 @@ const {
     sanitizeFormat,
     validateBookingInput,
     validationErrorResponse
-} = require('../src/utils/validation');
+} from '../src/utils/validation';
 
 describe('Input Validation', () => {
     describe('escapeHtml', () => {
@@ -34,9 +34,9 @@ describe('Input Validation', () => {
         });
 
         test('should handle non-string input', () => {
-            expect(escapeHtml(null)).toBe('');
-            expect(escapeHtml(undefined)).toBe('');
-            expect(escapeHtml(123)).toBe('');
+            expect(escapeHtml(null as any)).toBe('');
+            expect(escapeHtml(undefined as any)).toBe('');
+            expect(escapeHtml(123 as any)).toBe('');
         });
     });
 

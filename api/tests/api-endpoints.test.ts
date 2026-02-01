@@ -4,8 +4,8 @@
  * These are unit tests that mock the Azure Functions runtime
  */
 
-const translations = require('../src/translations');
-const config = require('../src/config');
+const translations = import  from '../src/translations');
+const config = import  from '../src/config');
 
 // Mock Azure Functions app
 const mockApp = {
@@ -38,7 +38,7 @@ describe('API Endpoints', () => {
         beforeAll(() => {
             jest.resetModules();
             mockApp.http.mockClear();
-            require('../src/functions/health.function');
+            import  from '../src/functions/health.function');
             const healthCall = mockApp.http.mock.calls.find(call => call[0] === 'health');
             healthHandler = healthCall[1].handler;
         });
@@ -70,7 +70,7 @@ describe('API Endpoints', () => {
         beforeAll(() => {
             jest.resetModules();
             mockApp.http.mockClear();
-            require('../src/functions/getAvailability.function');
+            import  from '../src/functions/getAvailability.function');
             const availabilityCall = mockApp.http.mock.calls.find(call => call[0] === 'getAvailability');
             availabilityHandler = availabilityCall[1].handler;
         });
@@ -146,7 +146,7 @@ describe('API Endpoints', () => {
             jest.resetModules();
             mockApp.http.mockClear();
             process.env.RESEND_API_KEY = 'test-key';
-            require('../src/functions/createBooking.function');
+            import  from '../src/functions/createBooking.function');
             const bookingCall = mockApp.http.mock.calls.find(call => call[0] === 'createBooking');
             createBookingHandler = bookingCall[1].handler;
         });
@@ -242,7 +242,7 @@ describe('API Endpoints', () => {
 describe('Booking Flow Simulation', () => {
     describe('Complete Booking Process', () => {
         it('should generate valid booking ID', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             const id = bookingRepository.generateBookingId();
             expect(id).toMatch(/^SN-[A-Z0-9]{8}$/);
         });
@@ -257,7 +257,7 @@ describe('Booking Flow Simulation', () => {
         });
 
         it('should generate payment token and verify it', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             const bookingId = 'SN-FLOW123';
             const email = 'test@test.com';
             const token = bookingRepository.generatePaymentToken(bookingId, email);
@@ -298,12 +298,12 @@ describe('Booking Flow Simulation', () => {
 describe('Error Handling', () => {
     describe('Invalid Input Handling', () => {
         it('should handle null booking data gracefully', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             expect(() => bookingRepository.generateBookingId()).not.toThrow();
         });
 
         it('should handle empty token verification', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             // verifyPaymentToken returns boolean, so invalid inputs should return false
             expect(bookingRepository.verifyPaymentToken('', 'SN-123', 'test@test.com')).toBe(false);
             expect(bookingRepository.verifyPaymentToken('invalid', 'SN-123', 'test@test.com')).toBe(false);
@@ -319,14 +319,14 @@ describe('Error Handling', () => {
         it('should handle missing RESEND_API_KEY', () => {
             jest.resetModules();
             delete process.env.RESEND_API_KEY;
-            const emailService = require('../src/services/emailService');
+            const emailService = import  from '../src/services/emailService');
             expect(emailService.isConfigured()).toBe(false);
         });
 
         it('should use in-memory storage when Azure not configured', () => {
             jest.resetModules();
             delete process.env.AZURE_STORAGE_CONNECTION_STRING;
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             expect(bookingRepository.isUsingAzureStorage()).toBe(false);
         });
     });
@@ -335,7 +335,7 @@ describe('Error Handling', () => {
 describe('Security', () => {
     describe('Payment Token Security', () => {
         it('should not expose booking ID in plain text in base64', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             const bookingId = 'SN-SECRET123';
             const email = 'secret@test.com';
             const token = bookingRepository.generatePaymentToken(bookingId, email);
@@ -347,7 +347,7 @@ describe('Security', () => {
         });
 
         it('should reject tampered tokens', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             const bookingId = 'SN-TAMPER123';
             const email = 'tamper@test.com';
             const token = bookingRepository.generatePaymentToken(bookingId, email);
@@ -361,7 +361,7 @@ describe('Security', () => {
     describe('Input Sanitization', () => {
         it('should handle XSS attempts in name', () => {
             const t = translations.getTranslation('lv');
-            const { generateClientEmailHTML } = require('../src/templates/emailTemplates');
+            import { generateClientEmailHTML } from '../src/templates/emailTemplates');
             
             const maliciousData = {
                 name: '<script>alert("xss")</script>',
@@ -378,7 +378,7 @@ describe('Security', () => {
         });
 
         it('should handle SQL injection attempts', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             
             const maliciousId = "'; DROP TABLE bookings; --";
             const email = 'sql@test.com';
@@ -393,7 +393,7 @@ describe('Security', () => {
 describe('Performance', () => {
     describe('Booking ID Generation', () => {
         it('should generate 1000 IDs in under 100ms', () => {
-            const bookingRepository = require('../src/services/bookingRepository');
+            const bookingRepository = import  from '../src/services/bookingRepository');
             
             const start = Date.now();
             for (let i = 0; i < 1000; i++) {
@@ -419,3 +419,4 @@ describe('Performance', () => {
         });
     });
 });
+
