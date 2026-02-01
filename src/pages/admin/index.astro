@@ -764,6 +764,109 @@ import Layout from '../../layouts/Layout.astro';
             animation: slideOut 0.3s ease-out forwards;
         }
 
+        /* Confirm Dialog */
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .confirm-overlay.show {
+            opacity: 1;
+        }
+
+        .confirm-dialog {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 440px;
+            width: 90%;
+            transform: scale(0.9) translateY(-20px);
+            transition: transform 0.2s ease-out;
+        }
+
+        .confirm-overlay.show .confirm-dialog {
+            transform: scale(1) translateY(0);
+        }
+
+        .confirm-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .confirm-icon {
+            font-size: 32px;
+            color: var(--color-secondary);
+            flex-shrink: 0;
+        }
+
+        .confirm-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .confirm-body {
+            padding: 24px;
+        }
+
+        .confirm-body p {
+            margin: 0;
+            color: var(--color-text);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px 24px;
+            justify-content: flex-end;
+        }
+
+        .confirm-cancel, .confirm-ok {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .confirm-cancel {
+            background: var(--color-white);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .confirm-cancel:hover {
+            background: var(--color-background);
+        }
+
+        .confirm-ok {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .confirm-ok:hover {
+            background: var(--color-secondary);
+        }
+
         /* Cards */
         .card {
             background: var(--color-white);
@@ -1610,6 +1713,65 @@ import Layout from '../../layouts/Layout.astro';
             }, 300);
         }
 
+        // Custom confirm dialog
+        function showConfirm(message, title = 'Apstiprināt darbību') {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'confirm-overlay';
+                
+                const dialog = document.createElement('div');
+                dialog.className = 'confirm-dialog';
+                
+                dialog.innerHTML = `
+                    <div class="confirm-header">
+                        <i class="ph ph-question confirm-icon"></i>
+                        <h3>${title}</h3>
+                    </div>
+                    <div class="confirm-body">
+                        <p>${message}</p>
+                    </div>
+                    <div class="confirm-actions">
+                        <button class="btn-secondary confirm-cancel">Atcelt</button>
+                        <button class="btn-primary confirm-ok">Apstiprināt</button>
+                    </div>
+                `;
+                
+                overlay.appendChild(dialog);
+                document.body.appendChild(overlay);
+                
+                // Animate in
+                requestAnimationFrame(() => {
+                    overlay.classList.add('show');
+                });
+                
+                // Focus on OK button
+                setTimeout(() => dialog.querySelector('.confirm-ok').focus(), 100);
+                
+                const close = (result) => {
+                    overlay.classList.remove('show');
+                    setTimeout(() => {
+                        overlay.remove();
+                        resolve(result);
+                    }, 200);
+                };
+                
+                dialog.querySelector('.confirm-ok').addEventListener('click', () => close(true));
+                dialog.querySelector('.confirm-cancel').addEventListener('click', () => close(false));
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) close(false);
+                });
+                
+                // ESC key to cancel
+                const handleEsc = (e) => {
+                    if (e.key === 'Escape') {
+                        close(false);
+                        document.removeEventListener('keydown', handleEsc);
+                    }
+                };
+                document.addEventListener('keydown', handleEsc);
+            });
+        }
+
         // Date formatting functions
         function formatDate(dateStr) {
             // Convert yyyy-mm-dd to dd/mm/yyyy
@@ -1914,13 +2076,35 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         window.confirmBooking = async function(id) {
-            if (!confirm('Apstiprināt šo ierakstu?')) return;
-            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) }); loadCalendar(); showToast('Ieraksts apstiprināts', 'success'); } catch (e) { showToast(e.message, 'error'); }
+            const confirmed = await showConfirm('Vai tiešām vēlaties apstiprināt šo ierakstu?', 'Apstiprināt ierakstu');
+            if (!confirmed) return;
+            try { 
+                await fetch(API_BASE + '/dashboard/bookings/' + id, { 
+                    method: 'PATCH', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ status: 'confirmed' }) 
+                }); 
+                loadCalendar(); 
+                showToast('Ieraksts veiksmīgi apstiprināts', 'success'); 
+            } catch (e) { 
+                showToast(e.message, 'error'); 
+            }
         };
 
         window.cancelBooking = async function(id) {
-            if (!confirm('Atcelt šo ierakstu?')) return;
-            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'cancelled' }) }); loadCalendar(); showToast('Ieraksts atcelts', 'success'); } catch (e) { showToast(e.message, 'error'); }
+            const confirmed = await showConfirm('Vai tiešām vēlaties atcelt šo ierakstu?', 'Atcelt ierakstu');
+            if (!confirmed) return;
+            try { 
+                await fetch(API_BASE + '/dashboard/bookings/' + id, { 
+                    method: 'PATCH', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ status: 'cancelled' }) 
+                }); 
+                loadCalendar(); 
+                showToast('Ieraksts veiksmīgi atcelts', 'success'); 
+            } catch (e) { 
+                showToast(e.message, 'error'); 
+            }
         };
 
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];

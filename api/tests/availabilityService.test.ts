@@ -2,13 +2,13 @@
  * Tests for AvailabilityService
  */
 
-const {
+import {
     generateSlotsFromSchedule,
     isDateInVacation,
     DEFAULT_SCHEDULE,
     DEFAULT_SERVICES,
     dayNames
-} = require('../src/services/availabilityService');
+} from '../src/services/availabilityService';
 
 describe('AvailabilityService', () => {
     describe('dayNames', () => {
@@ -129,3 +129,4 @@ describe('AvailabilityService', () => {
         });
     });
 });
+

@@ -3,7 +3,7 @@
  * Testing vacation period filtering, date range generation, and slot availability
  */
 
-const { isLatvianHoliday } = require('../src/services/latvianHolidays');
+import { isLatvianHoliday } from '../src/services/latvianHolidays';
 
 describe('Availability API Logic', () => {
     // Helper function to check if date is in vacation period
@@ -342,3 +342,4 @@ describe('Availability API Logic', () => {
         });
     });
 });
+

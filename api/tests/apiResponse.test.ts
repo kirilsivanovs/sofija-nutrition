@@ -2,7 +2,7 @@
  * API Response Helper Tests
  */
 
-const {
+import {
     successResponse,
     errorResponse,
     paginatedResponse,
@@ -11,7 +11,7 @@ const {
     CommonErrors,
     transformLegacyResponse,
     withStandardResponse
-} = require('../src/utils/apiResponse');
+} from '../src/utils/apiResponse';
 
 describe('API Response Helper', () => {
     describe('successResponse', () => {
@@ -320,3 +320,4 @@ describe('API Response Helper', () => {
         });
     });
 });
+
