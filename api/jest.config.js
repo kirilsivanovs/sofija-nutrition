@@ -17,12 +17,13 @@ module.exports = {
   // Coverage thresholds - CI/CD gate
   // Note: Functions are excluded as they're covered by E2E tests
   // Focus on business logic in services, utils, templates
+  // Target: 85%+ (current: 85.59%)
   coverageThreshold: {
     global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
+      branches: 75,
+      functions: 82,
+      lines: 86,
+      statements: 85
     }
   },
   

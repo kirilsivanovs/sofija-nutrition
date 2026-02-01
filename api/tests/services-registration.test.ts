@@ -12,6 +12,48 @@ describe('Service Registration', () => {
         testContainer = new Container();
     });
 
+    describe('Auto-registration on import', () => {
+        it('should auto-register services when importing services.ts', () => {
+            // Import services.ts which calls registerServices() automatically
+            const { container, registerServices } = require('../src/services');
+
+            // Verify registerServices function exists
+            expect(registerServices).toBeDefined();
+            expect(typeof registerServices).toBe('function');
+
+            // Verify all services are auto-registered in the global container
+            expect(container.has('config')).toBe(true);
+            expect(container.has('translations')).toBe(true);
+            expect(container.has('bookingRepository')).toBe(true);
+            expect(container.has('emailService')).toBe(true);
+            expect(container.has('pdfService')).toBe(true);
+            expect(container.has('featureFlags')).toBe(true);
+            expect(container.has('holidayService')).toBe(true);
+            expect(container.has('availabilityService')).toBe(true);
+            expect(container.has('bookingService')).toBe(true);
+        });
+
+        it('should allow manual registerServices() call', () => {
+            const { registerServices } = require('../src/services');
+            
+            // Create new container
+            const newContainer = new Container();
+            
+            // registerServices should work without errors
+            expect(() => registerServices()).not.toThrow();
+        });
+
+        it('should register holidayService with isLatvianHoliday', () => {
+            const { container } = require('../src/services');
+
+            const holidayService = container.resolve('holidayService');
+
+            expect(holidayService).toBeDefined();
+            expect(holidayService.isLatvianHoliday).toBeDefined();
+            expect(typeof holidayService.isLatvianHoliday).toBe('function');
+        });
+    });
+
     describe('registerServices', () => {
         it('should register all core services', () => {
             // Manually register same services as services.js
