@@ -33,6 +33,12 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
 }
 
+/* Force lining numerals (no descenders on 3, 4, etc.) */
+.tabular-nums {
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: 'lnum' 1, 'tnum' 1, 'onum' 0;
+}
+
 /* All clickable elements - minimum 44x44px touch target (Apple HIG) */
 a, button, [role="button"], .btn-primary, .lang-btn, .mobile-menu-btn,
 input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"] {
