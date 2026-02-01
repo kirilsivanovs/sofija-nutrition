@@ -1,0 +1,76 @@
+---
+// Availability tab with schedule, vacation periods, blocked dates and holidays
+---
+
+<div class="content-header"><h2 class="content-title">Darba laiki</h2></div>
+<p class="content-subtitle">Iestatiet pieejamos laikus katrai nedēļas dienai</p>
+
+<div class="card">
+    <div id="availability-form" class="availability-form"></div>
+    <div class="card-footer">
+        <button id="save-availability" class="btn-primary">
+            <i class="ph ph-floppy-disk"></i>
+            <span>Saglabāt</span>
+        </button>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+<div class="content-header"><h2 class="content-title">Atvaļinājuma periodi</h2></div>
+<p class="content-subtitle">Iestatiet periodus, kad esat atvaļinājumā</p>
+
+<div class="card">
+    <div class="vacation-form">
+        <div class="date-input-wrapper">
+            <input type="text" id="vacation-start" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+            <i class="ph ph-calendar date-input-icon"></i>
+        </div>
+        <div class="date-input-wrapper">
+            <input type="text" id="vacation-end" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+            <i class="ph ph-calendar date-input-icon"></i>
+        </div>
+        <input type="text" id="vacation-reason" placeholder="Piezīmes (neobligāti)" class="input-field input-flex">
+        <button id="add-vacation" class="btn-primary">
+            <i class="ph ph-calendar-x"></i>
+            <span>Pievienot atvaļinājumu</span>
+        </button>
+    </div>
+    <div id="vacation-list" class="blocked-list"></div>
+</div>
+
+<div class="section-divider"></div>
+<div class="content-header"><h2 class="content-title">Bloķētie datumi</h2></div>
+<p class="content-subtitle">Pievienojiet atsevišķus datumus, kad nepieņemat klientus</p>
+
+<div class="card">
+    <div class="blocked-date-form">
+        <div class="date-input-wrapper">
+            <input type="text" id="block-date" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+            <i class="ph ph-calendar date-input-icon"></i>
+        </div>
+        <input type="text" id="block-reason" placeholder="Iemesls" class="input-field input-flex">
+        <button id="add-blocked-date" class="btn-danger">
+            <i class="ph ph-plus"></i>
+            <span>Pievienot</span>
+        </button>
+    </div>
+    <div id="blocked-dates-list" class="blocked-list"></div>
+</div>
+
+<div class="section-divider"></div>
+<div class="content-header"><h2 class="content-title">Latvijas valsts svētki</h2></div>
+<p class="content-subtitle">Šajos datumos automātiski netiek pieņemti ieraksti</p>
+
+<div class="card">
+    <div class="holidays-controls">
+        <select id="holiday-year" class="input-field">
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+        </select>
+        <button id="refresh-holidays" class="btn-secondary">
+            <i class="ph ph-arrows-clockwise"></i>
+            <span>Atjaunot</span>
+        </button>
+    </div>
+    <div id="holidays-list" class="holidays-grid"></div>
+</div>
