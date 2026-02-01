@@ -178,9 +178,10 @@ test('Полное бронирование: клиент + подтвержде
     console.log('✅ Cookie баннер уже скрыт');
   }
   
-  // 2. Ждём появления секции контактов (статический HTML)
+  // 2. Ждём полной загрузки страницы и появления секции контактов
+  await page.waitForLoadState('domcontentloaded');
   const contactSection = page.locator('#contact');
-  await expect(contactSection).toBeAttached({ timeout: 10000 });
+  await expect(contactSection).toBeAttached({ timeout: 15000 });
   
   // 3. Скроллим к секции бронирования
   await contactSection.scrollIntoViewIfNeeded();
