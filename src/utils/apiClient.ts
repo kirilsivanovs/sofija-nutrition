@@ -24,12 +24,6 @@ const DEFAULT_HEADERS = {
     'Content-Type': 'application/json',
 } as const;
 
-const DEFAULT_RETRY_CONFIG = {
-    maxRetries: 3,
-    retryDelay: 1000, // ms
-    retryableStatusCodes: [408, 429, 500, 502, 503, 504],
-} as const;
-
 // ============================================
 // Types
 // ============================================
@@ -44,6 +38,20 @@ interface RetryConfig {
     maxRetries: number;
     retryDelay: number;
     retryableStatusCodes: number[];
+}
+
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+    maxRetries: 3,
+    retryDelay: 1000,
+    retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+};
+
+function getDefaultRetryConfig(): RetryConfig {
+    return {
+        maxRetries: 3,
+        retryDelay: 1000,
+        retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+    };
 }
 
 export class APIError extends Error {
@@ -68,7 +76,7 @@ export class APIError extends Error {
 async function fetchWithRetry(
     url: string,
     config: RequestConfig = {},
-    retryConfig: RetryConfig = DEFAULT_RETRY_CONFIG
+    retryConfig: RetryConfig = getDefaultRetryConfig()
 ): Promise<Response> {
     const { maxRetries, retryDelay, retryableStatusCodes } = retryConfig;
     const { retry = true, timeout = 30000, ...fetchConfig } = config;
@@ -144,7 +152,15 @@ async function parseResponse<T>(response: Response): Promise<APIResponse<T>> {
             );
         }
 
-        return data;
+        // Wrap response in APIResponse format if not already wrapped
+        if (data.success !== undefined) {
+            return data;
+        }
+        
+        return {
+            success: true,
+            data: data as T
+        };
     } catch (error) {
         if (error instanceof APIError) {
             throw error;
@@ -266,17 +282,21 @@ export const adminApi = {
     },
 
     /**
-     * Get schedule settings
+     * Get availability settings (schedule, blocked dates, vacation periods)
      */
-    getSchedule: async () => {
-        return get<Record<string, any>>('/api/dashboard/schedule');
+    getAvailability: async () => {
+        return get<{
+            schedule: Record<string, any>;
+            blockedDates: string[];
+            vacationPeriods: Array<{ start: string; end: string }>;
+        }>('/api/dashboard/availability');
     },
 
     /**
      * Update schedule settings
      */
     updateSchedule: async (schedule: Record<string, any>) => {
-        return post<Record<string, any>>('/api/dashboard/schedule', schedule);
+        return post<Record<string, any>>('/api/dashboard/availability', { schedule });
     },
 
     /**
@@ -294,38 +314,23 @@ export const adminApi = {
     },
 
     /**
-     * Get blocked dates
-     */
-    getBlockedDates: async () => {
-        return get<string[]>('/api/dashboard/blocked-dates');
-    },
-
-    /**
-     * Update blocked dates
-     */
-    updateBlockedDates: async (dates: string[]) => {
-        return post<string[]>('/api/dashboard/blocked-dates', { dates });
-    },
-
-    /**
-     * Get vacation periods
-     */
-    getVacations: async () => {
-        return get<Array<{ start: string; end: string }>>('/api/dashboard/vacations');
-    },
-
-    /**
-     * Update vacation periods
-     */
-    updateVacations: async (periods: Array<{ start: string; end: string }>) => {
-        return post<Array<{ start: string; end: string }>>('/api/dashboard/vacations', { periods });
-    },
-
-    /**
-     * Get Latvian holidays
+     * Get Latvian holidays (static data)
      */
     getHolidays: async (year: number) => {
-        return get<Record<string, string>>(`/api/dashboard/holidays/${year}`);
+        // Latvian holidays are static for now
+        const holidays: Record<string, string> = {
+            [`${year}-01-01`]: 'Jaunais gads',
+            [`${year}-05-01`]: 'Darba svētki',
+            [`${year}-05-04`]: 'Latvijas Republikas Neatkarības atjaunošanas diena',
+            [`${year}-06-23`]: 'Līgo diena',
+            [`${year}-06-24`]: 'Jāņi',
+            [`${year}-11-18`]: 'Latvijas Republikas proklamēšanas diena',
+            [`${year}-12-24`]: 'Ziemassvētku vakars',
+            [`${year}-12-25`]: 'Ziemassvētki',
+            [`${year}-12-26`]: 'Otrie Ziemassvētki',
+            [`${year}-12-31`]: 'Vecgada vakars',
+        };
+        return { success: true, data: holidays };
     },
 } as const;
 
@@ -366,5 +371,5 @@ export function formatAPIError(error: unknown): string {
 // Exports
 // ============================================
 
-export { APIError, get, post, patch, del };
+export { get, post, patch, del };
 export type { RequestConfig, APIResponse };

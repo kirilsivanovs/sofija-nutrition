@@ -145,8 +145,8 @@ import Layout from '../layouts/Layout.astro';
                             PhD pētniece un reģistrēta uztura speciāliste, kas palīdz cilvēkiem ar prediabētu un insulīna rezistenci stabilizēt cukura līmeni, izmantojot CGM datus.
                         </p>
 
-                        <!-- Benefits - horizontal on desktop -->
-                        <div class="grid grid-cols-2 gap-3 mb-6 md:mb-8">
+                        <!-- Benefits - horizontal on desktop, vertical on mobile -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 md:mb-8">
                             <div class="flex items-center gap-3">
                                 <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
                                 <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_1">14 dienu CGM monitorēšana</span>
@@ -330,7 +330,7 @@ import Layout from '../layouts/Layout.astro';
                         <!-- CTA -->
                         <a href="#contact" class="btn-cta btn-solid w-full text-base md:text-lg" data-i18n="program_cta">Pieteikties programmai</a>
                         
-                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500">
+                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-6">
                             <i class="ph ph-shield-check text-accent"></i>
                             <span data-i18n="program_guarantee">Pirmā konsultācija bezmaksas</span>
                         </p>
@@ -445,7 +445,7 @@ import Layout from '../layouts/Layout.astro';
         
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <div class="text-center mb-10 md:mb-14">
-                <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3">Atsauksmes</span>
+                <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3" data-i18n="testimonials_sectionTitle">Atsauksmes</span>
                 <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold" data-i18n="testimonials_title">Ko saka klienti</h2>
             </div>
 

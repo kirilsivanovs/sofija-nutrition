@@ -68,8 +68,8 @@ export async function loadHolidays(year: number) {
  */
 export async function loadSchedule() {
     try {
-        const response = await adminApi.getSchedule();
-        return response.data || {};
+        const response = await adminApi.getAvailability();
+        return response.data?.schedule || {};
     } catch (error) {
         console.error('Failed to load schedule:', formatAPIError(error));
         return {};
@@ -81,8 +81,8 @@ export async function loadSchedule() {
  */
 export async function loadBlockedDates() {
     try {
-        const response = await adminApi.getBlockedDates();
-        return response.data || [];
+        const response = await adminApi.getAvailability();
+        return response.data?.blockedDates || [];
     } catch (error) {
         console.error('Failed to load blocked dates:', formatAPIError(error));
         return [];
@@ -94,8 +94,8 @@ export async function loadBlockedDates() {
  */
 export async function loadVacations() {
     try {
-        const response = await adminApi.getVacations();
-        return response.data || [];
+        const response = await adminApi.getAvailability();
+        return response.data?.vacationPeriods || [];
     } catch (error) {
         console.error('Failed to load vacations:', formatAPIError(error));
         return [];
@@ -107,20 +107,22 @@ export async function loadVacations() {
  */
 export async function loadCalendarData(year: number) {
     try {
-        const [bookings, holidays, schedule, blockedDates, vacations] = await Promise.all([
+        // Load availability data once (schedule, blockedDates, vacationPeriods)
+        const availabilityResponse = await adminApi.getAvailability();
+        const availability = availabilityResponse.data || { schedule: {}, blockedDates: [], vacationPeriods: [] };
+        
+        // Load bookings and holidays in parallel
+        const [bookings, holidays] = await Promise.all([
             loadBookings(),
             loadHolidays(year),
-            loadSchedule(),
-            loadBlockedDates(),
-            loadVacations(),
         ]);
 
         return {
             bookings,
             holidays,
-            schedule,
-            blockedDates: new Set(blockedDates),
-            vacations,
+            schedule: availability.schedule,
+            blockedDates: new Set(availability.blockedDates),
+            vacations: availability.vacationPeriods,
         };
     } catch (error) {
         throw new Error(formatAPIError(error));

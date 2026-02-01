@@ -1259,9 +1259,12 @@ class BookingCalendar {
             if (modal) {
                 modal.style.display = 'none';
             }
+            // Reset selected date and time to allow new booking
+            this.selectedDate = null;
+            this.selectedTime = null;
             this.render(); // Re-render calendar
             this.attachEventListeners(); // Re-attach event listeners
-            this.renderCalendar(); // Re-render calendar days
+            this.renderCalendar(); // Re-render calendar days to make them clickable again
         });
     }
 

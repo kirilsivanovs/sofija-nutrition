@@ -1619,10 +1619,10 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         }
     </style>
 
-    <script is:inline type="module">
-        import { formatDate, formatDateReverse, formatTime, formatDateISO, initializeDateInputs } from '../../utils/admin/formatters.js';
-        import { showToast, showConfirm } from '../../utils/admin/notifications.js';
-        import { DAY_NAMES_FOR_SCHEDULE, MONTH_NAMES, SERVICE_NAMES } from '../../utils/admin/constants.js';
+    <script>
+        import { formatDate, formatDateReverse, formatTime, formatDateISO, initializeDateInputs } from '../../utils/admin/formatters';
+        import { showToast, showConfirm } from '../../utils/admin/notifications';
+        import { DAY_NAMES_FOR_SCHEDULE, MONTH_NAMES, SERVICE_NAMES } from '../../utils/admin/constants';
         import { 
             renderCalendar, 
             showDayDetails, 
@@ -1635,7 +1635,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             setSelectedDate,
             getServiceName,
             getStatusText
-        } from '../../utils/admin/calendar.js';
+        } from '../../utils/admin/calendar';
         import {
             loadAvailabilityForm,
             saveAvailability,
@@ -1644,15 +1644,34 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             addBlockedDate,
             removeBlockedDate as removeBlockedDateUtil,
             setupVacationDateValidation
-        } from '../../utils/admin/availability.js';
-        import { initDatePicker } from '../../utils/admin/datePicker.js';
-        import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays.js';
+        } from '../../utils/admin/availability';
+        import { initDatePicker } from '../../utils/admin/datePicker';
+        import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays';
         import { 
             loadCalendarData, 
             confirmBooking as confirmBookingApi,
             cancelBooking as cancelBookingApi,
             findFirstUpcomingBooking 
-        } from '../../utils/adminApiAdapter.js';
+        } from '../../utils/adminApiAdapter';
+
+        // Type declarations for global window functions
+        declare global {
+            interface Window {
+                getAuthHeaders: () => Record<string, string>;
+                showDayDetails: (dateStr: string) => void;
+                confirmBooking: (id: string) => Promise<void>;
+                cancelBooking: (id: string) => Promise<void>;
+                removeVacation: (id: string) => Promise<void>;
+                removeBlockedDate: (date: string) => Promise<void>;
+                deleteEntity: (partitionKey: string, rowKey: string) => Promise<void>;
+            }
+        }
+
+        interface VacationPeriod {
+            id?: string;
+            startDate: string;
+            endDate: string;
+        }
 
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
@@ -1674,8 +1693,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         }
         
         // Функция для добавления токена к API запросам
-        window.getAuthHeaders = function() {
-            const headers = { 'Content-Type': 'application/json' };
+        window.getAuthHeaders = function(): Record<string, string> {
+            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
             const token = sessionStorage.getItem('e2e_token');
             if (token) {
                 headers['X-E2E-Token'] = token;
@@ -1684,11 +1703,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         };
         
         // Calendar state managed by calendar.js
-        let allBookings = [];
-        let holidays = {};
-        let schedule = {};
-        let blockedDates = new Set();
-        let vacationPeriods = [];
+        let allBookings: any[] = [];
+        let holidays: Record<string, string> = {};
+        let schedule: Record<string, any> = {};
+        let blockedDates = new Set<string>();
+        let vacationPeriods: VacationPeriod[] = [];
         const dayNamesForSchedule = DAY_NAMES_FOR_SCHEDULE;
         const monthNames = MONTH_NAMES;
 
@@ -1704,7 +1723,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 headers: { 'X-E2E-Token': e2eTokenStored }
             }).then(r => r.json()).then(data => {
                 if (data.clientPrincipal) {
-                    document.getElementById('user-info').textContent = data.clientPrincipal.userDetails + ' (E2E)';
+                    const userInfo = document.getElementById('user-info');
+                    if (userInfo) userInfo.textContent = data.clientPrincipal.userDetails + ' (E2E)';
                 }
             }).catch(() => {
                 // Токен невалиден - очищаем
@@ -1714,61 +1734,99 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             // Стандартная Microsoft авторизация
             fetch('/.auth/me').then(r => r.json()).then(data => {
                 if (data.clientPrincipal) {
-                    document.getElementById('user-info').textContent = data.clientPrincipal.userDetails || data.clientPrincipal.userId;
+                    const userInfo = document.getElementById('user-info');
+                    if (userInfo) userInfo.textContent = data.clientPrincipal.userDetails || data.clientPrincipal.userId;
                 }
             }).catch(() => {});
         }
 
         const tabBtns = document.querySelectorAll('.admin-tab');
         const tabContents = document.querySelectorAll('.admin-content');
-        const mobileSelect = document.getElementById('mobile-tab-selector');
+        const mobileSelect = document.getElementById('mobile-tab-selector') as HTMLSelectElement | null;
 
-        function switchTab(tabId) {
+        function switchTab(tabId: string) {
             tabBtns.forEach(b => b.classList.remove('active'));
             const activeBtn = document.querySelector(`.admin-tab[data-tab="${tabId}"]`);
             if (activeBtn) activeBtn.classList.add('active');
             tabContents.forEach(c => c.classList.add('hidden'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            mobileSelect.value = tabId;
+            const tabEl = document.getElementById('tab-' + tabId);
+            if (tabEl) tabEl.classList.remove('hidden');
+            if (mobileSelect) mobileSelect.value = tabId;
             if (tabId === 'bookings') loadCalendar();
             if (tabId === 'availability') loadAvailability();
             if (tabId === 'settings') loadSettings();
             if (tabId === 'data') loadTableData();
         }
 
-        tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
-        mobileSelect.addEventListener('change', e => switchTab(e.target.value));
+        tabBtns.forEach(btn => btn.addEventListener('click', () => {
+            const tab = (btn as HTMLElement).dataset.tab;
+            if (tab) switchTab(tab);
+        }));
+        if (mobileSelect) {
+            mobileSelect.addEventListener('change', e => {
+                const target = e.target as HTMLSelectElement;
+                switchTab(target.value);
+            });
+        }
 
-        document.getElementById('prev-month').addEventListener('click', () => { 
-            const currentDate = getCurrentDate();
-            currentDate.setDate(1); 
-            currentDate.setMonth(currentDate.getMonth() - 1); 
-            setCurrentDate(currentDate);
-            loadCalendar(); 
-        });
-        document.getElementById('next-month').addEventListener('click', () => { 
-            const currentDate = getCurrentDate();
-            currentDate.setDate(1); 
-            currentDate.setMonth(currentDate.getMonth() + 1); 
-            setCurrentDate(currentDate);
-            loadCalendar(); 
-        });
-        document.getElementById('today-btn').addEventListener('click', () => { 
-            setCurrentDate(new Date()); 
-            loadCalendar(); 
-        });
-        document.getElementById('refresh-bookings').addEventListener('click', loadCalendar);
-        document.getElementById('close-day-details').addEventListener('click', () => document.getElementById('day-details').classList.add('hidden'));
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const todayBtn = document.getElementById('today-btn');
+        const refreshBookingsBtn = document.getElementById('refresh-bookings');
+        const closeDayDetailsBtn = document.getElementById('close-day-details');
+
+        if (prevMonthBtn) {
+            prevMonthBtn.addEventListener('click', () => { 
+                const currentDate = getCurrentDate();
+                currentDate.setDate(1); 
+                currentDate.setMonth(currentDate.getMonth() - 1); 
+                setCurrentDate(currentDate);
+                loadCalendar(); 
+            });
+        }
+
+        if (nextMonthBtn) {
+            nextMonthBtn.addEventListener('click', () => { 
+                const currentDate = getCurrentDate();
+                currentDate.setDate(1); 
+                currentDate.setMonth(currentDate.getMonth() + 1); 
+                setCurrentDate(currentDate);
+                loadCalendar(); 
+            });
+        }
+
+        if (todayBtn) {
+            todayBtn.addEventListener('click', () => { 
+                setCurrentDate(new Date()); 
+                loadCalendar(); 
+            });
+        }
+
+        if (refreshBookingsBtn) {
+            refreshBookingsBtn.addEventListener('click', loadCalendar);
+        }
+
+        if (closeDayDetailsBtn) {
+            closeDayDetailsBtn.addEventListener('click', () => {
+                const dayDetails = document.getElementById('day-details');
+                if (dayDetails) dayDetails.classList.add('hidden');
+            });
+        }
 
         async function loadCalendar() {
             const loading = document.getElementById('bookings-loading');
             const container = document.getElementById('calendar-container');
-            loading.classList.remove('hidden');
-            container.classList.add('hidden');
-            document.getElementById('day-details').classList.add('hidden');
+            const dayDetails = document.getElementById('day-details');
+            const currentMonthEl = document.getElementById('current-month');
+            
+            if (loading) loading.classList.remove('hidden');
+            if (container) container.classList.add('hidden');
+            if (dayDetails) dayDetails.classList.add('hidden');
             
             const currentDate = getCurrentDate();
-            document.getElementById('current-month').textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            if (currentMonthEl) {
+                currentMonthEl.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            }
 
             try {
                 const year = currentDate.getFullYear();
@@ -1779,18 +1837,21 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 allBookings = data.bookings;
                 holidays = data.holidays;
                 schedule = data.schedule;
-                blockedDates = data.blockedDates;
-                vacationPeriods = data.vacations;
+                blockedDates = data.blockedDates as Set<string>;
+                vacationPeriods = data.vacations.map((v: { start: string; end: string }) => ({
+                    startDate: v.start,
+                    endDate: v.end
+                }));
                 
                 // Update calendar data in calendar module
                 setCalendarData({ bookings: allBookings, schedule, holidays, blockedDates, vacationPeriods });
                 
                 console.log('📅 Loaded vacation periods:', vacationPeriods);
                 renderCalendar();
-                loading.classList.add('hidden');
-                container.classList.remove('hidden');
-            } catch (error) {
-                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>';
+                if (loading) loading.classList.add('hidden');
+                if (container) container.classList.remove('hidden');
+            } catch (error: unknown) {
+                if (loading) loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>';
             }
         }
 
@@ -1818,11 +1879,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         window.showDayDetails = showDayDetails;
 
         // Helper function to check if date is in vacation period (for non-calendar use)
-        function isDateInVacation(dateStr) {
+        function isDateInVacation(dateStr: string): boolean {
             return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
         }
 
-        window.confirmBooking = async function(id) {
+        window.confirmBooking = async function(id: string): Promise<void> {
             const confirmed = await showConfirm('Vai tiešām vēlaties apstiprināt šo ierakstu?', 'Apstiprināt ierakstu');
             if (!confirmed) return;
             try { 
@@ -1834,12 +1895,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     showDayDetails(selectedDate);
                 }
                 showToast('Ieraksts veiksmīgi apstiprināts', 'success'); 
-            } catch (e) { 
-                showToast(e.message, 'error'); 
+            } catch (e: unknown) { 
+                showToast((e as Error).message, 'error'); 
             }
         };
 
-        window.cancelBooking = async function(id) {
+        window.cancelBooking = async function(id: string): Promise<void> {
             const confirmed = await showConfirm('Vai tiešām vēlaties atcelt šo ierakstu?', 'Atcelt ierakstu');
             if (!confirmed) return;
             try { 
@@ -1851,8 +1912,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     showDayDetails(selectedDate);
                 }
                 showToast('Ieraksts veiksmīgi atcelts', 'success'); 
-            } catch (e) { 
-                showToast(e.message, 'error'); 
+            } catch (e: unknown) { 
+                showToast((e as Error).message, 'error'); 
             }
         };
 
@@ -1865,62 +1926,122 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         // Setup holidays listeners
         setupHolidaysListeners(API_BASE);
 
-        document.getElementById('save-availability').addEventListener('click', () => saveAvailability(API_BASE));
+        const saveAvailabilityBtn = document.getElementById('save-availability');
+        if (saveAvailabilityBtn) {
+            saveAvailabilityBtn.addEventListener('click', () => saveAvailability(API_BASE));
+        }
 
-        document.getElementById('add-vacation').addEventListener('click', () => {
-            addVacation(API_BASE, () => {
-                loadAvailability();
-                loadCalendar();
+        const addVacationBtn = document.getElementById('add-vacation');
+        if (addVacationBtn) {
+            addVacationBtn.addEventListener('click', () => {
+                addVacation(API_BASE, () => {
+                    loadAvailability();
+                    loadCalendar();
+                });
             });
-        });
+        }
 
-        window.removeVacation = async function(id) {
+        window.removeVacation = async function(id: string): Promise<void> {
             await removeVacationUtil(API_BASE, id, () => {
                 loadAvailability();
                 loadCalendar();
             });
         };
 
-        document.getElementById('add-blocked-date').addEventListener('click', () => {
-            addBlockedDate(API_BASE, loadAvailability);
-        });
+        const addBlockedDateBtn = document.getElementById('add-blocked-date');
+        if (addBlockedDateBtn) {
+            addBlockedDateBtn.addEventListener('click', () => {
+                addBlockedDate(API_BASE, loadAvailability);
+            });
+        }
 
-        window.removeBlockedDate = async function(date) {
+        window.removeBlockedDate = async function(date: string): Promise<void> {
             await removeBlockedDateUtil(API_BASE, date, loadAvailability);
         };
 
         function loadSettings() {
             fetch(API_BASE + '/dashboard/settings').then(r => r.json()).then(data => {
-                if (data.prices) { document.getElementById('price-initial').value = data.prices.initial || 65; document.getElementById('price-followup').value = data.prices.followup || 45; }
-                if (data.contact) { document.getElementById('contact-email').value = data.contact.email || ''; document.getElementById('contact-phone').value = data.contact.phone || ''; document.getElementById('contact-address').value = data.contact.address || ''; }
-                if (data.duration) { document.getElementById('duration-initial').value = data.duration.initial || 60; document.getElementById('duration-followup').value = data.duration.followup || 30; }
-                if (data.bank) { document.getElementById('bank-name').value = data.bank.name || ''; document.getElementById('bank-iban').value = data.bank.iban || ''; }
+                const priceInitial = document.getElementById('price-initial') as HTMLInputElement | null;
+                const priceFollowup = document.getElementById('price-followup') as HTMLInputElement | null;
+                const contactEmail = document.getElementById('contact-email') as HTMLInputElement | null;
+                const contactPhone = document.getElementById('contact-phone') as HTMLInputElement | null;
+                const contactAddress = document.getElementById('contact-address') as HTMLInputElement | null;
+                const durationInitial = document.getElementById('duration-initial') as HTMLInputElement | null;
+                const durationFollowup = document.getElementById('duration-followup') as HTMLInputElement | null;
+                const bankName = document.getElementById('bank-name') as HTMLInputElement | null;
+                const bankIban = document.getElementById('bank-iban') as HTMLInputElement | null;
+                
+                if (data.prices) { 
+                    if (priceInitial) priceInitial.value = data.prices.initial || 65; 
+                    if (priceFollowup) priceFollowup.value = data.prices.followup || 45; 
+                }
+                if (data.contact) { 
+                    if (contactEmail) contactEmail.value = data.contact.email || ''; 
+                    if (contactPhone) contactPhone.value = data.contact.phone || ''; 
+                    if (contactAddress) contactAddress.value = data.contact.address || ''; 
+                }
+                if (data.duration) { 
+                    if (durationInitial) durationInitial.value = data.duration.initial || 60; 
+                    if (durationFollowup) durationFollowup.value = data.duration.followup || 30; 
+                }
+                if (data.bank) { 
+                    if (bankName) bankName.value = data.bank.name || ''; 
+                    if (bankIban) bankIban.value = data.bank.iban || ''; 
+                }
             }).catch(() => {});
         }
 
-        document.getElementById('save-settings').addEventListener('click', async () => {
-            const settings = { prices: { initial: parseInt(document.getElementById('price-initial').value), followup: parseInt(document.getElementById('price-followup').value) }, contact: { email: document.getElementById('contact-email').value, phone: document.getElementById('contact-phone').value, address: document.getElementById('contact-address').value }, duration: { initial: parseInt(document.getElementById('duration-initial').value), followup: parseInt(document.getElementById('duration-followup').value) }, bank: { name: document.getElementById('bank-name').value, iban: document.getElementById('bank-iban').value } };
-            try { await fetch(API_BASE + '/dashboard/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); showToast('Iestatījumi saglabāti!', 'success'); } catch (e) { showToast(e.message, 'error'); }
-        });
+        const saveSettingsBtn = document.getElementById('save-settings');
+        if (saveSettingsBtn) {
+            saveSettingsBtn.addEventListener('click', async () => {
+                const priceInitial = (document.getElementById('price-initial') as HTMLInputElement)?.value;
+                const priceFollowup = (document.getElementById('price-followup') as HTMLInputElement)?.value;
+                const contactEmail = (document.getElementById('contact-email') as HTMLInputElement)?.value;
+                const contactPhone = (document.getElementById('contact-phone') as HTMLInputElement)?.value;
+                const contactAddress = (document.getElementById('contact-address') as HTMLInputElement)?.value;
+                const durationInitial = (document.getElementById('duration-initial') as HTMLInputElement)?.value;
+                const durationFollowup = (document.getElementById('duration-followup') as HTMLInputElement)?.value;
+                const bankName = (document.getElementById('bank-name') as HTMLInputElement)?.value;
+                const bankIban = (document.getElementById('bank-iban') as HTMLInputElement)?.value;
+                
+                const settings = { 
+                    prices: { initial: parseInt(priceInitial || '65'), followup: parseInt(priceFollowup || '45') }, 
+                    contact: { email: contactEmail || '', phone: contactPhone || '', address: contactAddress || '' }, 
+                    duration: { initial: parseInt(durationInitial || '60'), followup: parseInt(durationFollowup || '30') }, 
+                    bank: { name: bankName || '', iban: bankIban || '' } 
+                };
+                try { 
+                    await fetch(API_BASE + '/dashboard/settings', { 
+                        method: 'PUT', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify(settings) 
+                    }); 
+                    showToast('Iestatījumi saglabāti!', 'success'); 
+                } catch (e: unknown) { 
+                    showToast((e as Error).message, 'error'); 
+                }
+            });
+        }
 
         // При первой загрузке - переходим к месяцу с ближайшими записями
         navigateToFirstUpcomingBooking().then(() => loadCalendar());
 
-        let currentTableData = null;
-        let filteredTableData = [];
-        let selectedRows = new Set();
-        let currentSortColumn = null;
-        let currentSortDirection = 'asc';
+        let currentTableData: any = null;
+        let filteredTableData: any[] = [];
+        let selectedRows = new Set<string>();
+        let currentSortColumn: string | null = null;
+        let currentSortDirection: 'asc' | 'desc' = 'asc';
 
         async function loadTableData() {
-            const tableName = document.getElementById('table-select').value;
+            const tableSelectEl = document.getElementById('table-select') as HTMLSelectElement | null;
+            const tableName = tableSelectEl?.value || 'bookings';
             const loading = document.getElementById('table-loading');
             const container = document.getElementById('table-container');
             const filters = document.getElementById('table-filters');
             const empty = document.getElementById('table-empty');
             
-            loading.classList.remove('hidden'); 
-            container.classList.add('hidden'); 
+            if (loading) loading.classList.remove('hidden'); 
+            if (container) container.classList.add('hidden'); 
             if (empty) empty.classList.add('hidden');
             
             selectedRows.clear();
@@ -1932,35 +2053,41 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 currentTableData = data; 
                 filteredTableData = data.entities || [];
                 
-                loading.classList.add('hidden'); 
+                if (loading) loading.classList.add('hidden'); 
                 
                 if (!data.entities || data.entities.length === 0) { 
                     if (empty) empty.classList.remove('hidden'); 
-                    document.getElementById('table-count').textContent = '0'; 
-                    filters.classList.add('hidden');
+                    const countEl = document.getElementById('table-count');
+                    if (countEl) countEl.textContent = '0'; 
+                    if (filters) filters.classList.add('hidden');
                     return; 
                 }
                 
-                filters.classList.remove('hidden');
+                if (filters) filters.classList.remove('hidden');
                 applyFilters();
-            } catch (error) { 
-                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>'; 
+            } catch (error: unknown) { 
+                if (loading) loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>'; 
             }
         }
 
         function applyFilters() {
             if (!currentTableData || !currentTableData.entities) return;
             
-            const searchTerm = document.getElementById('table-search').value.toLowerCase();
-            const statusFilter = document.getElementById('filter-status').value;
-            const dateFrom = document.getElementById('filter-date-from').value;
-            const dateTo = document.getElementById('filter-date-to').value;
+            const searchEl = document.getElementById('table-search') as HTMLInputElement | null;
+            const statusEl = document.getElementById('filter-status') as HTMLSelectElement | null;
+            const dateFromEl = document.getElementById('filter-date-from') as HTMLInputElement | null;
+            const dateToEl = document.getElementById('filter-date-to') as HTMLInputElement | null;
+            
+            const searchTerm = searchEl?.value.toLowerCase() || '';
+            const statusFilter = statusEl?.value || '';
+            const dateFrom = dateFromEl?.value || '';
+            const dateTo = dateToEl?.value || '';
             
             let filtered = currentTableData.entities;
             
             // Search filter
             if (searchTerm) {
-                filtered = filtered.filter(entity => {
+                filtered = filtered.filter((entity: any) => {
                     return Object.values(entity).some(value => {
                         if (value === null || value === undefined) return false;
                         return String(value).toLowerCase().includes(searchTerm);
@@ -1970,12 +2097,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             
             // Status filter
             if (statusFilter) {
-                filtered = filtered.filter(entity => entity.status === statusFilter);
+                filtered = filtered.filter((entity: any) => entity.status === statusFilter);
             }
             
             // Date range filter
             if (dateFrom || dateTo) {
-                filtered = filtered.filter(entity => {
+                filtered = filtered.filter((entity: any) => {
                     const entityDate = entity.date;
                     if (!entityDate) return false;
                     
@@ -2006,18 +2133,21 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const total = currentTableData?.entities?.length || 0;
             const filtered = filteredTableData.length;
             const countEl = document.getElementById('filtered-count');
+            const tableCountEl = document.getElementById('table-count');
             
-            document.getElementById('table-count').textContent = total;
+            if (tableCountEl) tableCountEl.textContent = String(total);
             
-            if (filtered < total) {
-                countEl.textContent = `(rāda ${filtered})`;
-                countEl.classList.remove('hidden');
-            } else {
-                countEl.classList.add('hidden');
+            if (countEl) {
+                if (filtered < total) {
+                    countEl.textContent = `(rāda ${filtered})`;
+                    countEl.classList.remove('hidden');
+                } else {
+                    countEl.classList.add('hidden');
+                }
             }
         }
 
-        function sortTable(column) {
+        function sortTable(column: string) {
             if (currentSortColumn === column) {
                 currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
             } else {
@@ -2050,13 +2180,15 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const container = document.getElementById('table-container');
             const columns = currentTableData.columns || [];
             
+            if (!header || !body) return;
+            
             // Header with sorting
             const allSelected = filteredTableData.length > 0 && selectedRows.size === filteredTableData.length;
             header.innerHTML = `<tr>
                 <th style="width: 50px;">
                     <input type="checkbox" id="select-all" ${allSelected ? 'checked' : ''} title="${allSelected ? 'Noņemt izvēli no visiem' : 'Izvēlēties visus'}">
                 </th>
-                ${columns.map(col => `
+                ${columns.map((col: any) => `
                     <th onclick="sortTable('${col}')" style="cursor: pointer; user-select: none;">
                         ${col}
                         ${currentSortColumn === col ? 
@@ -2078,7 +2210,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     <td>
                         <input type="checkbox" class="row-checkbox" data-row-id="${rowId}" ${isSelected ? 'checked' : ''}>
                     </td>
-                    ${columns.map(col => { 
+                    ${columns.map((col: any) => { 
                         let value = entity[col]; 
                         if (value === undefined || value === null) value = ''; 
                         if (typeof value === 'object') value = JSON.stringify(value); 
@@ -2099,13 +2231,13 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 </tr>`;
             }).join('');
             
-            container.classList.remove('hidden');
+            if (container) container.classList.remove('hidden');
             
             // Attach checkbox listeners (remove old ones first to prevent duplicates)
             const selectAllCheckbox = document.getElementById('select-all');
             if (selectAllCheckbox) {
                 selectAllCheckbox.replaceWith(selectAllCheckbox.cloneNode(true));
-                document.getElementById('select-all').addEventListener('change', handleSelectAll);
+                document.getElementById('select-all')?.addEventListener('change', handleSelectAll);
             }
             
             document.querySelectorAll('.row-checkbox').forEach(cb => {
@@ -2113,8 +2245,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             });
         }
 
-        function handleSelectAll(e) {
-            const checked = e.target.checked;
+        function handleSelectAll(e: Event) {
+            const checked = (e.target as HTMLInputElement).checked;
             selectedRows.clear();
             
             if (checked) {
@@ -2129,10 +2261,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             updateBatchActionsUI();
         }
 
-        function handleRowSelect(e) {
-            const rowId = e.target.dataset.rowId;
+        function handleRowSelect(e: Event) {
+            const target = e.target as HTMLInputElement;
+            const rowId = target.dataset.rowId;
+            if (!rowId) return;
             
-            if (e.target.checked) {
+            if (target.checked) {
                 selectedRows.add(rowId);
             } else {
                 selectedRows.delete(rowId);
@@ -2143,7 +2277,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             // Update row styling
             const row = document.querySelector(`tr[data-row-id="${rowId}"]`);
             if (row) {
-                if (e.target.checked) {
+                if (target.checked) {
                     row.classList.add('row-selected');
                 } else {
                     row.classList.remove('row-selected');
@@ -2151,7 +2285,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             }
             
             // Update select-all checkbox
-            const selectAll = document.getElementById('select-all');
+            const selectAll = document.getElementById('select-all') as HTMLInputElement | null;
             if (selectAll) {
                 selectAll.checked = selectedRows.size === filteredTableData.length && filteredTableData.length > 0;
             }
@@ -2161,12 +2295,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const batchActions = document.getElementById('batch-actions');
             const selectedCount = document.getElementById('selected-count');
             
-            selectedCount.textContent = selectedRows.size;
+            if (selectedCount) selectedCount.textContent = String(selectedRows.size);
             
             if (selectedRows.size > 0) {
-                batchActions.classList.remove('hidden');
+                if (batchActions) batchActions.classList.remove('hidden');
             } else {
-                batchActions.classList.add('hidden');
+                if (batchActions) batchActions.classList.add('hidden');
             }
         }
 
@@ -2180,7 +2314,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             
             if (!confirmed) return;
             
-            const tableName = document.getElementById('table-select').value;
+            const tableSelectEl = document.getElementById('table-select') as HTMLSelectElement | null;
+            const tableName = tableSelectEl?.value;
+            if (!tableName) return;
             let successCount = 0;
             let errorCount = 0;
             
@@ -2197,7 +2333,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     } else {
                         errorCount++;
                     }
-                } catch (e) {
+                } catch (e: unknown) {
                     errorCount++;
                 }
             }
@@ -2224,8 +2360,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             
             const csvContent = [
                 columns.join(','),
-                ...selectedEntities.map(row => 
-                    columns.map(col => {
+                ...selectedEntities.map((row: any) => 
+                    columns.map((col: any) => {
                         let value = row[col];
                         if (value === undefined || value === null) return '';
                         if (typeof value === 'object') value = JSON.stringify(value);
@@ -2240,37 +2376,41 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${document.getElementById('table-select').value}_selected_${new Date().toISOString().split('T')[0]}.csv`;
+            const tableSelectEl2 = document.getElementById('table-select') as HTMLSelectElement | null;
+            link.download = `${tableSelectEl2?.value || 'export'}_selected_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
             URL.revokeObjectURL(url);
             
             showToast(`${selectedEntities.length} ieraksti eksportēti`, 'success');
         }
 
-        window.deleteEntity = async function(partitionKey, rowKey) {
+        window.deleteEntity = async function(partitionKey: string, rowKey: string) {
             const confirmed = await showConfirm('Vai tiešām dzēst šo ierakstu?', 'Dzēst ierakstu');
             if (!confirmed) return;
-            const tableName = document.getElementById('table-select').value;
-            try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) { loadTableData(); showToast('Ieraksts dzēsts', 'success'); } else { const error = await response.json(); showToast(error.details || error.error, 'error'); } } catch (e) { showToast(e.message, 'error'); }
+            const tableSelectEl3 = document.getElementById('table-select') as HTMLSelectElement | null;
+            const tableName = tableSelectEl3?.value;
+            if (!tableName) return;
+            try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) { loadTableData(); showToast('Ieraksts dzēsts', 'success'); } else { const error = await response.json(); showToast(error.details || error.error, 'error'); } } catch (e: unknown) { showToast((e as Error).message, 'error'); }
         };
 
         function exportTableToCSV() {
             if (!currentTableData.entities || currentTableData.entities.length === 0) { showToast('Nav datu eksportēšanai', 'warning'); return; }
             const columns = currentTableData.columns;
             const rows = currentTableData.entities;
-            const csvContent = [columns.join(','), ...rows.map(row => columns.map(col => { let value = row[col]; if (value === undefined || value === null) return ''; if (typeof value === 'object') value = JSON.stringify(value); value = String(value).replace(/"/g, '""'); if (value.includes(',') || value.includes('"') || value.includes('\n')) value = `"${value}"`; return value; }).join(','))].join('\n');
+            const csvContent = [columns.join(','), ...rows.map((row: any) => columns.map((col: any) => { let value = row[col]; if (value === undefined || value === null) return ''; if (typeof value === 'object') value = JSON.stringify(value); value = String(value).replace(/"/g, '""'); if (value.includes(',') || value.includes('"') || value.includes('\n')) value = `"${value}"`; return value; }).join(','))].join('\n');
             const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${document.getElementById('table-select').value}_${new Date().toISOString().split('T')[0]}.csv`;
+            const tableSelectEl4 = document.getElementById('table-select') as HTMLSelectElement | null;
+            link.download = `${tableSelectEl4?.value || 'export'}_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
             URL.revokeObjectURL(url);
         }
 
-        document.getElementById('table-select').addEventListener('change', loadTableData);
-        document.getElementById('refresh-table').addEventListener('click', loadTableData);
-        document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
+        document.getElementById('table-select')?.addEventListener('change', loadTableData);
+        document.getElementById('refresh-table')?.addEventListener('click', loadTableData);
+        document.getElementById('export-csv')?.addEventListener('click', exportTableToCSV);
         
         // Filter listeners
         document.getElementById('table-search')?.addEventListener('input', applyFilters);
@@ -2279,10 +2419,14 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         document.getElementById('filter-date-to')?.addEventListener('change', applyFilters);
         
         document.getElementById('clear-filters')?.addEventListener('click', () => {
-            document.getElementById('table-search').value = '';
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-date-from').value = '';
-            document.getElementById('filter-date-to').value = '';
+            const searchEl = document.getElementById('table-search') as HTMLInputElement | null;
+            const statusEl = document.getElementById('filter-status') as HTMLSelectElement | null;
+            const dateFromEl = document.getElementById('filter-date-from') as HTMLInputElement | null;
+            const dateToEl = document.getElementById('filter-date-to') as HTMLInputElement | null;
+            if (searchEl) searchEl.value = '';
+            if (statusEl) statusEl.value = '';
+            if (dateFromEl) dateFromEl.value = '';
+            if (dateToEl) dateToEl.value = '';
             applyFilters();
         });
         
