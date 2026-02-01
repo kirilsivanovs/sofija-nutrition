@@ -5,6 +5,10 @@
   "engines": {
     "node": ">=18"
   },
+  "workspaces": [
+    "api",
+    "shared"
+  ],
   "scripts": {
     "dev": "astro dev",
     "prebuild": "npm run sync:translations",
@@ -13,6 +17,8 @@
     "astro": "astro",
     "sync:translations": "node -e \"require('fs').copyFileSync('shared/translations.js', 'public/assets/shared-translations.js'); console.log('Translations synced!')\"",
     "test": "jest --verbose",
+    "test:shared": "cd shared && npm test",
+    "test:all": "npm test && npm run test:shared && cd api && npm test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
