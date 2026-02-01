@@ -1,0 +1,66 @@
+---
+// Settings tab with prices, contact info, duration and bank settings
+---
+
+<div class="content-header"><h2 class="content-title">Vietnes iestatījumi</h2></div>
+
+<div class="settings-grid">
+    <div class="card">
+        <h3 class="card-title"><i class="ph ph-currency-eur"></i> Cenas</h3>
+        <div class="form-group">
+            <label class="form-label">Pirmreizējā konsultācija (€)</label>
+            <input type="number" id="price-initial" class="input-field" value="65">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Atkārtota konsultācija (€)</label>
+            <input type="number" id="price-followup" class="input-field" value="45">
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title"><i class="ph ph-phone"></i> Kontaktinformācija</h3>
+        <div class="form-group">
+            <label class="form-label">E-pasts</label>
+            <input type="email" id="contact-email" class="input-field" value="sofija@nutrition.lv">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Telefons</label>
+            <input type="tel" id="contact-phone" class="input-field" value="+371 20000000">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Adrese</label>
+            <input type="text" id="contact-address" class="input-field" value="Rīga, Latvija">
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title"><i class="ph ph-timer"></i> Konsultāciju ilgums</h3>
+        <div class="form-group">
+            <label class="form-label">Pirmreizējā (minūtes)</label>
+            <input type="number" id="duration-initial" class="input-field" value="60">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Atkārtota (minūtes)</label>
+            <input type="number" id="duration-followup" class="input-field" value="30">
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title"><i class="ph ph-bank"></i> Maksājumu informācija</h3>
+        <div class="form-group">
+            <label class="form-label">Bankas nosaukums</label>
+            <input type="text" id="bank-name" class="input-field" value="Swedbank">
+        </div>
+        <div class="form-group">
+            <label class="form-label">IBAN</label>
+            <input type="text" id="bank-iban" class="input-field" value="LV00HABA0000000000000">
+        </div>
+    </div>
+</div>
+
+<div class="settings-actions">
+    <button id="save-settings" class="btn-primary">
+        <i class="ph ph-floppy-disk"></i>
+        <span>Saglabāt iestatījumus</span>
+    </button>
+</div>
