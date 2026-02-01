@@ -246,7 +246,7 @@ describe('Availability API Logic', () => {
         };
 
         function shouldIncludeDate(dateStr, config) {
-            import { schedule, blockedDates, vacationPeriods } = config;
+            const { schedule, blockedDates, vacationPeriods } = config;
             const date = new Date(dateStr + 'T12:00:00');
             const dayOfWeek = date.getDay();
             const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
