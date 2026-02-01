@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   },
   "scripts": {
     "start": "func start --cors \"*\"",
-    "build": "tsc && node -e \"require('fs').cpSync('src/fonts', 'dist/fonts', {recursive: true})\"",
+    "build": "tsc && node -e \"require('fs').cpSync('src/fonts', 'dist/fonts', {recursive: true})\" && node -e \"require('fs').copyFileSync('host.json', 'dist/host.json')\" && node scripts/prepare-dist-package.js",
     "build:watch": "tsc --watch",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.2",
+    "@azure/functions": "^4.11.0",
     "@pdf-lib/fontkit": "^1.1.1",
     "pdf-lib": "^1.17.1",
     "resend": "^6.8.0"
   },
   "devDependencies": {
-    "@azure/functions": "^4.11.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.1.0",
     "jest": "^30.2.0",
