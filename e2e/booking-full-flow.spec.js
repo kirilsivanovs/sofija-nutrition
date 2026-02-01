@@ -179,10 +179,6 @@ test('Полное бронирование: клиент + подтвержде
   const contactSection = page.locator('#contact');
   await expect(contactSection).toBeAttached({ timeout: 10000 });
   
-  // 2. Ждём появления секции контактов (статический HTML)
-  const contactSection = page.locator('#contact');
-  await expect(contactSection).toBeAttached({ timeout: 10000 });
-  
   // 3. Скроллим к секции бронирования
   await contactSection.scrollIntoViewIfNeeded();
   await page.waitForTimeout(500); // Даём время на плавный скролл
