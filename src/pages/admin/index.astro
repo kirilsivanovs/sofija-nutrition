@@ -1,60 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AdminHeader from '../../components/admin/AdminHeader.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
     <div class="admin-wrapper">
-        <!-- Header -->
-        <header class="admin-header">
-            <div class="admin-header-inner">
-                <a href="/" class="admin-logo">
-                    <img src="/assets/img/logo.svg" alt="SI Logo" class="admin-logo-img">
-                    <div class="admin-logo-text">
-                        <span class="admin-logo-name">Sofija Nutrition</span>
-                        <span class="admin-logo-sub">Administrācija</span>
-                    </div>
-                </a>
-                <div class="admin-user">
-                    <span id="user-info" class="admin-user-name"></span>
-                    <a href="/.auth/logout" class="admin-logout">
-                        <i class="ph ph-sign-out"></i>
-                        <span>Iziet</span>
-                    </a>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mobile Tab Selector -->
-        <div class="mobile-tab-select">
-            <select id="mobile-tab-selector" class="mobile-tab-dropdown">
-                <option value="bookings">Ieraksti</option>
-                <option value="availability">Pieejamība</option>
-                <option value="settings">Iestatījumi</option>
-                <option value="data">Dati</option>
-            </select>
-        </div>
-
-        <!-- Desktop Navigation Tabs -->
-        <nav class="admin-nav">
-            <div class="admin-nav-inner">
-                <button class="admin-tab active" data-tab="bookings">
-                    <i class="ph ph-calendar-check"></i>
-                    <span>Ieraksti</span>
-                </button>
-                <button class="admin-tab" data-tab="availability">
-                    <i class="ph ph-clock"></i>
-                    <span>Pieejamība</span>
-                </button>
-                <button class="admin-tab" data-tab="settings">
-                    <i class="ph ph-gear"></i>
-                    <span>Iestatījumi</span>
-                </button>
-                <button class="admin-tab" data-tab="data">
-                    <i class="ph ph-database"></i>
-                    <span>Dati</span>
-                </button>
-            </div>
-        </nav>
+        <AdminHeader />
 
         <!-- Main Content -->
         <main class="admin-main">
@@ -1855,8 +1806,11 @@ import Layout from '../../layouts/Layout.astro';
         }
     </style>
 
-    <script is:inline>
-    (function() {
+    <script is:inline type="module">
+        import { formatDate, formatDateReverse, formatTime, formatDateISO, initializeDateInputs } from '../../utils/admin/formatters.js';
+        import { showToast, showConfirm } from '../../utils/admin/notifications.js';
+        import { DAY_NAMES_FOR_SCHEDULE, MONTH_NAMES, SERVICE_NAMES } from '../../utils/admin/constants.js';
+
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
             : 'https://sofija-nutrition-api.azurewebsites.net/api';
@@ -1892,171 +1846,8 @@ import Layout from '../../layouts/Layout.astro';
         let schedule = {};
         let blockedDates = new Set();
         let vacationPeriods = [];
-        const dayNamesForSchedule = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        const monthNames = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
-
-        // Toast notification system
-        function showToast(message, type = 'info', title = null) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: 'ph-check-circle',
-                error: 'ph-warning-circle',
-                warning: 'ph-warning',
-                info: 'ph-info'
-            };
-            
-            const titles = {
-                success: title || 'Veiksmīgi',
-                error: title || 'Kļūda',
-                warning: title || 'Brīdinājums',
-                info: title || 'Informācija'
-            };
-            
-            toast.innerHTML = `
-                <i class="ph ${icons[type]} toast-icon"></i>
-                <div class="toast-content">
-                    <div class="toast-title">${titles[type]}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="toast-close"><i class="ph ph-x"></i></button>
-            `;
-            
-            container.appendChild(toast);
-            
-            // Close button
-            toast.querySelector('.toast-close').addEventListener('click', () => {
-                removeToast(toast);
-            });
-            
-            // Auto remove after 4 seconds
-            setTimeout(() => {
-                removeToast(toast);
-            }, 4000);
-        }
-        
-        function removeToast(toast) {
-            toast.classList.add('removing');
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }
-
-        // Custom confirm dialog
-        function showConfirm(message, title = 'Apstiprināt darbību') {
-            return new Promise((resolve) => {
-                const overlay = document.createElement('div');
-                overlay.className = 'confirm-overlay';
-                
-                const dialog = document.createElement('div');
-                dialog.className = 'confirm-dialog';
-                
-                dialog.innerHTML = `
-                    <div class="confirm-header">
-                        <i class="ph ph-question confirm-icon"></i>
-                        <h3>${title}</h3>
-                    </div>
-                    <div class="confirm-body">
-                        <p>${message}</p>
-                    </div>
-                    <div class="confirm-actions">
-                        <button class="btn-secondary confirm-cancel">Atcelt</button>
-                        <button class="btn-primary confirm-ok">Apstiprināt</button>
-                    </div>
-                `;
-                
-                overlay.appendChild(dialog);
-                document.body.appendChild(overlay);
-                
-                // Animate in
-                requestAnimationFrame(() => {
-                    overlay.classList.add('show');
-                });
-                
-                // Focus on OK button
-                setTimeout(() => dialog.querySelector('.confirm-ok').focus(), 100);
-                
-                const close = (result) => {
-                    overlay.classList.remove('show');
-                    setTimeout(() => {
-                        overlay.remove();
-                        resolve(result);
-                    }, 200);
-                };
-                
-                dialog.querySelector('.confirm-ok').addEventListener('click', () => close(true));
-                dialog.querySelector('.confirm-cancel').addEventListener('click', () => close(false));
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) close(false);
-                });
-                
-                // ESC key to cancel
-                const handleEsc = (e) => {
-                    if (e.key === 'Escape') {
-                        close(false);
-                        document.removeEventListener('keydown', handleEsc);
-                    }
-                };
-                document.addEventListener('keydown', handleEsc);
-            });
-        }
-
-        // Date formatting functions
-        function formatDate(dateStr) {
-            // Convert yyyy-mm-dd to dd/mm/yyyy
-            if (!dateStr) return '';
-            const [year, month, day] = dateStr.split('-');
-            return `${day}/${month}/${year}`;
-        }
-
-        function formatDateReverse(dateStr) {
-            // Convert dd/mm/yyyy to yyyy-mm-dd
-            if (!dateStr) return '';
-            const [day, month, year] = dateStr.split('/');
-            return `${year}-${month}-${day}`;
-        }
-
-        function formatTime(timeStr) {
-            // Ensure time is in 24-hour format HH:MM
-            if (!timeStr) return '';
-            // If already in correct format, return as is
-            if (timeStr.match(/^\d{2}:\d{2}$/)) return timeStr;
-            // Otherwise parse and format
-            const [hours, minutes] = timeStr.split(':');
-            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
-        }
-
-        // Initialize date input formatters globally
-        function initializeDateInputs() {
-            document.querySelectorAll('.date-input').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    let value = this.value.replace(/[^\d]/g, '');
-                    if (value.length >= 2) {
-                        value = value.slice(0, 2) + '/' + value.slice(2);
-                    }
-                    if (value.length >= 5) {
-                        value = value.slice(0, 5) + '/' + value.slice(5, 9);
-                    }
-                    this.value = value;
-                });
-                input.addEventListener('blur', function() {
-                    const parts = this.value.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        if (year.length === 4) {
-                            this.value = `${day}/${month}/${year}`;
-                        }
-                    }
-                });
-                input.addEventListener('keypress', function(e) {
-                    if (!/[0-9]/.test(e.key)) e.preventDefault();
-                });
-            });
-        }
+        const dayNamesForSchedule = DAY_NAMES_FOR_SCHEDULE;
+        const monthNames = MONTH_NAMES;
 
         // Initialize date inputs on page load
         initializeDateInputs();
@@ -2472,15 +2263,7 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         function getServiceName(service) {
-            const services = {
-                'cgm-diagnostic': 'CGM diagnostika',
-                'consultation': 'Uztura konsultācija',
-                'initial': 'Pirmreizējā konsultācija',
-                'followup': 'Atkārtota konsultācija',
-                'package3': '3 konsultāciju pakete',
-                'package5': '5 konsultāciju pakete'
-            };
-            return services[service] || service;
+            return SERVICE_NAMES[service] || service;
         }
 
         window.confirmBooking = async function(id) {
@@ -3081,6 +2864,5 @@ import Layout from '../../layouts/Layout.astro';
             renderTable();
             updateBatchActionsUI();
         });
-    })();
     </script>
 </Layout>
