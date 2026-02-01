@@ -163,11 +163,11 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
 }
 
-/* Checkbox and radio - moderate touch targets */
+/* Checkbox and radio - optimal touch targets per WCAG */
 input[type="checkbox"],
 input[type="radio"] {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
 }
 
