@@ -1647,6 +1647,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         } from '../../utils/admin/availability.js';
         import { initDatePicker } from '../../utils/admin/datePicker.js';
         import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays.js';
+        import { 
+            loadCalendarData, 
+            confirmBooking as confirmBookingApi,
+            cancelBooking as cancelBookingApi,
+            findFirstUpcomingBooking 
+        } from '../../utils/adminApiAdapter.js';
 
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
@@ -1766,23 +1772,15 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
             try {
                 const year = currentDate.getFullYear();
-                const [bookingsRes, holidaysRes, availabilityRes] = await Promise.all([
-                    fetch(API_BASE + '/dashboard/bookings'),
-                    fetch(API_BASE + '/holidays?year=' + year),
-                    fetch(API_BASE + '/dashboard/availability')
-                ]);
-                const bookingsData = await bookingsRes.json();
-                const holidaysData = await holidaysRes.json();
-                const availabilityData = await availabilityRes.json();
                 
-                allBookings = bookingsData.bookings || [];
-                holidays = {};
-                if (holidaysData.holidays) {
-                    holidaysData.holidays.forEach(h => { holidays[h.date] = h.name; });
-                }
-                schedule = availabilityData.schedule || {};
-                blockedDates = new Set((availabilityData.blockedDates || []).map(d => d.date));
-                vacationPeriods = availabilityData.vacationPeriods || [];
+                // Use centralized API client
+                const data = await loadCalendarData(year);
+                
+                allBookings = data.bookings;
+                holidays = data.holidays;
+                schedule = data.schedule;
+                blockedDates = data.blockedDates;
+                vacationPeriods = data.vacations;
                 
                 // Update calendar data in calendar module
                 setCalendarData({ bookings: allBookings, schedule, holidays, blockedDates, vacationPeriods });
@@ -1799,20 +1797,10 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         // Находит ближайшую будущую запись и переключает календарь на этот месяц
         async function navigateToFirstUpcomingBooking() {
             try {
-                const response = await fetch(API_BASE + '/dashboard/bookings');
-                const data = await response.json();
-                const bookings = data.bookings || [];
+                const firstBooking = await findFirstUpcomingBooking();
                 
-                const today = new Date();
-                const todayStr = today.toISOString().split('T')[0];
-                
-                // Находим ближайшую будущую запись (не отменённую)
-                const upcomingBookings = bookings
-                    .filter(b => b.date >= todayStr && b.status !== 'cancelled')
-                    .sort((a, b) => a.date.localeCompare(b.date));
-                
-                if (upcomingBookings.length > 0) {
-                    const firstBooking = upcomingBookings[0];
+                if (firstBooking) {
+                    const today = new Date();
                     const bookingDate = new Date(firstBooking.date);
                     
                     // Если запись в другом месяце - переключаемся
@@ -1838,11 +1826,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const confirmed = await showConfirm('Vai tiešām vēlaties apstiprināt šo ierakstu?', 'Apstiprināt ierakstu');
             if (!confirmed) return;
             try { 
-                await fetch(API_BASE + '/dashboard/bookings/' + id, { 
-                    method: 'PATCH', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ status: 'confirmed' }) 
-                }); 
+                await confirmBookingApi(id);
                 await loadCalendar();
                 // Refresh day details if a date is selected
                 const selectedDate = getSelectedDate();
@@ -1859,11 +1843,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const confirmed = await showConfirm('Vai tiešām vēlaties atcelt šo ierakstu?', 'Atcelt ierakstu');
             if (!confirmed) return;
             try { 
-                await fetch(API_BASE + '/dashboard/bookings/' + id, { 
-                    method: 'PATCH', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ status: 'cancelled' }) 
-                }); 
+                await cancelBookingApi(id);
                 await loadCalendar();
                 // Refresh day details if a date is selected
                 const selectedDate = getSelectedDate();
