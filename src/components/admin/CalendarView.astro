@@ -1,0 +1,66 @@
+---
+/**
+ * Calendar View Component for Admin Panel
+ * Shows bookings in a monthly calendar view
+ */
+---
+
+<div class="content-header">
+    <h2 class="content-title">Klientu ieraksti</h2>
+    <div class="calendar-controls">
+        <button id="prev-month" class="cal-nav-btn" title="Iepriekšējais mēnesis">
+            <i class="ph ph-caret-left"></i>
+        </button>
+        <span id="current-month" class="calendar-month"></span>
+        <button id="next-month" class="cal-nav-btn" title="Nākamais mēnesis">
+            <i class="ph ph-caret-right"></i>
+        </button>
+        <button id="today-btn" class="btn-primary btn-sm">Šodien</button>
+        <button id="refresh-bookings" class="cal-nav-btn" title="Atjaunot">
+            <i class="ph ph-arrows-clockwise"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Calendar Legend -->
+<div class="calendar-legend">
+    <div class="legend-item"><span class="legend-box legend-available"></span><span>Pieejama</span></div>
+    <div class="legend-item"><span class="legend-box legend-booked"></span><span>Ieraksti</span></div>
+    <div class="legend-item"><span class="legend-box legend-weekend"></span><span>Brīvdiena</span></div>
+    <div class="legend-item"><span class="legend-box legend-holiday"></span><span>Svētki</span></div>
+    <div class="legend-item"><span class="legend-dot legend-confirmed"></span><span>Apstiprināts</span></div>
+    <div class="legend-item"><span class="legend-dot legend-pending"></span><span>Gaida</span></div>
+    <div class="legend-item"><span class="legend-dot legend-cancelled"></span><span>Atcelts</span></div>
+</div>
+
+<div id="bookings-loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <span>Ielādē ierakstus...</span>
+</div>
+
+<div id="calendar-container" class="calendar-wrapper hidden">
+    <div class="calendar-card">
+        <div class="calendar-header-row">
+            <div class="calendar-day-name">Pr</div>
+            <div class="calendar-day-name">Ot</div>
+            <div class="calendar-day-name">Tr</div>
+            <div class="calendar-day-name">Ce</div>
+            <div class="calendar-day-name">Pk</div>
+            <div class="calendar-day-name weekend">Se</div>
+            <div class="calendar-day-name weekend">Sv</div>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+    </div>
+</div>
+
+<div id="day-details" class="day-details-panel hidden">
+    <div class="day-details-card">
+        <div class="day-details-header">
+            <h3 id="day-details-title"></h3>
+            <button id="close-day-details" class="btn-close">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+        <div id="day-bookings-list" class="bookings-list"></div>
+    </div>
+</div>
