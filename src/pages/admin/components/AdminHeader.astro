@@ -1,0 +1,110 @@
+---
+/**
+ * Admin Header Component
+ * Includes logo, user info, and navigation tabs
+ */
+---
+
+<!-- Header -->
+<header class="admin-header">
+    <div class="admin-header-inner">
+        <a href="/" class="admin-logo">
+            <img src="/assets/img/logo.svg" alt="SI Logo" class="admin-logo-img">
+            <div class="admin-logo-text">
+                <span class="admin-logo-name">Sofija Nutrition</span>
+                <span class="admin-logo-sub">Administrācija</span>
+            </div>
+        </a>
+        <div class="admin-user">
+            <span id="user-info" class="admin-user-name"></span>
+            <a href="/.auth/logout" class="admin-logout">
+                <i class="ph ph-sign-out"></i>
+                <span>Iziet</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Tab Selector -->
+<div class="mobile-tab-select">
+    <select id="mobile-tab-selector" class="mobile-tab-dropdown">
+        <option value="bookings">Ieraksti</option>
+        <option value="availability">Pieejamība</option>
+        <option value="settings">Iestatījumi</option>
+        <option value="data">Dati</option>
+    </select>
+</div>
+
+<!-- Desktop Navigation Tabs -->
+<nav class="admin-nav">
+    <div class="admin-nav-inner">
+        <button class="admin-tab active" data-tab="bookings">
+            <i class="ph ph-calendar-check"></i>
+            <span>Ieraksti</span>
+        </button>
+        <button class="admin-tab" data-tab="availability">
+            <i class="ph ph-clock"></i>
+            <span>Pieejamība</span>
+        </button>
+        <button class="admin-tab" data-tab="settings">
+            <i class="ph ph-gear"></i>
+            <span>Iestatījumi</span>
+        </button>
+        <button class="admin-tab" data-tab="data">
+            <i class="ph ph-database"></i>
+            <span>Dati</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+    // Tab switching logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.admin-tab');
+        const contents = document.querySelectorAll('.admin-content');
+        const mobileSelector = document.getElementById('mobile-tab-selector') as HTMLSelectElement;
+
+        function switchTab(tabId: string) {
+            // Update tabs
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Update content
+            contents.forEach(content => {
+                if (content.id === `tab-${tabId}`) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+
+            // Update mobile selector
+            if (mobileSelector) {
+                mobileSelector.value = tabId;
+            }
+
+            // Trigger load event for the tab
+            const loadEvent = new CustomEvent('tabChanged', { detail: { tabId } });
+            document.dispatchEvent(loadEvent);
+        }
+
+        // Desktop tabs
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                if (tabId) switchTab(tabId);
+            });
+        });
+
+        // Mobile selector
+        mobileSelector?.addEventListener('change', (e) => {
+            const tabId = (e.target as HTMLSelectElement).value;
+            switchTab(tabId);
+        });
+    });
+</script>
