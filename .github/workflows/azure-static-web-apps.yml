@@ -209,8 +209,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"
-          api_location: "api"
+          api_location: "api/dist"
           output_location: "dist"
+          skip_api_build: true
       
       - name: Comment Preview URL on PR
         if: github.event_name == 'pull_request'
