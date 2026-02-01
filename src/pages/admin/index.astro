@@ -1645,6 +1645,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             removeBlockedDate as removeBlockedDateUtil,
             setupVacationDateValidation
         } from '../../utils/admin/availability.js';
+        import { initDatePicker } from '../../utils/admin/datePicker.js';
+        import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays.js';
 
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
@@ -1684,139 +1686,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         const dayNamesForSchedule = DAY_NAMES_FOR_SCHEDULE;
         const monthNames = MONTH_NAMES;
 
-        // Initialize date inputs on page load
+        // Initialize date inputs and date picker on page load
         initializeDateInputs();
-
-        // Date Picker functionality
-        let pickerCurrentDate = new Date();
-        let pickerTargetInput = null;
-
-        const datePicker = document.getElementById('date-picker');
-        const pickerMonthYear = document.getElementById('picker-month-year');
-        const pickerDates = document.getElementById('picker-dates');
-
-        function renderDatePicker() {
-            const year = pickerCurrentDate.getFullYear();
-            const month = pickerCurrentDate.getMonth();
-            
-            pickerMonthYear.textContent = `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const prevMonthDays = new Date(year, month, 0).getDate();
-            
-            let html = '';
-            const today = new Date();
-            const todayStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-            const selectedValue = pickerTargetInput ? pickerTargetInput.value : '';
-            
-            // Previous month days
-            const startDay = firstDay === 0 ? 6 : firstDay - 1;
-            for (let i = startDay - 1; i >= 0; i--) {
-                const day = prevMonthDays - i;
-                html += `<div class="date-picker-date other-month" data-day="${day}" data-month="${month === 0 ? 11 : month - 1}" data-year="${month === 0 ? year - 1 : year}">${day}</div>`;
-            }
-            
-            // Current month days
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
-                const isToday = dateStr === todayStr;
-                const isSelected = dateStr === selectedValue;
-                const classes = ['date-picker-date'];
-                if (isToday) classes.push('today');
-                if (isSelected) classes.push('selected');
-                
-                html += `<div class="${classes.join(' ')}" data-day="${day}" data-month="${month}" data-year="${year}">${day}</div>`;
-            }
-            
-            // Next month days
-            const totalCells = startDay + daysInMonth;
-            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-            for (let day = 1; day <= remainingCells; day++) {
-                html += `<div class="date-picker-date other-month" data-day="${day}" data-month="${month === 11 ? 0 : month + 1}" data-year="${month === 11 ? year + 1 : year}">${day}</div>`;
-            }
-            
-            pickerDates.innerHTML = html;
-            
-            // Add click handlers
-            pickerDates.querySelectorAll('.date-picker-date').forEach(cell => {
-                cell.addEventListener('click', () => {
-                    const day = cell.dataset.day.padStart(2, '0');
-                    const month = (parseInt(cell.dataset.month) + 1).toString().padStart(2, '0');
-                    const year = cell.dataset.year;
-                    const dateStr = `${day}/${month}/${year}`;
-                    
-                    if (pickerTargetInput) {
-                        pickerTargetInput.value = dateStr;
-                        pickerTargetInput.dispatchEvent(new Event('change'));
-                    }
-                    
-                    closeDatePicker();
-                });
-            });
-        }
-
-        function openDatePicker(inputElement) {
-            pickerTargetInput = inputElement;
-            
-            // Parse current value if exists
-            if (inputElement.value) {
-                const parts = inputElement.value.split('/');
-                if (parts.length === 3) {
-                    pickerCurrentDate = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
-                }
-            } else {
-                pickerCurrentDate = new Date();
-            }
-            
-            renderDatePicker();
-            
-            // Position picker below input
-            const rect = inputElement.getBoundingClientRect();
-            datePicker.style.top = `${rect.bottom + window.scrollY + 5}px`;
-            datePicker.style.left = `${rect.left + window.scrollX}px`;
-            
-            datePicker.classList.remove('hidden');
-        }
-
-        function closeDatePicker() {
-            datePicker.classList.add('hidden');
-            pickerTargetInput = null;
-        }
-
-        // Navigation
-        document.getElementById('picker-prev-month').addEventListener('click', () => {
-            pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() - 1);
-            renderDatePicker();
-        });
-
-        document.getElementById('picker-next-month').addEventListener('click', () => {
-            pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() + 1);
-            renderDatePicker();
-        });
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-            if (!datePicker.classList.contains('hidden') && 
-                !datePicker.contains(e.target) && 
-                !e.target.classList.contains('date-input') &&
-                !e.target.classList.contains('date-input-icon')) {
-                closeDatePicker();
-            }
-        });
-
-        // Attach to date inputs and icons
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('date-input') || 
-                (e.target.classList.contains('date-input-icon') && e.target.previousElementSibling)) {
-                const input = e.target.classList.contains('date-input') ? e.target : e.target.previousElementSibling;
-                openDatePicker(input);
-            }
-        });
-
-        function isDateInVacation(dateStr) {
-            return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
-        }
+        initDatePicker();
 
         // Проверяем авторизацию - Microsoft OAuth или E2E Token
         const e2eTokenStored = sessionStorage.getItem('e2e_token');
@@ -2006,9 +1878,12 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
         // Availability functions using utilities
         function loadAvailability() {
-            loadAvailabilityForm(API_BASE, loadHolidays);
+            loadAvailabilityForm(API_BASE, () => loadHolidays(API_BASE));
             setupVacationDateValidation();
         }
+
+        // Setup holidays listeners
+        setupHolidaysListeners(API_BASE);
 
         document.getElementById('save-availability').addEventListener('click', () => saveAvailability(API_BASE));
 
@@ -2050,15 +1925,6 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
         // При первой загрузке - переходим к месяцу с ближайшими записями
         navigateToFirstUpcomingBooking().then(() => loadCalendar());
-
-        async function loadHolidays() {
-            const year = document.getElementById('holiday-year').value;
-            const list = document.getElementById('holidays-list');
-            try { const response = await fetch(API_BASE + '/holidays?year=' + year); const data = await response.json(); if (data.holidays && data.holidays.length > 0) list.innerHTML = data.holidays.map(h => `<div class="holiday-item"><span class="holiday-date">${formatDate(h.date)}</span><span>${h.name}</span></div>`).join(''); else list.innerHTML = '<p style="color:var(--color-text-light);">Nav svētku šajā gadā</p>'; } catch (e) { list.innerHTML = '<p style="color:#dc2626;">Kļūda ielādējot svētkus</p>'; }
-        }
-
-        document.getElementById('holiday-year').addEventListener('change', loadHolidays);
-        document.getElementById('refresh-holidays').addEventListener('click', loadHolidays);
 
         let currentTableData = null;
         let filteredTableData = [];
