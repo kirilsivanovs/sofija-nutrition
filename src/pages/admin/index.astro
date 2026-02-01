@@ -1291,6 +1291,16 @@ import Layout from '../../layouts/Layout.astro';
             font-size: 14px;
             width: auto;
         }
+        
+        /* Force 24-hour format for time inputs */
+        input[type="time"]::-webkit-datetime-edit-ampm-field {
+            display: none;
+        }
+        
+        input[type="time"] {
+            /* Force 24-hour format */
+            -webkit-appearance: textfield;
+        }
 
         .vacation-form {
             display: flex;
@@ -1926,7 +1936,7 @@ import Layout from '../../layouts/Layout.astro';
 
         function loadAvailability() {
             const form = document.getElementById('availability-form');
-            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:18px;height:18px;accent-color:var(--color-primary);"><span style="font-size:14px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="time" id="day-${day}-start" value="09:00" class="input-field"><span style="color:var(--color-muted);">—</span><input type="time" id="day-${day}-end" value="17:00" class="input-field"></div></div>`).join('');
+            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:18px;height:18px;accent-color:var(--color-primary);"><span style="font-size:14px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="time" id="day-${day}-start" value="09:00" step="60" class="input-field"><span style="color:var(--color-muted);">—</span><input type="time" id="day-${day}-end" value="17:00" step="60" class="input-field"></div></div>`).join('');
             document.getElementById('day-saturday-enabled').checked = false;
             document.getElementById('day-sunday-enabled').checked = false;
             fetch(API_BASE + '/dashboard/availability').then(r => r.json()).then(data => {
