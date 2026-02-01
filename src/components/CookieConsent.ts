@@ -319,8 +319,8 @@ class CookieConsent {
       }
       
       .cookie-category-header input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
       }
       
