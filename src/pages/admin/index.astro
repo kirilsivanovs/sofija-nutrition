@@ -2338,8 +2338,8 @@ import Layout from '../../layouts/Layout.astro';
                 const scheduleDayName = dayNamesForSchedule[checkDate.getDay()];
                 const daySchedule = schedule[scheduleDayName];
                 const isWorkingDay = daySchedule && daySchedule.enabled;
-                const pending = dayBookings.filter(b => !b.paymentConfirmed && b.status !== 'cancelled').length;
-                const confirmed = dayBookings.filter(b => b.paymentConfirmed && b.status !== 'cancelled').length;
+                const pending = dayBookings.filter(b => b.status === 'pending').length;
+                const confirmed = dayBookings.filter(b => b.status === 'confirmed').length;
                 const cancelled = dayBookings.filter(b => b.status === 'cancelled').length;
                 const totalCount = dayBookings.length;
                 
@@ -2410,8 +2410,8 @@ import Layout from '../../layouts/Layout.astro';
                 html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-muted);"></i><span>Nav ierakstu šajā dienā</span></div>';
             } else {
                 // Группируем записи по статусу
-                const confirmedBookings = dayBookings.filter(b => b.paymentConfirmed && b.status !== 'cancelled');
-                const pendingBookings = dayBookings.filter(b => !b.paymentConfirmed && b.status !== 'cancelled');
+                const confirmedBookings = dayBookings.filter(b => b.status === 'confirmed');
+                const pendingBookings = dayBookings.filter(b => b.status === 'pending');
                 const cancelledBookings = dayBookings.filter(b => b.status === 'cancelled');
                 
                 // Функция для рендеринга группы
@@ -2425,12 +2425,12 @@ import Layout from '../../layouts/Layout.astro';
                                 ${title} (${bookings.length})
                             </h4>
                             ${bookings.map(b => `
-                                <div class="booking-card ${b.status || (b.paymentConfirmed ? 'confirmed' : 'pending')}">
+                                <div class="booking-card ${b.status}">
                                     <div class="booking-header">
                                         <div class="booking-info">
                                             <div class="booking-name">${b.name}</div>
-                                            <span class="booking-status ${b.status || (b.paymentConfirmed ? 'confirmed' : 'pending')}">
-                                                ${b.status === 'cancelled' ? 'Atcelts' : b.paymentConfirmed ? 'Apstiprināts' : 'Gaida'}
+                                            <span class="booking-status ${b.status}">
+                                                ${b.status === 'cancelled' ? 'Atcelts' : b.status === 'confirmed' ? 'Apstiprināts' : 'Gaida'}
                                             </span>
                                         </div>
                                         <span class="booking-time">${formatTime(b.time)}</span>
@@ -2444,7 +2444,7 @@ import Layout from '../../layouts/Layout.astro';
                                         <div><i class="ph ph-currency-eur"></i>€${b.price || 0}</div>
                                     </div>
                                     <div class="booking-actions">
-                                        ${!b.paymentConfirmed && b.status !== 'cancelled' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}
+                                        ${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}
                                         ${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger btn-sm"><i class="ph ph-x"></i> Atcelt</button>` : ''}
                                     </div>
                                 </div>
