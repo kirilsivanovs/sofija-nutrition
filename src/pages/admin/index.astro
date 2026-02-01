@@ -296,6 +296,9 @@ import Layout from '../../layouts/Layout.astro';
                 </div>
             </div>
         </main>
+
+        <!-- Toast Notifications Container -->
+        <div id="toast-container" class="toast-container"></div>
     </div>
 
     <style is:global>
@@ -655,6 +658,111 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .btn-close i { font-size: 18px; }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            min-width: 300px;
+            max-width: 400px;
+            background: var(--color-white);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 16px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .toast.success { border-left-color: #22c55e; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.warning { border-left-color: #f59e0b; }
+        .toast.info { border-left-color: #3b82f6; }
+
+        .toast-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .toast.success .toast-icon { color: #22c55e; }
+        .toast.error .toast-icon { color: #ef4444; }
+        .toast.warning .toast-icon { color: #f59e0b; }
+        .toast.info .toast-icon { color: #3b82f6; }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            font-size: 14px;
+            color: var(--color-text-light);
+        }
+
+        .toast-close {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--color-text-light);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            background: var(--color-cream);
+            color: var(--color-text);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        .toast.removing {
+            animation: slideOut 0.3s ease-out forwards;
+        }
 
         /* Cards */
         .card {
@@ -1451,6 +1559,81 @@ import Layout from '../../layouts/Layout.astro';
         const dayNamesForSchedule = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         const monthNames = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
 
+        // Toast notification system
+        function showToast(message, type = 'info', title = null) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'ph-check-circle',
+                error: 'ph-warning-circle',
+                warning: 'ph-warning',
+                info: 'ph-info'
+            };
+            
+            const titles = {
+                success: title || 'Veiksmīgi',
+                error: title || 'Kļūda',
+                warning: title || 'Brīdinājums',
+                info: title || 'Informācija'
+            };
+            
+            toast.innerHTML = `
+                <i class="ph ${icons[type]} toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${titles[type]}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close"><i class="ph ph-x"></i></button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Close button
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                removeToast(toast);
+            });
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                removeToast(toast);
+            }, 4000);
+        }
+        
+        function removeToast(toast) {
+            toast.classList.add('removing');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+
+        // Date formatting functions
+        function formatDate(dateStr) {
+            // Convert yyyy-mm-dd to dd/mm/yyyy
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatDateReverse(dateStr) {
+            // Convert dd/mm/yyyy to yyyy-mm-dd
+            if (!dateStr) return '';
+            const [day, month, year] = dateStr.split('/');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatTime(timeStr) {
+            // Ensure time is in 24-hour format HH:MM
+            if (!timeStr) return '';
+            // If already in correct format, return as is
+            if (timeStr.match(/^\d{2}:\d{2}$/)) return timeStr;
+            // Otherwise parse and format
+            const [hours, minutes] = timeStr.split(':');
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+        }
+
+
         function isDateInVacation(dateStr) {
             return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
         }
@@ -1612,12 +1795,12 @@ import Layout from '../../layouts/Layout.astro';
                 else if (confirmed > 0 || pending > 0) cellClass += ' booked';
                 else cellClass += ' available';
                 
-                html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')" title="${dateStr}">
+                html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')" title="${formatDate(dateStr)}">
                     <div class="day-number ${isToday ? 'today' : ''}">${day}</div>
                     ${isHoliday ? `<div class="holiday-name">${isHoliday}</div>` : ''}
                     ${isVacation && !isHoliday ? '<div class="holiday-name">Atvaļinājums</div>' : ''}
                     ${isBlocked && !isHoliday && !isVacation ? '<div class="holiday-name">Bloķēts</div>' : ''}
-                    ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time"><i class="ph ph-clock"></i>${daySchedule.start}–${daySchedule.end}</div>` : ''}
+                    ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time"><i class="ph ph-clock"></i>${formatTime(daySchedule.start)}–${formatTime(daySchedule.end)}</div>` : ''}
                     ${totalCount > 0 ? `<div class="booking-count">${totalCount}</div>` : ''}
                     ${(pending > 0 || confirmed > 0 || cancelled > 0) ? `<div class="booking-dots">
                         ${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}
@@ -1638,7 +1821,7 @@ import Layout from '../../layouts/Layout.astro';
             const list = document.getElementById('day-bookings-list');
             const date = new Date(dateStr);
             const dayNames = ['Svētdiena', 'Pirmdiena', 'Otrdiena', 'Trešdiena', 'Ceturtdiena', 'Piektdiena', 'Sestdiena'];
-            title.textContent = `${dayNames[date.getDay()]}, ${dateStr}`;
+            title.textContent = `${dayNames[date.getDay()]}, ${formatDate(dateStr)}`;
             const holidayName = holidays[dateStr];
             const dayBookings = allBookings.filter(b => b.date === dateStr);
             
@@ -1678,7 +1861,7 @@ import Layout from '../../layouts/Layout.astro';
                                                 ${b.status === 'cancelled' ? 'Atcelts' : b.paymentConfirmed ? 'Apstiprināts' : 'Gaida'}
                                             </span>
                                         </div>
-                                        <span class="booking-time">${b.time}</span>
+                                        <span class="booking-time">${formatTime(b.time)}</span>
                                     </div>
                                     <div class="booking-details">
                                         <div><i class="ph ph-clipboard-text"></i>${getServiceName(b.service)}</div>
@@ -1730,12 +1913,12 @@ import Layout from '../../layouts/Layout.astro';
 
         window.confirmBooking = async function(id) {
             if (!confirm('Apstiprināt šo ierakstu?')) return;
-            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) }); loadCalendar(); } catch (e) { alert('Kļūda: ' + e.message); }
+            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) }); loadCalendar(); showToast('Ieraksts apstiprināts', 'success'); } catch (e) { showToast(e.message, 'error'); }
         };
 
         window.cancelBooking = async function(id) {
             if (!confirm('Atcelt šo ierakstu?')) return;
-            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'cancelled' }) }); loadCalendar(); } catch (e) { alert('Kļūda: ' + e.message); }
+            try { await fetch(API_BASE + '/dashboard/bookings/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'cancelled' }) }); loadCalendar(); showToast('Ieraksts atcelts', 'success'); } catch (e) { showToast(e.message, 'error'); }
         };
 
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -1770,7 +1953,7 @@ import Layout from '../../layouts/Layout.astro';
             list.innerHTML = periods.map(v => `
                 <div class="blocked-item" style="background:#eff6ff;">
                     <span>
-                        <strong>${v.startDate}</strong> — <strong>${v.endDate}</strong>
+                        <strong>${formatDate(v.startDate)}</strong> — <strong>${formatDate(v.endDate)}</strong>
                         ${v.reason ? '<span style="color:var(--color-text-light);margin-left:12px;">' + v.reason + '</span>' : ''}
                     </span>
                     <button onclick="removeVacation('${v.id}')" class="btn-close" style="width:28px;height:28px;">
@@ -1783,21 +1966,21 @@ import Layout from '../../layouts/Layout.astro';
         function renderBlockedDates(dates) {
             const list = document.getElementById('blocked-dates-list');
             if (!dates || dates.length === 0) { list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav bloķētu datumu</p>'; return; }
-            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${d.date} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:28px;height:28px;"><i class="ph ph-x"></i></button></div>`).join('');
+            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${formatDate(d.date)} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:28px;height:28px;"><i class="ph ph-x"></i></button></div>`).join('');
         }
 
         document.getElementById('save-availability').addEventListener('click', async () => {
             const scheduleData = {};
             days.forEach(day => { scheduleData[day] = { enabled: document.getElementById(`day-${day}-enabled`).checked, start: document.getElementById(`day-${day}-start`).value, end: document.getElementById(`day-${day}-end`).value }; });
-            try { await fetch(API_BASE + '/dashboard/availability', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule: scheduleData }) }); alert('Pieejamība saglabāta!'); } catch (e) { alert('Kļūda: ' + e.message); }
+            try { await fetch(API_BASE + '/dashboard/availability', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule: scheduleData }) }); showToast('Pieejamība saglabāta!', 'success'); } catch (e) { showToast(e.message, 'error'); }
         });
 
         document.getElementById('add-vacation').addEventListener('click', async () => {
             const startDate = document.getElementById('vacation-start').value;
             const endDate = document.getElementById('vacation-end').value;
             const reason = document.getElementById('vacation-reason').value;
-            if (!startDate || !endDate) return alert('Izvēlieties sākuma un beigu datumus');
-            if (new Date(startDate) > new Date(endDate)) return alert('Sākuma datums nevar būt vēlāks par beigu datumu');
+            if (!startDate || !endDate) return showToast('Izvēlieties sākuma un beigu datumus', 'warning');
+            if (new Date(startDate) > new Date(endDate)) return showToast('Sākuma datums nevar būt vēlāks par beigu datumu', 'warning');
             try { 
                 console.log('💼 Adding vacation:', { startDate, endDate, reason });
                 const response = await fetch(API_BASE + '/dashboard/availability/vacation', { 
@@ -1812,10 +1995,10 @@ import Layout from '../../layouts/Layout.astro';
                 document.getElementById('vacation-start').value = ''; 
                 document.getElementById('vacation-end').value = ''; 
                 document.getElementById('vacation-reason').value = ''; 
-                alert('Atvaļinājums pievienots!');
+                showToast('Atvaļinājums pievienots!', 'success');
             } catch (e) { 
                 console.error('❌ Error adding vacation:', e);
-                alert('Kļūda: ' + e.message); 
+                showToast(e.message, 'error'); 
             }
         });
 
@@ -1829,7 +2012,8 @@ import Layout from '../../layouts/Layout.astro';
                 }); 
                 loadAvailability(); 
                 loadCalendar();
-            } catch (e) { alert('Kļūda: ' + e.message); }
+                showToast('Atvaļinājums dzēsts', 'success');
+            } catch (e) { showToast(e.message, 'error'); }
         };
 
         // Auto-set vacation end date min when start date is selected
@@ -1849,12 +2033,12 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('add-blocked-date').addEventListener('click', async () => {
             const date = document.getElementById('block-date').value;
             const reason = document.getElementById('block-reason').value;
-            if (!date) return alert('Izvēlieties datumu');
-            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date, reason }) }); loadAvailability(); document.getElementById('block-date').value = ''; document.getElementById('block-reason').value = ''; } catch (e) { alert('Kļūda: ' + e.message); }
+            if (!date) return showToast('Izvēlieties datumu', 'warning');
+            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date, reason }) }); loadAvailability(); document.getElementById('block-date').value = ''; document.getElementById('block-reason').value = ''; showToast('Datums bloķēts', 'success'); } catch (e) { showToast(e.message, 'error'); }
         });
 
         window.removeBlockedDate = async function(date) {
-            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date }) }); loadAvailability(); } catch (e) { alert('Kļūda: ' + e.message); }
+            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date }) }); loadAvailability(); showToast('Bloķēšana noņemta', 'success'); } catch (e) { showToast(e.message, 'error'); }
         };
 
         function loadSettings() {
@@ -1868,7 +2052,7 @@ import Layout from '../../layouts/Layout.astro';
 
         document.getElementById('save-settings').addEventListener('click', async () => {
             const settings = { prices: { initial: parseInt(document.getElementById('price-initial').value), followup: parseInt(document.getElementById('price-followup').value) }, contact: { email: document.getElementById('contact-email').value, phone: document.getElementById('contact-phone').value, address: document.getElementById('contact-address').value }, duration: { initial: parseInt(document.getElementById('duration-initial').value), followup: parseInt(document.getElementById('duration-followup').value) }, bank: { name: document.getElementById('bank-name').value, iban: document.getElementById('bank-iban').value } };
-            try { await fetch(API_BASE + '/dashboard/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); alert('Iestatījumi saglabāti!'); } catch (e) { alert('Kļūda: ' + e.message); }
+            try { await fetch(API_BASE + '/dashboard/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); showToast('Iestatījumi saglabāti!', 'success'); } catch (e) { showToast(e.message, 'error'); }
         });
 
         // При первой загрузке - переходим к месяцу с ближайшими записями
@@ -1877,7 +2061,7 @@ import Layout from '../../layouts/Layout.astro';
         async function loadHolidays() {
             const year = document.getElementById('holiday-year').value;
             const list = document.getElementById('holidays-list');
-            try { const response = await fetch(API_BASE + '/holidays?year=' + year); const data = await response.json(); if (data.holidays && data.holidays.length > 0) list.innerHTML = data.holidays.map(h => `<div class="holiday-item"><span class="holiday-date">${h.date}</span><span>${h.name}</span></div>`).join(''); else list.innerHTML = '<p style="color:var(--color-text-light);">Nav svētku šajā gadā</p>'; } catch (e) { list.innerHTML = '<p style="color:#dc2626;">Kļūda ielādējot svētkus</p>'; }
+            try { const response = await fetch(API_BASE + '/holidays?year=' + year); const data = await response.json(); if (data.holidays && data.holidays.length > 0) list.innerHTML = data.holidays.map(h => `<div class="holiday-item"><span class="holiday-date">${formatDate(h.date)}</span><span>${h.name}</span></div>`).join(''); else list.innerHTML = '<p style="color:var(--color-text-light);">Nav svētku šajā gadā</p>'; } catch (e) { list.innerHTML = '<p style="color:#dc2626;">Kļūda ielādējot svētkus</p>'; }
         }
 
         document.getElementById('holiday-year').addEventListener('change', loadHolidays);
@@ -1909,11 +2093,11 @@ import Layout from '../../layouts/Layout.astro';
         window.deleteEntity = async function(partitionKey, rowKey) {
             if (!confirm('Vai tiešām dzēst šo ierakstu?')) return;
             const tableName = document.getElementById('table-select').value;
-            try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) loadTableData(); else { const error = await response.json(); alert('Kļūda: ' + (error.details || error.error)); } } catch (e) { alert('Kļūda: ' + e.message); }
+            try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) { loadTableData(); showToast('Ieraksts dzēsts', 'success'); } else { const error = await response.json(); showToast(error.details || error.error, 'error'); } } catch (e) { showToast(e.message, 'error'); }
         };
 
         function exportTableToCSV() {
-            if (!currentTableData.entities || currentTableData.entities.length === 0) { alert('Nav datu eksportēšanai'); return; }
+            if (!currentTableData.entities || currentTableData.entities.length === 0) { showToast('Nav datu eksportēšanai', 'warning'); return; }
             const columns = currentTableData.columns;
             const rows = currentTableData.entities;
             const csvContent = [columns.join(','), ...rows.map(row => columns.map(col => { let value = row[col]; if (value === undefined || value === null) return ''; if (typeof value === 'object') value = JSON.stringify(value); value = String(value).replace(/"/g, '""'); if (value.includes(',') || value.includes('"') || value.includes('\n')) value = `"${value}"`; return value; }).join(','))].join('\n');
