@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import AdminHeader from '../../components/admin/AdminHeader.astro';
 import CalendarView from '../../components/admin/CalendarView.astro';
+import AvailabilityTab from '../../components/admin/AvailabilityTab.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
@@ -17,78 +18,7 @@ import CalendarView from '../../components/admin/CalendarView.astro';
 
             <!-- Availability Tab -->
             <div id="tab-availability" class="admin-content hidden">
-                <div class="content-header"><h2 class="content-title">Darba laiki</h2></div>
-                <p class="content-subtitle">Iestatiet pieejamos laikus katrai nedēļas dienai</p>
-
-                <div class="card">
-                    <div id="availability-form" class="availability-form"></div>
-                    <div class="card-footer">
-                        <button id="save-availability" class="btn-primary">
-                            <i class="ph ph-floppy-disk"></i>
-                            <span>Saglabāt</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="section-divider"></div>
-                <div class="content-header"><h2 class="content-title">Atvaļinājuma periodi</h2></div>
-                <p class="content-subtitle">Iestatiet periodus, kad esat atvaļinājumā</p>
-                
-                <div class="card">
-                    <div class="vacation-form">
-                        <div class="date-input-wrapper">
-                            <input type="text" id="vacation-start" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
-                            <i class="ph ph-calendar date-input-icon"></i>
-                        </div>
-                        <div class="date-input-wrapper">
-                            <input type="text" id="vacation-end" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
-                            <i class="ph ph-calendar date-input-icon"></i>
-                        </div>
-                        <input type="text" id="vacation-reason" placeholder="Piezīmes (neobligāti)" class="input-field input-flex">
-                        <button id="add-vacation" class="btn-primary">
-                            <i class="ph ph-calendar-x"></i>
-                            <span>Pievienot atvaļinājumu</span>
-                        </button>
-                    </div>
-                    <div id="vacation-list" class="blocked-list"></div>
-                </div>
-
-                <div class="section-divider"></div>
-                <div class="content-header"><h2 class="content-title">Bloķētie datumi</h2></div>
-                <p class="content-subtitle">Pievienojiet atsevišķus datumus, kad nepieņemat klientus</p>
-                
-                <div class="card">
-                    <div class="blocked-date-form">
-                        <div class="date-input-wrapper">
-                            <input type="text" id="block-date" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
-                            <i class="ph ph-calendar date-input-icon"></i>
-                        </div>
-                        <input type="text" id="block-reason" placeholder="Iemesls" class="input-field input-flex">
-                        <button id="add-blocked-date" class="btn-danger">
-                            <i class="ph ph-plus"></i>
-                            <span>Pievienot</span>
-                        </button>
-                    </div>
-                    <div id="blocked-dates-list" class="blocked-list"></div>
-                </div>
-
-                <div class="section-divider"></div>
-                <div class="content-header"><h2 class="content-title">Latvijas valsts svētki</h2></div>
-                <p class="content-subtitle">Šajos datumos automātiski netiek pieņemti ieraksti</p>
-                
-                <div class="card">
-                    <div class="holidays-controls">
-                        <select id="holiday-year" class="input-field">
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                        </select>
-                        <button id="refresh-holidays" class="btn-secondary">
-                            <i class="ph ph-arrows-clockwise"></i>
-                            <span>Atjaunot</span>
-                        </button>
-                    </div>
-                    <div id="holidays-list" class="holidays-grid"></div>
-                </div>
+                <AvailabilityTab />
             </div>
 
             <!-- Settings Tab -->
@@ -1766,6 +1696,15 @@ import CalendarView from '../../components/admin/CalendarView.astro';
             getServiceName,
             getStatusText
         } from '../../utils/admin/calendar.js';
+        import {
+            loadAvailabilityForm,
+            saveAvailability,
+            addVacation,
+            removeVacation as removeVacationUtil,
+            addBlockedDate,
+            removeBlockedDate as removeBlockedDateUtil,
+            setupVacationDateValidation
+        } from '../../utils/admin/availability.js';
 
         const API_BASE = window.location.hostname === 'localhost' 
             ? 'http://localhost:7071/api' 
@@ -2125,148 +2064,34 @@ import CalendarView from '../../components/admin/CalendarView.astro';
             }
         };
 
-        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        const dayNames = { monday: 'Pirmdiena', tuesday: 'Otrdiena', wednesday: 'Trešdiena', thursday: 'Ceturtdiena', friday: 'Piektdiena', saturday: 'Sestdiena', sunday: 'Svētdiena' };
-
+        // Availability functions using utilities
         function loadAvailability() {
-            const form = document.getElementById('availability-form');
-            form.innerHTML = days.map(day => `<div class="availability-day"><div class="availability-day-header"><span class="availability-day-name">${dayNames[day]}</span><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="day-${day}-enabled" checked style="width:20px;height:20px;accent-color:var(--color-primary);"><span style="font-size:14px;color:var(--color-text-light);">Aktīva</span></label></div><div class="availability-day-times"><input type="text" id="day-${day}-start" value="09:00" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" maxlength="5" class="input-field time-input"><span style="color:var(--color-muted);">—</span><input type="text" id="day-${day}-end" value="17:00" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" maxlength="5" class="input-field time-input"></div></div>`).join('');
-            document.getElementById('day-saturday-enabled').checked = false;
-            document.getElementById('day-sunday-enabled').checked = false;
-            
-            // Add time input formatters
-            document.querySelectorAll('.time-input').forEach(input => {
-                input.addEventListener('blur', function() {
-                    this.value = formatTime(this.value);
-                });
-                input.addEventListener('keypress', function(e) {
-                    if (!/[0-9:]/.test(e.key)) e.preventDefault();
-                });
-            });
-
-            // Reinitialize date input formatters after DOM update
-            initializeDateInputs();
-
-            fetch(API_BASE + '/dashboard/availability').then(r => r.json()).then(data => {
-                if (data.schedule) Object.entries(data.schedule).forEach(([day, config]) => {
-                    const checkbox = document.getElementById(`day-${day}-enabled`);
-                    const startInput = document.getElementById(`day-${day}-start`);
-                    const endInput = document.getElementById(`day-${day}-end`);
-                    if (checkbox) checkbox.checked = config.enabled;
-                    if (startInput) startInput.value = config.start || '09:00';
-                    if (endInput) endInput.value = config.end || '17:00';
-                });
-                if (data.blockedDates) renderBlockedDates(data.blockedDates);
-                if (data.vacationPeriods) renderVacationPeriods(data.vacationPeriods);
-            }).catch(() => {});
-            loadHolidays();
+            loadAvailabilityForm(API_BASE, loadHolidays);
+            setupVacationDateValidation();
         }
 
-        function renderVacationPeriods(periods) {
-            const list = document.getElementById('vacation-list');
-            if (!periods || periods.length === 0) { 
-                list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav atvaļinājuma periodu</p>'; 
-                return; 
-            }
-            list.innerHTML = periods.map(v => `
-                <div class="blocked-item" style="background:#eff6ff;">
-                    <span>
-                        <strong>${formatDate(v.startDate)}</strong> — <strong>${formatDate(v.endDate)}</strong>
-                        ${v.reason ? '<span style="color:var(--color-text-light);margin-left:12px;">' + v.reason + '</span>' : ''}
-                    </span>
-                    <button onclick="removeVacation('${v.id}')" class="btn-close" style="width:28px;height:28px;">
-                        <i class="ph ph-x"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
+        document.getElementById('save-availability').addEventListener('click', () => saveAvailability(API_BASE));
 
-        function renderBlockedDates(dates) {
-            const list = document.getElementById('blocked-dates-list');
-            if (!dates || dates.length === 0) { list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav bloķētu datumu</p>'; return; }
-            list.innerHTML = dates.map(d => `<div class="blocked-item"><span>${formatDate(d.date)} ${d.reason ? '— ' + d.reason : ''}</span><button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:28px;height:28px;"><i class="ph ph-x"></i></button></div>`).join('');
-        }
-
-        document.getElementById('save-availability').addEventListener('click', async () => {
-            const scheduleData = {};
-            days.forEach(day => { scheduleData[day] = { enabled: document.getElementById(`day-${day}-enabled`).checked, start: document.getElementById(`day-${day}-start`).value, end: document.getElementById(`day-${day}-end`).value }; });
-            try { await fetch(API_BASE + '/dashboard/availability', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule: scheduleData }) }); showToast('Pieejamība saglabāta!', 'success'); } catch (e) { showToast(e.message, 'error'); }
-        });
-
-        document.getElementById('add-vacation').addEventListener('click', async () => {
-            const startDateDisplay = document.getElementById('vacation-start').value;
-            const endDateDisplay = document.getElementById('vacation-end').value;
-            const reason = document.getElementById('vacation-reason').value;
-            if (!startDateDisplay || !endDateDisplay) return showToast('Izvēlieties sākuma un beigu datumus', 'warning');
-            
-            // Convert dd/mm/yyyy to yyyy-mm-dd for API
-            const startDate = formatDateReverse(startDateDisplay);
-            const endDate = formatDateReverse(endDateDisplay);
-            
-            if (new Date(startDate) > new Date(endDate)) return showToast('Sākuma datums nevar būt vēlāks par beigu datumu', 'warning');
-            try { 
-                console.log('💼 Adding vacation:', { startDate, endDate, reason });
-                const response = await fetch(API_BASE + '/dashboard/availability/vacation', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ startDate, endDate, reason }) 
-                });
-                const result = await response.json();
-                console.log('✅ Vacation added:', result);
-                loadAvailability(); 
+        document.getElementById('add-vacation').addEventListener('click', () => {
+            addVacation(API_BASE, () => {
+                loadAvailability();
                 loadCalendar();
-                document.getElementById('vacation-start').value = ''; 
-                document.getElementById('vacation-end').value = ''; 
-                document.getElementById('vacation-reason').value = ''; 
-                showToast('Atvaļinājums pievienots!', 'success');
-            } catch (e) { 
-                console.error('❌ Error adding vacation:', e);
-                showToast(e.message, 'error'); 
-            }
+            });
         });
 
         window.removeVacation = async function(id) {
-            const confirmed = await showConfirm('Dzēst šo atvaļinājuma periodu?', 'Dzēst atvaļinājumu');
-            if (!confirmed) return;
-            try { 
-                await fetch(API_BASE + '/dashboard/availability/vacation', { 
-                    method: 'DELETE', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ id }) 
-                }); 
-                loadAvailability(); 
+            await removeVacationUtil(API_BASE, id, () => {
+                loadAvailability();
                 loadCalendar();
-                showToast('Atvaļinājums dzēsts', 'success');
-            } catch (e) { showToast(e.message, 'error'); }
+            });
         };
 
-        // Auto-set vacation end date min when start date is selected
-        document.getElementById('vacation-start').addEventListener('change', function() {
-            const startDate = this.value;
-            const endDateInput = document.getElementById('vacation-end');
-            if (startDate) {
-                // Set minimum date for end date to be same as start date
-                endDateInput.min = startDate;
-                // If end date is not set or is before start date, set it to start date
-                if (!endDateInput.value || endDateInput.value < startDate) {
-                    endDateInput.value = startDate;
-                }
-            }
-        });
-
-        document.getElementById('add-blocked-date').addEventListener('click', async () => {
-            const dateDisplay = document.getElementById('block-date').value;
-            const reason = document.getElementById('block-reason').value;
-            if (!dateDisplay) return showToast('Izvēlieties datumu', 'warning');
-            
-            // Convert dd/mm/yyyy to yyyy-mm-dd for API
-            const date = formatDateReverse(dateDisplay);
-            
-            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date, reason }) }); loadAvailability(); document.getElementById('block-date').value = ''; document.getElementById('block-reason').value = ''; showToast('Datums bloķēts', 'success'); } catch (e) { showToast(e.message, 'error'); }
+        document.getElementById('add-blocked-date').addEventListener('click', () => {
+            addBlockedDate(API_BASE, loadAvailability);
         });
 
         window.removeBlockedDate = async function(date) {
-            try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date }) }); loadAvailability(); showToast('Bloķēšana noņemta', 'success'); } catch (e) { showToast(e.message, 'error'); }
+            await removeBlockedDateUtil(API_BASE, date, loadAvailability);
         };
 
         function loadSettings() {
