@@ -160,17 +160,20 @@ test('Полное бронирование: клиент + подтвержде
   // Если баннер видим - принимаем cookies
   if (await cookieBanner.isVisible().catch(() => false)) {
     console.log('🍪 Принимаем все cookies для E2E теста');
-    const acceptAllBtn = page.locator('#cookie-consent-banner button:has-text("Принять все")').or(
-      page.locator('#cookie-consent-banner button').filter({ hasText: /Принять|Accept/ }).first()
-    );
-    await acceptAllBtn.click({ timeout: 5000 }).catch(() => {
-      console.log('⚠️ Не удалось найти кнопку принятия cookies, пробуем закрыть overlay');
-    });
+    // Ищем кнопку по ID (надежнее чем по тексту)
+    const acceptAllBtn = page.locator('#consent-accept-all');
     
-    // Ждём пока overlay исчезнет
-    await expect(cookieOverlay).toBeHidden({ timeout: 3000 }).catch(() => {
-      console.log('⚠️ Cookie overlay всё ещё виден, но продолжаем тест');
-    });
+    if (await acceptAllBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await acceptAllBtn.click();
+      console.log('✅ Кнопка принятия cookies нажата');
+      
+      // Ждём пока overlay исчезнет
+      await expect(cookieOverlay).toBeHidden({ timeout: 3000 }).catch(() => {
+        console.log('⚠️ Cookie overlay всё ещё виден, но продолжаем тест');
+      });
+    } else {
+      console.log('⚠️ Кнопка принятия cookies не найдена, продолжаем тест');
+    }
   } else {
     console.log('✅ Cookie баннер уже скрыт');
   }
