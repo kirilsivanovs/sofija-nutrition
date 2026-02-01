@@ -120,9 +120,9 @@ export async function loadCalendarData(year: number) {
         return {
             bookings,
             holidays,
-            schedule: availability.schedule,
-            blockedDates: new Set(availability.blockedDates),
-            vacations: availability.vacationPeriods,
+            schedule: availability.schedule || {},
+            blockedDates: new Set(availability.blockedDates || []),
+            vacations: availability.vacationPeriods || [],
         };
     } catch (error) {
         throw new Error(formatAPIError(error));
