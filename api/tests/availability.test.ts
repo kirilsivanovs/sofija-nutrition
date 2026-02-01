@@ -3,7 +3,7 @@
  * Testing vacation period filtering, date range generation, and slot availability
  */
 
-import { isLatvianHoliday } from '../src/services/latvianHolidays');
+import { isLatvianHoliday } from '../src/services/latvianHolidays';
 
 describe('Availability API Logic', () => {
     // Helper function to check if date is in vacation period

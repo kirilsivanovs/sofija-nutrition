@@ -8,7 +8,7 @@ import {
     DEFAULT_SCHEDULE,
     DEFAULT_SERVICES,
     dayNames
-} from '../src/services/availabilityService');
+} from '../src/services/availabilityService';
 
 describe('AvailabilityService', () => {
     describe('dayNames', () => {

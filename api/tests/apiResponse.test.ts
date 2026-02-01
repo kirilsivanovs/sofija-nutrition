@@ -11,7 +11,7 @@ import {
     CommonErrors,
     transformLegacyResponse,
     withStandardResponse
-} from '../src/utils/apiResponse');
+} from '../src/utils/apiResponse';
 
 describe('API Response Helper', () => {
     describe('successResponse', () => {
