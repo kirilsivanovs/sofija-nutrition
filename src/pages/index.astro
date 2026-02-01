@@ -13,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
                         <img src="/assets/img/logo.svg" alt="SI Logo" class="h-8 md:h-10 w-auto">
                         <div class="flex flex-col">
                             <span class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors">Sofija Ivanova</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest" data-i18n="header_subtitle">Uztura speciāliste · PhD</span>
+                            <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest" data-i18n="header_subtitle">Uztura speciāliste · PhD</span>
                         </div>
                     </div>
                 </a>
@@ -21,16 +21,16 @@ import Layout from '../layouts/Layout.astro';
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center gap-8">
                     <div class="flex gap-6">
-                        <a href="#program" data-i18n="nav_program" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Programma</a>
-                        <a href="#how-it-works" data-i18n="nav_how" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Kā tas strādā</a>
-                        <a href="#about" data-i18n="nav_about" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Par mani</a>
-                        <a href="#contact" data-i18n="nav_contact" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Pieteikties</a>
+                        <a href="#program" data-i18n="nav_program" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Programma</a>
+                        <a href="#how-it-works" data-i18n="nav_how" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Kā tas strādā</a>
+                        <a href="#about" data-i18n="nav_about" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Par mani</a>
+                        <a href="#contact" data-i18n="nav_contact" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Pieteikties</a>
                     </div>
                     
-                    <div class="flex gap-1 text-xs border-l border-gray-200 pl-4">
-                        <button class="lang-btn px-2.5 py-1.5 rounded-md hover:bg-primary/10 hover:text-primary transition-all cursor-pointer font-medium" data-lang="lv">LV</button>
-                        <button class="lang-btn px-2.5 py-1.5 rounded-md hover:bg-primary/10 hover:text-primary transition-all cursor-pointer font-medium" data-lang="en">EN</button>
-                        <button class="lang-btn px-2.5 py-1.5 rounded-md hover:bg-primary/10 hover:text-primary transition-all cursor-pointer font-medium" data-lang="ru">RU</button>
+                    <div class="flex gap-2 text-sm border-l border-gray-200 pl-4">
+                        <button class="lang-btn btn-chip" data-lang="lv">LV</button>
+                        <button class="lang-btn btn-chip" data-lang="en">EN</button>
+                        <button class="lang-btn btn-chip" data-lang="ru">RU</button>
                     </div>
                 </div>
                 
@@ -44,14 +44,14 @@ import Layout from '../layouts/Layout.astro';
             
             <!-- Mobile Nav -->
             <div id="mobile-nav-menu" class="mobile-nav-menu">
-                <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-2">Programma</a>
-                <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-2">Kā tas strādā</a>
-                <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-2">Par mani</a>
-                <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-2">Pieteikties</a>
+                <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-3 px-2">Programma</a>
+                <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-3 px-2">Kā tas strādā</a>
+                <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-3 px-2">Par mani</a>
+                <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-3 px-2">Pieteikties</a>
                 <div class="flex gap-4 pt-4 border-t">
-                    <button class="lang-btn px-3 py-2 rounded bg-gray-100" data-lang="lv">LV</button>
-                    <button class="lang-btn px-3 py-2 rounded bg-gray-100" data-lang="en">EN</button>
-                    <button class="lang-btn px-3 py-2 rounded bg-gray-100" data-lang="ru">RU</button>
+                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
+                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
+                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@ import Layout from '../layouts/Layout.astro';
         
         <div class="max-w-6xl mx-auto px-4 md:px-8 w-full">
             <!-- Integrated hero card -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div class="bg-white/95 rounded-3xl shadow-[0_20px_50px_rgba(17,24,39,0.12)] border border-white/70 overflow-hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-5">
                     <!-- Photo - takes 2 columns -->
                     <div class="lg:col-span-2 relative" style="transform: none !important;">
@@ -132,7 +132,7 @@ import Layout from '../layouts/Layout.astro';
                         <!-- Badge -->
                         <div class="inline-flex items-center gap-2 bg-cream px-4 py-2 rounded-full mb-6">
                             <i class="ph ph-seal-check text-secondary text-lg"></i>
-                            <span class="text-xs md:text-sm text-primary font-medium" data-i18n="hero_badge">Reģistrēta ārstniecības persona Nr. 75650061277</span>
+                            <span class="text-sm md:text-base text-primary font-medium" data-i18n="hero_badge">Reģistrēta ārstniecības persona Nr. 75650061277</span>
                         </div>
                         
                         <!-- Heading -->
@@ -141,36 +141,36 @@ import Layout from '../layouts/Layout.astro';
                         </h1>
                         
                         <!-- Subtitle -->
-                        <p class="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed mb-6 md:mb-8" data-i18n="hero_subtitle">
+                        <p class="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed mb-6 md:mb-8" data-i18n="hero_subtitle">
                             PhD pētniece un reģistrēta uztura speciāliste, kas palīdz cilvēkiem ar prediabētu un insulīna rezistenci stabilizēt cukura līmeni, izmantojot CGM datus.
                         </p>
 
                         <!-- Benefits - horizontal on desktop -->
                         <div class="grid grid-cols-2 gap-3 mb-6 md:mb-8">
-                            <div class="flex items-center gap-2">
-                                <i class="ph ph-check-circle text-accent text-lg shrink-0"></i>
-                                <span class="text-xs md:text-sm text-gray-700" data-i18n="hero_benefit_1">14 dienu CGM monitorēšana</span>
+                            <div class="flex items-center gap-3">
+                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_1">14 dienu CGM monitorēšana</span>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <i class="ph ph-check-circle text-accent text-lg shrink-0"></i>
-                                <span class="text-xs md:text-sm text-gray-700" data-i18n="hero_benefit_2">Datu analīze saprotamā valodā</span>
+                            <div class="flex items-center gap-3">
+                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_2">Datu analīze saprotamā valodā</span>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <i class="ph ph-check-circle text-accent text-lg shrink-0"></i>
-                                <span class="text-xs md:text-sm text-gray-700" data-i18n="hero_benefit_3">Personalizēts uztura plāns</span>
+                            <div class="flex items-center gap-3">
+                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_3">Personalizēts uztura plāns</span>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <i class="ph ph-check-circle text-accent text-lg shrink-0"></i>
-                                <span class="text-xs md:text-sm text-gray-700" data-i18n="hero_benefit_4">Fokuss uz prediabētu</span>
+                            <div class="flex items-center gap-3">
+                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_4">Fokuss uz prediabētu</span>
                             </div>
                         </div>
 
                         <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <a href="#program" class="inline-flex justify-center items-center bg-primary text-white px-6 py-3.5 rounded-lg font-semibold text-sm md:text-base hover:bg-accent transition-colors cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transform" data-i18n="hero_cta_primary">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#program" class="btn-cta btn-solid text-base md:text-lg" data-i18n="hero_cta_primary">
                                 Pieteikties 14 dienu programmai
                             </a>
-                            <a href="#contact" class="inline-flex justify-center items-center border-2 border-primary text-primary px-6 py-3.5 rounded-lg font-semibold text-sm md:text-base hover:bg-primary hover:text-white transition-all cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transform" data-i18n="hero_cta_secondary">
+                            <a href="#contact" class="btn-cta btn-outline text-base md:text-lg" data-i18n="hero_cta_secondary">
                                 Bezmaksas 15 min konsultācija
                             </a>
                         </div>
@@ -181,51 +181,51 @@ import Layout from '../layouts/Layout.astro';
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-16 md:py-24 bg-white">
+    <section id="how-it-works" class="py-16 md:py-24 bg-white/95">
         
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <!-- Section Header -->
             <div class="text-center mb-12 md:mb-16">
                 <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3" data-i18n="how_title">Kā tas strādā?</h2>
-                <p class="text-gray-600 text-base md:text-lg" data-i18n="how_subtitle">Vienkāršs process, ko varēsiet iekļaut savā ikdienā</p>
+                <p class="text-gray-700 text-base md:text-lg max-w-2xl mx-auto" data-i18n="how_subtitle">Vienkāršs process, ko varēsiet iekļaut savā ikdienā</p>
             </div>
 
             <!-- Process Steps -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 <!-- Step 1 -->
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-syringe text-white text-2xl md:text-3xl"></i>
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-syringe text-primary text-2xl"></i>
                     </div>
-                    <h4 class="font-semibold text-primary text-sm md:text-base mb-2" data-i18n="step_1_title">1. Uzliekam CGM sensoru</h4>
-                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed" data-i18n="step_1_desc">Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.</p>
+                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_1_title">1. Uzliekam CGM sensoru</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_1_desc">Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.</p>
                 </div>
                 
                 <!-- Step 2 -->
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-calendar-check text-white text-2xl md:text-3xl"></i>
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-calendar-check text-primary text-2xl"></i>
                     </div>
-                    <h4 class="font-semibold text-primary text-sm md:text-base mb-2" data-i18n="step_2_title">2. Dzīvojiet savu ierasto dzīvi</h4>
-                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed" data-i18n="step_2_desc">Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.</p>
+                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_2_title">2. Dzīvojiet savu ierasto dzīvi</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_2_desc">Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.</p>
                 </div>
                 
                 <!-- Step 3 -->
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-chart-line text-white text-2xl md:text-3xl"></i>
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-chart-line text-primary text-2xl"></i>
                     </div>
-                    <h4 class="font-semibold text-primary text-sm md:text-base mb-2" data-i18n="step_3_title">3. Analizējam datus kopā</h4>
-                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed" data-i18n="step_3_desc">Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.</p>
+                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_3_title">3. Analizējam datus kopā</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_3_desc">Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.</p>
                 </div>
                 
                 <!-- Step 4 -->
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-list-checks text-white text-2xl md:text-3xl"></i>
+                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
+                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
+                        <i class="ph ph-list-checks text-primary text-2xl"></i>
                     </div>
-                    <h4 class="font-semibold text-primary text-sm md:text-base mb-2" data-i18n="step_4_title">4. Saņemat personalizētu plānu</h4>
-                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed" data-i18n="step_4_desc">Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.</p>
+                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_4_title">4. Saņemat personalizētu plānu</h4>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_4_desc">Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.</p>
                 </div>
             </div>
         </div>
@@ -244,9 +244,9 @@ import Layout from '../layouts/Layout.astro';
                 >
                 <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex items-center">
                     <div class="p-8 md:p-12 max-w-lg">
-                        <span class="inline-block bg-secondary text-white text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4" data-i18n="program_badge">Galvenais pakalpojums</span>
+                        <span class="inline-block bg-secondary text-white text-sm font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4" data-i18n="program_badge">Galvenais pakalpojums</span>
                         <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3" data-i18n="program_title">14 dienu CGM programma</h2>
-                        <p class="text-white/90 text-sm md:text-base" data-i18n="program_subtitle">Pilna diagnostika un personalizēts rīcības plāns</p>
+                        <p class="text-white/90 text-base" data-i18n="program_subtitle">Pilna diagnostika un personalizēts rīcības plāns</p>
                     </div>
                 </div>
             </div>
@@ -257,7 +257,7 @@ import Layout from '../layouts/Layout.astro';
                     
                     <!-- What's Included -->
                     <div class="mb-8">
-                        <h4 class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_includes_title">Kas iekļauts:</h4>
+                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_includes_title">Kas iekļauts:</h4>
                         <ul class="space-y-3">
                             <li class="flex items-start gap-3">
                                 <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
@@ -284,7 +284,7 @@ import Layout from '../layouts/Layout.astro';
 
                     <!-- Who Is It For -->
                     <div>
-                        <h4 class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_for_title">Kam paredzēts:</h4>
+                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_for_title">Kam paredzēts:</h4>
                         <ul class="space-y-3">
                             <li class="flex items-start gap-3">
                                 <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
@@ -304,23 +304,23 @@ import Layout from '../layouts/Layout.astro';
 
                 <!-- Price Card -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-100 sticky top-24">
+                    <div class="bg-white/95 p-6 md:p-8 rounded-2xl shadow-lg border border-[#E6E0D6] sticky top-24">
                         <!-- Price -->
                         <div class="text-center pb-6 border-b border-gray-100 mb-6">
-                            <span class="text-xs uppercase tracking-wider text-gray-500 block mb-2" data-i18n="price_label">Programmas cena</span>
+                            <span class="text-sm uppercase tracking-wider text-gray-500 block mb-2" data-i18n="price_label">Programmas cena</span>
                             <span class="font-serif text-4xl md:text-5xl font-bold text-primary block" data-i18n="price_value">no 249 €</span>
                             <span class="text-sm text-gray-500 mt-1 block" data-i18n="price_note">CGM sensors iekļauts cenā</span>
                         </div>
                         
                         <!-- Results -->
                         <div class="mb-6">
-                            <h4 class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="result_title">Rezultāts:</h4>
+                            <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="result_title">Rezultāts:</h4>
                             <div class="space-y-3">
-                                <p class="flex items-start gap-2 text-sm text-gray-700">
+                                <p class="flex items-start gap-2 text-base text-gray-700">
                                     <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
                                     <span data-i18n="result_1">Sapratīsiet, kuri ēdieni tieši Jums izraisa straujus cukura lēcienus</span>
                                 </p>
-                                <p class="flex items-start gap-2 text-sm text-gray-700">
+                                <p class="flex items-start gap-2 text-base text-gray-700">
                                     <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
                                     <span data-i18n="result_2">Saņemsiet konkrētu rīcības plānu, kā stabilizēt glikozes līmeni ikdienā</span>
                                 </p>
@@ -328,9 +328,9 @@ import Layout from '../layouts/Layout.astro';
                         </div>
 
                         <!-- CTA -->
-                        <a href="#contact" class="block w-full bg-primary text-white text-center py-4 rounded-lg font-semibold hover:bg-accent transition-all cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transform mb-4" data-i18n="program_cta">Pieteikties programmai</a>
+                        <a href="#contact" class="btn-cta btn-solid w-full text-base md:text-lg" data-i18n="program_cta">Pieteikties programmai</a>
                         
-                        <p class="flex items-center justify-center gap-2 text-xs text-gray-500">
+                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500">
                             <i class="ph ph-shield-check text-accent"></i>
                             <span data-i18n="program_guarantee">Pirmā konsultācija bezmaksas</span>
                         </p>
@@ -355,14 +355,14 @@ import Layout from '../layouts/Layout.astro';
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                         <div>
                             <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-4" data-i18n="cgm_unique_title">Jūsu organisms reaģē atšķirīgi</h3>
-                            <p class="text-gray-600 leading-relaxed" data-i18n="cgm_unique_desc">Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.</p>
+                            <p class="text-gray-700 leading-relaxed" data-i18n="cgm_unique_desc">Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.</p>
                         </div>
                         
                         <!-- Chart -->
-                        <div class="bg-white rounded-xl p-4 md:p-6 shadow-sm">
+                        <div class="bg-white/95 rounded-xl p-4 md:p-6 shadow-sm border border-gray-100/70">
                             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
                                 <span class="text-sm font-medium text-gray-700" data-i18n="chart_glucose_response">Glikozes reakcija</span>
-                                <div class="flex gap-4 text-xs">
+                                <div class="flex gap-4 text-sm">
                                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent shrink-0"></span> <span data-i18n="chart_after">Pēc programmas</span></span>
                                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span> <span data-i18n="chart_before">Pirms</span></span>
                                 </div>
@@ -403,7 +403,7 @@ import Layout from '../layouts/Layout.astro';
                                 </div>
                                 <div>
                                     <strong class="text-primary block mb-1" data-i18n="cgm_benefit_1_title">Reāllaika monitorings</strong>
-                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_1_desc">Redzat, kā organisms reaģē uz katru maltīti</span>
+                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_1_desc">Redzat, kā organisms reaģē uz katru maltīti</span>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
@@ -412,7 +412,7 @@ import Layout from '../layouts/Layout.astro';
                                 </div>
                                 <div>
                                     <strong class="text-primary block mb-1" data-i18n="cgm_benefit_2_title">20 000+ mērījumu</strong>
-                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_2_desc">Pilnīgs priekšstats par 14 dienām</span>
+                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_2_desc">Pilnīgs priekšstats par 14 dienām</span>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
@@ -421,7 +421,7 @@ import Layout from '../layouts/Layout.astro';
                                 </div>
                                 <div>
                                     <strong class="text-primary block mb-1" data-i18n="cgm_benefit_3_title">Precīzas rekomendācijas</strong>
-                                    <span class="text-gray-600 text-sm" data-i18n="cgm_benefit_3_desc">Zinām, ko mainīt tieši Jums</span>
+                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_3_desc">Zinām, ko mainīt tieši Jums</span>
                                 </div>
                             </li>
                         </ul>
@@ -445,13 +445,13 @@ import Layout from '../layouts/Layout.astro';
         
         <div class="max-w-6xl mx-auto px-4 md:px-8">
             <div class="text-center mb-10 md:mb-14">
-                <span class="inline-block text-xs uppercase tracking-widest text-secondary font-semibold mb-3">Atsauksmes</span>
+                <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3">Atsauksmes</span>
                 <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold" data-i18n="testimonials_title">Ko saka klienti</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col">
+                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
                     <div class="p-6 md:p-8 flex-1">
                         <div class="flex gap-1 mb-4 text-secondary">
                             <i class="ph-fill ph-star"></i>
@@ -466,15 +466,15 @@ import Layout from '../layouts/Layout.astro';
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">M</div>
                             <div>
-                                <strong class="text-primary font-semibold text-sm" data-i18n="testimonial_1_author">Maija, 47 gadi</strong>
-                                <p class="text-xs text-gray-500" data-i18n="testimonial_1_condition">Prediabēts, vielmaiņas sindroms</p>
+                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_1_author">Maija, 47 gadi</strong>
+                                <p class="text-sm text-gray-500" data-i18n="testimonial_1_condition">Prediabēts, vielmaiņas sindroms</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col">
+                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
                     <div class="p-6 md:p-8 flex-1">
                         <div class="flex gap-1 mb-4 text-secondary">
                             <i class="ph-fill ph-star"></i>
@@ -489,15 +489,15 @@ import Layout from '../layouts/Layout.astro';
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">R</div>
                             <div>
-                                <strong class="text-primary font-semibold text-sm" data-i18n="testimonial_2_author">Rihards, 35 gadi</strong>
-                                <p class="text-xs text-gray-500" data-i18n="testimonial_2_condition">Insulīna rezistence</p>
+                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_2_author">Rihards, 35 gadi</strong>
+                                <p class="text-sm text-gray-500" data-i18n="testimonial_2_condition">Insulīna rezistence</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col">
+                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
                     <div class="p-6 md:p-8 flex-1">
                         <div class="flex gap-1 mb-4 text-secondary">
                             <i class="ph-fill ph-star"></i>
@@ -512,8 +512,8 @@ import Layout from '../layouts/Layout.astro';
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">K</div>
                             <div>
-                                <strong class="text-primary font-semibold text-sm" data-i18n="testimonial_3_author">Kristīne, 34 gadi</strong>
-                                <p class="text-xs text-gray-500" data-i18n="testimonial_3_condition">Pēc gestācijas diabēta</p>
+                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_3_author">Kristīne, 34 gadi</strong>
+                                <p class="text-sm text-gray-500" data-i18n="testimonial_3_condition">Pēc gestācijas diabēta</p>
                             </div>
                         </div>
                     </div>
@@ -530,7 +530,7 @@ import Layout from '../layouts/Layout.astro';
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
                 <!-- Photo Column -->
                 <div class="relative">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(17,24,39,0.18)] border border-white/60">
                         <img 
                             src="/assets/img/aboutme.png" 
                             alt="Sofija Ivanova konsultācijā ar pacientu" 
@@ -540,13 +540,13 @@ import Layout from '../layouts/Layout.astro';
                         <div class="absolute inset-0 border-2 border-white/20 rounded-2xl"></div>
                     </div>
                     <!-- Floating credential badge -->
-                    <div class="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-lg p-4 hidden md:block">
+                    <div class="absolute -bottom-6 -right-6 bg-white/95 rounded-xl shadow-lg p-4 hidden md:block border border-gray-100/70">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
                                 <i class="ph ph-seal-check text-white text-xl"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-500 block" data-i18n="reg_number_label">Reģistrācijas Nr.</span>
+                                <span class="text-sm text-gray-500 block" data-i18n="reg_number_label">Reģistrācijas Nr.</span>
                                 <span class="text-primary font-semibold">75650061277</span>
                             </div>
                         </div>
@@ -557,7 +557,7 @@ import Layout from '../layouts/Layout.astro';
                 
                 <!-- Text Column -->
                 <div>
-                    <span class="inline-block text-xs uppercase tracking-widest text-secondary font-semibold mb-4" data-i18n="about_tag">Par mani</span>
+                    <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4" data-i18n="about_tag">Par mani</span>
                     <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold mb-6">
                         Dr. Sofija Ivanova
                     </h2>
@@ -605,17 +605,17 @@ import Layout from '../layouts/Layout.astro';
             <div>
                 <div class="text-center mb-10">
                     <h3 class="font-serif text-2xl md:text-3xl text-primary font-bold mb-3" data-i18n="science_title">Zinātniskā darbība</h3>
-                    <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="science_subtitle">Aktīvi piedalos starptautiskās konferencēs un zinātnes popularizēšanas pasākumos</p>
+                    <p class="text-gray-700 max-w-2xl mx-auto" data-i18n="science_subtitle">Aktīvi piedalos starptautiskās konferencēs un zinātnes popularizēšanas pasākumos</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Featured Card -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
                         <div class="aspect-[4/3] overflow-hidden">
                             <img src="/assets/img/zinatnieku_nakts.png" alt="Zinātnieku nakts Latvijā" loading="lazy" class="w-full h-full object-cover">
                         </div>
                         <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-xs font-medium text-secondary bg-secondary/10 rounded-full px-3 py-1 mb-3">
+                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-secondary bg-secondary/10 rounded-full px-3 py-1 mb-3">
                                 <i class="ph ph-lightbulb"></i>
                                 <span data-i18n="gallery_2_tag">Izglītība</span>
                             </div>
@@ -625,13 +625,13 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                     
                     <!-- EASD Card -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
                         <div class="aspect-[4/3] overflow-hidden relative">
                             <img src="/assets/img/conference_EASD2025_Vienna.jpg" alt="EASD 2025 konference Vīnē" loading="lazy" class="w-full h-full object-cover">
-                            <div class="absolute top-3 right-3 bg-accent text-white text-xs font-bold px-2.5 py-1 rounded-full">2025</div>
+                            <div class="absolute top-3 right-3 bg-accent text-white text-sm font-bold px-2.5 py-1 rounded-full">2025</div>
                         </div>
                         <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-xs font-medium text-accent bg-accent/10 rounded-full px-3 py-1 mb-3">
+                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full px-3 py-1 mb-3">
                                 <i class="ph ph-globe"></i>
                                 <span data-i18n="gallery_1_tag">Starptautisks</span>
                             </div>
@@ -641,12 +641,12 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                     
                     <!-- Hospital Card -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
                         <div class="aspect-[4/3] overflow-hidden">
                             <img src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg" alt="Veselībpratības diena Stradiņa slimnīcā" loading="lazy" class="w-full h-full object-cover">
                         </div>
                         <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 rounded-full px-3 py-1 mb-3">
+                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 mb-3">
                                 <i class="ph ph-hospital"></i>
                                 <span data-i18n="gallery_3_tag">Klīniskais</span>
                             </div>
@@ -662,11 +662,11 @@ import Layout from '../layouts/Layout.astro';
     <!-- Lead Magnet -->
     <section class="lead-magnet py-16 md:py-20">
         <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <div class="bg-primary rounded-2xl p-6 md:p-10 lg:p-12">
+            <div class="bg-primary rounded-2xl p-6 md:p-10 lg:p-12 shadow-[0_16px_40px_rgba(27,67,50,0.25)]">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <!-- Text -->
                     <div class="text-white">
-                        <span class="inline-block bg-secondary text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4" data-i18n="lead_badge">Bezmaksas PDF</span>
+                        <span class="inline-block bg-secondary text-white text-sm font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4" data-i18n="lead_badge">Bezmaksas PDF</span>
                         <h3 class="font-serif text-xl md:text-2xl lg:text-3xl font-bold mb-3" data-i18n="lead_title">7 ikdienas paradumi, kas paaugstina cukuru</h3>
                         <p class="text-white/80 mb-6" data-i18n="lead_desc">Uzziniet, kādi paradumi latviešu vidū palielina diabēta risku, un kā tos mainīt.</p>
                         <ul class="space-y-2">
@@ -693,11 +693,11 @@ import Layout from '../layouts/Layout.astro';
                                 placeholder="Jūsu e-pasts" 
                                 data-i18n="lead_placeholder" 
                                 required
-                                class="w-full px-4 py-3 border border-gray-200 rounded-lg text-base focus:border-primary focus:ring-1 focus:ring-primary"
+                                class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all min-h-[52px]"
                             >
-                            <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-accent transition-all cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transform" data-i18n="lead_btn">Saņemt PDF</button>
+                            <button type="submit" class="btn-cta btn-solid w-full text-base md:text-lg" data-i18n="lead_btn">Saņemt PDF</button>
                         </form>
-                        <p class="flex items-center justify-center gap-2 text-xs text-gray-500 mt-4">
+                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-4">
                             <i class="ph ph-lock"></i>
                             <span data-i18n="lead_note">Nekāda spama. Jebkurā brīdī varat atteikties.</span>
                         </p>
@@ -713,7 +713,9 @@ import Layout from '../layouts/Layout.astro';
         <div class="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
             <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4" data-i18n="cta_title">Vēlaties uzzināt, kā Jūsu organisms reaģē uz ēdienu?</h2>
             <p class="text-lg text-white/80 mb-8" data-i18n="cta_desc">Sāciet ar bezmaksas 15 min konsultāciju</p>
-            <a href="#contact" class="inline-flex items-center justify-center bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all cursor-pointer hover:shadow-xl hover:-translate-y-0.5 transform" data-i18n="cta_btn">Pieteikties konsultācijai</a>
+            <a href="#contact" class="btn-cta btn-light text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" data-i18n="cta_btn">
+                Pieteikties konsultācijai
+            </a>
         </div>
     </section>
 
@@ -753,4 +755,20 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </div>
     </footer>
+    
+    <!-- Cookie Settings Button (fixed bottom-right) -->
+    <button 
+        onclick="window.showCookieSettings()" 
+        style="position: fixed; bottom: 20px; right: 20px; background: #a78f72; color: white; padding: 14px 24px; border-radius: 28px; border: none; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; font-weight: 600; transition: all 0.2s; min-height: 48px; min-width: 48px;"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.2)'"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+        aria-label="Sīkdatņu iestatījumi"
+    >
+        🍪 Sīkdatnes
+    </button>
+    
+    <!-- GDPR Cookie Consent (TypeScript) -->
+    <script>
+      import '../components/CookieConsent';
+    </script>
 </Layout>

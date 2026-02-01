@@ -1,13 +1,13 @@
 {
   "name": "sofija-nutrition-api",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "start": "func start --cors \"*\"",
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').cpSync('src/fonts', 'dist/fonts', {recursive: true})\"",
     "build:watch": "tsc --watch",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
