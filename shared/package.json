@@ -1,0 +1,14 @@
+{
+  "name": "@sofija-nutrition/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities and types for Sofija Nutrition app",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["shared", "utilities", "types"],
+  "author": "",
+  "license": "ISC"
+}
