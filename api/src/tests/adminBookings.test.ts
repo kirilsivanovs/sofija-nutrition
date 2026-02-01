@@ -84,7 +84,7 @@ const mockTableClient = {
         );
         if (!entity) {
             const error = new Error('Not found');
-            error.statusCode = 404;
+            (error as any).statusCode = 404;
             return Promise.reject(error);
         }
         return Promise.resolve(entity);
@@ -100,7 +100,7 @@ jest.mock('@azure/data-tables', () => ({
 // Helper to create mock request
 function createMockRequest(method, params = {}, body = null, query = {}) {
     const url = new URL('https://test.azurewebsites.net/api/dashboard/bookings');
-    Object.entries(query).forEach(([key, value]) => url.searchParams.set(key, value));
+    Object.entries(query).forEach(([key, value]) => url.searchParams.set(key, String(value)));
     
     return {
         method,
@@ -239,7 +239,7 @@ describe('Admin Bookings API', () => {
             const sorted = [...mockEntityStore].sort((a, b) => {
                 const dateA = new Date(a.date + 'T' + a.time);
                 const dateB = new Date(b.date + 'T' + b.time);
-                return dateB - dateA;
+                return dateB.getTime() - dateA.getTime();
             });
             
             expect(sorted[0].date).toBe('2026-02-02');

@@ -142,8 +142,14 @@ import Layout from '../../layouts/Layout.astro';
                 
                 <div class="card">
                     <div class="vacation-form">
-                        <input type="date" id="vacation-start" class="input-field" placeholder="Sākuma datums">
-                        <input type="date" id="vacation-end" class="input-field" placeholder="Beigu datums">
+                        <div class="date-input-wrapper">
+                            <input type="text" id="vacation-start" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+                            <i class="ph ph-calendar date-input-icon"></i>
+                        </div>
+                        <div class="date-input-wrapper">
+                            <input type="text" id="vacation-end" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+                            <i class="ph ph-calendar date-input-icon"></i>
+                        </div>
                         <input type="text" id="vacation-reason" placeholder="Piezīmes (neobligāti)" class="input-field input-flex">
                         <button id="add-vacation" class="btn-primary">
                             <i class="ph ph-calendar-x"></i>
@@ -159,7 +165,10 @@ import Layout from '../../layouts/Layout.astro';
                 
                 <div class="card">
                     <div class="blocked-date-form">
-                        <input type="date" id="block-date" class="input-field">
+                        <div class="date-input-wrapper">
+                            <input type="text" id="block-date" class="input-field date-input" placeholder="dd/mm/yyyy" maxlength="10">
+                            <i class="ph ph-calendar date-input-icon"></i>
+                        </div>
                         <input type="text" id="block-reason" placeholder="Iemesls" class="input-field input-flex">
                         <button id="add-blocked-date" class="btn-danger">
                             <i class="ph ph-plus"></i>
@@ -260,8 +269,7 @@ import Layout from '../../layouts/Layout.astro';
                     <h2 class="content-title">Azure Table Storage</h2>
                     <div class="data-controls">
                         <select id="table-select" class="input-field">
-                            <option value="bookings">bookings</option>
-                            <option value="adminSettings">adminSettings</option>
+                            <option value="bookings">bookings (ieraksti)</option>
                         </select>
                         <button id="refresh-table" class="btn-secondary">
                             <i class="ph ph-arrows-clockwise"></i>
@@ -270,6 +278,57 @@ import Layout from '../../layouts/Layout.astro';
                             <i class="ph ph-download-simple"></i>
                             <span>CSV</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Filters and Batch Actions -->
+                <div id="table-filters" class="card hidden" style="margin-bottom: 20px; padding: 20px;">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label class="input-label">Meklēt</label>
+                            <input type="text" id="table-search" class="input-field" placeholder="Meklēt visos laukos...">
+                        </div>
+                        <div style="min-width: 150px;">
+                            <label class="input-label">Statuss</label>
+                            <select id="filter-status" class="input-field">
+                                <option value="">Visi</option>
+                                <option value="confirmed">Apstiprināts</option>
+                                <option value="pending">Gaida</option>
+                                <option value="cancelled">Atcelts</option>
+                            </select>
+                        </div>
+                        <div style="min-width: 150px;">
+                            <label class="input-label">Sākuma datums</label>
+                            <input type="text" id="filter-date-from" class="input-field date-input" placeholder="dd/mm/yyyy">
+                        </div>
+                        <div style="min-width: 150px;">
+                            <label class="input-label">Beigu datums</label>
+                            <input type="text" id="filter-date-to" class="input-field date-input" placeholder="dd/mm/yyyy">
+                        </div>
+                        <button id="clear-filters" class="btn-secondary">
+                            <i class="ph ph-x"></i>
+                            <span>Notīrīt</span>
+                        </button>
+                    </div>
+                    
+                    <div id="batch-actions" class="hidden" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+                        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                            <span style="font-weight: 600; color: var(--color-primary);">
+                                <span id="selected-count">0</span> izvēlēti
+                            </span>
+                            <button id="batch-delete" class="btn-danger btn-sm">
+                                <i class="ph ph-trash"></i>
+                                <span>Dzēst izvēlētos</span>
+                            </button>
+                            <button id="batch-export" class="btn-info btn-sm">
+                                <i class="ph ph-download-simple"></i>
+                                <span>Eksportēt izvēlētos</span>
+                            </button>
+                            <button id="deselect-all" class="btn-secondary btn-sm">
+                                <i class="ph ph-x"></i>
+                                <span>Atcelt izvēli</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -287,7 +346,10 @@ import Layout from '../../layouts/Layout.astro';
                             </table>
                         </div>
                     </div>
-                    <div class="table-footer"><span id="table-count">0</span> ieraksti</div>
+                    <div class="table-footer">
+                        <span id="table-count">0</span> ieraksti
+                        <span id="filtered-count" class="hidden" style="color: var(--color-primary); margin-left: 10px;"></span>
+                    </div>
                 </div>
 
                 <div id="table-empty" class="hidden empty-state">
@@ -297,6 +359,29 @@ import Layout from '../../layouts/Layout.astro';
             </div>
         </main>
 
+        <!-- Date Picker Popup -->
+        <div id="date-picker" class="date-picker-popup hidden">
+            <div class="date-picker-header">
+                <button type="button" class="date-picker-nav" id="picker-prev-month">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <span id="picker-month-year" class="date-picker-title"></span>
+                <button type="button" class="date-picker-nav" id="picker-next-month">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+            <div class="date-picker-days">
+                <div class="date-picker-day-name">Pr</div>
+                <div class="date-picker-day-name">Ot</div>
+                <div class="date-picker-day-name">Tr</div>
+                <div class="date-picker-day-name">Ce</div>
+                <div class="date-picker-day-name">Pk</div>
+                <div class="date-picker-day-name">Se</div>
+                <div class="date-picker-day-name">Sv</div>
+            </div>
+            <div id="picker-dates" class="date-picker-dates"></div>
+        </div>
+
         <!-- Toast Notifications Container -->
         <div id="toast-container" class="toast-container"></div>
     </div>
@@ -304,20 +389,20 @@ import Layout from '../../layouts/Layout.astro';
     <style is:global>
         :root {
             --color-primary: #1B4332;
-            --color-secondary: #D4A574;
-            --color-accent: #2D6A4F;
-            --color-text: #374151;
-            --color-text-light: #6b7280;
-            --color-muted: #9ca3af;
-            --color-bg: #FDFBF7;
+            --color-secondary: #C9A36A;
+            --color-accent: #295D45;
+            --color-text: #1f2937;
+            --color-text-light: #64748b;
+            --color-muted: #94a3b8;
+            --color-bg: #FBF8F2;
             --color-white: #FFFFFF;
-            --color-cream: #F8F6F1;
-            --color-border: #e5e7eb;
+            --color-cream: #F6F1E8;
+            --color-border: #E6E0D6;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Inter', sans-serif;
-            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-sm: 0 1px 2px 0 rgba(17,24,39,0.06);
+            --shadow-md: 0 6px 12px -4px rgba(17,24,39,0.12);
+            --shadow-lg: 0 16px 30px -12px rgba(17,24,39,0.18);
             --radius: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -330,17 +415,19 @@ import Layout from '../../layouts/Layout.astro';
             background: var(--color-bg);
             font-family: var(--font-sans);
             color: var(--color-text);
-            font-size: 16px;
+            font-size: 18px;
+            line-height: 1.6;
         }
 
         /* Header */
         .admin-header {
             background: var(--color-white);
             border-bottom: 1px solid var(--color-border);
-            padding: 16px 20px;
+            padding: 18px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
         .admin-header-inner {
@@ -365,17 +452,17 @@ import Layout from '../../layouts/Layout.astro';
 
         .admin-logo-name {
             font-family: var(--font-serif);
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 600;
             color: var(--color-primary);
             line-height: 1.2;
         }
 
         .admin-logo-sub {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--color-text-light);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.6px;
         }
 
         .admin-user {
@@ -385,7 +472,7 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .admin-user-name {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--color-text-light);
             display: none;
         }
@@ -394,10 +481,10 @@ import Layout from '../../layouts/Layout.astro';
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 14px;
+            font-size: 15px;
             color: var(--color-text-light);
             text-decoration: none;
-            padding: 8px 14px;
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
             transition: all 0.2s;
         }
@@ -410,14 +497,14 @@ import Layout from '../../layouts/Layout.astro';
         /* Mobile Tab Select */
         .mobile-tab-select {
             display: block;
-            padding: 16px 20px;
+            padding: 18px 24px;
             background: var(--color-white);
             border-bottom: 1px solid var(--color-border);
         }
 
         .mobile-tab-dropdown {
             width: 100%;
-            padding: 14px 16px;
+            padding: 14px 18px;
             font-size: 16px;
             font-family: var(--font-sans);
             border: 1px solid var(--color-border);
@@ -452,20 +539,20 @@ import Layout from '../../layouts/Layout.astro';
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             border: none;
             background: none;
             font-family: var(--font-sans);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             color: var(--color-text-light);
             cursor: pointer;
             border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
             white-space: nowrap;
         }
 
-        .admin-tab i { font-size: 18px; }
+        .admin-tab i { font-size: 20px; }
 
         .admin-tab:hover {
             color: var(--color-primary);
@@ -481,7 +568,7 @@ import Layout from '../../layouts/Layout.astro';
         .admin-main {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
 
         .admin-content { animation: fadeIn 0.2s ease; }
@@ -497,21 +584,21 @@ import Layout from '../../layouts/Layout.astro';
         .content-header {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
         .content-title {
             font-family: var(--font-serif);
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 600;
             color: var(--color-primary);
         }
 
         .content-subtitle {
-            font-size: 15px;
+            font-size: 16px;
             color: var(--color-text-light);
-            margin: 0 0 20px 0;
+            margin: 0 0 24px 0;
         }
 
         /* Calendar Controls */
@@ -519,21 +606,21 @@ import Layout from '../../layouts/Layout.astro';
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .calendar-month {
             font-family: var(--font-serif);
             font-weight: 600;
-            font-size: 18px;
+            font-size: 21px;
             min-width: 160px;
             text-align: center;
             color: var(--color-primary);
         }
 
         .cal-nav-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -541,7 +628,7 @@ import Layout from '../../layouts/Layout.astro';
             border-radius: var(--radius-sm);
             background: var(--color-white);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
             color: var(--color-text);
         }
 
@@ -559,26 +646,26 @@ import Layout from '../../layouts/Layout.astro';
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
+            min-height: 44px;
             background: var(--color-primary);
             color: white;
             border: none;
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-primary:hover {
             background: var(--color-accent);
-            transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
 
         .btn-primary.btn-sm {
-            padding: 10px 16px;
-            font-size: 14px;
+            padding: 10px 18px;
+            font-size: 15px;
         }
 
         .btn-secondary {
@@ -586,15 +673,16 @@ import Layout from '../../layouts/Layout.astro';
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
+            min-height: 44px;
             background: var(--color-white);
             color: var(--color-text);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-secondary:hover {
@@ -607,15 +695,16 @@ import Layout from '../../layouts/Layout.astro';
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
+            min-height: 44px;
             background: #fef2f2;
             color: #dc2626;
             border: 1px solid #fecaca;
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-danger:hover { background: #fee2e2; }
@@ -867,23 +956,131 @@ import Layout from '../../layouts/Layout.astro';
             background: var(--color-secondary);
         }
 
+        /* Date Picker */
+        .date-picker-popup {
+            position: absolute;
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 16px;
+            z-index: 9999;
+            min-width: 300px;
+        }
+
+        .date-picker-popup.hidden {
+            display: none;
+        }
+
+        .date-picker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .date-picker-title {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .date-picker-nav {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--color-text);
+        }
+
+        .date-picker-nav:hover {
+            background: var(--color-cream);
+            border-color: var(--color-primary);
+        }
+
+        .date-picker-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .date-picker-day-name {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-light);
+            padding: 8px 0;
+        }
+
+        .date-picker-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .date-picker-date {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: var(--color-text);
+            border: 1px solid transparent;
+        }
+
+        .date-picker-date:hover {
+            background: var(--color-cream);
+            border-color: var(--color-primary);
+        }
+
+        .date-picker-date.other-month {
+            color: var(--color-muted);
+        }
+
+        .date-picker-date.today {
+            border-color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .date-picker-date.selected {
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .date-picker-date.selected:hover {
+            background: var(--color-accent);
+        }
+
         /* Cards */
         .card {
             background: var(--color-white);
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
-            padding: 24px;
-            margin-bottom: 20px;
+            border: 1px solid var(--color-border);
+            padding: 28px;
+            margin-bottom: 24px;
         }
 
         .card-title {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--color-primary);
-            margin: 0 0 20px 0;
+            margin: 0 0 24px 0;
         }
 
         .card-title i {
@@ -892,18 +1089,18 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .card-footer {
-            margin-top: 24px;
-            padding-top: 20px;
+            margin-top: 28px;
+            padding-top: 24px;
             border-top: 1px solid var(--color-border);
         }
 
         /* Form Elements */
         .input-field {
-            padding: 12px 16px;
+            padding: 12px 18px;
             border: 1px solid var(--color-border);
             border-radius: var(--radius-sm);
             font-family: var(--font-sans);
-            font-size: 15px;
+            font-size: 16px;
             color: var(--color-text);
             background: var(--color-white);
             transition: border-color 0.2s;
@@ -917,23 +1114,23 @@ import Layout from '../../layouts/Layout.astro';
 
         .input-field.input-flex { flex: 1; min-width: 0; }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 20px; }
 
         .form-label {
             display: block;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             color: var(--color-text-light);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         /* Calendar Legend */
         .calendar-legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            gap: 18px;
+            margin-bottom: 24px;
+            font-size: 15px;
             color: var(--color-text-light);
         }
 
@@ -1027,6 +1224,12 @@ import Layout from '../../layouts/Layout.astro';
             transform: scale(1.02);
         }
 
+        .calendar-cell.selected {
+            box-shadow: inset 0 0 0 4px var(--color-primary) !important;
+            z-index: 11;
+            transform: scale(1.02);
+        }
+
         .calendar-cell.empty {
             background: #f9fafb;
             cursor: default;
@@ -1079,14 +1282,14 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .calendar-cell .holiday-name {
-            font-size: 11px;
+            font-size: 12px;
             color: #dc2626;
             font-weight: 600;
             line-height: 1.3;
         }
 
         .calendar-cell .day-time {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--color-text-light);
             display: flex;
             align-items: center;
@@ -1106,7 +1309,7 @@ import Layout from '../../layouts/Layout.astro';
             align-items: center;
             justify-content: center;
             gap: 3px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             padding: 3px 6px;
             border-radius: 10px;
@@ -1391,17 +1594,37 @@ import Layout from '../../layouts/Layout.astro';
 
         .availability-day-times .time-input {
             padding: 10px 12px;
-            font-size: 14px;
+            font-size: 16px;
             width: 90px;
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-sans);
             text-align: center;
+            font-weight: 500;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .date-input-wrapper .date-input {
+            padding-right: 40px;
+        }
+
+        .date-input-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: var(--color-primary);
+            cursor: pointer;
         }
 
         .vacation-form {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 24px;
         }
 
         .vacation-form .input-field { 
@@ -1412,8 +1635,8 @@ import Layout from '../../layouts/Layout.astro';
         .blocked-date-form {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 24px;
         }
 
         .blocked-date-form .input-field { width: auto; }
@@ -1421,23 +1644,23 @@ import Layout from '../../layouts/Layout.astro';
         .blocked-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .blocked-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 18px;
+            padding: 16px 20px;
             background: #fef2f2;
             border-radius: var(--radius-sm);
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .holidays-controls {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
 
@@ -1445,19 +1668,19 @@ import Layout from '../../layouts/Layout.astro';
 
         .holidays-grid {
             display: grid;
-            gap: 10px;
+            gap: 12px;
         }
 
         .holiday-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 18px;
+            padding: 16px 20px;
             background: #eff6ff;
             border-radius: var(--radius-sm);
-            font-size: 14px;
+            font-size: 15px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
 
         .holiday-date {
@@ -1466,7 +1689,7 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         /* Data Table */
-        .table-card { padding: 0; overflow: hidden; }
+        .table-card { padding: 0; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius); }
 
         .table-wrapper {
             overflow-x: auto;
@@ -1476,12 +1699,12 @@ import Layout from '../../layouts/Layout.astro';
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .data-table th {
             background: var(--color-cream);
-            padding: 14px 16px;
+            padding: 16px 18px;
             text-align: left;
             font-weight: 600;
             color: var(--color-primary);
@@ -1490,12 +1713,20 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         .data-table td {
-            padding: 12px 16px;
+            padding: 14px 18px;
             border-bottom: 1px solid var(--color-border);
             white-space: nowrap;
         }
 
         .data-table tr:hover td { background: var(--color-cream); }
+        
+        .data-table tr.row-selected {
+            background: #dbeafe !important;
+        }
+        
+        .data-table tr.row-selected td {
+            background: #dbeafe !important;
+        }
 
         .table-footer {
             padding: 14px 20px;
@@ -1797,6 +2028,165 @@ import Layout from '../../layouts/Layout.astro';
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
 
+        // Initialize date input formatters globally
+        function initializeDateInputs() {
+            document.querySelectorAll('.date-input').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = this.value.replace(/[^\d]/g, '');
+                    if (value.length >= 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2);
+                    }
+                    if (value.length >= 5) {
+                        value = value.slice(0, 5) + '/' + value.slice(5, 9);
+                    }
+                    this.value = value;
+                });
+                input.addEventListener('blur', function() {
+                    const parts = this.value.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        if (year.length === 4) {
+                            this.value = `${day}/${month}/${year}`;
+                        }
+                    }
+                });
+                input.addEventListener('keypress', function(e) {
+                    if (!/[0-9]/.test(e.key)) e.preventDefault();
+                });
+            });
+        }
+
+        // Initialize date inputs on page load
+        initializeDateInputs();
+
+        // Date Picker functionality
+        let pickerCurrentDate = new Date();
+        let pickerTargetInput = null;
+
+        const datePicker = document.getElementById('date-picker');
+        const pickerMonthYear = document.getElementById('picker-month-year');
+        const pickerDates = document.getElementById('picker-dates');
+
+        function renderDatePicker() {
+            const year = pickerCurrentDate.getFullYear();
+            const month = pickerCurrentDate.getMonth();
+            
+            pickerMonthYear.textContent = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            
+            let html = '';
+            const today = new Date();
+            const todayStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+            const selectedValue = pickerTargetInput ? pickerTargetInput.value : '';
+            
+            // Previous month days
+            const startDay = firstDay === 0 ? 6 : firstDay - 1;
+            for (let i = startDay - 1; i >= 0; i--) {
+                const day = prevMonthDays - i;
+                html += `<div class="date-picker-date other-month" data-day="${day}" data-month="${month === 0 ? 11 : month - 1}" data-year="${month === 0 ? year - 1 : year}">${day}</div>`;
+            }
+            
+            // Current month days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
+                const isToday = dateStr === todayStr;
+                const isSelected = dateStr === selectedValue;
+                const classes = ['date-picker-date'];
+                if (isToday) classes.push('today');
+                if (isSelected) classes.push('selected');
+                
+                html += `<div class="${classes.join(' ')}" data-day="${day}" data-month="${month}" data-year="${year}">${day}</div>`;
+            }
+            
+            // Next month days
+            const totalCells = startDay + daysInMonth;
+            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            for (let day = 1; day <= remainingCells; day++) {
+                html += `<div class="date-picker-date other-month" data-day="${day}" data-month="${month === 11 ? 0 : month + 1}" data-year="${month === 11 ? year + 1 : year}">${day}</div>`;
+            }
+            
+            pickerDates.innerHTML = html;
+            
+            // Add click handlers
+            pickerDates.querySelectorAll('.date-picker-date').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const day = cell.dataset.day.padStart(2, '0');
+                    const month = (parseInt(cell.dataset.month) + 1).toString().padStart(2, '0');
+                    const year = cell.dataset.year;
+                    const dateStr = `${day}/${month}/${year}`;
+                    
+                    if (pickerTargetInput) {
+                        pickerTargetInput.value = dateStr;
+                        pickerTargetInput.dispatchEvent(new Event('change'));
+                    }
+                    
+                    closeDatePicker();
+                });
+            });
+        }
+
+        function openDatePicker(inputElement) {
+            pickerTargetInput = inputElement;
+            
+            // Parse current value if exists
+            if (inputElement.value) {
+                const parts = inputElement.value.split('/');
+                if (parts.length === 3) {
+                    pickerCurrentDate = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
+                }
+            } else {
+                pickerCurrentDate = new Date();
+            }
+            
+            renderDatePicker();
+            
+            // Position picker below input
+            const rect = inputElement.getBoundingClientRect();
+            datePicker.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            datePicker.style.left = `${rect.left + window.scrollX}px`;
+            
+            datePicker.classList.remove('hidden');
+        }
+
+        function closeDatePicker() {
+            datePicker.classList.add('hidden');
+            pickerTargetInput = null;
+        }
+
+        // Navigation
+        document.getElementById('picker-prev-month').addEventListener('click', () => {
+            pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() - 1);
+            renderDatePicker();
+        });
+
+        document.getElementById('picker-next-month').addEventListener('click', () => {
+            pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() + 1);
+            renderDatePicker();
+        });
+
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+            if (!datePicker.classList.contains('hidden') && 
+                !datePicker.contains(e.target) && 
+                !e.target.classList.contains('date-input') &&
+                !e.target.classList.contains('date-input-icon')) {
+                closeDatePicker();
+            }
+        });
+
+        // Attach to date inputs and icons
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('date-input') || 
+                (e.target.classList.contains('date-input-icon') && e.target.previousElementSibling)) {
+                const input = e.target.classList.contains('date-input') ? e.target : e.target.previousElementSibling;
+                openDatePicker(input);
+            }
+        });
 
         function isDateInVacation(dateStr) {
             return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
@@ -1980,6 +2370,20 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         window.showDayDetails = function(dateStr) {
+            // Remove previous selection
+            document.querySelectorAll('.calendar-cell.selected').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked day
+            const allCells = document.querySelectorAll('.calendar-cell');
+            allCells.forEach(cell => {
+                const cellDateMatch = cell.getAttribute('onclick')?.match(/showDayDetails\('([^']+)'\)/);
+                if (cellDateMatch && cellDateMatch[1] === dateStr) {
+                    cell.classList.add('selected');
+                }
+            });
+            
             const details = document.getElementById('day-details');
             const title = document.getElementById('day-details-title');
             const list = document.getElementById('day-bookings-list');
@@ -2125,6 +2529,10 @@ import Layout from '../../layouts/Layout.astro';
                     if (!/[0-9:]/.test(e.key)) e.preventDefault();
                 });
             });
+
+            // Reinitialize date input formatters after DOM update
+            initializeDateInputs();
+
             fetch(API_BASE + '/dashboard/availability').then(r => r.json()).then(data => {
                 if (data.schedule) Object.entries(data.schedule).forEach(([day, config]) => {
                     const checkbox = document.getElementById(`day-${day}-enabled`);
@@ -2172,10 +2580,15 @@ import Layout from '../../layouts/Layout.astro';
         });
 
         document.getElementById('add-vacation').addEventListener('click', async () => {
-            const startDate = document.getElementById('vacation-start').value;
-            const endDate = document.getElementById('vacation-end').value;
+            const startDateDisplay = document.getElementById('vacation-start').value;
+            const endDateDisplay = document.getElementById('vacation-end').value;
             const reason = document.getElementById('vacation-reason').value;
-            if (!startDate || !endDate) return showToast('Izvēlieties sākuma un beigu datumus', 'warning');
+            if (!startDateDisplay || !endDateDisplay) return showToast('Izvēlieties sākuma un beigu datumus', 'warning');
+            
+            // Convert dd/mm/yyyy to yyyy-mm-dd for API
+            const startDate = formatDateReverse(startDateDisplay);
+            const endDate = formatDateReverse(endDateDisplay);
+            
             if (new Date(startDate) > new Date(endDate)) return showToast('Sākuma datums nevar būt vēlāks par beigu datumu', 'warning');
             try { 
                 console.log('💼 Adding vacation:', { startDate, endDate, reason });
@@ -2199,7 +2612,8 @@ import Layout from '../../layouts/Layout.astro';
         });
 
         window.removeVacation = async function(id) {
-            if (!confirm('Dzēst šo atvaļinājuma periodu?')) return;
+            const confirmed = await showConfirm('Dzēst šo atvaļinājuma periodu?', 'Dzēst atvaļinājumu');
+            if (!confirmed) return;
             try { 
                 await fetch(API_BASE + '/dashboard/availability/vacation', { 
                     method: 'DELETE', 
@@ -2227,9 +2641,13 @@ import Layout from '../../layouts/Layout.astro';
         });
 
         document.getElementById('add-blocked-date').addEventListener('click', async () => {
-            const date = document.getElementById('block-date').value;
+            const dateDisplay = document.getElementById('block-date').value;
             const reason = document.getElementById('block-reason').value;
-            if (!date) return showToast('Izvēlieties datumu', 'warning');
+            if (!dateDisplay) return showToast('Izvēlieties datumu', 'warning');
+            
+            // Convert dd/mm/yyyy to yyyy-mm-dd for API
+            const date = formatDateReverse(dateDisplay);
+            
             try { await fetch(API_BASE + '/dashboard/availability/block', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date, reason }) }); loadAvailability(); document.getElementById('block-date').value = ''; document.getElementById('block-reason').value = ''; showToast('Datums bloķēts', 'success'); } catch (e) { showToast(e.message, 'error'); }
         });
 
@@ -2263,31 +2681,350 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('holiday-year').addEventListener('change', loadHolidays);
         document.getElementById('refresh-holidays').addEventListener('click', loadHolidays);
 
-        let currentTableData = { entities: [], columns: [] };
+        let currentTableData = null;
+        let filteredTableData = [];
+        let selectedRows = new Set();
+        let currentSortColumn = null;
+        let currentSortDirection = 'asc';
 
         async function loadTableData() {
             const tableName = document.getElementById('table-select').value;
             const loading = document.getElementById('table-loading');
             const container = document.getElementById('table-container');
+            const filters = document.getElementById('table-filters');
             const empty = document.getElementById('table-empty');
-            loading.classList.remove('hidden'); container.classList.add('hidden'); empty.classList.add('hidden');
-            try { const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); const data = await response.json(); currentTableData = data; loading.classList.add('hidden'); if (!data.entities || data.entities.length === 0) { empty.classList.remove('hidden'); document.getElementById('table-count').textContent = '0'; return; } renderTable(data); container.classList.remove('hidden'); document.getElementById('table-count').textContent = data.count || data.entities.length; } catch (error) { loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>'; }
+            
+            loading.classList.remove('hidden'); 
+            container.classList.add('hidden'); 
+            if (empty) empty.classList.add('hidden');
+            
+            selectedRows.clear();
+            updateBatchActionsUI();
+            
+            try { 
+                const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); 
+                const data = await response.json(); 
+                currentTableData = data; 
+                filteredTableData = data.entities || [];
+                
+                loading.classList.add('hidden'); 
+                
+                if (!data.entities || data.entities.length === 0) { 
+                    if (empty) empty.classList.remove('hidden'); 
+                    document.getElementById('table-count').textContent = '0'; 
+                    filters.classList.add('hidden');
+                    return; 
+                }
+                
+                filters.classList.remove('hidden');
+                applyFilters();
+            } catch (error) { 
+                loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + error.message + '</span>'; 
+            }
         }
 
-        function renderTable(data) {
+        function applyFilters() {
+            if (!currentTableData || !currentTableData.entities) return;
+            
+            const searchTerm = document.getElementById('table-search').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+            const dateFrom = document.getElementById('filter-date-from').value;
+            const dateTo = document.getElementById('filter-date-to').value;
+            
+            let filtered = currentTableData.entities;
+            
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(entity => {
+                    return Object.values(entity).some(value => {
+                        if (value === null || value === undefined) return false;
+                        return String(value).toLowerCase().includes(searchTerm);
+                    });
+                });
+            }
+            
+            // Status filter
+            if (statusFilter) {
+                filtered = filtered.filter(entity => entity.status === statusFilter);
+            }
+            
+            // Date range filter
+            if (dateFrom || dateTo) {
+                filtered = filtered.filter(entity => {
+                    const entityDate = entity.date;
+                    if (!entityDate) return false;
+                    
+                    const dateStr = entityDate.split('T')[0]; // Get yyyy-mm-dd part
+                    
+                    if (dateFrom) {
+                        const [day, month, year] = dateFrom.split('/');
+                        const fromDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                        if (dateStr < fromDate) return false;
+                    }
+                    
+                    if (dateTo) {
+                        const [day, month, year] = dateTo.split('/');
+                        const toDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                        if (dateStr > toDate) return false;
+                    }
+                    
+                    return true;
+                });
+            }
+            
+            filteredTableData = filtered;
+            renderTable();
+            updateFilterCount();
+        }
+
+        function updateFilterCount() {
+            const total = currentTableData?.entities?.length || 0;
+            const filtered = filteredTableData.length;
+            const countEl = document.getElementById('filtered-count');
+            
+            document.getElementById('table-count').textContent = total;
+            
+            if (filtered < total) {
+                countEl.textContent = `(rāda ${filtered})`;
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
+        }
+
+        function sortTable(column) {
+            if (currentSortColumn === column) {
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumn = column;
+                currentSortDirection = 'asc';
+            }
+            
+            filteredTableData.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+                
+                // Handle null/undefined
+                if (valA === null || valA === undefined) return 1;
+                if (valB === null || valB === undefined) return -1;
+                
+                // Convert to string for comparison
+                valA = String(valA).toLowerCase();
+                valB = String(valB).toLowerCase();
+                
+                const comparison = valA < valB ? -1 : valA > valB ? 1 : 0;
+                return currentSortDirection === 'asc' ? comparison : -comparison;
+            });
+            
+            renderTable();
+        }
+
+        function renderTable() {
             const header = document.getElementById('table-header');
             const body = document.getElementById('table-body');
-            const columns = data.columns || [];
-            header.innerHTML = `<tr>${columns.map(col => `<th>${col}</th>`).join('')}<th>Darbības</th></tr>`;
-            body.innerHTML = data.entities.map(entity => {
+            const container = document.getElementById('table-container');
+            const columns = currentTableData.columns || [];
+            
+            // Header with sorting
+            const allSelected = filteredTableData.length > 0 && selectedRows.size === filteredTableData.length;
+            header.innerHTML = `<tr>
+                <th style="width: 50px;">
+                    <input type="checkbox" id="select-all" ${allSelected ? 'checked' : ''} title="${allSelected ? 'Noņemt izvēli no visiem' : 'Izvēlēties visus'}">
+                </th>
+                ${columns.map(col => `
+                    <th onclick="sortTable('${col}')" style="cursor: pointer; user-select: none;">
+                        ${col}
+                        ${currentSortColumn === col ? 
+                            (currentSortDirection === 'asc' ? ' ▲' : ' ▼') : 
+                            ' ⇅'}
+                    </th>
+                `).join('')}
+                <th>Darbības</th>
+            </tr>`;
+            
+            // Body
+            body.innerHTML = filteredTableData.map((entity, index) => {
                 const pk = encodeURIComponent(entity.partitionKey || '');
                 const rk = encodeURIComponent(entity.rowKey || '');
-                return `<tr>${columns.map(col => { let value = entity[col]; if (value === undefined || value === null) value = ''; if (typeof value === 'object') value = JSON.stringify(value); const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; let style = ''; if (col === 'status') { if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; } return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; }).join('')}<td><button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" title="Dzēst"><i class="ph ph-trash"></i></button></td></tr>`;
+                const rowId = `${pk}_${rk}`;
+                const isSelected = selectedRows.has(rowId);
+                
+                return `<tr class="${isSelected ? 'row-selected' : ''}" data-row-id="${rowId}">
+                    <td>
+                        <input type="checkbox" class="row-checkbox" data-row-id="${rowId}" ${isSelected ? 'checked' : ''}>
+                    </td>
+                    ${columns.map(col => { 
+                        let value = entity[col]; 
+                        if (value === undefined || value === null) value = ''; 
+                        if (typeof value === 'object') value = JSON.stringify(value); 
+                        const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; 
+                        let style = ''; 
+                        if (col === 'status') { 
+                            if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; 
+                            else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; 
+                            else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; 
+                        } 
+                        return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; 
+                    }).join('')}
+                    <td>
+                        <button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" title="Dzēst">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
             }).join('');
+            
+            container.classList.remove('hidden');
+            
+            // Attach checkbox listeners (remove old ones first to prevent duplicates)
+            const selectAllCheckbox = document.getElementById('select-all');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.replaceWith(selectAllCheckbox.cloneNode(true));
+                document.getElementById('select-all').addEventListener('change', handleSelectAll);
+            }
+            
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.addEventListener('change', handleRowSelect);
+            });
+        }
+
+        function handleSelectAll(e) {
+            const checked = e.target.checked;
+            selectedRows.clear();
+            
+            if (checked) {
+                filteredTableData.forEach(entity => {
+                    const pk = encodeURIComponent(entity.partitionKey || '');
+                    const rk = encodeURIComponent(entity.rowKey || '');
+                    selectedRows.add(`${pk}_${rk}`);
+                });
+            }
+            
+            renderTable();
+            updateBatchActionsUI();
+        }
+
+        function handleRowSelect(e) {
+            const rowId = e.target.dataset.rowId;
+            
+            if (e.target.checked) {
+                selectedRows.add(rowId);
+            } else {
+                selectedRows.delete(rowId);
+            }
+            
+            updateBatchActionsUI();
+            
+            // Update row styling
+            const row = document.querySelector(`tr[data-row-id="${rowId}"]`);
+            if (row) {
+                if (e.target.checked) {
+                    row.classList.add('row-selected');
+                } else {
+                    row.classList.remove('row-selected');
+                }
+            }
+            
+            // Update select-all checkbox
+            const selectAll = document.getElementById('select-all');
+            if (selectAll) {
+                selectAll.checked = selectedRows.size === filteredTableData.length && filteredTableData.length > 0;
+            }
+        }
+
+        function updateBatchActionsUI() {
+            const batchActions = document.getElementById('batch-actions');
+            const selectedCount = document.getElementById('selected-count');
+            
+            selectedCount.textContent = selectedRows.size;
+            
+            if (selectedRows.size > 0) {
+                batchActions.classList.remove('hidden');
+            } else {
+                batchActions.classList.add('hidden');
+            }
+        }
+
+        async function batchDelete() {
+            if (selectedRows.size === 0) return;
+            
+            const confirmed = await showConfirm(
+                `Vai tiešām dzēst ${selectedRows.size} ierakstu${selectedRows.size === 1 ? '' : 's'}?`,
+                'Dzēst ierakstus'
+            );
+            
+            if (!confirmed) return;
+            
+            const tableName = document.getElementById('table-select').value;
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const rowId of selectedRows) {
+                const [pk, rk] = rowId.split('_').map(decodeURIComponent);
+                
+                try {
+                    const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${encodeURIComponent(pk)}/${encodeURIComponent(rk)}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                } catch (e) {
+                    errorCount++;
+                }
+            }
+            
+            selectedRows.clear();
+            await loadTableData();
+            
+            if (errorCount === 0) {
+                showToast(`${successCount} ieraksti dzēsti`, 'success');
+            } else {
+                showToast(`${successCount} dzēsti, ${errorCount} kļūdas`, 'warning');
+            }
+        }
+
+        function batchExport() {
+            if (selectedRows.size === 0) return;
+            
+            const columns = currentTableData.columns;
+            const selectedEntities = filteredTableData.filter(entity => {
+                const pk = encodeURIComponent(entity.partitionKey || '');
+                const rk = encodeURIComponent(entity.rowKey || '');
+                return selectedRows.has(`${pk}_${rk}`);
+            });
+            
+            const csvContent = [
+                columns.join(','),
+                ...selectedEntities.map(row => 
+                    columns.map(col => {
+                        let value = row[col];
+                        if (value === undefined || value === null) return '';
+                        if (typeof value === 'object') value = JSON.stringify(value);
+                        value = String(value).replace(/"/g, '""');
+                        if (value.includes(',') || value.includes('"') || value.includes('\n')) value = `"${value}"`;
+                        return value;
+                    }).join(',')
+                )
+            ].join('\n');
+            
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${document.getElementById('table-select').value}_selected_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showToast(`${selectedEntities.length} ieraksti eksportēti`, 'success');
         }
 
         window.deleteEntity = async function(partitionKey, rowKey) {
-            if (!confirm('Vai tiešām dzēst šo ierakstu?')) return;
+            const confirmed = await showConfirm('Vai tiešām dzēst šo ierakstu?', 'Dzēst ierakstu');
+            if (!confirmed) return;
             const tableName = document.getElementById('table-select').value;
             try { const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${partitionKey}/${rowKey}`, { method: 'DELETE' }); if (response.ok) { loadTableData(); showToast('Ieraksts dzēsts', 'success'); } else { const error = await response.json(); showToast(error.details || error.error, 'error'); } } catch (e) { showToast(e.message, 'error'); }
         };
@@ -2309,6 +3046,29 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('table-select').addEventListener('change', loadTableData);
         document.getElementById('refresh-table').addEventListener('click', loadTableData);
         document.getElementById('export-csv').addEventListener('click', exportTableToCSV);
+        
+        // Filter listeners
+        document.getElementById('table-search')?.addEventListener('input', applyFilters);
+        document.getElementById('filter-status')?.addEventListener('change', applyFilters);
+        document.getElementById('filter-date-from')?.addEventListener('change', applyFilters);
+        document.getElementById('filter-date-to')?.addEventListener('change', applyFilters);
+        
+        document.getElementById('clear-filters')?.addEventListener('click', () => {
+            document.getElementById('table-search').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-date-from').value = '';
+            document.getElementById('filter-date-to').value = '';
+            applyFilters();
+        });
+        
+        // Batch action listeners
+        document.getElementById('batch-delete')?.addEventListener('click', batchDelete);
+        document.getElementById('batch-export')?.addEventListener('click', batchExport);
+        document.getElementById('deselect-all')?.addEventListener('click', () => {
+            selectedRows.clear();
+            renderTable();
+            updateBatchActionsUI();
+        });
     })();
     </script>
 </Layout>
