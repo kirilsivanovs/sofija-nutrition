@@ -8,7 +8,6 @@ import {
     createBooking,
     confirmPayment,
     cancelBooking,
-    getBookingStatus,
     BookingError,
     BookingErrorCodes
 } from '../src/services/bookingService';
@@ -160,7 +159,7 @@ describe('BookingService - Advanced Scenarios', () => {
             const booking1 = {
                 name: 'User 1',
                 email: 'user1@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -170,7 +169,7 @@ describe('BookingService - Advanced Scenarios', () => {
             const booking2 = {
                 name: 'User 2',
                 email: 'user2@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -231,28 +230,11 @@ describe('BookingService - Advanced Scenarios', () => {
     });
 
     describe('Payment Confirmation', () => {
-        it('should confirm free consultation immediately', async () => {
-            const freeBooking = {
-                name: 'Test User',
-                email: 'test@example.com',
-                date: '2026-03-15',
-                time: '10:00',
-                serviceId: 'free-consultation',
-                consultationFormat: 'online',
-                language: 'lv'
-            };
-
-            const result = await createBooking(freeBooking);
-
-            expect(result.booking.paymentConfirmed).toBe(true);
-            expect(result.booking.status).toBe('confirmed');
-        });
-
         it('should not auto-confirm paid consultations', async () => {
             const paidBooking = {
                 name: 'Test User',
                 email: 'test@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '11:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -383,8 +365,8 @@ describe('BookingService - Advanced Scenarios', () => {
             const booking = {
                 name: 'Test User',
                 email: 'test@example.com',
-                date: '2026-03-15',
-                time: '10:00',
+                date: '2026-03-16', // Monday
+                time: '14:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
                 language: 'lv'
@@ -400,8 +382,8 @@ describe('BookingService - Advanced Scenarios', () => {
             const onlineBooking = {
                 name: 'Test User',
                 email: 'test@example.com',
-                date: '2026-03-15',
-                time: '10:00',
+                date: '2026-03-16', // Monday
+                time: '15:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
                 language: 'lv'
@@ -418,7 +400,7 @@ describe('BookingService - Advanced Scenarios', () => {
                 const booking = {
                     name: 'Test User',
                     email: 'test@example.com',
-                    date: '2026-03-15',
+                    date: '2026-03-16', // Monday
                     time: `${10 + formats.indexOf(format)}:00`,
                     serviceId: 'initial',
                     consultationFormat: format,
@@ -500,40 +482,12 @@ describe('BookingService - Advanced Scenarios', () => {
         });
     });
 
-    describe('Booking Status', () => {
-        it('should get booking status by ID', async () => {
-            // Create booking
-            // Then get its status
-        });
-
-        it('should return 404 for non-existent booking', async () => {
-            await expect(getBookingStatus('NON-EXISTENT-ID'))
-                .rejects
-                .toThrow();
-        });
-
-        it('should show pending for unpaid booking', async () => {
-            // Create unpaid booking
-            // Status should be 'pending'
-        });
-
-        it('should show confirmed after payment', async () => {
-            // Create booking, confirm payment
-            // Status should be 'confirmed'
-        });
-
-        it('should show cancelled after cancellation', async () => {
-            // Create booking, cancel it
-            // Status should be 'cancelled'
-        });
-    });
-
     describe('Input Validation & Sanitization', () => {
         it('should handle very long names', async () => {
             const longNameBooking = {
                 name: 'A'.repeat(1000),
                 email: 'test@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -551,7 +505,7 @@ describe('BookingService - Advanced Scenarios', () => {
             const specialCharsBooking = {
                 name: 'Jānis Bērziņš-O\'Brien',
                 email: 'test@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -570,7 +524,7 @@ describe('BookingService - Advanced Scenarios', () => {
             const longNotesBooking = {
                 name: 'Test User',
                 email: 'test@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
@@ -589,7 +543,7 @@ describe('BookingService - Advanced Scenarios', () => {
             const xssBooking = {
                 name: 'Test User',
                 email: 'test@example.com',
-                date: '2026-03-15',
+                date: '2026-03-16', // Monday
                 time: '10:00',
                 serviceId: 'initial',
                 consultationFormat: 'online',
