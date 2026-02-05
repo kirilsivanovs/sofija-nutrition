@@ -9,6 +9,27 @@ export interface IAIService {
   analyzeFoodPhoto(photoBase64: string): Promise<FoodAnalysisResult>;
 }
 
+// OpenAI API response types
+interface OpenAIResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+}
+
+// Gemini API response types
+interface GeminiResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string;
+      }>;
+    };
+    finishReason?: string;
+  }>;
+}
+
 /**
  * Azure OpenAI implementation of IAIService
  * Following Single Responsibility Principle - only handles AI integration
@@ -90,7 +111,7 @@ Use standard nutritional databases (USDA) for calculations.`;
         throw new Error(`OpenAI API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as OpenAIResponse;
       const content = data.choices[0].message.content;
       
       return JSON.parse(content) as FoodAnalysisResult;
@@ -154,7 +175,7 @@ export class GeminiAIService implements IAIService {
       throw new Error(`Gemini API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as GeminiResponse;
     console.log('📥 Gemini response:', JSON.stringify(data, null, 2));
 
     const candidate = data?.candidates?.[0];
