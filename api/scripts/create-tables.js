@@ -12,7 +12,9 @@ const TABLES = [
     'ServicesHistory',
     'AuditLogs',
     'AppConfig',
-    'FeatureFlags'
+    'FeatureFlags',
+    'Meals',
+    'Users'
 ];
 
 async function createTables() {

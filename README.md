@@ -774,6 +774,563 @@ npm run test:e2e      # E2E (Playwright)
 
 ---
 
+## 📱 ROADMAP: Food Tracker App (AI-Powered)
+
+### 🎯 Концепция
+
+Мобильное приложение для клиентов Софии, позволяющее:
+1. **Сфотографировать еду** с телефона
+2. **AI автоматически распознает** тип продуктов и примерный вес (граммы)
+3. **Записать как приём пищи** с возможностью подкорректировать граммовки
+4. **Подтвердить** и сохранить в историю питания
+
+**Проблема:** Людям лень вручную записывать приёмы пищи  
+**Решение:** Максимально простой процесс — сфотографировал → проверил → подтвердил
+
+---
+
+### 🏗️ Архитектура решения
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│            PWA (Progressive Web App)                         │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  📱 Mobile-First UI (React/Preact + Tailwind)       │   │
+│  │  - Camera API (фото еды)                            │   │
+│  │  - Offline support (Service Worker)                 │   │
+│  │  - Push Notifications (напоминания о еде)           │   │
+│  │  - Add to Home Screen (иконка на телефоне)          │   │
+│  └─────────────────────────────────────────────────────┘   │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ HTTPS
+┌──────────────────────────▼──────────────────────────────────┐
+│            Azure Functions (Serverless API)                  │
+│  - POST /api/food/analyze      → AI анализ фото             │
+│  - POST /api/meals             → Сохранить приём пищи       │
+│  - GET  /api/meals/{date}      → История за день            │
+│  - GET  /api/meals/stats       → Статистика КБЖУ            │
+│  - GET  /api/user/profile      → Профиль пользователя       │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│ Azure OpenAI  │  │ Azure Table   │  │ Azure Blob    │
+│ GPT-4 Vision  │  │ Storage       │  │ Storage       │
+│ (анализ фото) │  │ (данные)      │  │ (фото)        │
+│ ~$0.01/фото   │  │ ~$0.10/мес    │  │ ~$0.02/GB     │
+└───────────────┘  └───────────────┘  └───────────────┘
+```
+
+---
+
+### 💡 Почему PWA, а не Native App?
+
+| Критерий | PWA | Native (React Native/Flutter) |
+|----------|-----|-------------------------------|
+| **Стоимость разработки** | ✅ Низкая (1 codebase) | ❌ Выше (даже с cross-platform) |
+| **App Store/Play Market** | ✅ Не нужен | ❌ $99/год (Apple) + $25 (Google) |
+| **Иконка на телефоне** | ✅ "Add to Home Screen" | ✅ Да |
+| **Camera API** | ✅ Да (MediaDevices API) | ✅ Да |
+| **Push Notifications** | ✅ Да (Web Push) | ✅ Да |
+| **Offline работа** | ✅ Service Worker | ✅ Да |
+| **Обновления** | ✅ Мгновенные | ❌ Через store review |
+| **Деплой** | ✅ Azure Static Web Apps (бесплатно) | ❌ Сложнее |
+| **Переиспользование** | ✅ Тот же стек (React/TS) | ⚠️ Частичное |
+
+**Вывод:** PWA идеально подходит для MVP и стадии разработки
+
+---
+
+### 📊 Структура данных
+
+#### Таблица: `Users`
+```typescript
+interface User {
+  PartitionKey: string;      // "user"
+  RowKey: string;            // unique user ID (UUID)
+  email: string;
+  displayName: string;
+  targetCalories?: number;   // дневная норма ккал
+  targetProtein?: number;    // норма белка (г)
+  targetFat?: number;        // норма жиров (г)
+  targetCarbs?: number;      // норма углеводов (г)
+  createdAt: string;         // ISO date
+  linkedClientId?: string;   // связь с bookings (если клиент Софии)
+}
+```
+
+#### Таблица: `Meals`
+```typescript
+interface Meal {
+  PartitionKey: string;      // `${userId}_${YYYY-MM-DD}`
+  RowKey: string;            // timestamp or meal ID
+  userId: string;
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  photoUrl?: string;         // Blob Storage URL
+  items: MealItem[];         // распознанные продукты
+  totalCalories: number;
+  totalProtein: number;
+  totalFat: number;
+  totalCarbs: number;
+  confirmed: boolean;        // подтверждено пользователем
+  createdAt: string;
+  confirmedAt?: string;
+}
+
+interface MealItem {
+  name: string;              // "Куриная грудка"
+  nameEn: string;            // "Chicken breast"
+  weight: number;            // граммы
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+  confidence: number;        // уверенность AI (0-1)
+  userAdjusted: boolean;     // пользователь изменил
+}
+```
+
+#### Таблица: `FoodDatabase` (кэш для быстрого lookup)
+```typescript
+interface FoodItem {
+  PartitionKey: string;      // category ("meat", "dairy", etc.)
+  RowKey: string;            // normalized name
+  name_lv: string;
+  name_ru: string;
+  name_en: string;
+  caloriesPer100g: number;
+  proteinPer100g: number;
+  fatPer100g: number;
+  carbsPer100g: number;
+}
+```
+
+---
+
+### 🤖 AI Integration: Варианты распознавания еды
+
+#### 🆓 Бесплатные варианты (для разработки и MVP)
+
+| Сервис | Лимиты бесплатно | Стоимость после лимита | Рекомендация |
+|--------|------------------|------------------------|--------------|
+| **Google Gemini 1.5 Flash** | 15 req/min, 1500 req/day | $0.00015/image | ✅ **Лучший выбор для MVP** |
+| **Google Gemini 1.5 Pro** | 2 req/min, 50 req/day | $0.00125/image | Для сложных случаев |
+| **OpenAI GPT-4o-mini** | — | $0.002/image | Если уже есть OpenAI аккаунт |
+| **Azure OpenAI GPT-4V** | — | $0.01/image | ❌ Дорого для MVP |
+| **Clarifai Food Model** | 1000 req/мес | $1.20/1000 после | Специализирован на еде |
+
+#### 💡 Рекомендуемая стратегия
+
+```typescript
+// 1. Начать с Google Gemini (бесплатно)
+// 2. При превышении лимитов → переключиться на GPT-4o-mini
+// 3. В production → Gemini Flash (очень дешево)
+
+const AI_PROVIDERS = {
+  gemini: {
+    endpoint: 'https://generativelanguage.googleapis.com/v1beta',
+    model: 'gemini-2.0-flash',
+    cost: 0.00015, // per image
+    freeLimit: 1500 // per day
+  },
+  openai: {
+    endpoint: 'https://api.openai.com/v1',
+    model: 'gpt-4o-mini',
+    cost: 0.002,
+    freeLimit: 0
+  }
+};
+```
+
+#### Prompt для анализа фото еды:
+
+```typescript
+const systemPrompt = `You are a nutrition analysis AI. Analyze food photos and return structured JSON.
+
+For each food item visible in the photo:
+1. Identify the food item
+2. Estimate the weight in grams based on visual cues (plate size, portions)
+3. Calculate nutritional values per estimated weight
+
+Return JSON format:
+{
+  "items": [
+    {
+      "name": "название на русском",
+      "nameEn": "english name",
+      "weight": 150,  // estimated grams
+      "calories": 248,
+      "protein": 31,
+      "fat": 13,
+      "carbs": 0,
+      "confidence": 0.85
+    }
+  ],
+  "totalCalories": 248,
+  "totalProtein": 31,
+  "totalFat": 13,
+  "totalCarbs": 0,
+  "mealType": "lunch"  // breakfast/lunch/dinner/snack based on time or content
+}
+
+Be conservative with estimates. If unsure, provide lower confidence score.
+Use standard nutritional databases (USDA) for calculations.`;
+```
+
+#### API Endpoint:
+
+```typescript
+// api/src/functions/food-analyze.ts
+import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
+
+export async function analyzeFoodPhoto(
+  photoBase64: string
+): Promise<FoodAnalysisResult> {
+  const client = new OpenAIClient(
+    process.env.AZURE_OPENAI_ENDPOINT,
+    new AzureKeyCredential(process.env.AZURE_OPENAI_KEY)
+  );
+
+  const response = await client.getChatCompletions(
+    "gpt-4-vision",  // deployment name
+    [
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "Analyze this meal:" },
+          { 
+            type: "image_url", 
+            imageUrl: { url: `data:image/jpeg;base64,${photoBase64}` }
+          }
+        ]
+      }
+    ],
+    { maxTokens: 1000, temperature: 0.3 }
+  );
+
+  return JSON.parse(response.choices[0].message.content);
+}
+```
+
+---
+
+### 💰 Расчёт стоимости (обновлённый)
+
+#### Вариант A: Полностью бесплатно (для MVP и тестирования)
+
+| Сервис | Использование | Стоимость/мес |
+|--------|---------------|---------------|
+| **Azure Static Web Apps** | Free tier | $0 |
+| **Azure Functions** | <1M запросов | $0 (free tier) |
+| **Azure Table Storage** | ~1GB данных | ~$0.10 |
+| **Azure Blob Storage** | ~5GB фото | ~$0.10 |
+| **Google Gemini 1.5 Flash** | 1500 фото/день (бесплатно) | $0 |
+| **ИТОГО** | | **~$0.20/мес** ✅ |
+
+#### Вариант B: Масштабируемый (для production)
+
+| Сервис | Использование | Стоимость/мес |
+|--------|---------------|---------------|
+| **Azure Static Web Apps** | Free tier | $0 |
+| **Azure Functions** | ~50K запросов | $0 (free tier) |
+| **Azure Table Storage** | ~5GB данных | ~$0.50 |
+| **Azure Blob Storage** | ~50GB фото | ~$1.00 |
+| **Gemini 1.5 Flash** | 10,000 фото × $0.00015 | ~$1.50 |
+| **ИТОГО** | | **~$3/мес** |
+
+#### Сравнение AI моделей (на 1000 фото/мес)
+
+| Модель | Стоимость | Скорость | Точность | Рекомендация |
+|--------|-----------|----------|----------|--------------|
+| Gemini 1.5 Flash | $0.15 | ⚡⚡⚡ Быстро | ⭐⭐⭐ Хорошо | ✅ MVP + Production |
+| GPT-4o-mini | $2.00 | ⚡⚡ Средне | ⭐⭐⭐⭐ Отлично | Запасной вариант |
+| GPT-4 Vision | $10.00 | ⚡ Медленно | ⭐⭐⭐⭐⭐ Превосходно | ❌ Дорого |
+| Clarifai Food | $1.20 | ⚡⚡⚡ Быстро | ⭐⭐⭐ Хорошо | Специализирован |
+
+> 💡 **Вывод:** Начните с Google Gemini бесплатно, это сэкономит ~$60/год на стадии разработки!
+
+---
+
+### 📁 Структура проекта
+
+```
+sofija-nutrition-astro/
+├── api/                          # Существующий backend
+│   └── src/
+│       └── functions/
+│           ├── food-analyze.ts   # 🆕 AI анализ фото
+│           ├── meals.ts          # 🆕 CRUD приёмов пищи
+│           └── user-profile.ts   # 🆕 Профиль пользователя
+│
+├── food-tracker/                 # 🆕 Новый PWA
+│   ├── public/
+│   │   ├── manifest.json         # PWA manifest
+│   │   ├── sw.js                 # Service Worker
+│   │   └── icons/                # App icons (192x192, 512x512)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Camera.tsx        # Компонент камеры
+│   │   │   ├── FoodEditor.tsx    # Редактор граммовок
+│   │   │   ├── MealCard.tsx      # Карточка приёма пищи
+│   │   │   ├── DailyStats.tsx    # Статистика за день
+│   │   │   └── NutritionBar.tsx  # Прогресс КБЖУ
+│   │   ├── pages/
+│   │   │   ├── index.tsx         # Главная (today's meals)
+│   │   │   ├── camera.tsx        # Фото еды
+│   │   │   ├── history.tsx       # История
+│   │   │   └── profile.tsx       # Настройки
+│   │   ├── hooks/
+│   │   │   ├── useCamera.ts      # Camera API
+│   │   │   └── useMeals.ts       # Meals state
+│   │   ├── services/
+│   │   │   └── api.ts            # API client
+│   │   └── App.tsx
+│   ├── package.json
+│   ├── vite.config.ts            # Vite + PWA plugin
+│   └── tsconfig.json
+│
+└── shared/                       # Общие типы
+    └── types/
+        └── food.ts               # 🆕 Food-related types
+```
+
+---
+
+### 🎨 UI/UX Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📱 Home Screen                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Today: 1,450 / 2,000 kcal                          │    │
+│  │  ████████████████░░░░░░░░░░ 72%                     │    │
+│  │                                                      │    │
+│  │  P: 85g/120g  F: 45g/65g  C: 180g/250g             │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  🍳 Breakfast  ────────────────────────────  320 kcal       │
+│     └── Scrambled eggs (150g), Toast (30g)                  │
+│                                                              │
+│  🥗 Lunch  ─────────────────────────────────  580 kcal      │
+│     └── Chicken salad (300g), Dressing (20g)                │
+│                                                              │
+│  🍎 Snack  ─────────────────────────────────  150 kcal      │
+│     └── Apple (180g), Almonds (20g)                         │
+│                                                              │
+│                    ╔═══════════════╗                         │
+│                    ║  📷 ADD MEAL  ║                         │
+│                    ╚═══════════════╝                         │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  📸 Camera View                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                                                      │    │
+│  │           [  Live Camera Preview  ]                 │    │
+│  │                                                      │    │
+│  │                    ◉                                │    │
+│  │              (Capture Button)                       │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  💡 Tip: Center your plate in frame                         │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  🔍 AI Analysis (loading...)                                │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │        [  Your Photo Preview  ]                     │    │
+│  │                                                      │    │
+│  │              ⏳ Analyzing...                        │    │
+│  │         "Identifying food items..."                 │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  ✏️ Edit & Confirm                                           │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │        [  Your Photo  ]                             │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Detected items (tap to edit):                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  🍗 Chicken Breast        [  150g  ] [-] [+]       │    │
+│  │     248 kcal | P:31g F:13g C:0g        (85% conf)  │    │
+│  ├─────────────────────────────────────────────────────┤    │
+│  │  🥦 Broccoli              [  100g  ] [-] [+]       │    │
+│  │     34 kcal | P:3g F:0g C:7g           (92% conf)  │    │
+│  ├─────────────────────────────────────────────────────┤    │
+│  │  🍚 Rice                  [  120g  ] [-] [+]       │    │
+│  │     156 kcal | P:3g F:0g C:34g         (88% conf)  │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ──────────────────────────────────────────────────────     │
+│  Total: 438 kcal | P:37g F:13g C:41g                        │
+│                                                              │
+│        [  ➕ Add Item  ]    [  ✅ CONFIRM MEAL  ]           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🚀 План реализации (Phases)
+
+#### Phase 1: MVP (2-3 недели)
+- [ ] Создать PWA scaffold (Vite + React + Tailwind)
+- [ ] Настроить manifest.json и Service Worker
+- [ ] Реализовать Camera API (фото с телефона)
+- [ ] Azure OpenAI GPT-4V интеграция
+- [ ] Базовый UI: камера → анализ → подтверждение
+- [ ] Сохранение в Azure Table Storage
+- [ ] Простой список приёмов пищи за день
+- [ ] Деплой на Azure Static Web Apps
+
+#### Phase 2: Улучшения (2-3 недели)
+- [ ] Редактирование граммовок (+/- кнопки, ручной ввод)
+- [ ] Ручное добавление продуктов (поиск по базе)
+- [ ] История по дням (календарь)
+- [ ] Статистика КБЖУ (прогресс-бары)
+- [ ] Установка дневных целей
+- [ ] Удаление/редактирование записей
+
+#### Phase 3: Интеграции (2-3 недели)
+- [ ] Авторизация (Azure AD B2C или простой email/password)
+- [ ] Связь с существующей системой бронирований
+- [ ] Панель нутрициолога: просмотр дневников клиентов
+- [ ] Push уведомления (напоминания о еде)
+- [ ] Экспорт данных (PDF отчёт за неделю/месяц)
+
+#### Phase 4: Оптимизации (ongoing)
+- [ ] Кэширование частых продуктов
+- [ ] Оффлайн режим (сохранение локально → синхронизация)
+- [ ] Улучшение точности AI (fine-tuning на реальных данных)
+- [ ] Голосовой ввод продуктов
+- [ ] Сканирование штрих-кодов
+
+---
+
+### 🛠️ Технологии для PWA
+
+```json
+// food-tracker/package.json
+{
+  "name": "sofija-food-tracker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "@tanstack/react-query": "^5.0.0",
+    "zustand": "^4.5.0",
+    "date-fns": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.19.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.0"
+  }
+}
+```
+
+```javascript
+// food-tracker/vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Sofija Food Tracker',
+        short_name: 'FoodTracker',
+        description: 'AI-powered food diary',
+        theme_color: '#10b981',
+        background_color: '#ffffff',
+        display: 'standalone',
+        orientation: 'portrait',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
+        ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
+      }
+    })
+  ]
+});
+```
+
+---
+
+### 🔐 Авторизация (Варианты)
+
+#### Вариант A: Простой (Magic Link)
+- Пользователь вводит email
+- Получает ссылку для входа
+- Сессия хранится в localStorage + JWT
+- **Плюсы:** Просто, бесплатно
+- **Минусы:** Менее безопасно
+
+#### Вариант B: Azure AD B2C (рекомендуется)
+- Полноценная OAuth2 авторизация
+- Social logins (Google, Facebook)
+- **Плюсы:** Безопасно, масштабируемо
+- **Минусы:** ~$0.00325 за активного пользователя
+
+#### Вариант C: Связь с существующей системой
+- Клиент получает ссылку после бронирования
+- Активация по booking ID
+- **Плюсы:** Интеграция с текущей системой
+- **Минусы:** Только для существующих клиентов
+
+---
+
+### 📝 Команды для запуска
+
+```powershell
+# Создать проект
+cd c:\Users\kirils.ivanovs\source\repos\sofija-nutrition-astro
+mkdir food-tracker
+cd food-tracker
+npm create vite@latest . -- --template react-ts
+
+# Установить зависимости
+npm install react-router-dom @tanstack/react-query zustand date-fns
+npm install -D tailwindcss postcss autoprefixer vite-plugin-pwa
+npx tailwindcss init -p
+
+# Запуск разработки
+npm run dev
+```
+
+---
+
+### 🔗 Полезные ресурсы
+
+- [PWA Documentation](https://web.dev/progressive-web-apps/)
+- [Vite PWA Plugin](https://vite-pwa-org.netlify.app/)
+- [Azure OpenAI GPT-4 Vision](https://learn.microsoft.com/azure/ai-services/openai/how-to/gpt-with-vision)
+- [Camera API (MediaDevices)](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)
+- [Web Push Notifications](https://web.dev/push-notifications-overview/)
+
+---
+
 ## 👀 Полезные ссылки
 
 - [Astro Documentation](https://docs.astro.build)
