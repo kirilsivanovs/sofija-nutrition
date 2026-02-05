@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Pacienta kabinets">
+    <section class="portal-hero">
+        <div class="portal-container">
+            <div class="portal-header">
+                <div>
+                    <h1>Pacienta kabinets</h1>
+                    <p>Uztura dienasgrāmata.</p>
+                </div>
+                <div class="portal-auth" id="auth-actions">
+                    <a class="btn-secondary" id="login-google" href="/.auth/login/google?post_login_redirect_uri=/portal">Pieslēgties ar Google</a>
+                    <a class="btn-primary" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/portal">Pieslēgties ar Microsoft</a>
+                </div>
+            </div>
+
+            <div class="card portal-card" id="auth-card">
+                <div class="portal-user">
+                    <div>
+                        <div class="portal-user-label">Lietotājs</div>
+                        <div id="user-name" class="portal-user-name">—</div>
+                        <div id="user-email" class="portal-user-email">—</div>
+                    </div>
+                    <a class="btn-secondary" id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/portal">Iziet</a>
+                </div>
+                <div id="access-status" class="portal-access hidden">Pārbauda piekļuvi…</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="portal-content">
+        <div class="portal-container">
+            <div id="no-access" class="card hidden">
+                <h3>Uztura dienasgrāmata nav aktivizēta</h3>
+                <p>Lai aktivizētu, lūdzu sazinieties ar administratoru.</p>
+            </div>
+
+            <div id="diary" class="hidden">
+                ---
+                return Astro.redirect('/cabinet', 302);
+                ---

@@ -8,7 +8,16 @@
     "E2E_TEST_TOKEN": "<generate-with: openssl rand -hex 32>",
     "BUSINESS_EMAIL": "your-email@example.com",
     "BUSINESS_NAME": "Your Business Name",
-    "FUNCTIONS_CORS_ALLOWED_ORIGINS": "http://localhost:4321,http://localhost:3000,https://your-domain.com"
+    "FUNCTIONS_CORS_ALLOWED_ORIGINS": "http://localhost:4321,http://localhost:3000,https://your-domain.com",
+    
+    "USE_MOCK_AI": "false",
+    "USE_GEMINI": "true",
+    "GEMINI_API_KEY": "AIzaSyA2FSZ54y-ptnv4vIvPO0dBufPbCqqzcpc",
+    "GEMINI_MODEL": "gemini-2.0-flash",
+    
+    "AZURE_OPENAI_ENDPOINT": "https://your-resource.openai.azure.com",
+    "AZURE_OPENAI_KEY": "<your-azure-openai-key>",
+    "AZURE_OPENAI_DEPLOYMENT": "gpt-4-vision"
   },
   "ConnectionStrings": {},
   "Host": {}

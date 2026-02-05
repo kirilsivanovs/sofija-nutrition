@@ -27,6 +27,81 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 <SettingsTab />
             </div>
 
+            <!-- Meals Tab -->
+            <div id="tab-meals" class="admin-content hidden">
+                <div class="content-header">
+                    <h2 class="content-title">Uztura dienasgrāmata</h2>
+                </div>
+
+                <div class="meals-layout">
+                    <div class="card meals-sidebar">
+                        <div class="meals-sidebar-header">
+                            <h3>Pacienti</h3>
+                            <button id="patients-refresh" class="btn-secondary btn-sm">
+                                <i class="ph ph-arrows-clockwise"></i>
+                            </button>
+                        </div>
+                        <input id="patients-search" class="input-field" placeholder="Meklēt pēc ID" />
+                        <div class="patient-add" style="margin-top: 10px; display: flex; gap: 8px;">
+                            <input id="patients-add-id" class="input-field" placeholder="Ievadīt lietotāja ID" />
+                            <button id="patients-add-btn" class="btn-secondary btn-sm">Pievienot</button>
+                        </div>
+
+                        <div id="patients-loading" class="loading-state hidden" style="margin-top: 12px;">
+                            <div class="loading-spinner"></div>
+                            <span>Ielādē datus...</span>
+                        </div>
+
+                        <div id="patients-list" class="patients-list"></div>
+
+                        <div id="patients-empty" class="hidden empty-state" style="margin-top: 12px;">
+                            <i class="ph ph-users empty-icon"></i>
+                            <span>Nav pacientu</span>
+                        </div>
+                    </div>
+
+                    <div class="meals-main">
+                        <div class="card" style="margin-bottom: 20px; padding: 20px;">
+                            <div class="meals-controls">
+                                <div style="min-width: 220px;">
+                                    <label class="input-label">Lietotāja ID</label>
+                                    <input id="meals-user-id" class="input-field" placeholder="SWA userId" />
+                                </div>
+                                <div style="min-width: 180px;">
+                                    <label class="input-label">Datums</label>
+                                    <input id="meals-date" type="date" class="input-field" />
+                                </div>
+                                <div style="flex: 1; min-width: 220px;">
+                                    <label class="input-label">Meklēt</label>
+                                    <input id="meals-search" class="input-field" placeholder="Produkts vai nosaukums" />
+                                </div>
+                                <button id="meals-load" class="btn-secondary">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                    <span>Meklēt</span>
+                                </button>
+                                <button id="meals-refresh" class="btn-secondary">
+                                    <i class="ph ph-arrows-clockwise"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="meals-loading" class="loading-state hidden">
+                            <div class="loading-spinner"></div>
+                            <span>Ielādē datus...</span>
+                        </div>
+
+                        <div id="meals-container" class="hidden">
+                            <div id="meals-list" class="meals-list"></div>
+                        </div>
+
+                        <div id="meals-empty" class="hidden empty-state">
+                            <i class="ph ph-bowl-food empty-icon"></i>
+                            <span>Nav atrastu maltīšu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Data Tab -->
             <div id="tab-data" class="admin-content hidden">
                 <div class="content-header">
@@ -1506,6 +1581,191 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
         .data-controls .input-field { width: auto; }
 
+        /* Meals Admin Tab */
+        .meals-controls {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .meals-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .meals-sidebar {
+            padding: 16px;
+        }
+
+        .meals-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .meals-sidebar-header h3 {
+            font-size: 16px;
+            margin: 0;
+            color: var(--color-text);
+        }
+
+        .patients-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .patient-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            background: var(--color-white);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .patient-item > div {
+            min-width: 0;
+        }
+
+        .patient-item:hover {
+            background: var(--color-cream);
+        }
+
+        .patient-item.active {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .patient-id {
+            font-size: 13px;
+            color: var(--color-text);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .patient-meta {
+            font-size: 12px;
+            color: var(--color-text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .patient-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .access-toggle {
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 4px 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .access-toggle.on {
+            background: rgba(34, 197, 94, 0.12);
+            color: #166534;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .access-toggle.off {
+            background: rgba(239, 68, 68, 0.12);
+            color: #991b1b;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .meals-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .meal-card {
+            padding: 16px 18px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            background: var(--color-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .meal-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .meal-title {
+            font-weight: 600;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-time {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .meal-kcal {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .meal-items {
+            font-size: 14px;
+            color: var(--color-text-light);
+            margin-bottom: 10px;
+        }
+
+        .meal-macros {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--color-text-light);
+            border-top: 1px solid var(--color-border);
+            padding-top: 10px;
+        }
+
+        .meal-photo {
+            margin-top: 12px;
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            background: var(--color-cream);
+        }
+
+        @media (max-width: 1024px) {
+            .meals-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Status Card */
         .status-card {
             background: var(--color-white);
@@ -1755,6 +2015,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             if (tabId === 'bookings') loadCalendar();
             if (tabId === 'availability') loadAvailability();
             if (tabId === 'settings') loadSettings();
+            if (tabId === 'meals') loadPatients();
             if (tabId === 'data') loadTableData();
         }
 
@@ -1767,6 +2028,356 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 const target = e.target as HTMLSelectElement;
                 switchTab(target.value);
             });
+        }
+
+        const patientsSearchInput = document.getElementById('patients-search') as HTMLInputElement | null;
+        const patientsAddInput = document.getElementById('patients-add-id') as HTMLInputElement | null;
+        const patientsAddBtn = document.getElementById('patients-add-btn');
+        const patientsRefreshBtn = document.getElementById('patients-refresh');
+        const patientsLoading = document.getElementById('patients-loading');
+        const patientsEmpty = document.getElementById('patients-empty');
+        const patientsList = document.getElementById('patients-list');
+
+        const mealsUserInput = document.getElementById('meals-user-id') as HTMLInputElement | null;
+        const mealsDateInput = document.getElementById('meals-date') as HTMLInputElement | null;
+        const mealsSearchInput = document.getElementById('meals-search') as HTMLInputElement | null;
+        const mealsLoadBtn = document.getElementById('meals-load');
+        const mealsRefreshBtn = document.getElementById('meals-refresh');
+        const mealsLoading = document.getElementById('meals-loading');
+        const mealsContainer = document.getElementById('meals-container');
+        const mealsEmpty = document.getElementById('meals-empty');
+        const mealsList = document.getElementById('meals-list');
+
+        let adminMeals: any[] = [];
+        let adminPatients: any[] = [];
+        let selectedPatientId = '';
+
+        if (mealsDateInput && !mealsDateInput.value) {
+            mealsDateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        mealsLoadBtn?.addEventListener('click', loadMeals);
+        mealsRefreshBtn?.addEventListener('click', loadMeals);
+        mealsSearchInput?.addEventListener('input', applyMealsFilter);
+
+        patientsRefreshBtn?.addEventListener('click', loadPatients);
+        patientsSearchInput?.addEventListener('input', applyPatientsFilter);
+        patientsAddBtn?.addEventListener('click', addPatientFromInput);
+        patientsAddInput?.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addPatientFromInput();
+            }
+        });
+
+        function formatMealTime(value?: string): string {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatPatientDate(value?: string): string {
+            if (!value) return '—';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleDateString('lv-LV');
+        }
+
+        function applyPatientsFilter(): void {
+            const query = patientsSearchInput?.value?.trim().toLowerCase() || '';
+            const filtered = query
+                ? adminPatients.filter((patient: any) => {
+                    const userId = String(patient.userId || '').toLowerCase();
+                    const displayName = String(patient.displayName || '').toLowerCase();
+                    const email = String(patient.email || '').toLowerCase();
+                    return userId.includes(query) || displayName.includes(query) || email.includes(query);
+                })
+                : adminPatients;
+            renderPatients(filtered);
+        }
+
+        function renderPatients(patients: any[]): void {
+            if (!patientsList || !patientsEmpty) return;
+
+            if (!patients.length) {
+                patientsList.innerHTML = '';
+                patientsEmpty.classList.remove('hidden');
+                return;
+            }
+
+            patientsEmpty.classList.add('hidden');
+            patientsList.innerHTML = patients.map((patient: any) => {
+                const isActive = selectedPatientId === patient.userId;
+                const accessEnabled = Boolean(patient.accessEnabled);
+                const displayName = patient.displayName || patient.email || patient.userId;
+                const secondary = displayName !== patient.userId ? `ID: ${patient.userId}` : '';
+                return `
+                    <div class="patient-item ${isActive ? 'active' : ''}" data-user-id="${patient.userId}" role="button" tabindex="0">
+                        <div>
+                            <div class="patient-id">${displayName}</div>
+                            <div class="patient-meta">${secondary || `Pēdējais ieraksts: ${formatPatientDate(patient.lastMealAt)}`}</div>
+                        </div>
+                        <div class="patient-actions">
+                            <div class="patient-meta">${patient.mealsCount || 0} ier.</div>
+                            <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${patient.userId}" data-enabled="${accessEnabled}">
+                                ${accessEnabled ? 'Atļauts' : 'Slēgts'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            patientsList.querySelectorAll('.patient-item').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const userId = (btn as HTMLElement).dataset.userId || '';
+                    if (!userId) return;
+                    selectedPatientId = userId;
+                    if (mealsUserInput) mealsUserInput.value = userId;
+                    applyPatientsFilter();
+                    loadMeals();
+                });
+            });
+
+            patientsList.querySelectorAll('.access-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const button = event.currentTarget as HTMLButtonElement;
+                    const userId = button.dataset.userId || '';
+                    const enabled = button.dataset.enabled === 'true';
+                    if (!userId) return;
+                    updateAccess(userId, !enabled);
+                });
+            });
+        }
+
+        function addPatientFromInput(): void {
+            const userId = patientsAddInput?.value?.trim() || '';
+            if (!userId) return;
+
+            if (!adminPatients.some(patient => patient.userId === userId)) {
+                adminPatients = [
+                    { userId, mealsCount: 0, lastMealAt: undefined, accessEnabled: false },
+                    ...adminPatients
+                ];
+            }
+
+            selectedPatientId = userId;
+            if (mealsUserInput) mealsUserInput.value = userId;
+            if (patientsAddInput) patientsAddInput.value = '';
+            applyPatientsFilter();
+        }
+
+        function applyMealsFilter(): void {
+            const query = mealsSearchInput?.value?.trim().toLowerCase() || '';
+            const filtered = query
+                ? adminMeals.filter(meal => {
+                    const type = String(meal.mealType || '').toLowerCase();
+                    const itemsText = (meal.items || [])
+                        .map((item: any) => `${item.name || ''} ${item.nameEn || ''}`.toLowerCase())
+                        .join(' ');
+                    return type.includes(query) || itemsText.includes(query);
+                })
+                : adminMeals;
+            renderMeals(filtered);
+        }
+
+        function renderMeals(meals: any[]): void {
+            if (!mealsList || !mealsContainer || !mealsEmpty) return;
+
+            if (!meals.length) {
+                mealsContainer.classList.add('hidden');
+                mealsEmpty.classList.remove('hidden');
+                mealsList.innerHTML = '';
+                return;
+            }
+
+            const typeLabels: Record<string, string> = {
+                breakfast: 'Brokastis',
+                lunch: 'Pusdienas',
+                dinner: 'Vakariņas',
+                snack: 'Uzkoda'
+            };
+
+            mealsEmpty.classList.add('hidden');
+            mealsContainer.classList.remove('hidden');
+
+            mealsList.innerHTML = meals.map(meal => {
+                const mealType = typeLabels[String(meal.mealType || '')] || 'Maltīte';
+                const time = formatMealTime(meal.createdAt);
+                const items = (meal.items || [])
+                    .map((item: any) => `${item.name} (${item.weight}g)`)
+                    .join(', ') || '—';
+                const calories = meal.totalCalories ?? 0;
+                const protein = meal.totalProtein ?? 0;
+                const fat = meal.totalFat ?? 0;
+                const carbs = meal.totalCarbs ?? 0;
+                const photo = meal.photoUrl
+                    ? `<img class="meal-photo" src="${meal.photoUrl}" alt="Meal photo" />`
+                    : '';
+
+                return `
+                    <div class="meal-card">
+                        <div class="meal-card-header">
+                            <div>
+                                <div class="meal-title">
+                                    <i class="ph ph-bowl-food"></i>
+                                    <span>${mealType}</span>
+                                </div>
+                                <div class="meal-time">${time}</div>
+                            </div>
+                            <div class="meal-kcal">${calories} kcal</div>
+                        </div>
+                        <div class="meal-items">${items}</div>
+                        <div class="meal-macros">
+                            <span>O: ${protein}g</span>
+                            <span>T: ${fat}g</span>
+                            <span>Og: ${carbs}g</span>
+                        </div>
+                        ${photo}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadMeals(): Promise<void> {
+            const userId = mealsUserInput?.value?.trim() || '';
+            const date = mealsDateInput?.value || '';
+
+            if (!userId || !date) {
+                showToast('Norādiet lietotāja ID un datumu', 'warning');
+                renderMeals([]);
+                return;
+            }
+
+            if (mealsLoading) mealsLoading.classList.remove('hidden');
+            if (mealsContainer) mealsContainer.classList.add('hidden');
+            if (mealsEmpty) mealsEmpty.classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/dashboard/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`, {
+                    headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => null);
+                    showToast(error?.error || 'Neizdevās ielādēt maltītes', 'error');
+                    adminMeals = [];
+                    renderMeals([]);
+                    return;
+                }
+
+                const data = await response.json();
+                adminMeals = Array.isArray(data) ? data : [];
+                applyMealsFilter();
+            } catch (error: unknown) {
+                showToast((error as Error).message, 'error');
+                adminMeals = [];
+                renderMeals([]);
+            } finally {
+                if (mealsLoading) mealsLoading.classList.add('hidden');
+            }
+        }
+
+        async function loadPatients(): Promise<void> {
+            if (patientsLoading) patientsLoading.classList.remove('hidden');
+            if (patientsEmpty) patientsEmpty.classList.add('hidden');
+
+            try {
+                const [patientsResponse, accessResponse] = await Promise.all([
+                    fetch(`${API_BASE}/dashboard/patients`, {
+                        headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' }
+                    }),
+                    fetch(`${API_BASE}/dashboard/food-access`, {
+                        headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' }
+                    })
+                ]);
+
+                if (!patientsResponse.ok) {
+                    const error = await patientsResponse.json().catch(() => null);
+                    showToast(error?.error || 'Neizdevās ielādēt pacientus', 'error');
+                    adminPatients = [];
+                    renderPatients([]);
+                    return;
+                }
+
+                const patientsData = await patientsResponse.json();
+                const accessData = accessResponse.ok ? await accessResponse.json() : [];
+                const accessMap = new Map<string, { enabled: boolean; displayName?: string; email?: string }>();
+
+                if (Array.isArray(accessData)) {
+                    accessData.forEach((entry: any) => {
+                        if (!entry?.userId) return;
+                        accessMap.set(entry.userId, {
+                            enabled: Boolean(entry.enabled),
+                            displayName: entry.displayName,
+                            email: entry.email
+                        });
+                    });
+                }
+
+                const patientsArray = Array.isArray(patientsData) ? patientsData : [];
+                const patientMap = new Map<string, any>();
+
+                patientsArray.forEach((patient: any) => {
+                    if (!patient?.userId) return;
+                    const access = accessMap.get(patient.userId);
+                    patientMap.set(patient.userId, {
+                        ...patient,
+                        accessEnabled: access?.enabled ?? false,
+                        displayName: access?.displayName,
+                        email: access?.email
+                    });
+                });
+
+                if (Array.isArray(accessData)) {
+                    accessData.forEach((entry: any) => {
+                        const userId = entry?.userId ? String(entry.userId) : '';
+                        if (!userId || patientMap.has(userId)) return;
+                        patientMap.set(userId, {
+                            userId,
+                            mealsCount: 0,
+                            lastMealAt: undefined,
+                            accessEnabled: Boolean(entry.enabled),
+                            displayName: entry.displayName,
+                            email: entry.email
+                        });
+                    });
+                }
+
+                adminPatients = Array.from(patientMap.values());
+                applyPatientsFilter();
+            } catch (error: unknown) {
+                showToast((error as Error).message, 'error');
+                adminPatients = [];
+                renderPatients([]);
+            } finally {
+                if (patientsLoading) patientsLoading.classList.add('hidden');
+            }
+        }
+
+        async function updateAccess(userId: string, enabled: boolean): Promise<void> {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard/food-access?userId=${encodeURIComponent(userId)}`, {
+                    method: 'PUT',
+                    headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => null);
+                    showToast(error?.error || 'Neizdevās atjaunināt piekļuvi', 'error');
+                    return;
+                }
+
+                adminPatients = adminPatients.map((patient: any) =>
+                    patient.userId === userId ? { ...patient, accessEnabled: enabled } : patient
+                );
+                applyPatientsFilter();
+                showToast(enabled ? 'Piekļuve ieslēgta' : 'Piekļuve izslēgta', 'success');
+            } catch (error: unknown) {
+                showToast((error as Error).message, 'error');
+            }
         }
 
         const prevMonthBtn = document.getElementById('prev-month');
