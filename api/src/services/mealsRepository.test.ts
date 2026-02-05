@@ -1,16 +1,16 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { MealsRepository } from './mealsRepository';
 import type { Meal } from '../types/food';
 
 // Mock TableClient
-vi.mock('@azure/data-tables', () => ({
+jest.mock('@azure/data-tables', () => ({
   TableClient: {
-    fromConnectionString: vi.fn(() => ({
-      createEntity: vi.fn(),
-      listEntities: vi.fn(),
-      getEntity: vi.fn(),
-      updateEntity: vi.fn(),
-      deleteEntity: vi.fn()
+    fromConnectionString: jest.fn(() => ({
+      createEntity: jest.fn(),
+      listEntities: jest.fn(),
+      getEntity: jest.fn(),
+      updateEntity: jest.fn(),
+      deleteEntity: jest.fn()
     }))
   }
 }));
