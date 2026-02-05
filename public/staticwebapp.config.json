@@ -5,6 +5,14 @@
     },
     "routes": [
         {
+            "route": "/cabinet",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/portal",
+            "allowedRoles": ["authenticated"]
+        },
+        {
             "route": "/admin/*",
             "allowedRoles": ["authenticated"]
         },
