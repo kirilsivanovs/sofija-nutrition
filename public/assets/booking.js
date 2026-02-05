@@ -8,7 +8,7 @@
 // Auto-detect API URL based on environment
 const API_BASE_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:7071'
-    : '';
+    : 'https://sofija-nutrition-api.azurewebsites.net';
 
 /**
  * Build UI translations from shared translations

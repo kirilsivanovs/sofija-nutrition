@@ -19,10 +19,7 @@ describe('Centralized Configuration', () => {
 
         it('should have API base URL', () => {
             expect(config.env.apiBaseUrl).toBeDefined();
-            // Allow empty string for Azure SWA managed functions (relative paths)
-            if (config.env.apiBaseUrl) {
-                expect(config.env.apiBaseUrl).toMatch(/^https?:\/\//);
-            }
+            expect(config.env.apiBaseUrl).toMatch(/^https?:\/\//);
         });
     });
 
