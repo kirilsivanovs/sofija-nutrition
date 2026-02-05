@@ -413,7 +413,10 @@ describe('Config Module', () => {
     describe('API Base URL', () => {
         it('should have API base URL', () => {
             expect(config.API_BASE_URL).toBeDefined();
-            expect(config.API_BASE_URL).toContain('http');
+            // Allow empty string for Azure SWA managed functions (relative paths)
+            if (config.API_BASE_URL) {
+                expect(config.API_BASE_URL).toContain('http');
+            }
         });
     });
 });
