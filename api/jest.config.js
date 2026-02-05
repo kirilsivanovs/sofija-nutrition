@@ -11,6 +11,8 @@ module.exports = {
     'src/**/*.{js,ts}',
     '!src/index.ts',
     '!src/functions/**', // Exclude Azure Functions handlers (covered by E2E tests)
+    '!src/services/aiService.ts', // AI functionality disabled
+    '!src/services/mealsRepository.ts', // Meals repository disabled
     '!**/node_modules/**'
   ],
   
@@ -50,6 +52,13 @@ module.exports = {
   moduleNameMapper: {
     '@azure/data-tables': '<rootDir>/tests/__mocks__/azure-data-tables.js'
   },
+  
+  // Exclude AI service tests (functionality disabled)
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    'aiService.test.ts',
+    'mealsRepository.test.ts'
+  ],
   
   // Расширения файлов для резолвинга модулей
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']

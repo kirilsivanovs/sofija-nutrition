@@ -14,8 +14,9 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                 </a>
                 <div class="portal-auth" id="auth-actions">
-                    <a class="btn-secondary" id="login-google" href="/.auth/login/google?post_login_redirect_uri=/cabinet">Pieslēgties ar Google</a>
-                    <a class="btn-primary" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">Pieslēgties ar Microsoft</a>
+                    <!-- Google login temporary disabled until configured in Azure Portal - see docs/GOOGLE_AUTH_SETUP.md -->
+                    <!-- <a class="btn-secondary" id="login-google" href="/.auth/login/google?post_login_redirect_uri=/cabinet">Pieslēgties ar Google</a> -->
+                    <a class="btn-primary" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">Pieslēgties</a>
                 </div>
                 <div class="portal-auth hidden" id="auth-user">
                     <div class="portal-user-inline">
