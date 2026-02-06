@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'public/**'
       - 'shared/**'
+      - 'api/**'
       - 'astro.config.mjs'
       - 'tsconfig.json'
       - 'package.json'
@@ -33,7 +34,7 @@ jobs:
           # ── Build config ──
           app_location: /
           output_location: dist
-          # API is deployed separately (sofija-nutrition-api Function App)
-          skip_api_build: true
+          # Managed API — deploys Functions alongside frontend
+          api_location: api
         env:
           NODE_VERSION: 20
