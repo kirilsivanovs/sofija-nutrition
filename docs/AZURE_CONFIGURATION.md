@@ -57,8 +57,12 @@
 
 1. Открой [Azure Portal](https://portal.azure.com)
 2. Найди **Function App** → `sofija-nutrition-api` (или твоё название)
-3. Слева выбери **Settings** → **Configuration**
-4. Вкладка **Application settings**
+3. Слева выбери **Settings** → **Environment variables**
+4. Откроется страница с двумя вкладками:
+   - **App settings** ← **сюда добавляем переменные**
+   - **Connection strings** (не используем)
+
+> 💡 **Если видишь "Configuration (preview)"** - это старый интерфейс, используй его. Там будет вкладка **Application settings**.
 
 ### Обязательные переменные
 
@@ -79,12 +83,12 @@
 
 ### Как добавить переменную
 
-1. В **Application settings** нажми **+ New application setting**
+1. В **App settings** нажми **+ Add** или **+ New application setting**
 2. **Name**: название переменной (например `RESEND_API_KEY`)
 3. **Value**: значение переменной
-4. Нажми **OK**
-5. После добавления всех переменных нажми **Save** вверху
-6. Подтверди **Continue**
+4. Нажми **OK** или **Apply**
+5. После добавления всех переменных нажми **Apply** внизу страницы
+6. Затем нажми **Confirm** во всплывающем окне
 7. **Подожди 1-2 минуты** пока Functions перезапустится
 
 ### 🔑 Где взять значения
