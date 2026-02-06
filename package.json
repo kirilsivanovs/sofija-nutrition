@@ -18,12 +18,7 @@
     "sync:translations": "node -e \"require('fs').copyFileSync('shared/translations.js', 'public/assets/shared-translations.js'); console.log('Translations synced!')\"",
     "test": "jest --verbose",
     "test:shared": "cd shared && npm test",
-    "test:all": "npm test && npm run test:shared && cd api && npm test",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:debug": "playwright test --debug",
-    "test:e2e:report": "playwright show-report"
+    "test:all": "npm test && npm run test:shared && cd api && npm test"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",
@@ -32,7 +27,6 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.1",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "ts-jest": "^29.4.6",

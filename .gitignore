@@ -27,9 +27,7 @@ api/local.settings.json
 # jetbrains setting folder
 .idea/
 
-# Playwright E2E test artifacts
-/playwright-report/
-/playwright/.cache/
+# Test artifacts
 /test-results/
 /api/test-results/
 

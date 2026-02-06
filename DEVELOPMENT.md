@@ -6,7 +6,6 @@
 
 - **Тесты:** 922 (896 unit + 10 integration + 16 snapshot)
 - **Покрытие:** 98.2%
-- **CI/CD:** GitHub Actions + Azure Static Web Apps
 
 ---
 
@@ -76,8 +75,8 @@ rateLimits: {
 1. `git checkout -b feature/название`
 2. Разработать и протестировать
 3. `npm test` — все тесты должны пройти
-4. Создать PR → CI запустит тесты + E2E
-5. После успешных проверок — auto-merge
+4. Создать PR
+5. Merge после ревью
 
 ### Branch naming
 
@@ -137,7 +136,6 @@ cd api
 npm test                    # Unit тесты (896)
 npm run test:coverage       # С покрытием
 npm run test:integration    # Интеграционные (Azurite)
-npm run test:e2e           # E2E (Playwright)
 ```
 
 ### Критические тесты
@@ -150,5 +148,4 @@ npm run test:e2e           # E2E (Playwright)
 
 ## 🔗 Полезные ссылки
 
-- [e2e/README.md](e2e/README.md) — E2E тестирование
 - [TESTS_COVERAGE.md](TESTS_COVERAGE.md) — Тестовое покрытие
