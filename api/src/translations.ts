@@ -5,8 +5,9 @@
  */
 
 // Use require for shared module to avoid TypeScript compilation issues
+// The shared translations file is copied into dist/ during build
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { sharedTranslations } = require('../../shared/translations');
+const { sharedTranslations } = require('./shared-translations');
 
 export interface TranslationStrings {
     // Email translations
