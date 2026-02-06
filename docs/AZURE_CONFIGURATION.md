@@ -68,18 +68,17 @@
 
 | Переменная | Пример значения | Зачем нужна |
 |------------|-----------------|-------------|
-| `AZURE_STORAGE_CONNECTION_STRING` | `DefaultEndpointsProtocol=https;AccountName=...` | Для Table Storage (данные бронирований, пациентов) |
+| `AZURE_STORAGE_CONNECTION_STRING` | `DefaultEndpointsProtocol=https;AccountName=...` | Для Table Storage (данные бронирований, пациентов, еды) |
 | `RESEND_API_KEY` | `re_xxxxxxxxxxxxxxxxxx` | Для отправки email подтверждений |
+| `ADMIN_EMAIL` | `ivanovs.kirils95@gmail.com` | Email админа для уведомлений о новых бронированиях |
 
 ### Опциональные переменные
 
 | Переменная | Пример значения | Зачем нужна |
 |------------|-----------------|-------------|
-| `BUSINESS_EMAIL` | `info@sofija-nutrition.lv` | Email от имени которого отправляются письма |
-| `BUSINESS_NAME` | `Sofija Nutrition` | Имя в email шаблонах |
-| `GEMINI_API_KEY` | `AIza...` | Для AI анализа еды (опционально) |
+| `E2E_TEST_TOKEN` | `random-hex-string` | Для E2E тестов (если запускаешь `npm run test:e2e`) |
+| `GEMINI_API_KEY` | `AIza...` | Для AI анализа еды (food diary фичи) |
 | `USE_GEMINI` | `true` | Включить Gemini AI |
-| `E2E_TEST_TOKEN` | `random-hex-string` | Для E2E тестов |
 
 ### Как добавить переменную
 
@@ -116,11 +115,14 @@
 
 ### ⚙️ Автоматические переменные (не трогай!)
 
-Azure Functions автоматически создаёт эти переменные:
+Azure Functions автоматически создаёт эти переменные - у тебя они уже есть:
 
 - `AzureWebJobsStorage` - для внутренних нужд Functions
-- `WEBSITE_CONTENTAZUREFILECONNECTIONSTRING` 
-- `WEBSITE_CONTENTSHARE`
+- `APPLICATIONINSIGHTS_CONNECTION_STRING` - мониторинг и логи
+- `WEBSITE_CONTENTAZUREFILECONNECTIONSTRING` - хранилище функций
+- `WEBSITE_CONTENTSHARE` - файлы приложения
+- `WEBSITE_MOUNT_ENABLED` - монтирование файлов
+- `WEBSITE_RUN_FROM_PACKAGE` - запуск из пакета
 - `FUNCTIONS_WORKER_RUNTIME` = `node`
 - `FUNCTIONS_EXTENSION_VERSION` = `~4`
 
@@ -194,17 +196,17 @@ Azure Functions автоматически создаёт эти перемен�
 
 ### Static Web App (1 переменная)
 ```
-PUBLIC_API_BASE_URL = https://sofija-nutrition-api.azurewebsites.net
-```
-
-### Azure Functions (минимум 2 переменные)
+PUBLIC_API_BASE_URL = https:/3 переменные)
 ```
 AZURE_STORAGE_CONNECTION_STRING = DefaultEndpointsProtocol=https;...
 RESEND_API_KEY = re_xxxxx...
+ADMIN_EMAIL = ivanovs.kirils95@gmail.com
 ```
 
 ### Опционально для Functions
 ```
+E2E_TEST_TOKEN = random-hex-string  (для тестов)
+GEMINI_API_KEY = AIza...  (для AI фич)
 BUSINESS_EMAIL = info@sofija-nutrition.lv
 BUSINESS_NAME = Sofija Nutrition
 GEMINI_API_KEY = AIza...
