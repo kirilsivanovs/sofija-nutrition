@@ -33,7 +33,55 @@ HTTP Request → Function (thin) → Service (business logic) → Repository (da
 
 ---
 
-## 🔒 Безопасность
+## � CI/CD Pipeline
+
+### Умный деплой (экономия ресурсов)
+
+**Static Web App Workflow** - триггерится только при изменениях фронтенда:
+- `src/**`, `public/**`, `shared/**`
+- `astro.config.mjs`, `package.json`, `tsconfig.json`
+
+**Azure Functions Workflow** - триггерится только при изменениях API:
+- `api/**`
+- `.github/workflows/azure-functions-deploy.yml`
+
+### Этапы деплоя
+
+```
+PR → main:
+├── Frontend changes? → Deploy Static Web App
+│   ├── Unit tests
+│   ├── Build & Deploy
+│   └── E2E tests
+│
+└── API changes? → Deploy Azure Functions
+    ├── Unit tests (jest)
+    ├── Build TypeScript
+    └── Deploy to Azure
+```
+
+### Переменные окружения
+
+> 📘 **Полная инструкция**: [docs/AZURE_CONFIGURATION.md](docs/AZURE_CONFIGURATION.md)
+
+**Static Web App:**
+- `PUBLIC_API_BASE_URL` = `https://sofija-nutrition-api.azurewebsites.net`
+
+**Azure Functions:**
+- `AZURE_STORAGE_CONNECTION_STRING` (обязательно)
+- `RESEND_API_KEY` (обязательно)
+- `GEMINI_API_KEY`, `BUSINESS_EMAIL` (опционально)
+
+### CORS настройка
+
+API автоматически разрешает запросы от:
+- `*.azurestaticapps.net` (preview URLs)
+- `sofija-nutrition.lv` (production)
+- `localhost:4321` (dev)
+
+---
+
+## �🔒 Безопасность
 
 ### Реализовано
 

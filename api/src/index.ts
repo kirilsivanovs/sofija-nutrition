@@ -3,6 +3,8 @@
  * Registers all Azure Functions
  */
 
+import { app } from '@azure/functions';
+
 // Register all functions
 import './functions/health.function';
 import './functions/createBooking.function';
@@ -28,3 +30,6 @@ import './services/featureFlags';
 
 // Export container for DI
 export { container } from './services';
+
+// CRITICAL: Export app for Azure Functions v4 runtime
+export default app;
