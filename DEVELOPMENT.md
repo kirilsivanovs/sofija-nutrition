@@ -62,14 +62,15 @@ PR → main:
 
 ### Переменные окружения
 
+> 📘 **Полная инструкция**: [docs/AZURE_CONFIGURATION.md](docs/AZURE_CONFIGURATION.md)
+
 **Static Web App:**
 - `PUBLIC_API_BASE_URL` = `https://sofija-nutrition-api.azurewebsites.net`
 
-**Azure Functions (настроить в Azure Portal):**
-- `AZURE_STORAGE_CONNECTION_STRING`
-- `RESEND_API_KEY`
-- `GEMINI_API_KEY` (опционально)
-- См. `api/local.settings.json.example` для полного списка
+**Azure Functions:**
+- `AZURE_STORAGE_CONNECTION_STRING` (обязательно)
+- `RESEND_API_KEY` (обязательно)
+- `GEMINI_API_KEY`, `BUSINESS_EMAIL` (опционально)
 
 ### CORS настройка
 
