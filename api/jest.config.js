@@ -50,7 +50,8 @@ module.exports = {
   
   // Mock Azure modules instead of trying to transform them
   moduleNameMapper: {
-    '@azure/data-tables': '<rootDir>/tests/__mocks__/azure-data-tables.js'
+    '@azure/data-tables': '<rootDir>/tests/__mocks__/azure-data-tables.js',
+    '^./shared-translations$': '<rootDir>/../shared/translations.js'
   },
   
   // Exclude AI service tests (functionality disabled)
