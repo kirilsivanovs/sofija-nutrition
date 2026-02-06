@@ -20,13 +20,7 @@
    - Cancellation workflows
    - Edge cases для всех сценариев
 
-3. **api/tests/featureFlags-cors.test.ts** (~400 строк)
-   - Feature flags system (было 0%)
-   - CORS middleware (было 44%)
-   - Security headers
-   - Origin validation
-
-4. **api/tests/helpers/mockFactory.ts** (~400 строк)
+3. **api/tests/helpers/mockFactory.ts** (~400 строк)
    - Централизованные mock factories
    - Устранение дублирования (DRY)
    - Test data generators
@@ -67,7 +61,6 @@
 File Coverage: 54.45%
 - Admin Functions: 0%
 - BookingService: 18.1%
-- FeatureFlags: 0%
 - CORS: 44.44%
 - Frontend: 0%
 ```
@@ -77,7 +70,6 @@ File Coverage: 54.45%
 Target: 75%+
 - Admin Functions: 90%+
 - BookingService: 95%+
-- FeatureFlags: 100%
 - CORS: 90%+
 - Frontend: 85%+
 ```
@@ -132,7 +124,6 @@ Target: 75%+
 - [ ] `tests/booking-state.test.ts`
 
 ### Приоритет: LOW
-- [ ] `api/tests/featureFlags-cors.test.ts`
 - [ ] `tests/booking-formatters.test.ts`
 
 ## Команды для запуска
@@ -145,7 +136,6 @@ npm run test:coverage
 # Только новые тесты
 npm test -- admin-functions
 npm test -- bookingService-extended
-npm test -- featureFlags-cors
 
 # Frontend тесты
 cd ..

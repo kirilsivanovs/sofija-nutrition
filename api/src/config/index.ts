@@ -43,7 +43,6 @@ export const tables: TableNames = {
   settings: 'adminSettings',
   services: 'Services',
   servicesHistory: 'ServicesHistory',
-  featureFlags: 'FeatureFlags',
   locks: 'slotLocks'
 };
 
@@ -54,9 +53,6 @@ export const tables: TableNames = {
 export const cache: CacheConfig = {
   // Service settings cache TTL (5 minutes)
   servicesTtlMs: 5 * 60 * 1000,
-  
-  // Feature flags cache TTL (2 minutes - shorter for faster response to changes)  
-  featureFlagsTtlMs: 2 * 60 * 1000,
   
   // Schedule cache TTL (5 minutes)
   scheduleTtlMs: 5 * 60 * 1000

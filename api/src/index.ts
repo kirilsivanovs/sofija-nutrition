@@ -23,8 +23,5 @@ import './functions/adminSettings.function';
 import './functions/adminServiceSettings.function';
 import './functions/adminTableData.function';
 
-// Services with exposed functions (feature flags endpoint)
-import './services/featureFlags';
-
 // Export container for DI
 export { container } from './services';

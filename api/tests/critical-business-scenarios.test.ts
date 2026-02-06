@@ -6,8 +6,7 @@
  * 2. Клиент может создать бронирование
  * 3. Система не позволяет двойное бронирование
  * 4. Админ может видеть бронирования
- * 5. Feature flags работают
- * 6. Services загружаются с кэшем
+ * 5. Services загружаются с кэшем
  */
 
 const { TableClient } = require('@azure/data-tables');
@@ -21,13 +20,11 @@ const USE_MOCK = true;
 describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
     let servicesClient;
     let bookingsClient;
-    let featureFlagsClient;
 
     beforeAll(() => {
         // Используем mock - connection string не важен для mock
         servicesClient = TableClient.fromConnectionString('mock', 'Services');
         bookingsClient = TableClient.fromConnectionString('mock', 'bookings');
-        featureFlagsClient = TableClient.fromConnectionString('mock', 'FeatureFlags');
     });
 
     describe('1️⃣ КРИТИЧНО: Клиент может посмотреть доступные услуги', () => {
@@ -222,37 +219,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
         });
     });
 
-    describe('4️⃣ КРИТИЧНО: Feature Flags работают', () => {
-        test('FeatureFlags таблица существует', async () => {
-            const flags = [];
-            for await (const flag of featureFlagsClient.listEntities()) {
-                flags.push(flag);
-            }
-
-            expect(flags.length).toBeGreaterThan(0);
-        });
-
-        test('Feature flags имеют корректную структуру', async () => {
-            for await (const flag of featureFlagsClient.listEntities()) {
-                expect(flag.partitionKey).toBe('FLAGS');
-                expect(flag.rowKey).toBeDefined();
-                expect(typeof flag.enabled).toBe('boolean');
-            }
-        });
-
-        test('Критичные флаги присутствуют', async () => {
-            const flags = [];
-            for await (const flag of featureFlagsClient.listEntities()) {
-                flags.push(flag.rowKey);
-            }
-
-            // Эти флаги должны существовать
-            expect(flags).toContain('email_reminders');
-            expect(flags).toContain('cgm_diagnostic_booking');
-        });
-    });
-
-    describe('5️⃣ КРИТИЧНО: Система предотвращает двойное бронирование', () => {
+    describe('4️⃣ КРИТИЧНО: Система предотвращает двойное бронирование', () => {
         test('Проверка занятости слота перед бронированием', () => {
             const existingBookings = [
                 { date: '2026-02-15', time: '14:00', status: 'confirmed' }
@@ -296,7 +263,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
         });
     });
 
-    describe('6️⃣ КРИТИЧНО: Email уведомления работают', () => {
+    describe('5️⃣ КРИТИЧНО: Email уведомления работают', () => {
         test('Генерируется корректный email клиенту', () => {
             const booking = {
                 id: 'SN-TEST123',

@@ -41,11 +41,10 @@
 └──────────────────┬──────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────┐
-│ Azure Table Storage (5 таблиц, €0.10/мес)          │
+│ Azure Table Storage (4 таблицы, €0.10/мес)          │
 │ - bookings (бронирования)                           │
 │ - adminSettings (расписание, отпуска)               │
 │ - Services (цены, длительность услуг)               │
-│ - FeatureFlags (вкл/выкл функций)                   │
 │ - ServicesHistory (история изменений)               │
 └─────────────────────────────────────────────────────┘
 ```
@@ -53,11 +52,10 @@
 ### Ключевые особенности
 
 1. **Serverless архитектура** - нет постоянно работающих серверов, оплата только за запросы
-2. **Feature Flags** - включение/выключение функций без деплоя (кэш 2 мин)
-3. **Кэширование** - Services кэшируются на 5 мин (↓80% запросов к БД)
-4. **Валидация** - все данные проверяются на уровне API
-5. **Версионирование** - история изменений цен и настроек сохраняется
-6. **Мультиязычность** - lv/ru/en для всех услуг
+2. **Кэширование** - Services кэшируются на 5 мин
+3. **Валидация** - все данные проверяются на уровне API
+4. **Версионирование** - история изменений цен и настроек сохраняется
+5. **Мультиязычность** - lv/ru/en для всех услуг
 7. **Дешевизна** - ~€0.10/мес за БД, Functions бесплатны до 1M запросов
 
 ### Услуги (настраиваются через админку)
@@ -176,11 +174,6 @@ npm run dev
 - `GET /api/dashboard/services/{serviceId}/history` - История изменений
 - `POST /api/dashboard/services/initialize` - Инициализация с defaults
 
-**Feature Flags:**
-- `GET /api/dashboard/features` - Список флагов
-- `PUT /api/dashboard/features/{featureId}` - Изменить флаг
-- `POST /api/dashboard/features/initialize` - Инициализация флагов
-
 **Таблицы:**
 - `GET /api/dashboard/tables/{tableName}` - Содержимое таблицы
 - `DELETE /api/dashboard/tables/{tableName}/{pk}/{rk}` - Удалить запись
@@ -234,9 +227,6 @@ node scripts/list-tables.js
 
 # Инициализировать Services с дефолтными услугами
 curl -X POST http://localhost:7071/api/dashboard/services/initialize
-
-# Инициализировать FeatureFlags
-curl -X POST http://localhost:7071/api/dashboard/features/initialize
 ```
 
 ## 🏗️ Структура проекта
@@ -255,7 +245,6 @@ sofija-nutrition-astro/
 │   │   ├── services/              # Бизнес-логика
 │   │   │   ├── bookingRepository.js
 │   │   │   ├── emailService.js
-│   │   │   ├── featureFlags.js
 │   │   │   ├── availabilityService.js
 │   │   │   └── ...
 │   │   ├── utils/                 # Утилиты
@@ -292,14 +281,13 @@ sofija-nutrition-astro/
 
 ## 🗄️ База данных (Azure Table Storage)
 
-Проект использует **5 таблиц** (€0.10/месяц):
+Проект использует **4 таблицы** (€0.10/месяц):
 
 | Таблица | PartitionKey | RowKey | Назначение | Записей |
 |---------|--------------|--------|------------|---------|
 | `bookings` | userId/date | guid | Бронирования клиентов | ~100/мес |
 | `adminSettings` | "config" | тип настройки | Расписание, отпуска, заблокированные даты | ~2 |
 | `Services` | "SERVICE" | serviceId | Цены, длительность, названия услуг | 3 |
-| `FeatureFlags` | "FEATURE" | featureName | Вкл/выкл функций без деплоя | 5 |
 | `ServicesHistory` | serviceId | v{version}_{timestamp} | История изменений цен | ~50/год |
 
 ### Примеры данных
@@ -340,17 +328,6 @@ sofija-nutrition-astro/
 }
 ```
 
-**FeatureFlag:**
-```json
-{
-  "partitionKey": "FEATURE",
-  "rowKey": "online_payments",
-  "featureName": "online_payments",
-  "description": "Enable online payment processing",
-  "isEnabled": false
-}
-```
-
 ### Бизнес-логика бронирования
 
 1. **Клиент выбирает услугу** → загружаются из `Services` (кэш 5 мин)
@@ -367,28 +344,6 @@ sofija-nutrition-astro/
    - Отправка email клиенту + администратору
    - Генерация PDF с деталями
 5. **Статусы:** pending → confirmed → completed / cancelled
-
-### Feature Flags (важно для AI)
-
-**Назначение:** Включение/выключение функций БЕЗ деплоя кода.
-
-**Кэш:** 2 минуты (короткий TTL для быстрой реакции).
-
-**Как использовать в коде:**
-```javascript
-const { isFeatureEnabled } = require('./services/featureFlags');
-
-if (await isFeatureEnabled('online_payments')) {
-    // показать форму оплаты
-}
-```
-
-**Доступные флаги:**
-- `online_payments` (OFF) - Онлайн-оплата через Stripe/PayPal
-- `email_reminders` (ON) - Автоматические напоминания за 24ч
-- `cgm_diagnostic_booking` (ON) - Бронирование CGM диагностики
-- `free_consultation_booking` (ON) - Бесплатные консультации
-- `maintenance_mode` (OFF) - Режим обслуживания (блокирует сайт)
 
 ## � Важные замечания для AI
 
@@ -408,7 +363,6 @@ if (await isFeatureEnabled('online_payments')) {
 3. **Почему кэш именно 5 минут для Services?**
    - Услуги меняются редко (раз в месяц)
    - 5 минут = баланс между свежестью и экономией
-   - FeatureFlags кэшируются 2 минуты (нужна быстрая реакция)
 
 4. **Почему один администратор?**
    - Проект для индивидуального предпринимателя
@@ -421,7 +375,7 @@ if (await isFeatureEnabled('online_payments')) {
    - Файлы: camelCase (`createBooking.js`)
    - Функции: camelCase (`getAvailability`)
    - Константы: UPPER_SNAKE_CASE (`SERVICES_TABLE`)
-   - Таблицы: PascalCase (`Services`, `FeatureFlags`)
+   - Таблицы: PascalCase (`Services`)
 
 2. **Структура функций:**
    ```javascript
@@ -517,12 +471,11 @@ cd api
 node scripts/create-tables.js
 ```
 
-### Нет данных в Services/FeatureFlags
+### Нет данных в Services
 
 ```powershell
 # API должен быть запущен!
 curl -X POST http://localhost:7071/api/dashboard/services/initialize
-curl -X POST http://localhost:7071/api/dashboard/features/initialize
 ```
 
 ## 📚 Документация
@@ -563,8 +516,7 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 1. `bookings` - бронирования (PK: date, RK: guid)
 2. `adminSettings` - расписание, отпуска (PK: "config")
 3. `Services` - услуги с ценами (PK: "SERVICE", кэш 5 мин)
-4. `FeatureFlags` - вкл/выкл функций (PK: "FEATURE", кэш 2 мин)
-5. `ServicesHistory` - история изменений (PK: serviceId)
+4. `ServicesHistory` - история изменений (PK: serviceId)
 
 **Безопасность:**
 - SWA Auth (Microsoft OAuth) + E2E Token для админки
@@ -576,8 +528,7 @@ curl -X POST http://localhost:7071/api/dashboard/features/initialize
 **Важно знать:**
 - Один админ (Софья), авторизация через Azure AD
 - Мультиязычность: lv/ru/en (единый источник — `shared/translations.js`)
-- Feature flags позволяют вкл/выкл без деплоя
-- Кэширование: Services 5 мин, FeatureFlags 2 мин
+- Кэширование: Services 5 мин
 - Валидация на уровне API обязательна
 - Нет дублирования кода и данных (архитектура оптимизирована)
 
@@ -601,10 +552,6 @@ Body: { serviceId, date, time, format, customer... }
 
 # Получить услуги
 GET http://localhost:7071/api/dashboard/services
-
-# Изменить feature flag
-PUT http://localhost:7071/api/dashboard/features/online_payments
-Body: { isEnabled: true }
 ```
 
 **Соглашения:**
@@ -613,25 +560,6 @@ Body: { isEnabled: true }
 - Константы: UPPER_SNAKE_CASE
 - Всегда валидировать входные данные
 - Всегда возвращать `{ success: true/false, data/errors }`
-
-## 🎯 Feature Flags - Примеры использования
-
-```powershell
-# Посмотреть все флаги
-curl http://localhost:7071/api/dashboard/features
-
-# Включить онлайн-оплату
-curl -X PUT http://localhost:7071/api/dashboard/features/online_payments `
-  -H "Content-Type: application/json" `
-  -d '{"isEnabled": true}'
-```
-
-**Доступные флаги:**
-- `online_payments` - Онлайн-оплата (OFF по умолчанию)
-- `email_reminders` - Email напоминания (ON)
-- `cgm_diagnostic_booking` - Бронирование CGM диагностики (ON)
-- `free_consultation_booking` - Бесплатные консультации (ON)
-- `maintenance_mode` - Режим обслуживания (OFF)
 
 ## 🔧 Частые задачи
 
@@ -708,19 +636,7 @@ GET http://localhost:7071/api/dashboard/tables/Services
 3. Убедиться что возвращается массив `errors`
 4. Протестировать локально
 
-### Сценарий 3: Добавить новый feature flag
-
-1. Добавить в `api/src/services/featureFlags.js` в список DEFAULT_FLAGS
-2. Запустить инициализацию:
-```bash
-curl -X POST http://localhost:7071/api/dashboard/features/initialize
-```
-3. Использовать в коде:
-```javascript
-if (await isFeatureEnabled('my_new_feature')) { ... }
-```
-
-### Сценарий 4: Дебаг проблем с бронированием
+### Сценарий 3: Дебаг проблем с бронированием
 
 1. Проверить логи в терминале где запущен `func start`
 2. Проверить таблицу bookings:
