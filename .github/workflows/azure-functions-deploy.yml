@@ -1,34 +1,79 @@
-name: Deploy Azure Functions API
+name: Azure Functions API
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'api/**'
+      - 'shared/**'
       - '.github/workflows/azure-functions-deploy.yml'
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
+    branches: [main]
     paths:
       - 'api/**'
+      - 'shared/**'
       - '.github/workflows/azure-functions-deploy.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'sofija-nutrition-api'
+  NODE_VERSION: '20'
 
 jobs:
-  deploy-api:
+  # ============================================
+  # Тесты — всегда (PR + push to main)
+  # ============================================
+  test:
     runs-on: ubuntu-latest
-    name: Deploy API to Azure Functions
+    name: 🧪 Unit Tests
+    defaults:
+      run:
+        working-directory: ./api
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: './api/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: ./api/coverage/
+          retention-days: 7
+
+  # ============================================
+  # Сборка — всегда (PR для валидации, push для деплоя)
+  # ============================================
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    name: 🔨 Build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: './api/package-lock.json'
 
       - name: Install dependencies
         working-directory: ./api
@@ -38,20 +83,93 @@ jobs:
         working-directory: ./api
         run: npm run build
 
-      - name: 'Install production dependencies in dist'
+      - name: Install production dependencies
         working-directory: ./api/dist
         run: npm install --production
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-build
+          path: ./api/dist/
+          retention-days: 1
+
+  # ============================================
+  # Деплой — ТОЛЬКО push в main или workflow_dispatch
+  # PR-ы не деплоятся, только проходят тесты и билд
+  # ============================================
+  deploy:
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy
+    environment: production
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api-build
+          path: ./deploy
 
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
-      - name: 'Deploy to Azure Functions via CLI'
-        run: |
-          cd api/dist
-          zip -r deploy.zip .
-          az functionapp deployment source config-zip \
-            --resource-group PersonalProjects \
-            --name sofija-nutrition-api \
-            --src deploy.zip
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: './deploy'
+
+  # ============================================
+  # Auto-merge: тесты + билд прошли — мержим в main
+  # ============================================
+  auto_merge:
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    name: 🔀 Auto-merge PR
+    steps:
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # E2E тесты — только после деплоя в production
+  # ============================================
+  e2e:
+    needs: deploy
+    runs-on: ubuntu-latest
+    name: 🎭 E2E Tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
+          PLAYWRIGHT_BASE_URL: https://wonderful-bay-0fb550403.4.azurestaticapps.net
+          E2E_TEST_TOKEN: ${{ secrets.E2E_TEST_TOKEN }}
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

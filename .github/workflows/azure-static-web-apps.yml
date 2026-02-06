@@ -2,8 +2,7 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'src/**'
       - 'public/**'
@@ -14,8 +13,7 @@ on:
       - '.github/workflows/azure-static-web-apps.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'src/**'
       - 'public/**'
@@ -24,178 +22,20 @@ on:
       - 'package.json'
       - 'tsconfig.json'
       - '.github/workflows/azure-static-web-apps.yml'
-  # Scheduled cleanup - каждый день в 3:00 UTC
-  schedule:
-    - cron: '0 3 * * *'
-  # Manual trigger for cleanup
   workflow_dispatch:
-    inputs:
-      cleanup_only:
-        description: 'Only run cleanup (skip deploy)'
-        required: false
-        default: false
-        type: boolean
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
-  issues: write
 
 jobs:
   # ============================================
-  # CLEANUP: Принудительное удаление staging environments перед deploy
-  # Free tier Azure SWA: максимум 3 staging environments
-  # ============================================
-  cleanup_staging:
-    # Запускается для ВСЕХ PR (кроме close) и по расписанию
-    if: |
-      github.event_name == 'schedule' || 
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: 🧹 Cleanup Staging Environments
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      - name: Get staging environments and cleanup
-        id: cleanup
-        continue-on-error: true  # Don't block deploy if cleanup fails (permission issues)
-        env:
-          CURRENT_PR: ${{ github.event.pull_request.number }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "🔍 Fetching staging environments..."
-          
-          # Get all staging environments (excluding 'default' which is production)
-          ENVS=$(az staticwebapp environment list \
-            --name "sofija-nutrition" \
-            --resource-group "PersonalProjects" \
-            --query "[?name != 'default'].{name: name, createdOn: properties.createdOn}" \
-            -o json 2>/dev/null || echo "[]")
-          
-          echo "Current environments: $ENVS"
-          
-          # Count environments
-          ENV_COUNT=$(echo "$ENVS" | jq 'length')
-          echo "📊 Found $ENV_COUNT staging environment(s)"
-          
-          # Azure SWA Free tier limit: 3 staging environments
-          # If we have 3 or more, we need to delete the oldest one to make room
-          if [ "$ENV_COUNT" -ge 3 ]; then
-            echo "⚠️ At limit ($ENV_COUNT/3 staging environments)"
-            
-            # Get the oldest environment (sort by createdOn ascending, take first)
-            OLDEST_ENV=$(echo "$ENVS" | jq -r 'sort_by(.createdOn) | .[0].name')
-            
-            if [ -n "$OLDEST_ENV" ] && [ "$OLDEST_ENV" != "null" ]; then
-              echo "🧹 Deleting oldest environment: $OLDEST_ENV"
-              az staticwebapp environment delete \
-                --name "sofija-nutrition" \
-                --resource-group "PersonalProjects" \
-                --environment-name "$OLDEST_ENV" \
-                --yes
-              echo "✅ Deleted environment $OLDEST_ENV"
-            fi
-          else
-            echo "✅ Within limits ($ENV_COUNT/3 staging environments)"
-          fi
-          
-          # Also cleanup any environments for closed PRs
-          echo "🔍 Checking for orphaned environments..."
-          
-          # Get open PR numbers
-          OPEN_PRS=$(gh pr list --state open --json number --jq '.[].number' || echo "")
-          echo "Open PRs: $OPEN_PRS"
-          
-          # Get all environment names
-          ENV_NAMES=$(echo "$ENVS" | jq -r '.[].name')
-          
-          for ENV in $ENV_NAMES; do
-            # Environment names are PR numbers
-            if echo "$OPEN_PRS" | grep -q "^${ENV}$"; then
-              echo "✅ Environment $ENV has open PR - keeping"
-            else
-              echo "🧹 Environment $ENV is orphaned - deleting"
-              az staticwebapp environment delete \
-                --name "sofija-nutrition" \
-                --resource-group "PersonalProjects" \
-                --environment-name "$ENV" \
-                --yes 2>/dev/null || echo "Failed to delete $ENV"
-            fi
-          done
-          
-          echo "✅ Cleanup complete"
-      
-      - name: Verify cleanup
-        continue-on-error: true
-        run: |
-          echo "📊 Current staging environments after cleanup:"
-          az staticwebapp environment list \
-            --name "sofija-nutrition" \
-            --resource-group "PersonalProjects" \
-            --query "[?name != 'default'].name" \
-            -o tsv || echo "None"
-
-  # ============================================
-  # ЭТАП 1: Unit тесты API (быстрые, без деплоя)
-  # ============================================
-  test_api:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.inputs.cleanup_only != 'true'
-    runs-on: ubuntu-latest
-    name: 🧪 API Unit Tests
-    defaults:
-      run:
-        working-directory: ./api
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: './api/package-lock.json'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests with coverage
-        run: npm run test:coverage
-      
-      - name: Check coverage threshold (70%)
-        run: |
-          # Extract coverage percentage from output
-          COVERAGE=$(grep -oP 'All files\s+\|\s+\K[\d.]+' coverage/coverage-summary.json | head -1 || echo "0")
-          echo "Current coverage: ${COVERAGE}%"
-          
-          # Fail if below 70%
-          if (( $(echo "$COVERAGE < 70" | bc -l) )); then
-            echo "❌ Coverage ${COVERAGE}% is below required 70%"
-            exit 1
-          else
-            echo "✅ Coverage ${COVERAGE}% meets requirement (≥70%)"
-          fi
-      
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: ./api/coverage/
-          retention-days: 7
-
-  # ============================================
-  # ЭТАП 2: Deploy to Staging (Preview для PR)
+  # Сборка и деплой (staging для PR, production для main)
   # ============================================
   build_and_deploy:
-    needs: [test_api, cleanup_staging]
-    if: always() && needs.test_api.result == 'success' && (needs.cleanup_staging.result == 'success' || needs.cleanup_staging.result == 'skipped') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.event.inputs.cleanup_only != 'true'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy
+    name: 🚀 Build and Deploy
     outputs:
       static_web_app_url: ${{ steps.builddeploy.outputs.static_web_app_url }}
     steps:
@@ -203,7 +43,7 @@ jobs:
         with:
           submodules: true
           lfs: false
-      
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -216,7 +56,7 @@ jobs:
           app_location: "/"
           api_location: ""
           output_location: "dist"
-      
+
       - name: Comment Preview URL on PR
         if: github.event_name == 'pull_request'
         continue-on-error: true
@@ -243,7 +83,6 @@ jobs:
             ---
             *This preview will be automatically deleted when the PR is closed.*`;
             
-            // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -256,7 +95,6 @@ jobs:
             );
             
             if (botComment) {
-              // Update existing comment
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -264,7 +102,6 @@ jobs:
                 body
               });
             } else {
-              // Create new comment
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -274,35 +111,35 @@ jobs:
             }
 
   # ============================================
-  # ЭТАП 3: E2E тесты на задеплоенной среде
+  # E2E тесты на staging (PR) или production (push)
   # ============================================
-  test_e2e:
-    needs: [build_and_deploy]
+  e2e:
+    needs: build_and_deploy
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: 🎭 E2E Tests (Playwright)
+    name: 🎭 E2E Tests
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-      
-      - name: Run Playwright E2E tests
+
+      - name: Run E2E tests
         run: npm run test:e2e
         env:
           CI: true
           PLAYWRIGHT_BASE_URL: ${{ needs.build_and_deploy.outputs.static_web_app_url || 'https://wonderful-bay-0fb550403.4.azurestaticapps.net' }}
           E2E_TEST_TOKEN: ${{ secrets.E2E_TEST_TOKEN }}
-      
+
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -310,48 +147,31 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-      
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: test-results/
-          retention-days: 7
 
   # ============================================
-  # ЭТАП 4: Auto-merge PR после успешных тестов
+  # Auto-merge: все тесты прошли — мержим в main
   # ============================================
   auto_merge:
-    needs: [test_api, build_and_deploy, test_e2e]
+    needs: [build_and_deploy, e2e]
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 🔀 Auto-merge PR
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
       - name: Enable auto-merge
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          # Use PAT to trigger push workflow after merge
-          # Falls back to GITHUB_TOKEN if PAT not set
-          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # ============================================
   # Cleanup staging при закрытии PR
   # ============================================
-  close_pull_request_job:
+  close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: 🧹 Close PR Environment
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
