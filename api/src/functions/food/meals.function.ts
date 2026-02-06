@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import type { Meal } from '../types/food.js';
-import { MealsRepository } from '../services/mealsRepository';
+import type { Meal } from '../../types/food.js';
+import { MealsRepository } from '../../services/mealsRepository';
 import { format } from 'date-fns';
 
 /**

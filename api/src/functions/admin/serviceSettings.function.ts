@@ -5,8 +5,8 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { TableClient } from '@azure/data-tables';
-import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
-import { sanitizeODataValue } from '../utils/odataSanitizer';
+import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { sanitizeODataValue } from '../../utils/odataSanitizer';
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 const SERVICES_TABLE = 'Services';

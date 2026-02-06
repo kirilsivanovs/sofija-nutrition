@@ -5,11 +5,11 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { TableClient } from '@azure/data-tables';
-import { checkAuthorization, unauthorizedResponse } from '../utils/authMiddleware';
-import { sendCancellationNotification } from '../services/emailService';
-import { generateCancellationEmailHTML } from '../templates/emailTemplates';
-import { getTranslation } from '../translations';
-import { buildStatusFilter } from '../utils/odataSanitizer';
+import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { sendCancellationNotification } from '../../services/emailService';
+import { generateCancellationEmailHTML } from '../../templates/emailTemplates';
+import { getTranslation } from '../../translations';
+import { buildStatusFilter } from '../../utils/odataSanitizer';
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 

@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { FoodAccessRepository } from '../services/foodAccessRepository';
+import { FoodAccessRepository } from '../../services/foodAccessRepository';
 
 interface ClientPrincipal {
   userId?: string;
