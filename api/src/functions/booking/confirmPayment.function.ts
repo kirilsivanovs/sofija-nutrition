@@ -4,12 +4,12 @@
 
 import { app, HttpRequest, InvocationContext } from '@azure/functions';
 import type { HttpResponseInit } from '@azure/functions';
-import { branding, colors } from '../config';
-import translations from '../translations';
-import { getBooking, updateBooking, verifyPaymentToken } from '../services/bookingRepository';
-import { sendPaymentConfirmation, isConfigured } from '../services/emailService';
-import { generatePaymentConfirmedEmailHTML, generateConfirmationPageHTML } from '../templates/emailTemplates';
-import type { Language, TranslationObject } from '../types';
+import { branding, colors } from '../../config';
+import translations from '../../translations';
+import { getBooking, updateBooking, verifyPaymentToken } from '../../services/bookingRepository';
+import { sendPaymentConfirmation, isConfigured } from '../../services/emailService';
+import { generatePaymentConfirmedEmailHTML, generateConfirmationPageHTML } from '../../templates/emailTemplates';
+import type { Language, TranslationObject } from '../../types';
 
 // ============================================
 // Types

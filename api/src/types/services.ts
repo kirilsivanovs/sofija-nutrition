@@ -10,7 +10,6 @@ import type {
   BookingStatus, 
   Language, 
   Service, 
-  FeatureFlag,
   CreateBookingRequest,
   TimeSlot,
   Vacation,
@@ -164,17 +163,6 @@ export interface PdfGenerationOptions {
 
 export interface IPdfService {
   generateInvoicePDF(options: PdfGenerationOptions): Promise<Buffer>;
-}
-
-// ============================================
-// Feature Flags Service Types
-// ============================================
-
-export interface IFeatureFlagsService {
-  isFeatureEnabled(featureName: string): Promise<boolean>;
-  getAllFeatureFlags(): Promise<FeatureFlag[]>;
-  updateFeatureFlag(featureId: string, updates: Partial<FeatureFlag>): Promise<FeatureFlag>;
-  clearCache(): void;
 }
 
 // ============================================

@@ -7,8 +7,8 @@
 
 import { app, HttpRequest, InvocationContext } from '@azure/functions';
 import type { HttpResponseInit } from '@azure/functions';
-import { getAvailability } from '../services/availabilityService';
-import { addCorsHeaders } from '../utils/cors';
+import { getAvailability } from '../../services/availabilityService';
+import { addCorsHeaders } from '../../utils/cors';
 
 // ============================================
 // Handler

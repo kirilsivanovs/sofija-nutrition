@@ -61,16 +61,6 @@ export interface LocalizedString {
   en: string;
 }
 
-export interface FeatureFlag {
-  partitionKey: string;  // "FEATURE"
-  rowKey: string;        // featureId
-  featureName: string;
-  description: string;
-  isEnabled: boolean;
-  createdAt: string;
-  lastModifiedAt: string;
-}
-
 export interface AdminSettings {
   partitionKey: string;  // "config"
   rowKey: string;        // setting type
@@ -201,13 +191,11 @@ export interface TableNames {
   settings: string;
   services: string;
   servicesHistory: string;
-  featureFlags: string;
   locks: string;
 }
 
 export interface CacheConfig {
   servicesTtlMs: number;
-  featureFlagsTtlMs: number;
   scheduleTtlMs: number;
 }
 

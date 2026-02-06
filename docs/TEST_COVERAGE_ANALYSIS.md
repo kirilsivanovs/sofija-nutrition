@@ -35,17 +35,10 @@ Current tests only cover basic happy path scenarios.
 - Cancellation logic
 - All error codes and edge cases
 
-### 3. FeatureFlags Service (0% Coverage) ⚠️ HIGH
-No tests for feature flag system that controls functionality availability.
-
-**Created Tests**: `featureFlags-cors.test.ts` - Feature flag and CORS tests
-
-### 4. CORS Middleware (44.44% Coverage) ⚠️ HIGH
+### 3. CORS Middleware (44.44% Coverage) ⚠️ HIGH
 Security-critical component partially tested.
 
-**Created Tests**: Enhanced CORS tests in `featureFlags-cors.test.ts`
-
-### 5. Frontend Utilities (0% Coverage) ⚠️ CRITICAL
+### 4. Frontend Utilities (0% Coverage) ⚠️ CRITICAL
 New utilities added in latest commit are completely untested:
 - `apiClient.ts` - HTTP client with retry logic
 - `booking/formatters.ts` - Data formatting
@@ -309,7 +302,6 @@ describe('Complete Booking Flow', () => {
 |-----------|---------|--------|----------|
 | Admin Functions | 0% | 90% | CRITICAL |
 | BookingService | 18% | 95% | CRITICAL |
-| FeatureFlags | 0% | 100% | HIGH |
 | CORS | 44% | 90% | HIGH |
 | Frontend Utils | 0% | 85% | CRITICAL |
 | Overall API | 54% | 85% | HIGH |
@@ -346,7 +338,7 @@ The current codebase follows SOLID/DRY principles well in production code, but t
 1. ✅ Admin functions now have comprehensive tests
 2. ✅ BookingService extended tests cover edge cases
 3. ✅ Frontend utilities have initial test coverage
-4. ✅ Feature flags and CORS have test coverage
+4. ✅ CORS has test coverage
 
 **Estimated coverage increase**: 54% → 75%+ after running new tests
 

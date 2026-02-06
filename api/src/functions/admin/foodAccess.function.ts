@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { FoodAccessRepository } from '../services/foodAccessRepository';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../utils/authMiddleware';
+import { FoodAccessRepository } from '../../services/foodAccessRepository';
+import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
 
 /**
  * Admin endpoint to list or update food access

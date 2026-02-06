@@ -10,7 +10,8 @@
         },
         {
             "route": "/portal",
-            "allowedRoles": ["authenticated"]
+            "redirect": "/cabinet",
+            "statusCode": 301
         },
         {
             "route": "/admin/*",

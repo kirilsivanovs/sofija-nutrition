@@ -18,15 +18,6 @@ function initializeSeedData() {
     services.forEach(s => servicesTable.set(`${s.partitionKey}-${s.rowKey}`, s));
     mockTables.set('Services', servicesTable);
 
-    // FeatureFlags table
-    const flagsTable = new Map();
-    const flags = [
-        { partitionKey: 'FLAGS', rowKey: 'email_reminders', enabled: true, description: 'Send email reminders' },
-        { partitionKey: 'FLAGS', rowKey: 'cgm_diagnostic_booking', enabled: true, description: 'Allow CGM diagnostic bookings' }
-    ];
-    flags.forEach(f => flagsTable.set(`${f.partitionKey}-${f.rowKey}`, f));
-    mockTables.set('FeatureFlags', flagsTable);
-
     // Bookings table (empty initially)
     mockTables.set('bookings', new Map());
 }

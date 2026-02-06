@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { MealsRepository } from '../services/mealsRepository';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../utils/authMiddleware';
+import { MealsRepository } from '../../services/mealsRepository';
+import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
 
 /**
  * Admin endpoint to fetch meals for any user by date

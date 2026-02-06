@@ -1,30 +1,38 @@
 /**
  * API Entry Point
- * Registers all Azure Functions
+ * Registers all Azure Functions organized by domain
  */
 
-// Register all functions
+// ============================================
+// Booking Domain
+// ============================================
+import './functions/booking/getAvailability.function';
+import './functions/booking/createBooking.function';
+import './functions/booking/confirmPayment.function';
+
+// ============================================
+// Food Tracker Domain
+// ============================================
+import './functions/food/meals.function';
+import './functions/food/foodAccess.function';
+import './functions/food/food-analyze.function';
+import './functions/food/food-estimate.function';
+
+// ============================================
+// Admin Domain
+// ============================================
+import './functions/admin/bookings.function';
+import './functions/admin/settings.function';
+import './functions/admin/serviceSettings.function';
+import './functions/admin/tableData.function';
+import './functions/admin/patients.function';
+import './functions/admin/foodAccess.function';
+import './functions/admin/meals.function';
+
+// ============================================
+// Infrastructure
+// ============================================
 import './functions/health.function';
-import './functions/createBooking.function';
-import './functions/confirmPayment.function';
-import './functions/getAvailability.function';
-
-// Food tracker functions
-import './functions/food-analyze.function';
-import './functions/foodAccess.function';
-import './functions/meals.function';
-
-// Admin functions
-import './functions/adminBookings.function';
-import './functions/adminFoodAccess.function';
-import './functions/adminMeals.function';
-import './functions/adminPatients.function';
-import './functions/adminSettings.function';
-import './functions/adminServiceSettings.function';
-import './functions/adminTableData.function';
-
-// Services with exposed functions (feature flags endpoint)
-import './services/featureFlags';
 
 // Export container for DI
 export { container } from './services';

@@ -172,10 +172,6 @@ app.http('adminBookings', {
    - Требует рефакторинга для экспорта testable functions
    - Альтернатива: E2E тесты через HTTP endpoints
 
-3. **Feature Flags & CORS** (0%):
-   - `tests/featureFlags-cors.test.ts` уже создан
-   - Требует mock для process.env
-
 ## Выводы
 
 ✅ **Все 43 failing теста исправлены**  

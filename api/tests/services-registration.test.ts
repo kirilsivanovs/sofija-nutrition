@@ -27,7 +27,6 @@ describe('Service Registration', () => {
             expect(container.has('bookingRepository')).toBe(true);
             expect(container.has('emailService')).toBe(true);
             expect(container.has('pdfService')).toBe(true);
-            expect(container.has('featureFlags')).toBe(true);
             expect(container.has('holidayService')).toBe(true);
             expect(container.has('availabilityService')).toBe(true);
             expect(container.has('bookingService')).toBe(true);

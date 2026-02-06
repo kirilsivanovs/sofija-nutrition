@@ -12,7 +12,6 @@ import * as bookingRepository from './services/bookingRepository';
 import * as emailService from './services/emailService';
 import * as pdfService from './services/pdfService';
 import { isLatvianHoliday } from './services/latvianHolidays';
-import * as featureFlags from './services/featureFlags';
 
 // Import service classes/functions
 import * as availabilityService from './services/availabilityService';
@@ -38,7 +37,6 @@ export function registerServices(): void {
     container.register('bookingRepository', () => bookingRepository, { singleton: true });
     container.register('emailService', () => emailService, { singleton: true });
     container.register('pdfService', () => pdfService, { singleton: true });
-    container.register('featureFlags', () => featureFlags, { singleton: true });
     container.register<HolidayService>('holidayService', () => ({ isLatvianHoliday }), { singleton: true });
 
     // High-level services (singletons)

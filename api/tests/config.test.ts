@@ -29,7 +29,6 @@ describe('Centralized Configuration', () => {
             expect(config.tables.bookings).toBe('bookings');
             expect(config.tables.settings).toBe('adminSettings');
             expect(config.tables.services).toBe('Services');
-            expect(config.tables.featureFlags).toBe('FeatureFlags');
             expect(config.tables.locks).toBe('slotLocks');
         });
     });
@@ -38,7 +37,6 @@ describe('Centralized Configuration', () => {
         it('should have cache configuration', () => {
             expect(config.cache).toBeDefined();
             expect(config.cache.servicesTtlMs).toBe(5 * 60 * 1000);
-            expect(config.cache.featureFlagsTtlMs).toBe(2 * 60 * 1000);
             expect(config.cache.scheduleTtlMs).toBe(5 * 60 * 1000);
         });
 
@@ -49,8 +47,6 @@ describe('Centralized Configuration', () => {
             
             expect(config.cache.servicesTtlMs).toBeGreaterThanOrEqual(minTtl);
             expect(config.cache.servicesTtlMs).toBeLessThanOrEqual(maxTtl);
-            expect(config.cache.featureFlagsTtlMs).toBeGreaterThanOrEqual(minTtl);
-            expect(config.cache.featureFlagsTtlMs).toBeLessThanOrEqual(maxTtl);
         });
     });
 

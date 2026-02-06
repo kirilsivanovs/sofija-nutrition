@@ -65,7 +65,6 @@ rateLimits: {
 | `bookings` | date | guid | Бронирования |
 | `adminSettings` | "config" | type | Расписание, отпуска |
 | `Services` | "SERVICE" | serviceId | Услуги (кэш 5 мин) |
-| `FeatureFlags` | "FEATURE" | name | Feature toggles (кэш 2 мин) |
 | `ServicesHistory` | serviceId | version | История изменений |
 
 ---
