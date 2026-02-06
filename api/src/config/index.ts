@@ -31,7 +31,7 @@ export const env: EnvConfig = {
   isTest: process.env.NODE_ENV === 'test',
   azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING || '',
   resendApiKey: process.env.RESEND_API_KEY || '',
-  apiBaseUrl: process.env.API_BASE_URL || 'https://sofija-nutrition-api.azurewebsites.net'
+  apiBaseUrl: process.env.API_BASE_URL || ''
 };
 
 // ============================================
