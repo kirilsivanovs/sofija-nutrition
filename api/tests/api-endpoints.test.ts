@@ -70,7 +70,7 @@ describe('API Endpoints', () => {
         beforeAll(() => {
             jest.resetModules();
             mockApp.http.mockClear();
-            require('../src/functions/getAvailability.function');
+            require('../src/functions/booking/getAvailability.function');
             const availabilityCall = mockApp.http.mock.calls.find(call => call[0] === 'getAvailability');
             availabilityHandler = availabilityCall[1].handler;
         });
@@ -146,7 +146,7 @@ describe('API Endpoints', () => {
             jest.resetModules();
             mockApp.http.mockClear();
             process.env.RESEND_API_KEY = 'test-key';
-            require('../src/functions/createBooking.function');
+            require('../src/functions/booking/createBooking.function');
             const bookingCall = mockApp.http.mock.calls.find(call => call[0] === 'createBooking');
             createBookingHandler = bookingCall[1].handler;
         });

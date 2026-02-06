@@ -124,7 +124,7 @@ PR → CI (lint + test + build) → merge to main
 | Secret | Description |
 |--------|-------------|
 | `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWA deployment token |
-| `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` | Function App publish profile |
+| `AZURE_CREDENTIALS` | Service principal JSON for Function App deploy |
 
 ### Manual Deployment
 
