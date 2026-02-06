@@ -399,7 +399,7 @@ import Layout from '../layouts/Layout.astro';
         }
     </style>
 
-    <script>
+    <script define:vars={{ apiBaseUrl: import.meta.env.PUBLIC_API_BASE_URL || '' }}>
         const authActions = document.getElementById('auth-actions');
         const authUser = document.getElementById('auth-user');
         const loginGoogle = document.getElementById('login-google');
@@ -411,13 +411,16 @@ import Layout from '../layouts/Layout.astro';
         const mealsList = document.getElementById('meals-list');
         const mealsEmpty = document.getElementById('meals-empty');
 
-        const diaryDate = document.getElementById('diary-date');
+        const diaryDate = document.getElementById('diary-date') as HTMLInputElement;
         const reloadMeals = document.getElementById('reload-meals');
         const mealForm = document.getElementById('meal-form');
         const mealStatus = document.getElementById('meal-status');
 
         const userName = document.getElementById('user-name');
         let userId = '';
+        
+        // API Base URL (passed from server-side)
+        const API_BASE = apiBaseUrl;
 
         function setAuthLinks() {
             const origin = window.location.origin;
@@ -432,8 +435,8 @@ import Layout from '../layouts/Layout.astro';
             const now = new Date();
             const hour = String(now.getHours()).padStart(2, '0');
             const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
-            const hourSelect = document.getElementById('meal-hour');
-            const minuteSelect = document.getElementById('meal-minute');
+            const hourSelect = document.getElementById('meal-hour') as HTMLSelectElement;
+            const minuteSelect = document.getElementById('meal-minute') as HTMLSelectElement;
             if (hourSelect) hourSelect.value = hour;
             if (minuteSelect) minuteSelect.value = minute;
         }
@@ -459,14 +462,14 @@ import Layout from '../layouts/Layout.astro';
 
                 await loadAccess();
             } catch {
-                authCard?.classList.add('hidden');
+                // Error loading auth
             }
         }
 
         setAuthLinks();
 
         async function loadAccess() {
-            const response = await fetch('/api/food/access');
+            const response = await fetch(`${API_BASE}/api/food/access`);
             if (!response.ok) {
                 return;
             }
@@ -485,8 +488,8 @@ import Layout from '../layouts/Layout.astro';
         }
 
         function buildMealTime() {
-            const hourValue = document.getElementById('meal-hour')?.value || '12';
-            const minuteValue = document.getElementById('meal-minute')?.value || '00';
+            const hourValue = (document.getElementById('meal-hour') as HTMLSelectElement)?.value || '12';
+            const minuteValue = (document.getElementById('meal-minute') as HTMLSelectElement)?.value || '00';
             const [hour, minute] = [hourValue, minuteValue].map(Number);
             const date = new Date(diaryDate?.value || new Date().toISOString().split('T')[0]);
             date.setHours(hour || 0, minute || 0, 0, 0);
@@ -495,12 +498,12 @@ import Layout from '../layouts/Layout.astro';
 
         async function loadMeals() {
             if (!userId || !diaryDate?.value) return;
-            const response = await fetch(`/api/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(diaryDate.value)}`);
+            const response = await fetch(`${API_BASE}/api/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(diaryDate.value)}`);
             const meals = response.ok ? await response.json() : [];
             renderMeals(Array.isArray(meals) ? meals : []);
         }
 
-        function renderMeals(meals) {
+        function renderMeals(meals: any[]) {
             if (!mealsList || !mealsEmpty) return;
             if (!meals.length) {
                 mealsList.innerHTML = '';
@@ -508,16 +511,16 @@ import Layout from '../layouts/Layout.astro';
                 return;
             }
             mealsEmpty.classList.add('hidden');
-            const mealTypeLabels = {
+            const mealTypeLabels: Record<string, string> = {
                 breakfast: 'Brokastis',
                 lunch: 'Pusdienas',
                 dinner: 'Vakariņas',
                 snack: 'Uzkoda'
             };
-            mealsList.innerHTML = meals.map(meal => {
+            mealsList.innerHTML = meals.map((meal: any) => {
                 const time = new Date(meal.createdAt).toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
                 const mealType = mealTypeLabels[meal.mealType] || 'Maltīte';
-                const items = (meal.items || []).map(item => `${item.name} (${item.weight}g)`).join(', ');
+                const items = (meal.items || []).map((item: any) => `${item.name} (${item.weight}g)`).join(', ');
                 return `
                     <div class="portal-meal">
                         <div class="portal-meal-header">
@@ -537,7 +540,7 @@ import Layout from '../layouts/Layout.astro';
         }
 
         async function readPhoto() {
-            const input = document.getElementById('meal-photo');
+            const input = document.getElementById('meal-photo') as HTMLInputElement;
             const file = input?.files?.[0];
             if (!file) return undefined;
             return new Promise(resolve => {
@@ -550,30 +553,30 @@ import Layout from '../layouts/Layout.astro';
         mealForm?.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (!userId) return;
-            const name = document.getElementById('meal-name')?.value?.trim();
-            const weight = Number(document.getElementById('meal-weight')?.value || 0);
+            const name = (document.getElementById('meal-name') as HTMLInputElement)?.value?.trim();
+            const weight = Number((document.getElementById('meal-weight') as HTMLInputElement)?.value || 0);
             if (!name || !weight) return;
 
             if (mealStatus) mealStatus.textContent = 'Saglabā…';
 
             const payload = {
                 userId,
-                mealType: document.getElementById('meal-type')?.value || 'snack',
+                mealType: (document.getElementById('meal-type') as HTMLSelectElement)?.value || 'snack',
                 createdAt: buildMealTime(),
                 photoUrl: await readPhoto(),
                 items: [{
                     name,
                     nameEn: name,
                     weight,
-                    calories: Number(document.getElementById('meal-calories')?.value || 0),
-                    protein: Number(document.getElementById('meal-protein')?.value || 0),
-                    fat: Number(document.getElementById('meal-fat')?.value || 0),
-                    carbs: Number(document.getElementById('meal-carbs')?.value || 0)
+                    calories: Number((document.getElementById('meal-calories') as HTMLInputElement)?.value || 0),
+                    protein: Number((document.getElementById('meal-protein') as HTMLInputElement)?.value || 0),
+                    fat: Number((document.getElementById('meal-fat') as HTMLInputElement)?.value || 0),
+                    carbs: Number((document.getElementById('meal-carbs') as HTMLInputElement)?.value || 0)
                 }]
             };
 
             try {
-                const response = await fetch('/api/meals', {
+                const response = await fetch(`${API_BASE}/api/meals`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
