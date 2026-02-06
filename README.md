@@ -481,12 +481,6 @@ AZURE_STORAGE_CONNECTION_STRING=<connection_string>
 EMAIL_CONNECTION_STRING=<azure_communication_services>
 ```
 
-**Deployment:**
-1. Пуш в `main` ветку
-2. GitHub Actions автоматически деплоит
-3. Frontend → Azure Static Web Apps
-4. Backend → Azure Functions (автоматически вместе с SWA)
-
 **Стоимость production:**
 - Azure Table Storage: €0.10/мес
 - Azure Functions: €0 (до 1M запросов)
@@ -751,7 +745,6 @@ GET http://localhost:7071/api/availability/2026-02-15
 cd api
 npm test              # Unit тесты
 npm run test:integration  # С Azurite
-npm run test:e2e      # E2E (Playwright)
 ```
 
 ---
