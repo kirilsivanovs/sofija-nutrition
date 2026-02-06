@@ -7,9 +7,11 @@ on:
       - 'src/**'
       - 'public/**'
       - 'shared/**'
+      - 'tests/**'
       - 'astro.config.mjs'
       - 'package.json'
       - 'tsconfig.json'
+      - 'jest.config.cjs'
       - '.github/workflows/azure-static-web-apps.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
@@ -18,9 +20,11 @@ on:
       - 'src/**'
       - 'public/**'
       - 'shared/**'
+      - 'tests/**'
       - 'astro.config.mjs'
       - 'package.json'
       - 'tsconfig.json'
+      - 'jest.config.cjs'
       - '.github/workflows/azure-static-web-apps.yml'
   workflow_dispatch:
 
@@ -30,9 +34,35 @@ permissions:
 
 jobs:
   # ============================================
+  # Тесты фронтенда + shared — всегда (PR + push)
+  # ============================================
+  test:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: 🧪 Unit Tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run frontend tests
+        run: npm test
+
+      - name: Run shared tests
+        run: npm run test:shared
+
+  # ============================================
   # Сборка и деплой (staging для PR, production для main)
   # ============================================
   build_and_deploy:
+    needs: test
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: 🚀 Build and Deploy
@@ -152,7 +182,7 @@ jobs:
   # Auto-merge: все тесты прошли — мержим в main
   # ============================================
   auto_merge:
-    needs: [build_and_deploy, e2e]
+    needs: [test, build_and_deploy, e2e]
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 🔀 Auto-merge PR

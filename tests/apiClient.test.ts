@@ -14,14 +14,14 @@ let apiClient: any;
 
 beforeEach(async () => {
     jest.resetModules();
-    (global.fetch as jest.MockedFunction<typeof fetch>).mockClear();
+    (global.fetch as jest.MockedFunction<typeof fetch>).mockReset();
     
     // Dynamically import to get fresh module
     apiClient = await import('../src/utils/apiClient');
 });
 
 afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
 });
 
 // ============================================

@@ -4,7 +4,7 @@
  * Tests for centralized booking state
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import {
     getBookingState,
     getCurrentStep,
@@ -12,20 +12,19 @@ import {
     isLoading,
     isSubmitting,
     getFormData,
-    setFormField,
-    setMultipleFields,
-    clearForm,
-    setStep,
+    setField,
+    setFields,
+    resetFormData,
+    goToStep,
     nextStep,
     previousStep,
     setLoading,
     setSubmitting,
     setError,
     clearError,
-    clearAllErrors,
+    clearErrors,
     setAvailableSlots,
-    subscribe,
-    unsubscribe
+    subscribe
 } from '../src/utils/booking/state';
 
 // ============================================
@@ -33,8 +32,8 @@ import {
 // ============================================
 
 beforeEach(() => {
-    clearForm();
-    clearAllErrors();
+    resetFormData();
+    clearErrors();
 });
 
 // ============================================
@@ -58,7 +57,7 @@ describe('State Getters', () => {
     });
 
     it('should check if on specific step', () => {
-        setStep(1);
+        goToStep(1);
         expect(isOnStep(1)).toBe(true);
         expect(isOnStep(2)).toBe(false);
     });
@@ -83,14 +82,14 @@ describe('State Getters', () => {
 
 describe('Form Field Management', () => {
     it('should set single form field', () => {
-        setFormField('name', 'John Doe');
+        setField('name', 'John Doe');
         const state = getBookingState();
         
         expect(state.name).toBe('John Doe');
     });
 
     it('should set multiple fields at once', () => {
-        setMultipleFields({
+        setFields({
             name: 'John Doe',
             email: 'john@example.com',
             phone: '+37120000000'
@@ -103,8 +102,8 @@ describe('Form Field Management', () => {
     });
 
     it('should update existing field', () => {
-        setFormField('name', 'John');
-        setFormField('name', 'Jane');
+        setField('name', 'John');
+        setField('name', 'Jane');
         
         const state = getBookingState();
         expect(state.name).toBe('Jane');
@@ -123,7 +122,7 @@ describe('Form Field Management', () => {
             language: 'lv' as const
         };
 
-        setMultipleFields(fields);
+        setFields(fields);
         const state = getBookingState();
 
         expect(state.service).toBe(fields.service);
@@ -138,12 +137,12 @@ describe('Form Field Management', () => {
     });
 
     it('should clear form', () => {
-        setMultipleFields({
+        setFields({
             name: 'John Doe',
             email: 'john@example.com'
         });
         
-        clearForm();
+        resetFormData();
         const state = getBookingState();
         
         expect(state.name).toBeUndefined();
@@ -157,24 +156,24 @@ describe('Form Field Management', () => {
 
 describe('Step Navigation', () => {
     it('should set step directly', () => {
-        setStep(2);
+        goToStep(2);
         expect(getCurrentStep()).toBe(2);
     });
 
     it('should go to next step', () => {
-        setStep(1);
+        goToStep(1);
         nextStep();
         expect(getCurrentStep()).toBe(2);
     });
 
     it('should go to previous step', () => {
-        setStep(2);
+        goToStep(2);
         previousStep();
         expect(getCurrentStep()).toBe(1);
     });
 
     it('should not go below step 1', () => {
-        setStep(1);
+        goToStep(1);
         previousStep();
         expect(getCurrentStep()).toBe(1);
     });
@@ -183,14 +182,14 @@ describe('Step Navigation', () => {
         const state = getBookingState();
         const totalSteps = state.totalSteps;
         
-        setStep(totalSteps);
+        goToStep(totalSteps);
         nextStep();
         
         expect(getCurrentStep()).toBe(totalSteps);
     });
 
     it('should handle step navigation sequence', () => {
-        setStep(1);
+        goToStep(1);
         expect(getCurrentStep()).toBe(1);
         
         nextStep();
@@ -269,7 +268,7 @@ describe('Error Management', () => {
         setError('email', 'Invalid email');
         setError('phone', 'Invalid phone');
         
-        clearAllErrors();
+        clearErrors();
         const state = getBookingState();
         
         expect(Object.keys(state.errors)).toHaveLength(0);
@@ -336,11 +335,11 @@ describe('State Subscriptions', () => {
         let callCount = 0;
         const listener = () => { callCount++; };
         
-        subscribe(listener);
-        setFormField('name', 'Test');
+        const unsub = subscribe(listener);
+        setField('name', 'Test');
         
         expect(callCount).toBeGreaterThan(0);
-        unsubscribe(listener);
+        unsub();
     });
 
     it('should notify multiple subscribers', () => {
@@ -350,28 +349,28 @@ describe('State Subscriptions', () => {
         const listener1 = () => { count1++; };
         const listener2 = () => { count2++; };
         
-        subscribe(listener1);
-        subscribe(listener2);
+        const unsub1 = subscribe(listener1);
+        const unsub2 = subscribe(listener2);
         
-        setFormField('name', 'Test');
+        setField('name', 'Test');
         
         expect(count1).toBeGreaterThan(0);
         expect(count2).toBeGreaterThan(0);
         
-        unsubscribe(listener1);
-        unsubscribe(listener2);
+        unsub1();
+        unsub2();
     });
 
     it('should unsubscribe listener', () => {
         let callCount = 0;
         const listener = () => { callCount++; };
         
-        subscribe(listener);
-        setFormField('name', 'First');
+        const unsub = subscribe(listener);
+        setField('name', 'First');
         const firstCount = callCount;
         
-        unsubscribe(listener);
-        setFormField('name', 'Second');
+        unsub();
+        setField('name', 'Second');
         
         expect(callCount).toBe(firstCount);
     });
@@ -380,13 +379,13 @@ describe('State Subscriptions', () => {
         let receivedState: any = null;
         const listener = (state: any) => { receivedState = state; };
         
-        subscribe(listener);
-        setFormField('name', 'Test User');
+        const unsub = subscribe(listener);
+        setField('name', 'Test User');
         
         expect(receivedState).toBeTruthy();
         expect(receivedState.name).toBe('Test User');
         
-        unsubscribe(listener);
+        unsub();
     });
 });
 
@@ -397,7 +396,7 @@ describe('State Subscriptions', () => {
 describe('State Immutability', () => {
     it('should return new state object on change', () => {
         const state1 = getBookingState();
-        setFormField('name', 'Test');
+        setField('name', 'Test');
         const state2 = getBookingState();
         
         expect(state1).not.toBe(state2);
@@ -422,18 +421,18 @@ describe('State Immutability', () => {
 describe('Complex Booking Workflows', () => {
     it('should handle complete booking flow', () => {
         // Step 1: Service selection
-        setStep(1);
-        setFormField('service', 'initial');
-        setFormField('consultationFormat', 'online');
+        goToStep(1);
+        setField('service', 'initial');
+        setField('consultationFormat', 'online');
         nextStep();
         
         // Step 2: Date & Time
-        setFormField('date', '2026-02-15');
-        setFormField('time', '10:00');
+        setField('date', '2026-02-15');
+        setField('time', '10:00');
         nextStep();
         
         // Step 3: Personal info
-        setMultipleFields({
+        setFields({
             name: 'John Doe',
             email: 'john@example.com',
             phone: '+37120000000'
@@ -446,8 +445,8 @@ describe('Complex Booking Workflows', () => {
     });
 
     it('should handle validation errors during flow', () => {
-        setStep(1);
-        setFormField('service', 'initial');
+        goToStep(1);
+        setField('service', 'initial');
         
         // Try to advance without required fields
         setError('date', 'Date is required');
@@ -458,8 +457,8 @@ describe('Complex Booking Workflows', () => {
     });
 
     it('should handle back navigation with preserved data', () => {
-        setFormField('name', 'John Doe');
-        setStep(2);
+        setField('name', 'John Doe');
+        goToStep(2);
         
         previousStep();
         
@@ -471,7 +470,7 @@ describe('Complex Booking Workflows', () => {
     it('should clear errors when changing steps', () => {
         setError('email', 'Invalid email');
         nextStep();
-        clearAllErrors();
+        clearErrors();
         
         const state = getBookingState();
         expect(Object.keys(state.errors)).toHaveLength(0);
@@ -485,7 +484,7 @@ describe('Complex Booking Workflows', () => {
 describe('Edge Cases', () => {
     it('should handle rapid state changes', () => {
         for (let i = 0; i < 100; i++) {
-            setFormField('name', `User ${i}`);
+            setField('name', `User ${i}`);
         }
         
         const state = getBookingState();
@@ -494,9 +493,9 @@ describe('Edge Cases', () => {
 
     it('should handle concurrent updates', async () => {
         const updates = [
-            setFormField('name', 'User 1'),
-            setFormField('email', 'user1@test.com'),
-            setFormField('phone', '+37120000001'),
+            setField('name', 'User 1'),
+            setField('email', 'user1@test.com'),
+            setField('phone', '+37120000001'),
         ];
         
         await Promise.all(updates);
@@ -508,8 +507,8 @@ describe('Edge Cases', () => {
     });
 
     it('should handle empty strings', () => {
-        setFormField('name', '');
-        setFormField('message', '');
+        setField('name', '');
+        setField('message', '');
         
         const state = getBookingState();
         expect(state.name).toBe('');
@@ -517,7 +516,7 @@ describe('Edge Cases', () => {
     });
 
     it('should handle special characters in fields', () => {
-        setMultipleFields({
+        setFields({
             name: 'Jānis Bērziņš',
             message: 'Special chars: <>&"\''
         });
@@ -529,15 +528,15 @@ describe('Edge Cases', () => {
 
     it('should handle very long strings', () => {
         const longString = 'a'.repeat(10000);
-        setFormField('message', longString);
+        setField('message', longString);
         
         const state = getBookingState();
         expect(state.message).toHaveLength(10000);
     });
 
     it('should handle null/undefined values', () => {
-        setFormField('name', undefined as any);
-        setFormField('email', null as any);
+        setField('name', undefined as any);
+        setField('email', null as any);
         
         const state = getBookingState();
         // Should handle gracefully
@@ -553,21 +552,21 @@ describe('Performance', () => {
     it('should handle many subscribers efficiently', () => {
         const listeners = Array.from({ length: 100 }, () => jest.fn());
         
-        listeners.forEach(listener => subscribe(listener));
+        const unsubs = listeners.map(listener => subscribe(listener));
         
-        setFormField('name', 'Test');
+        setField('name', 'Test');
         
         listeners.forEach(listener => {
             expect(listener).toHaveBeenCalled();
-            unsubscribe(listener);
         });
+        unsubs.forEach(unsub => unsub());
     });
 
     it('should handle large state objects', () => {
         const largeMessage = 'x'.repeat(100000);
         
         const start = Date.now();
-        setFormField('message', largeMessage);
+        setField('message', largeMessage);
         const duration = Date.now() - start;
         
         expect(duration).toBeLessThan(100); // Should be fast
