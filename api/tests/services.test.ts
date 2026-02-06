@@ -411,9 +411,10 @@ describe('Config Module', () => {
     });
 
     describe('API Base URL', () => {
-        it('should have API base URL', () => {
+        it('should have API base URL defined', () => {
             expect(config.API_BASE_URL).toBeDefined();
-            expect(config.API_BASE_URL).toContain('http');
+            // Empty string is valid — means API is co-located (SWA managed API)
+            expect(typeof config.API_BASE_URL).toBe('string');
         });
     });
 });

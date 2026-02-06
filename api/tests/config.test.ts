@@ -17,9 +17,10 @@ describe('Centralized Configuration', () => {
             expect(config.env.isTest).toBe(true);
         });
 
-        it('should have API base URL', () => {
+        it('should have API base URL defined', () => {
             expect(config.env.apiBaseUrl).toBeDefined();
-            expect(config.env.apiBaseUrl).toMatch(/^https?:\/\//);
+            // Empty string is valid — means API is co-located (SWA managed API)
+            expect(typeof config.env.apiBaseUrl).toBe('string');
         });
     });
 
