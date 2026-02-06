@@ -4,10 +4,26 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'shared/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'tsconfig.json'
+      - '.github/workflows/azure-static-web-apps.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'shared/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'tsconfig.json'
+      - '.github/workflows/azure-static-web-apps.yml'
   # Scheduled cleanup - каждый день в 3:00 UTC
   schedule:
     - cron: '0 3 * * *'
