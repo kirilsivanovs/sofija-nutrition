@@ -710,6 +710,27 @@ import Layout from '../layouts/Layout.astro';
         }
         .meal-item-delete:hover { color: #ef4444; background: #fef2f2; }
 
+        /* Section totals row */
+        .meal-section-totals {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-top: 1.5px solid var(--diary-border);
+            background: var(--diary-warm);
+        }
+        .meal-section-totals-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--diary-text);
+        }
+        .meal-section-totals-values {
+            font-size: 12px;
+            color: var(--diary-text-dim);
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
         /* Day empty */
         .day-empty {
             text-align: center;
@@ -1230,7 +1251,8 @@ import Layout from '../layouts/Layout.astro';
                 if (!container) return;
 
                 const meals = allMeals.filter(m => m.mealType === type);
-                let sectionCal = 0;
+                let sectionCal = 0, sectionP = 0, sectionF = 0, sectionC = 0;
+                let sectionItems = 0;
                 let html = '';
 
                 meals.forEach(meal => {
@@ -1240,11 +1262,15 @@ import Layout from '../layouts/Layout.astro';
                         const f = Number(item.fat || 0);
                         const c = Number(item.carbs || 0);
                         sectionCal += cal;
+                        sectionP += p;
+                        sectionF += f;
+                        sectionC += c;
                         grandCal += cal;
                         grandP += p;
                         grandF += f;
                         grandC += c;
                         totalItems++;
+                        sectionItems++;
 
                         html += `
                             <div class="meal-item-row" data-meal-id="${escapeHtml(meal.RowKey)}" data-meal-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" >
@@ -1263,6 +1289,17 @@ import Layout from '../layouts/Layout.astro';
                             </div>`;
                     });
                 });
+
+                // Section totals row (only when more than 1 item)
+                if (sectionItems > 1) {
+                    html += `
+                        <div class="meal-section-totals">
+                            <span class="meal-section-totals-label">Kopā</span>
+                            <span class="meal-section-totals-values">
+                                ${Math.round(sectionCal)} kcal · Obv. ${Math.round(sectionP*10)/10}g · Tauki ${Math.round(sectionF*10)/10}g · Ogh. ${Math.round(sectionC*10)/10}g
+                            </span>
+                        </div>`;
+                }
 
                 container.innerHTML = html;
                 if (kcalLabel) kcalLabel.textContent = sectionCal > 0 ? `${Math.round(sectionCal)} kcal` : '';
