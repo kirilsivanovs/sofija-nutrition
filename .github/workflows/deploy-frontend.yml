@@ -35,6 +35,6 @@ jobs:
           app_build_command: npm run build
           # Managed API — deploys Functions alongside frontend
           api_location: api
-          api_build_command: npm run build --prefix api
+          api_build_command: npm run build
         env:
           NODE_VERSION: 20
