@@ -10,7 +10,11 @@ const redactString = (value) => {
   return value
     .replace(/authorization:\s*bearer\s+[^\s]+/ig, 'authorization: Bearer [REDACTED]')
     .replace(/x-e2e-token\s*[:=]\s*[^\s]+/ig, 'x-e2e-token=[REDACTED]')
-    .replace(/e2e[_-]?test[_-]?token\s*[:=]\s*[^\s]+/ig, 'E2E_TEST_TOKEN=[REDACTED]');
+    .replace(/e2e[_-]?test[_-]?token\s*[:=]\s*[^\s]+/ig, 'E2E_TEST_TOKEN=[REDACTED]')
+    .replace(/([?&]apiKey=)[^&\s]+/ig, '$1[REDACTED]')
+    .replace(/([?&]key=)[^&\s]+/ig, '$1[REDACTED]')
+    .replace(/(apiKey\s*[:=]\s*)[^\s]+/ig, '$1[REDACTED]')
+    .replace(/(\bkey\s*[:=]\s*)[^\s]+/ig, '$1[REDACTED]');
 };
 
 const redactArg = (arg) => {
