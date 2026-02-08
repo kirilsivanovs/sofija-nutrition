@@ -197,6 +197,7 @@ import Layout from '../layouts/Layout.astro';
             </button>
         </div>
 
+        <div class="sheet-body">
         <!-- Tabs: Manual / Favorites / Recent -->
         <div class="sheet-tabs">
             <button class="sheet-tab active" data-sheet-tab="manual">
@@ -284,6 +285,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div id="sheet-status" class="sheet-status"></div>
+        </div><!-- .sheet-body -->
     </div>
 
     <!-- ============ FAB (Mobile add button) ============ -->
@@ -620,21 +622,39 @@ import Layout from '../layouts/Layout.astro';
             aspect-ratio: 1;
             width: 100%;
             border-radius: 10px;
-            border: 1.5px solid #dbeafe;
-            background: #f0f7ff;
+            border: 1.5px solid #e0e7ee;
+            background: #f8fafc;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            font-size: 17px;
-            color: #93c5fd;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 18px;
+            color: #cbd5e1;
+            position: relative;
+            overflow: hidden;
         }
+        .water-cup::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0%;
+            background: linear-gradient(180deg, #93c5fd 0%, #3b82f6 100%);
+            transition: height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: inherit;
+            z-index: 0;
+        }
+        .water-cup i { position: relative; z-index: 1; transition: color 0.3s, transform 0.3s; }
         .water-cup.filled {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            border-color: #3b82f6;
+            border-color: #93c5fd;
             color: #fff;
         }
-        .water-cup:hover { transform: scale(1.08); }
+        .water-cup.filled::before {
+            height: 100%;
+        }
+        .water-cup.filled i { transform: scale(1.1); }
+        .water-cup:hover { transform: scale(1.08); border-color: #93c5fd; }
         .water-cup:active { transform: scale(0.93); }
 
         /* ---- Meal Sections ---- */
@@ -797,11 +817,13 @@ import Layout from '../layouts/Layout.astro';
             z-index: 101;
             background: #fff;
             border-radius: 20px 20px 0 0;
-            max-height: 92vh;
-            overflow-y: auto;
+            max-height: 96dvh;
+            display: flex;
+            flex-direction: column;
             transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-            padding: 0 20px 32px;
+            padding: 0 20px;
+            padding-bottom: env(safe-area-inset-bottom, 16px);
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.12);
         }
         .add-sheet.visible { transform: translateY(0); }
@@ -821,12 +843,14 @@ import Layout from '../layouts/Layout.astro';
             border-radius: 2px;
             background: #d1d5db;
             margin: 10px auto 8px;
+            flex-shrink: 0;
         }
         .sheet-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 8px 0 12px;
+            flex-shrink: 0;
         }
         .sheet-header h3 {
             margin: 0;
@@ -849,6 +873,14 @@ import Layout from '../layouts/Layout.astro';
         }
         .sheet-close:hover { background: var(--diary-border); }
 
+        /* Sheet body scrollable */
+        .sheet-body {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+        }
+
         /* Sheet tabs */
         .sheet-tabs {
             display: flex;
@@ -857,6 +889,7 @@ import Layout from '../layouts/Layout.astro';
             border-radius: 12px;
             padding: 4px;
             margin-bottom: 16px;
+            flex-shrink: 0;
         }
         .sheet-tab {
             flex: 1;
@@ -879,7 +912,7 @@ import Layout from '../layouts/Layout.astro';
         .sheet-tab i { font-size: 16px; }
 
         /* Form styles in sheet */
-        .add-food-form { display: flex; flex-direction: column; gap: 14px; }
+        .add-food-form { display: flex; flex-direction: column; gap: 12px; }
         .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group label {
             font-size: 12px;
@@ -890,21 +923,22 @@ import Layout from '../layouts/Layout.astro';
         }
         .form-group input[type="text"],
         .form-group input[type="number"] {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1.5px solid var(--diary-border);
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             color: var(--diary-text);
             background: #fff;
             transition: border-color 0.2s;
             font-family: var(--font-sans, 'Inter', sans-serif);
+            width: 100%;
         }
         .form-group input:focus {
             outline: none;
             border-color: var(--diary-green);
         }
-        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
         /* Photo */
         .photo-label {
