@@ -18,15 +18,16 @@
     "sync:translations": "node -e \"require('fs').copyFileSync('shared/translations.js', 'public/assets/shared-translations.js'); console.log('Translations synced!')\"",
     "test": "jest --verbose",
     "test:shared": "cd shared && npm test",
-    "test:all": "npm test && npm run test:shared && cd api && npm test"
+    "test:all": "npm test && npm run test:shared && cd api && npm test",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@astrojs/vercel": "^9.0.4",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.11",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "ts-jest": "^29.4.6",

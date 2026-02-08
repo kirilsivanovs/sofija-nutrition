@@ -1,0 +1,129 @@
+# ============================================
+# Deploy Static Web App Preview (Frontend + Managed API)
+# Triggers on pull requests to main
+# ============================================
+name: Deploy Frontend Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'shared/**'
+      - 'api/**'
+      - 'astro.config.mjs'
+      - 'tsconfig.json'
+      - 'package.json'
+      - 'package-lock.json'
+
+concurrency:
+  group: deploy-frontend-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Preview to Azure Static Web Apps
+    runs-on: ubuntu-latest
+    if: ${{ github.event.action != 'closed' && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      deployments: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Azure Static Web Apps
+        id: deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          # ── Build config ──
+          app_location: /
+          output_location: dist
+          app_build_command: npm run build
+          # Managed API — deploys Functions alongside frontend
+          api_location: api
+          api_build_command: npm run build
+        env:
+          NODE_VERSION: 20
+
+  e2e:
+    name: E2E (Preview)
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: ${{ github.event.action != 'closed' && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      deployments: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Resolve preview URL
+        id: preview_url
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.payload.pull_request?.head?.sha || context.sha;
+            const deployments = await github.rest.repos.listDeployments({
+              owner,
+              repo,
+              ref: sha,
+              per_page: 20,
+            });
+
+            if (!deployments.data.length) {
+              core.setFailed('No deployments found for this ref.');
+              return;
+            }
+
+            for (const deployment of deployments.data) {
+              const statuses = await github.rest.repos.listDeploymentStatuses({
+                owner,
+                repo,
+                deployment_id: deployment.id,
+                per_page: 20,
+              });
+
+              const success = statuses.data.find(
+                (status) => status.state === 'success' && status.environment_url
+              );
+
+              if (success?.environment_url) {
+                core.setOutput('url', success.environment_url);
+                return;
+              }
+            }
+
+            core.setFailed('No successful deployment URL found.');
+
+      - name: Run e2e tests
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.preview_url.outputs.url }}
+        run: npm run test:e2e
+
+  close:
+    name: Close Preview Environment
+    runs-on: ubuntu-latest
+    if: ${{ github.event.action == 'closed' && github.event_name == 'pull_request' }}
+    steps:
+      - name: Close Azure Static Web Apps preview
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: close

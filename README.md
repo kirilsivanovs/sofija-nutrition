@@ -114,9 +114,10 @@ npm run test:all
 ### CI/CD Pipeline
 
 ```
-PR → CI (lint + test + build) → merge to main
-  ├── src/ changed  → Deploy Frontend (SWA)
-  └── api/ changed  → Deploy API (Function App)
+PR → CI + CodeQL → Preview Deploy (SWA) → E2E (Preview)
+  └── merge to main after all checks pass
+
+main → Deploy Frontend (SWA) with managed API
 ```
 
 ### Required GitHub Secrets
@@ -124,15 +125,15 @@ PR → CI (lint + test + build) → merge to main
 | Secret | Description |
 |--------|-------------|
 | `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWA deployment token |
-| `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` | Function App publish profile |
+
+### Branch Protection + Auto-merge (recommended)
+
+- Require status checks: `CI`, `CodeQL`, `Deploy Frontend Preview`, `E2E (Preview)`
+- Enable auto-merge to merge PRs automatically after all checks succeed
 
 ### Manual Deployment
 
 ```bash
-# Build & deploy API
-cd api && npm run build
-func azure functionapp publish sofija-nutrition-api --javascript
-
 # Frontend deploys automatically via SWA GitHub integration
 ```
 
