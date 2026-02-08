@@ -2,907 +2,1493 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Pacienta kabinets">
-    <section class="portal-hero">
-        <div class="portal-container">
-            <div class="portal-header">
-                <a href="/" class="portal-logo">
-                    <img src="/assets/img/logo.svg" alt="SI Logo" class="portal-logo-img" />
-                    <div class="portal-logo-text">
-                        <span class="portal-logo-name">Sofija Ivanova</span>
-                        <span class="portal-logo-sub">Pacienta kabinets</span>
-                    </div>
+<Layout title="Uztura dienasgrāmata — Pacienta kabinets">
+    <!-- ============ HEADER ============ -->
+    <header class="diary-header">
+        <div class="diary-container">
+            <a href="/" class="diary-logo">
+                <img src="/assets/img/logo.svg" alt="SI" class="diary-logo-img" />
+                <div class="diary-logo-text">
+                    <span class="diary-logo-name">Sofija Ivanova</span>
+                    <span class="diary-logo-sub">Uztura dienasgrāmata</span>
+                </div>
+            </a>
+            <div id="auth-actions" class="diary-auth">
+                <a class="btn-login" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">
+                    <i class="ph ph-sign-in"></i> Pieslēgties
                 </a>
-                <div class="portal-auth" id="auth-actions">
-                    <!-- Google login temporary disabled until configured in Azure Portal - see docs/GOOGLE_AUTH_SETUP.md -->
-                    <!-- <a class="btn-secondary" id="login-google" href="/.auth/login/google?post_login_redirect_uri=/cabinet">Pieslēgties ar Google</a> -->
-                    <a class="btn-primary" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">Pieslēgties</a>
-                </div>
-                <div class="portal-auth hidden" id="auth-user">
-                    <div class="portal-user-inline">
-                        <span id="user-name" class="portal-user-name">—</span>
-                        <a class="portal-logout" id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/cabinet">
-                            <i class="ph ph-sign-out"></i>
-                            <span>Iziet</span>
-                        </a>
-                    </div>
-                </div>
+            </div>
+            <div id="auth-user" class="diary-auth hidden">
+                <span id="user-name" class="diary-user-name"></span>
+                <a id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/cabinet" class="btn-logout">
+                    <i class="ph ph-sign-out"></i>
+                </a>
             </div>
         </div>
-    </section>
+    </header>
 
-    <div class="mobile-tab-select">
-        <select class="mobile-tab-dropdown" aria-label="Kabineta izvēlne">
-            <option value="meals" selected>Uztura dienasgrāmata</option>
-        </select>
+    <!-- ============ AUTH SCREENS ============ -->
+    <div id="login-hint" class="diary-fullscreen">
+        <div class="diary-empty-state">
+            <i class="ph ph-lock-simple"></i>
+            <h2>Pieslēdzieties</h2>
+            <p>Lai piekļūtu uztura dienasgrāmatai, lūdzu autorizējieties.</p>
+        </div>
     </div>
 
-    <nav class="admin-nav" aria-label="Kabineta izvēlne">
-        <div class="admin-nav-inner">
-            <button class="admin-tab active" type="button">
-                <i class="ph ph-bowl-food"></i>
-                <span>Uztura dienasgrāmata</span>
+    <div id="no-access" class="diary-fullscreen hidden">
+        <div class="diary-empty-state">
+            <i class="ph ph-prohibit"></i>
+            <h2>Nav aktivizēta</h2>
+            <p>Uztura dienasgrāmata vēl nav aktivizēta. Sazinieties ar savu speciālisti.</p>
+        </div>
+    </div>
+
+    <!-- ============ MAIN DIARY ============ -->
+    <main id="diary" class="diary-main hidden">
+        <!-- Day Navigation -->
+        <div class="day-nav">
+            <button id="day-prev" class="day-nav-btn" aria-label="Iepriekšējā diena">
+                <i class="ph ph-caret-left"></i>
+            </button>
+            <button id="day-today" class="day-nav-date">
+                <span id="day-label">Šodien</span>
+                <span id="day-date-sub" class="day-date-sub"></span>
+            </button>
+            <button id="day-next" class="day-nav-btn" aria-label="Nākamā diena">
+                <i class="ph ph-caret-right"></i>
             </button>
         </div>
-    </nav>
+        <input id="diary-date" type="date" class="hidden-date-input" />
 
-    <section class="portal-content">
-        <div class="portal-container">
-            <div id="login-hint" class="card portal-card">
-                <h3>Pieslēdzieties, lai turpinātu</h3>
-                <p>Lai piekļūtu uztura dienasgrāmatai, lūdzu autorizējieties ar Google vai Microsoft.</p>
+        <!-- Summary Ring -->
+        <section class="summary-card">
+            <div class="summary-ring-wrap">
+                <svg class="summary-ring" viewBox="0 0 120 120">
+                    <circle class="ring-bg" cx="60" cy="60" r="52" />
+                    <circle class="ring-fill" id="cal-ring" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="ring-text">
+                    <span class="ring-eaten" id="ring-eaten">0</span>
+                    <span class="ring-label">no <span id="ring-target">2000</span></span>
+                    <span class="ring-unit">kcal</span>
+                </div>
             </div>
-
-            <div id="no-access" class="card hidden">
-                <h3>Uztura dienasgrāmata nav aktivizēta</h3>
-                <p>Lai aktivizētu, lūdzu sazinieties ar administratoru.</p>
+            <div class="macro-bars">
+                <div class="macro-bar-item">
+                    <div class="macro-bar-header">
+                        <span class="macro-name">Olbaltumv.</span>
+                        <span class="macro-value"><span id="macro-protein">0</span>/<span id="macro-protein-target">120</span>g</span>
+                    </div>
+                    <div class="macro-track"><div class="macro-fill macro-fill-protein" id="bar-protein"></div></div>
+                </div>
+                <div class="macro-bar-item">
+                    <div class="macro-bar-header">
+                        <span class="macro-name">Tauki</span>
+                        <span class="macro-value"><span id="macro-fat">0</span>/<span id="macro-fat-target">65</span>g</span>
+                    </div>
+                    <div class="macro-track"><div class="macro-fill macro-fill-fat" id="bar-fat"></div></div>
+                </div>
+                <div class="macro-bar-item">
+                    <div class="macro-bar-header">
+                        <span class="macro-name">Ogļhidrāti</span>
+                        <span class="macro-value"><span id="macro-carbs">0</span>/<span id="macro-carbs-target">250</span>g</span>
+                    </div>
+                    <div class="macro-track"><div class="macro-fill macro-fill-carbs" id="bar-carbs"></div></div>
+                </div>
             </div>
+        </section>
 
-            <div id="diary" class="hidden">
-                <div class="card portal-card">
-                    <div class="portal-controls">
-                        <div>
-                            <label>Datums</label>
-                            <input id="diary-date" type="date" />
-                        </div>
-                        <div class="portal-actions">
-                            <button id="reload-meals" class="btn-secondary">Atjaunot</button>
-                        </div>
+        <!-- Water Tracker -->
+        <section class="water-card">
+            <div class="water-header">
+                <div class="water-title">
+                    <i class="ph ph-drop"></i>
+                    <span>Ūdens</span>
+                </div>
+                <span class="water-count"><span id="water-current">0</span> / <span id="water-goal">8</span> glāzes</span>
+            </div>
+            <div class="water-cups" id="water-cups"></div>
+        </section>
+
+        <!-- Meal Sections -->
+        <section class="meal-section" data-meal-type="breakfast">
+            <div class="meal-section-header">
+                <div class="meal-section-title">
+                    <i class="ph ph-sun-horizon"></i>
+                    <h3>Brokastis</h3>
+                </div>
+                <div class="meal-section-info">
+                    <span class="meal-section-kcal" data-section-kcal>0 kcal</span>
+                    <button class="meal-add-btn" data-add-meal="breakfast" aria-label="Pievienot brokastis">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="meal-section-items" data-meal-items="breakfast"></div>
+        </section>
+
+        <section class="meal-section" data-meal-type="lunch">
+            <div class="meal-section-header">
+                <div class="meal-section-title">
+                    <i class="ph ph-sun"></i>
+                    <h3>Pusdienas</h3>
+                </div>
+                <div class="meal-section-info">
+                    <span class="meal-section-kcal" data-section-kcal>0 kcal</span>
+                    <button class="meal-add-btn" data-add-meal="lunch" aria-label="Pievienot pusdienas">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="meal-section-items" data-meal-items="lunch"></div>
+        </section>
+
+        <section class="meal-section" data-meal-type="dinner">
+            <div class="meal-section-header">
+                <div class="meal-section-title">
+                    <i class="ph ph-moon-stars"></i>
+                    <h3>Vakariņas</h3>
+                </div>
+                <div class="meal-section-info">
+                    <span class="meal-section-kcal" data-section-kcal>0 kcal</span>
+                    <button class="meal-add-btn" data-add-meal="dinner" aria-label="Pievienot vakariņas">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="meal-section-items" data-meal-items="dinner"></div>
+        </section>
+
+        <section class="meal-section" data-meal-type="snack">
+            <div class="meal-section-header">
+                <div class="meal-section-title">
+                    <i class="ph ph-cookie"></i>
+                    <h3>Uzkodas</h3>
+                </div>
+                <div class="meal-section-info">
+                    <span class="meal-section-kcal" data-section-kcal>0 kcal</span>
+                    <button class="meal-add-btn" data-add-meal="snack" aria-label="Pievienot uzkodu">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="meal-section-items" data-meal-items="snack"></div>
+        </section>
+
+        <!-- Empty state for the whole day -->
+        <div id="day-empty" class="day-empty hidden">
+            <i class="ph ph-bowl-food"></i>
+            <p>Šodien vēl nekas nav pievienots</p>
+            <button class="btn-primary-sm" id="empty-add-btn">
+                <i class="ph ph-plus"></i> Pievienot pirmo maltīti
+            </button>
+        </div>
+    </main>
+
+    <!-- ============ ADD FOOD BOTTOM SHEET ============ -->
+    <div id="sheet-overlay" class="sheet-overlay hidden"></div>
+    <div id="add-sheet" class="add-sheet hidden">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+            <h3 id="sheet-title">Pievienot ēdienu</h3>
+            <button id="sheet-close" class="sheet-close" aria-label="Aizvērt">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <!-- Tabs: Manual / Favorites / Recent -->
+        <div class="sheet-tabs">
+            <button class="sheet-tab active" data-sheet-tab="manual">
+                <i class="ph ph-pencil-simple"></i> Ievadīt
+            </button>
+            <button class="sheet-tab" data-sheet-tab="favorites">
+                <i class="ph ph-star"></i> Favorīti
+            </button>
+            <button class="sheet-tab" data-sheet-tab="recent">
+                <i class="ph ph-clock-counter-clockwise"></i> Nesen
+            </button>
+        </div>
+
+        <!-- Tab: Manual entry -->
+        <div class="sheet-panel" data-sheet-panel="manual">
+            <form id="add-food-form" class="add-food-form">
+                <div class="form-group">
+                    <label for="food-name">Ēdiena nosaukums</label>
+                    <input id="food-name" type="text" placeholder="Piem., griķi ar vistu" autocomplete="off" required />
+                </div>
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="food-weight">Svars (g)</label>
+                        <input id="food-weight" type="number" min="1" value="100" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="food-calories">Kalorijas</label>
+                        <input id="food-calories" type="number" min="0" value="" placeholder="kcal" />
+                    </div>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Olbaltumv. (g)</label>
+                        <input id="food-protein" type="number" min="0" step="0.1" value="" placeholder="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Tauki (g)</label>
+                        <input id="food-fat" type="number" min="0" step="0.1" value="" placeholder="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ogļh. (g)</label>
+                        <input id="food-carbs" type="number" min="0" step="0.1" value="" placeholder="0" />
                     </div>
                 </div>
 
-                <div class="portal-grid">
-                    <div class="card portal-card">
-                        <h3>Pievienot maltīti</h3>
-                        <form id="meal-form" class="portal-form">
-                            <div class="quick-actions">
-                                <div class="quick-group">
-                                    <span class="quick-label">Tips</span>
-                                    <button type="button" class="quick-chip" data-meal-type="breakfast">Brokastis</button>
-                                    <button type="button" class="quick-chip" data-meal-type="lunch">Pusdienas</button>
-                                    <button type="button" class="quick-chip" data-meal-type="dinner">Vakariņas</button>
-                                    <button type="button" class="quick-chip" data-meal-type="snack">Uzkoda</button>
-                                </div>
-                                <div class="quick-group">
-                                    <span class="quick-label">Laiks</span>
-                                    <button type="button" class="quick-chip" data-time="now">Tagad</button>
-                                    <button type="button" class="quick-chip" data-time="-30">-30m</button>
-                                    <button type="button" class="quick-chip" data-time="+30">+30m</button>
-                                </div>
-                                <div class="quick-group">
-                                    <button type="button" class="btn-secondary btn-compact" id="copy-last-meal">Kopēt pēdējo maltīti</button>
-                                    <button type="button" class="btn-secondary btn-compact" id="clear-meal-form">Notīrīt</button>
-                                </div>
-                            </div>
-                            <div>
-                                <label>Maltītes veids</label>
-                                <select id="meal-type">
-                                    <option value="breakfast">Brokastis</option>
-                                    <option value="lunch">Pusdienas</option>
-                                    <option value="dinner">Vakariņas</option>
-                                    <option value="snack">Uzkoda</option>
-                                </select>
-                            </div>
-                            <div class="portal-row">
-                                <div>
-                                    <label>Laiks (24h)</label>
-                                    <div class="time-select">
-                                        <select id="meal-hour" aria-label="Stunda">
-                                            <option value="00">00</option>
-                                            <option value="01">01</option>
-                                            <option value="02">02</option>
-                                            <option value="03">03</option>
-                                            <option value="04">04</option>
-                                            <option value="05">05</option>
-                                            <option value="06">06</option>
-                                            <option value="07">07</option>
-                                            <option value="08">08</option>
-                                            <option value="09">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                            <option value="13">13</option>
-                                            <option value="14">14</option>
-                                            <option value="15">15</option>
-                                            <option value="16">16</option>
-                                            <option value="17">17</option>
-                                            <option value="18">18</option>
-                                            <option value="19">19</option>
-                                            <option value="20">20</option>
-                                            <option value="21">21</option>
-                                            <option value="22">22</option>
-                                            <option value="23">23</option>
-                                        </select>
-                                        <span>:</span>
-                                        <select id="meal-minute" aria-label="Minūtes">
-                                            <option value="00">00</option>
-                                            <option value="05">05</option>
-                                            <option value="10">10</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                            <option value="25">25</option>
-                                            <option value="30">30</option>
-                                            <option value="35">35</option>
-                                            <option value="40">40</option>
-                                            <option value="45">45</option>
-                                            <option value="50">50</option>
-                                            <option value="55">55</option>
-                                        </select>
-                                        <button type="button" class="btn-secondary btn-compact" id="meal-time-now">Tagad</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="portal-section-header">
-                                    <h4>Ēdieni maltītē</h4>
-                                    <button type="button" class="btn-secondary btn-compact" id="add-meal-item">+ Pievienot ēdienu</button>
-                                </div>
-                                <div id="meal-items" class="meal-items"></div>
-                                <div id="meal-totals" class="meal-totals hidden">
-                                    <span>Kopā: <strong id="meal-total-kcal">0</strong> kcal</span>
-                                    <span>O: <strong id="meal-total-protein">0</strong>g</span>
-                                    <span>T: <strong id="meal-total-fat">0</strong>g</span>
-                                    <span>Og: <strong id="meal-total-carbs">0</strong>g</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="portal-section-header">
-                                    <h4>Favorīti</h4>
-                                    <button type="button" class="btn-secondary btn-compact" id="clear-favorites">Notīrīt</button>
-                                </div>
-                                <div id="favorite-items" class="recent-items"></div>
-                            </div>
-
-                            <div>
-                                <label>Nesen lietots</label>
-                                <div id="recent-items" class="recent-items"></div>
-                            </div>
-                            <div>
-                                <label>Foto (neobligāti)</label>
-                                <input id="meal-photo" type="file" accept="image/*" />
-                                <div id="meal-photo-preview" class="meal-photo-preview hidden"></div>
-                            </div>
-                            <button class="btn-primary" type="submit" id="meal-submit">Saglabāt</button>
-                            <div id="meal-status" class="portal-status"></div>
-                        </form>
-                    </div>
-
-                    <div class="card portal-card">
-                        <h3>Maltītes</h3>
-                        <div id="meals-summary" class="meal-summary hidden">
-                            <div>
-                                <span>Kopā dienā</span>
-                                <strong id="day-total-kcal">0 kcal</strong>
-                            </div>
-                            <div class="meal-summary-macros">
-                                <span>O: <strong id="day-total-protein">0</strong>g</span>
-                                <span>T: <strong id="day-total-fat">0</strong>g</span>
-                                <span>Og: <strong id="day-total-carbs">0</strong>g</span>
-                            </div>
-                        </div>
-                        <div id="meals-list" class="portal-meals"></div>
-                        <div id="meals-empty" class="portal-empty hidden">Nav maltīšu šajā datumā.</div>
-                    </div>
+                <!-- Photo -->
+                <div class="form-group">
+                    <label class="photo-label">
+                        <i class="ph ph-camera"></i> Pievienot foto
+                        <input id="food-photo" type="file" accept="image/*" class="photo-input" />
+                    </label>
+                    <div id="photo-preview" class="photo-preview hidden"></div>
                 </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-save-fav" id="save-and-fav" title="Saglabāt un pievienot favorītiem">
+                        <i class="ph ph-star"></i> + Favorīts
+                    </button>
+                    <button type="submit" class="btn-primary-sm">
+                        <i class="ph ph-plus"></i> Pievienot
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tab: Favorites -->
+        <div class="sheet-panel hidden" data-sheet-panel="favorites">
+            <div id="fav-list" class="food-chip-list"></div>
+            <div id="fav-empty" class="sheet-empty hidden">
+                <i class="ph ph-star"></i>
+                <p>Nav favorītu. Pievienojiet ēdienu un nospiediet ★</p>
+            </div>
+            <div class="fav-footer">
+                <button type="button" class="btn-text" id="clear-all-fav">Notīrīt visus</button>
             </div>
         </div>
-    </section>
 
+        <!-- Tab: Recent -->
+        <div class="sheet-panel hidden" data-sheet-panel="recent">
+            <div id="recent-list" class="food-chip-list"></div>
+            <div id="recent-empty" class="sheet-empty hidden">
+                <i class="ph ph-clock-counter-clockwise"></i>
+                <p>Pagaidām nav iepriekšējo ēdienu.</p>
+            </div>
+        </div>
+
+        <div id="sheet-status" class="sheet-status"></div>
+    </div>
+
+    <!-- ============ FAB (Mobile add button) ============ -->
+    <button id="fab-add" class="fab hidden" aria-label="Pievienot maltīti">
+        <i class="ph ph-plus"></i>
+    </button>
+
+    <!-- ============ STYLES ============ -->
     <style>
-        .portal-hero {
-            padding: 20px 0;
+        /* ---- Design tokens ---- */
+        :root {
+            --diary-green: #1B4332;
+            --diary-green-light: #295D45;
+            --diary-cream: #FBF8F2;
+            --diary-warm: #F6F1E8;
+            --diary-border: #E6E0D6;
+            --diary-gold: #C9A36A;
+            --diary-text: #1f2937;
+            --diary-text-dim: #64748b;
+            --diary-radius: 16px;
+            --diary-max-w: 480px;
+            --macro-protein: #5B8DEF;
+            --macro-fat: #F59E42;
+            --macro-carbs: #43D9AD;
+        }
+
+        /* ---- Reset for diary ---- */
+        .diary-header, .diary-main, .diary-fullscreen,
+        .add-sheet, .sheet-overlay, .fab {
+            font-family: var(--font-sans, 'Inter', sans-serif);
+        }
+
+        /* ---- Header ---- */
+        .diary-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
             background: #fff;
-            border-bottom: 1px solid #E6E0D6;
+            border-bottom: 1px solid var(--diary-border);
+            padding: 12px 0;
         }
-        .portal-container {
-            max-width: 1100px;
+        .diary-container {
+            max-width: var(--diary-max-w);
             margin: 0 auto;
-            padding: 0 24px;
-        }
-        .portal-header {
+            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
         }
-
-        .portal-logo {
+        .diary-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
         }
-
-        .portal-logo-img { height: 36px; width: auto; }
-
-        .portal-logo-text { display: flex; flex-direction: column; }
-
-        .portal-logo-name {
+        .diary-logo-img { height: 32px; width: auto; }
+        .diary-logo-text { display: flex; flex-direction: column; }
+        .diary-logo-name {
             font-family: var(--font-serif, 'Cormorant Garamond', serif);
-            font-size: 21px;
+            font-size: 18px;
             font-weight: 600;
-            color: #1B4332;
+            color: var(--diary-green);
             line-height: 1.2;
         }
-
-        .portal-logo-sub {
-            font-size: 12px;
-            color: #64748b;
+        .diary-logo-sub {
+            font-size: 11px;
+            color: var(--diary-text-dim);
             text-transform: uppercase;
-            letter-spacing: 1.6px;
+            letter-spacing: 1.5px;
         }
-
-        .mobile-tab-select {
-            display: block;
-            padding: 18px 24px;
-            background: #fff;
-            border-bottom: 1px solid #E6E0D6;
-        }
-
-        .mobile-tab-dropdown {
-            width: 100%;
-            padding: 14px 18px;
-            font-size: 16px;
-            font-family: var(--font-sans, 'Inter', sans-serif);
-            border: 1px solid #E6E0D6;
-            border-radius: 10px;
-            background: #fff;
-            color: #1f2937;
-            cursor: pointer;
-        }
-
-        .mobile-tab-dropdown:focus {
-            outline: none;
-            border-color: #1B4332;
-        }
-
-        .admin-nav {
-            display: none;
-            background: #fff;
-            border-bottom: 1px solid #E6E0D6;
-        }
-
-        .admin-nav-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            gap: 4px;
-            padding: 0 24px;
-            overflow-x: auto;
-        }
-
-        .admin-tab {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 18px;
-            border: none;
-            background: none;
-            font-family: var(--font-sans, 'Inter', sans-serif);
-            font-size: 15px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        .diary-auth { display: flex; align-items: center; gap: 10px; }
+        .diary-user-name {
+            font-size: 14px;
+            color: var(--diary-text-dim);
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
-
-        .admin-tab i { font-size: 20px; }
-
-        .admin-tab:hover {
-            color: #1B4332;
-            background: #F6F1E8;
-        }
-
-        .admin-tab.active {
-            color: #1B4332;
-            border-bottom-color: #a78f72;
-        }
-        .portal-auth {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .portal-auth a {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 15px;
-            color: var(--color-text-light, #64748b);
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-            background: transparent;
-        }
-
-        .portal-auth a:hover {
-            background: #f1f5f9;
-            color: #1B4332;
-        }
-        .portal-card {
-            margin-top: 16px;
-        }
-        .card {
-            background: #fff;
-            border: 1px solid #E6E0D6;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 6px 12px -4px rgba(17,24,39,0.12);
-        }
-        .portal-user-inline {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .portal-logout {
+        .btn-login {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 15px;
-            color: var(--color-text-light, #64748b);
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .portal-logout:hover {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-        .portal-user-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; }
-        .portal-user-name { font-size: 15px; font-weight: 400; color: #64748b; }
-        .portal-user-email { color: #64748b; font-size: 14px; }
-        .portal-access { margin-top: 12px; font-weight: 600; }
-        .portal-content { padding: 20px 0 60px; background: #FBF8F2; }
-        .portal-content { min-height: 60vh; }
-        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .portal-controls { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
-        .portal-controls label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; }
-        .portal-controls input { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; }
-        .portal-form { display: flex; flex-direction: column; gap: 12px; }
-        .portal-form label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; }
-        .portal-form input, .portal-form select { width: 100%; padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; }
-        .time-select { display: flex; align-items: center; gap: 8px; }
-        .time-select select { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; background: #fff; }
-        .btn-compact { padding: 8px 12px; font-size: 13px; }
-        .portal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .quick-actions { display: flex; flex-direction: column; gap: 12px; padding: 12px; border: 1px dashed #E6E0D6; border-radius: 12px; background: #fff; }
-        .quick-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .quick-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 6px; }
-        .quick-chip { border: 1px solid #E6E0D6; background: #fff; color: #1f2937; padding: 6px 12px; border-radius: 999px; font-size: 12px; cursor: pointer; }
-        .quick-chip.active, .quick-chip:hover { background: #1B4332; color: #fff; border-color: #1B4332; }
-        .portal-section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-        .portal-section-header h4 { margin: 0; font-size: 14px; color: #1f2937; }
-        .meal-items { display: flex; flex-direction: column; gap: 12px; }
-        .meal-item { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
-        .meal-item-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
-        .meal-item-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .meal-item-actions-left { display: flex; gap: 8px; }
-        .btn-ghost { background: transparent; border: 1px dashed #E6E0D6; color: #64748b; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
-        .meal-totals { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #475569; margin-top: 8px; }
-        .recent-items { display: flex; flex-wrap: wrap; gap: 8px; }
-        .recent-item { border: 1px solid #E6E0D6; background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
-        .meal-photo-preview { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E6E0D6; }
-        .meal-photo-preview img { width: 100%; display: block; }
-        .portal-meals { display: flex; flex-direction: column; gap: 12px; }
-        .portal-meal { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
-        .portal-meal-header { display: flex; justify-content: space-between; font-weight: 600; }
-        .portal-meal-meta { font-size: 12px; color: #64748b; margin-top: 4px; }
-        .portal-meal-items { margin-top: 8px; font-size: 14px; color: #64748b; }
-        .portal-meal-macros { margin-top: 8px; font-size: 12px; color: #64748b; display: flex; gap: 12px; }
-        .meal-summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #F6F1E8; margin-bottom: 12px; font-size: 13px; }
-        .meal-summary strong { font-size: 16px; color: #1B4332; }
-        .meal-summary-macros { display: flex; gap: 12px; }
-        .portal-empty { margin-top: 12px; color: #64748b; }
-        .portal-status { font-size: 12px; color: #64748b; }
-        .btn-primary {
-            background: #1B4332;
+            padding: 10px 18px;
+            background: var(--diary-green);
             color: #fff;
-            padding: 10px 16px;
             border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
             border: none;
             cursor: pointer;
+            transition: background 0.2s;
         }
-        .btn-secondary {
-            background: #F6F1E8;
-            color: #1B4332;
-            padding: 10px 16px;
+        .btn-login:hover { background: var(--diary-green-light); }
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            color: var(--diary-text-dim);
             border-radius: 10px;
-            border: 1px solid #E6E0D6;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+            font-size: 20px;
+        }
+        .btn-logout:hover { background: #fef2f2; color: #dc2626; }
+
+        /* ---- Full-screen states ---- */
+        .diary-fullscreen {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--diary-cream);
+        }
+        .diary-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .diary-empty-state i {
+            font-size: 48px;
+            color: var(--diary-border);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .diary-empty-state h2 {
+            font-family: var(--font-serif, 'Cormorant Garamond', serif);
+            font-size: 24px;
+            color: var(--diary-green);
+            margin: 0 0 8px;
+        }
+        .diary-empty-state p {
+            color: var(--diary-text-dim);
+            font-size: 15px;
+            margin: 0;
+        }
+
+        /* ---- Main diary ---- */
+        .diary-main {
+            max-width: var(--diary-max-w);
+            margin: 0 auto;
+            padding: 0 16px 100px;
+            background: var(--diary-cream);
+            min-height: 100vh;
+        }
+
+        /* ---- Day Nav ---- */
+        .day-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 16px 0 8px;
+        }
+        .day-nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: none;
+            color: var(--diary-green);
+            font-size: 22px;
             cursor: pointer;
+            border-radius: 12px;
+            transition: background 0.15s;
         }
+        .day-nav-btn:hover { background: var(--diary-warm); }
+        .day-nav-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 8px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background 0.15s;
+        }
+        .day-nav-date:hover { background: var(--diary-warm); }
+        #day-label {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--diary-text);
+        }
+        .day-date-sub {
+            font-size: 12px;
+            color: var(--diary-text-dim);
+        }
+        .hidden-date-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+        }
+
+        /* ---- Summary Ring Card ---- */
+        .summary-card {
+            background: #fff;
+            border: 1px solid var(--diary-border);
+            border-radius: var(--diary-radius);
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .summary-ring-wrap {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+        .summary-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .ring-bg {
+            fill: none;
+            stroke: var(--diary-warm);
+            stroke-width: 10;
+        }
+        .ring-fill {
+            fill: none;
+            stroke: var(--diary-green);
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 326.73;
+            stroke-dashoffset: 326.73;
+            transition: stroke-dashoffset 0.8s ease;
+        }
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .ring-eaten {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--diary-green);
+        }
+        .ring-label {
+            font-size: 11px;
+            color: var(--diary-text-dim);
+        }
+        .ring-unit {
+            font-size: 11px;
+            color: var(--diary-text-dim);
+            font-weight: 500;
+        }
+        .macro-bars {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .macro-bar-item { display: flex; flex-direction: column; gap: 4px; }
+        .macro-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        .macro-name { color: var(--diary-text-dim); font-weight: 500; }
+        .macro-value { color: var(--diary-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+        .macro-track {
+            height: 6px;
+            background: var(--diary-warm);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .macro-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+            width: 0;
+        }
+        .macro-fill-protein { background: var(--macro-protein); }
+        .macro-fill-fat { background: var(--macro-fat); }
+        .macro-fill-carbs { background: var(--macro-carbs); }
+
+        /* ---- Water Card ---- */
+        .water-card {
+            background: #fff;
+            border: 1px solid var(--diary-border);
+            border-radius: var(--diary-radius);
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .water-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .water-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--diary-text);
+        }
+        .water-title i { font-size: 20px; color: #3b82f6; }
+        .water-count { font-size: 13px; color: var(--diary-text-dim); font-variant-numeric: tabular-nums; }
+        .water-cups {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .water-cup {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1.5px solid #bfdbfe;
+            background: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: #93c5fd;
+        }
+        .water-cup.filled {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+        .water-cup:hover { transform: scale(1.08); }
+
+        /* ---- Meal Sections ---- */
+        .meal-section {
+            background: #fff;
+            border: 1px solid var(--diary-border);
+            border-radius: var(--diary-radius);
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .meal-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+        }
+        .meal-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .meal-section-title i { font-size: 20px; color: var(--diary-gold); }
+        .meal-section-title h3 {
+            margin: 0;
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--diary-text);
+        }
+        .meal-section-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .meal-section-kcal {
+            font-size: 13px;
+            color: var(--diary-text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+        .meal-add-btn {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            min-height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid var(--diary-green);
+            background: none;
+            color: var(--diary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .meal-add-btn:hover {
+            background: var(--diary-green);
+            color: #fff;
+        }
+        .meal-section-items { /* container for rendered items */ }
+
+        /* Meal item row */
+        .meal-item-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-top: 1px solid #f1ede6;
+            gap: 10px;
+            position: relative;
+            transition: background 0.15s;
+        }
+        .meal-item-row:hover { background: #fdfbf7; }
+        .meal-item-body { flex: 1; min-width: 0; }
+        .meal-item-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .meal-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--diary-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .meal-item-kcal {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--diary-text);
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+        .meal-item-detail {
+            font-size: 12px;
+            color: var(--diary-text-dim);
+            margin-top: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+        .meal-item-delete {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border: none;
+            background: none;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: color 0.2s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .meal-item-delete:hover { color: #ef4444; background: #fef2f2; }
+
+        /* Day empty */
+        .day-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--diary-text-dim);
+        }
+        .day-empty i { font-size: 48px; display: block; margin-bottom: 12px; color: var(--diary-border); }
+        .day-empty p { margin: 0 0 16px; font-size: 15px; }
+
+        /* ---- Bottom Sheet ---- */
+        .sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .sheet-overlay.visible { opacity: 1; }
+        .add-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 101;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            max-height: 92vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            padding: 0 20px 32px;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.12);
+        }
+        .add-sheet.visible { transform: translateY(0); }
+        @media (min-width: 520px) {
+            .add-sheet {
+                max-width: var(--diary-max-w);
+                left: 50%;
+                transform: translate(-50%, 100%);
+            }
+            .add-sheet.visible {
+                transform: translate(-50%, 0);
+            }
+        }
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            background: #d1d5db;
+            margin: 10px auto 8px;
+        }
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0 12px;
+        }
+        .sheet-header h3 {
+            margin: 0;
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--diary-text);
+        }
+        .sheet-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: var(--diary-warm);
+            border-radius: 50%;
+            color: var(--diary-text-dim);
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.15s;
+            min-width: 36px;
+            min-height: 36px;
+        }
+        .sheet-close:hover { background: var(--diary-border); }
+
+        /* Sheet tabs */
+        .sheet-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--diary-warm);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+        .sheet-tab {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--diary-text-dim);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-height: 40px;
+        }
+        .sheet-tab.active {
+            background: #fff;
+            color: var(--diary-green);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .sheet-tab i { font-size: 16px; }
+
+        /* Form styles in sheet */
+        .add-food-form { display: flex; flex-direction: column; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--diary-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            padding: 12px 14px;
+            border: 1.5px solid var(--diary-border);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--diary-text);
+            background: #fff;
+            transition: border-color 0.2s;
+            font-family: var(--font-sans, 'Inter', sans-serif);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--diary-green);
+        }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+        /* Photo */
+        .photo-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            border: 1.5px dashed var(--diary-border);
+            border-radius: 12px;
+            color: var(--diary-text-dim);
+            cursor: pointer;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .photo-label:hover { border-color: var(--diary-green); }
+        .photo-input { display: none; }
+        .photo-preview {
+            margin-top: 8px;
+            border-radius: 12px;
+            overflow: hidden;
+            max-height: 180px;
+        }
+        .photo-preview img { width: 100%; display: block; object-fit: cover; max-height: 180px; }
+
+        /* Form actions */
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-primary-sm {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--diary-green);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+            min-height: 48px;
+        }
+        .btn-primary-sm:hover { background: var(--diary-green-light); }
+        .btn-primary-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-save-fav {
+            padding: 14px 16px;
+            border: 1.5px solid var(--diary-border);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--diary-text-dim);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            min-height: 48px;
+        }
+        .btn-save-fav:hover { border-color: var(--diary-gold); color: var(--diary-gold); }
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--diary-text-dim);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px;
+            min-height: 36px;
+        }
+        .btn-text:hover { color: #ef4444; }
+
+        /* Food chip list (favorites/recent panels) */
+        .food-chip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        .food-chip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--diary-border);
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .food-chip:hover { background: var(--diary-warm); border-color: var(--diary-gold); }
+        .food-chip-body { flex: 1; min-width: 0; }
+        .food-chip-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--diary-text);
+        }
+        .food-chip-detail {
+            font-size: 12px;
+            color: var(--diary-text-dim);
+            margin-top: 2px;
+        }
+        .food-chip-kcal {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--diary-text);
+            flex-shrink: 0;
+        }
+        .food-chip-del {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            border: none;
+            background: none;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .food-chip-del:hover { color: #ef4444; }
+
+        .fav-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .sheet-empty {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--diary-text-dim);
+        }
+        .sheet-empty i { font-size: 32px; display: block; margin-bottom: 8px; color: var(--diary-border); }
+        .sheet-empty p { margin: 0; font-size: 14px; }
+
+        .sheet-status {
+            text-align: center;
+            font-size: 13px;
+            color: var(--diary-green);
+            padding: 8px 0 0;
+            min-height: 24px;
+        }
+
+        /* ---- FAB ---- */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            min-height: 56px;
+            border-radius: 50%;
+            background: var(--diary-green);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 16px rgba(27, 67, 50, 0.3);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(27, 67, 50, 0.4); }
+        @media (min-width: 520px) {
+            .fab { right: calc(50% - var(--diary-max-w)/2 + 20px); right: max(24px, calc(50% - 220px)); }
+        }
+
+        /* ---- Utility ---- */
         .hidden { display: none !important; }
-        @media (max-width: 900px) {
-            .portal-grid { grid-template-columns: 1fr; }
-            .portal-header { flex-direction: column; align-items: flex-start; }
-            .meal-item-grid { grid-template-columns: 1fr 1fr; }
-            .quick-group { align-items: flex-start; }
-            .meal-summary { flex-direction: column; align-items: flex-start; }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 500px) {
+            .summary-card { flex-direction: column; gap: 16px; padding: 20px 16px; }
+            .summary-ring-wrap { width: 100px; height: 100px; }
+            .ring-eaten { font-size: 24px; }
+            .form-row-3 { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
         }
-        @media (min-width: 900px) {
-            .mobile-tab-select { display: none; }
-            .admin-nav { display: block; }
+
+        /* Animation */
+        @keyframes sheetSlideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .meal-item-row {
+            animation: fadeIn 0.25s ease;
         }
     </style>
 
+    <!-- ============ SCRIPT ============ -->
     <script>
-        const authActions = document.getElementById('auth-actions');
-        const authUser = document.getElementById('auth-user');
-        const loginGoogle = document.getElementById('login-google');
-        const loginAad = document.getElementById('login-aad');
-        const logoutLink = document.getElementById('logout-link');
-        const noAccess = document.getElementById('no-access');
-        const loginHint = document.getElementById('login-hint');
-        const diary = document.getElementById('diary');
-        const mealsList = document.getElementById('meals-list');
-        const mealsEmpty = document.getElementById('meals-empty');
-
-        const diaryDate = document.getElementById('diary-date');
-        const reloadMeals = document.getElementById('reload-meals');
-        const mealForm = document.getElementById('meal-form');
-        const mealStatus = document.getElementById('meal-status');
-        const mealItems = document.getElementById('meal-items');
-        const addMealItem = document.getElementById('add-meal-item');
-        const mealTotals = document.getElementById('meal-totals');
-        const mealTotalKcal = document.getElementById('meal-total-kcal');
-        const mealTotalProtein = document.getElementById('meal-total-protein');
-        const mealTotalFat = document.getElementById('meal-total-fat');
-        const mealTotalCarbs = document.getElementById('meal-total-carbs');
-        const recentItems = document.getElementById('recent-items');
-        const favoriteItems = document.getElementById('favorite-items');
-        const clearFavorites = document.getElementById('clear-favorites');
-        const mealPhotoPreview = document.getElementById('meal-photo-preview');
-        const mealTimeNow = document.getElementById('meal-time-now');
-        const copyLastMeal = document.getElementById('copy-last-meal');
-        const clearMealForm = document.getElementById('clear-meal-form');
-        const mealsSummary = document.getElementById('meals-summary');
-        const dayTotalKcal = document.getElementById('day-total-kcal');
-        const dayTotalProtein = document.getElementById('day-total-protein');
-        const dayTotalFat = document.getElementById('day-total-fat');
-        const dayTotalCarbs = document.getElementById('day-total-carbs');
-
-        const userName = document.getElementById('user-name');
+        // ---- Globals ----
         let userId = '';
-        let lastMealsCache = [];
+        let currentDate = new Date();
+        let allMeals = [];
+        let activeSheetMealType = 'snack';
+        const FAVORITES_KEY = 'diary_favorites_v2';
+        const WATER_KEY_PREFIX = 'diary_water_';
+        const TARGETS_KEY = 'diary_targets';
 
-        const favoritesKey = 'mealFavorites';
+        // Default targets (can be overridden by specialist)
+        let targets = { calories: 2000, protein: 120, fat: 65, carbs: 250, water: 8 };
 
-        function escapeHtml(value) {
-            return String(value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+        // ---- DOM refs ----
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        // ---- Helpers ----
+        function escapeHtml(val) {
+            return String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
+        function formatDate(d) {
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function isSameDay(d1, d2) {
+            return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+        }
+
+        function isToday(d) { return isSameDay(d, new Date()); }
+        function isYesterday(d) {
+            const y = new Date();
+            y.setDate(y.getDate() - 1);
+            return isSameDay(d, y);
+        }
+
+        function dayLabel(d) {
+            if (isToday(d)) return 'Šodien';
+            if (isYesterday(d)) return 'Vakar';
+            const weekdays = ['Svētdiena','Pirmdiena','Otrdiena','Trešdiena','Ceturtdiena','Piektdiena','Sestdiena'];
+            return weekdays[d.getDay()];
+        }
+
+        function daySubLabel(d) {
+            const months = ['janv.','febr.','marts','apr.','maijs','jūn.','jūl.','aug.','sept.','okt.','nov.','dec.'];
+            return `${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        // ---- Auth ----
         function setAuthLinks() {
-            const origin = window.location.origin;
-            if (loginGoogle) loginGoogle.setAttribute('href', `${origin}/.auth/login/google?post_login_redirect_uri=/cabinet`);
-            if (loginAad) loginAad.setAttribute('href', `${origin}/.auth/login/aad?post_login_redirect_uri=/cabinet`);
-            if (logoutLink) logoutLink.setAttribute('href', `${origin}/.auth/logout?post_logout_redirect_uri=/cabinet`);
-        }
-
-        function setDateDefaults() {
-            const today = new Date().toISOString().split('T')[0];
-            if (diaryDate && !diaryDate.value) diaryDate.value = today;
-            setTimeToNow();
-        }
-
-        function setTimeToNow() {
-            const now = new Date();
-            const hour = String(now.getHours()).padStart(2, '0');
-            const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
-            const hourSelect = document.getElementById('meal-hour');
-            const minuteSelect = document.getElementById('meal-minute');
-            if (hourSelect) hourSelect.value = hour;
-            if (minuteSelect) minuteSelect.value = minute;
+            const o = window.location.origin;
+            const loginAad = $('#login-aad');
+            const logoutLink = $('#logout-link');
+            if (loginAad) loginAad.setAttribute('href', `${o}/.auth/login/aad?post_login_redirect_uri=/cabinet`);
+            if (logoutLink) logoutLink.setAttribute('href', `${o}/.auth/logout?post_logout_redirect_uri=/cabinet`);
         }
 
         async function loadAuth() {
             try {
-                const response = await fetch('/.auth/me');
-                const data = await response.json();
-                const principal = data?.clientPrincipal;
-                if (!principal) {
-                    authUser?.classList.add('hidden');
-                    diary?.classList.add('hidden');
-                    noAccess?.classList.add('hidden');
-                    loginHint?.classList.remove('hidden');
+                const res = await fetch('/.auth/me');
+                const data = await res.json();
+                const p = data?.clientPrincipal;
+                if (!p) {
+                    showScreen('login');
                     return;
                 }
-
-                userId = principal.userId;
-                if (userName) userName.textContent = principal.userDetails || principal.userId;
-                authActions?.classList.add('hidden');
-                authUser?.classList.remove('hidden');
-                loginHint?.classList.add('hidden');
-
+                userId = p.userId;
+                $('#user-name').textContent = p.userDetails || p.userId;
+                $('#auth-actions').classList.add('hidden');
+                $('#auth-user').classList.remove('hidden');
                 await loadAccess();
             } catch {
-                authCard?.classList.add('hidden');
+                showScreen('login');
             }
         }
-
-        setAuthLinks();
 
         async function loadAccess() {
-            const response = await fetch('/api/food/access');
-            if (!response.ok) {
-                return;
-            }
-
-            const data = await response.json();
-            const enabled = Boolean(data?.enabled);
-
-            if (!enabled) {
-                noAccess?.classList.remove('hidden');
-                diary?.classList.add('hidden');
-            } else {
-                noAccess?.classList.add('hidden');
-                diary?.classList.remove('hidden');
+            try {
+                const res = await fetch('/api/food/access');
+                if (!res.ok) { showScreen('no-access'); return; }
+                const data = await res.json();
+                if (!data?.enabled) { showScreen('no-access'); return; }
+                showScreen('diary');
+                loadTargets();
                 await loadMeals();
+                loadWater();
+            } catch {
+                showScreen('no-access');
             }
         }
 
-        function buildMealTime() {
-            const hourValue = document.getElementById('meal-hour')?.value || '12';
-            const minuteValue = document.getElementById('meal-minute')?.value || '00';
-            const [hour, minute] = [hourValue, minuteValue].map(Number);
-            const date = new Date(diaryDate?.value || new Date().toISOString().split('T')[0]);
-            date.setHours(hour || 0, minute || 0, 0, 0);
-            return date.toISOString();
+        function showScreen(screen) {
+            $('#login-hint').classList.toggle('hidden', screen !== 'login');
+            $('#no-access').classList.toggle('hidden', screen !== 'no-access');
+            $('#diary').classList.toggle('hidden', screen !== 'diary');
+            $('#fab-add').classList.toggle('hidden', screen !== 'diary');
         }
 
+        // ---- Targets ----
+        function loadTargets() {
+            try {
+                const saved = localStorage.getItem(TARGETS_KEY);
+                if (saved) Object.assign(targets, JSON.parse(saved));
+            } catch {}
+            $('#ring-target').textContent = targets.calories;
+            $('#macro-protein-target').textContent = targets.protein;
+            $('#macro-fat-target').textContent = targets.fat;
+            $('#macro-carbs-target').textContent = targets.carbs;
+            $('#water-goal').textContent = targets.water;
+        }
+
+        // ---- Day navigation ----
+        function updateDayUI() {
+            $('#day-label').textContent = dayLabel(currentDate);
+            $('#day-date-sub').textContent = daySubLabel(currentDate);
+            $('#diary-date').value = formatDate(currentDate);
+        }
+
+        function goDay(offset) {
+            currentDate.setDate(currentDate.getDate() + offset);
+            updateDayUI();
+            loadMeals();
+            loadWater();
+        }
+
+        $('#day-prev')?.addEventListener('click', () => goDay(-1));
+        $('#day-next')?.addEventListener('click', () => goDay(1));
+        $('#day-today')?.addEventListener('click', () => {
+            const picker = $('#diary-date');
+            // Try native date picker, fallback to today
+            if (picker && typeof picker.showPicker === 'function') {
+                picker.showPicker();
+            } else {
+                currentDate = new Date();
+                updateDayUI();
+                loadMeals();
+                loadWater();
+            }
+        });
+        $('#diary-date')?.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                currentDate = new Date(val + 'T12:00:00');
+                updateDayUI();
+                loadMeals();
+                loadWater();
+            }
+        });
+
+        // ---- Meals CRUD ----
         async function loadMeals() {
-            if (!userId || !diaryDate?.value) return;
-            const response = await fetch(`/api/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(diaryDate.value)}`);
-            const meals = response.ok ? await response.json() : [];
-            renderMeals(Array.isArray(meals) ? meals : []);
-        }
-
-        function renderMeals(meals) {
-            if (!mealsList || !mealsEmpty) return;
-            lastMealsCache = Array.isArray(meals) ? meals : [];
-            if (!meals.length) {
-                mealsList.innerHTML = '';
-                mealsEmpty.classList.remove('hidden');
-                mealsSummary?.classList.add('hidden');
-                return;
+            if (!userId) return;
+            const date = formatDate(currentDate);
+            try {
+                const res = await fetch(`/api/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`);
+                const meals = res.ok ? await res.json() : [];
+                allMeals = Array.isArray(meals) ? meals : [];
+            } catch {
+                allMeals = [];
             }
-            mealsEmpty.classList.add('hidden');
-            const mealTypeLabels = {
-                breakfast: 'Brokastis',
-                lunch: 'Pusdienas',
-                dinner: 'Vakariņas',
-                snack: 'Uzkoda'
-            };
-            let totalCalories = 0;
-            let totalProtein = 0;
-            let totalFat = 0;
-            let totalCarbs = 0;
-
-            mealsList.innerHTML = meals.map(meal => {
-                const time = new Date(meal.createdAt).toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
-                const mealType = mealTypeLabels[meal.mealType] || 'Maltīte';
-                const items = (meal.items || []).map(item => `${escapeHtml(item.name)} (${item.weight}g)`).join(', ');
-                totalCalories += Number(meal.totalCalories || 0);
-                totalProtein += Number(meal.totalProtein || 0);
-                totalFat += Number(meal.totalFat || 0);
-                totalCarbs += Number(meal.totalCarbs || 0);
-                return `
-                    <div class="portal-meal">
-                        <div class="portal-meal-header">
-                            <span>${mealType}</span>
-                            <span>${meal.totalCalories || 0} kcal</span>
-                        </div>
-                        <div class="portal-meal-meta">${time}</div>
-                        <div class="portal-meal-items">${items || '—'}</div>
-                        <div class="portal-meal-macros">
-                            <span>O: ${meal.totalProtein || 0}g</span>
-                            <span>T: ${meal.totalFat || 0}g</span>
-                            <span>Og: ${meal.totalCarbs || 0}g</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            if (mealsSummary) mealsSummary.classList.remove('hidden');
-            if (dayTotalKcal) dayTotalKcal.textContent = `${Math.round(totalCalories)} kcal`;
-            if (dayTotalProtein) dayTotalProtein.textContent = `${Math.round(totalProtein * 10) / 10}`;
-            if (dayTotalFat) dayTotalFat.textContent = `${Math.round(totalFat * 10) / 10}`;
-            if (dayTotalCarbs) dayTotalCarbs.textContent = `${Math.round(totalCarbs * 10) / 10}`;
-
-            updateRecentItems(meals);
-            renderFavorites();
+            renderAllMeals();
         }
 
-        function addMealItemRow(item = {}) {
-            if (!mealItems) return;
-            const safeName = escapeHtml(item.name || '');
-            const row = document.createElement('div');
-            row.className = 'meal-item';
-            row.innerHTML = `
-                <div class="meal-item-grid">
-                    <div>
-                        <label>Nosaukums</label>
-                        <input type="text" class="meal-item-name" placeholder="Piem., griķi" value="${safeName}">
-                    </div>
-                    <div>
-                        <label>Svars (g)</label>
-                        <input type="number" min="1" class="meal-item-weight" value="${item.weight || 100}">
-                    </div>
-                    <div>
-                        <label>Kalorijas</label>
-                        <input type="number" min="0" class="meal-item-calories" value="${item.calories || 0}">
-                    </div>
-                    <div>
-                        <label>Olbaltumv.</label>
-                        <input type="number" min="0" step="0.1" class="meal-item-protein" value="${item.protein || 0}">
-                    </div>
-                    <div>
-                        <label>Tauki</label>
-                        <input type="number" min="0" step="0.1" class="meal-item-fat" value="${item.fat || 0}">
-                    </div>
-                    <div>
-                        <label>Ogļh.</label>
-                        <input type="number" min="0" step="0.1" class="meal-item-carbs" value="${item.carbs || 0}">
-                    </div>
-                </div>
-                <div class="meal-item-actions">
-                    <div class="meal-item-actions-left">
-                        <button type="button" class="btn-ghost meal-item-favorite">Saglabāt favorītos</button>
-                    </div>
-                    <button type="button" class="btn-ghost meal-item-remove">Noņemt</button>
-                </div>
-            `;
-            mealItems.appendChild(row);
-            updateMealTotals();
-        }
+        function renderAllMeals() {
+            const types = ['breakfast', 'lunch', 'dinner', 'snack'];
+            let grandCal = 0, grandP = 0, grandF = 0, grandC = 0;
+            let totalItems = 0;
 
-        function updateMealTotals() {
-            if (!mealItems || !mealTotals) return;
-            const items = collectMealItems();
-            if (!items.length) {
-                mealTotals.classList.add('hidden');
-                return;
-            }
+            types.forEach(type => {
+                const container = $(`[data-meal-items="${type}"]`);
+                const kcalLabel = $(`.meal-section[data-meal-type="${type}"] [data-section-kcal]`);
+                if (!container) return;
 
-            const totals = items.reduce((acc, item) => {
-                acc.calories += item.calories || 0;
-                acc.protein += item.protein || 0;
-                acc.fat += item.fat || 0;
-                acc.carbs += item.carbs || 0;
-                return acc;
-            }, { calories: 0, protein: 0, fat: 0, carbs: 0 });
+                const meals = allMeals.filter(m => m.mealType === type);
+                let sectionCal = 0;
+                let html = '';
 
-            mealTotals.classList.remove('hidden');
-            if (mealTotalKcal) mealTotalKcal.textContent = `${Math.round(totals.calories)}`;
-            if (mealTotalProtein) mealTotalProtein.textContent = `${Math.round(totals.protein * 10) / 10}`;
-            if (mealTotalFat) mealTotalFat.textContent = `${Math.round(totals.fat * 10) / 10}`;
-            if (mealTotalCarbs) mealTotalCarbs.textContent = `${Math.round(totals.carbs * 10) / 10}`;
-        }
+                meals.forEach(meal => {
+                    (meal.items || []).forEach(item => {
+                        const cal = Number(item.calories || 0);
+                        const p = Number(item.protein || 0);
+                        const f = Number(item.fat || 0);
+                        const c = Number(item.carbs || 0);
+                        sectionCal += cal;
+                        grandCal += cal;
+                        grandP += p;
+                        grandF += f;
+                        grandC += c;
+                        totalItems++;
 
-        function collectMealItems() {
-            if (!mealItems) return [];
-            const rows = Array.from(mealItems.querySelectorAll('.meal-item'));
-            return rows.map(row => {
-                const name = row.querySelector('.meal-item-name')?.value?.trim();
-                const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
-                const calories = Number(row.querySelector('.meal-item-calories')?.value || 0);
-                const protein = Number(row.querySelector('.meal-item-protein')?.value || 0);
-                const fat = Number(row.querySelector('.meal-item-fat')?.value || 0);
-                const carbs = Number(row.querySelector('.meal-item-carbs')?.value || 0);
-
-                return { name, weight, calories, protein, fat, carbs };
-            }).filter(item => item.name && item.weight);
-        }
-
-        function updateRecentItems(meals) {
-            if (!recentItems) return;
-            const items = [];
-            meals.forEach(meal => {
-                (meal.items || []).forEach(item => {
-                    if (!item?.name) return;
-                    items.push({
-                        name: item.name,
-                        weight: item.weight || 100,
-                        calories: item.calories || 0,
-                        protein: item.protein || 0,
-                        fat: item.fat || 0,
-                        carbs: item.carbs || 0
+                        html += `
+                            <div class="meal-item-row" data-meal-id="${escapeHtml(meal.RowKey)}" data-meal-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" >
+                                <div class="meal-item-body">
+                                    <div class="meal-item-name-row">
+                                        <span class="meal-item-name">${escapeHtml(item.name)}</span>
+                                        <span class="meal-item-kcal">${Math.round(cal)} kcal</span>
+                                    </div>
+                                    <div class="meal-item-detail">
+                                        ${item.weight}g · O ${Math.round(p*10)/10}g · T ${Math.round(f*10)/10}g · Og ${Math.round(c*10)/10}g
+                                    </div>
+                                </div>
+                                <button class="meal-item-delete" data-delete-meal="${escapeHtml(meal.RowKey)}" data-delete-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" aria-label="Dzēst">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </div>`;
                     });
                 });
+
+                container.innerHTML = html;
+                if (kcalLabel) kcalLabel.textContent = sectionCal > 0 ? `${Math.round(sectionCal)} kcal` : '';
             });
 
-            const unique = [];
-            const seen = new Set();
-            for (let i = items.length - 1; i >= 0; i -= 1) {
-                const key = items[i].name.toLowerCase();
-                if (seen.has(key)) continue;
-                seen.add(key);
-                unique.push(items[i]);
-                if (unique.length >= 8) break;
-            }
+            // Update summary ring
+            updateSummary(grandCal, grandP, grandF, grandC);
 
-            recentItems.innerHTML = '';
-
-            if (!unique.length) {
-                const empty = document.createElement('span');
-                empty.className = 'portal-empty';
-                empty.textContent = 'Nav iepriekšēju ēdienu.';
-                recentItems.appendChild(empty);
-                return;
-            }
-
-            unique.forEach(item => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'recent-item';
-                button.dataset.name = item.name;
-                button.dataset.weight = String(item.weight || 100);
-                button.dataset.calories = String(item.calories || 0);
-                button.dataset.protein = String(item.protein || 0);
-                button.dataset.fat = String(item.fat || 0);
-                button.dataset.carbs = String(item.carbs || 0);
-                button.textContent = item.name;
-                recentItems.appendChild(button);
-            });
+            // Show/hide empty state
+            const dayEmpty = $('#day-empty');
+            if (dayEmpty) dayEmpty.classList.toggle('hidden', totalItems > 0);
         }
 
-        function loadFavorites() {
+        function updateSummary(cal, p, f, c) {
+            const ratio = Math.min(cal / targets.calories, 1);
+            const circumference = 2 * Math.PI * 52; // ~326.73
+            const ring = $('#cal-ring');
+            if (ring) ring.style.strokeDashoffset = String(circumference * (1 - ratio));
+            if (cal > targets.calories && ring) ring.style.stroke = '#ef4444';
+            else if (ring) ring.style.stroke = 'var(--diary-green)';
+
+            $('#ring-eaten').textContent = Math.round(cal);
+            $('#macro-protein').textContent = Math.round(p);
+            $('#macro-fat').textContent = Math.round(f);
+            $('#macro-carbs').textContent = Math.round(c);
+
+            $('#bar-protein').style.width = `${Math.min(p / targets.protein * 100, 100)}%`;
+            $('#bar-fat').style.width = `${Math.min(f / targets.fat * 100, 100)}%`;
+            $('#bar-carbs').style.width = `${Math.min(c / targets.carbs * 100, 100)}%`;
+        }
+
+        // Delete meal
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-delete-meal]');
+            if (!btn) return;
+            const mealId = btn.dataset.deleteMeal;
+            const date = btn.dataset.deleteDate;
+            if (!confirm('Dzēst šo ierakstu?')) return;
             try {
-                const raw = localStorage.getItem(favoritesKey);
-                return raw ? JSON.parse(raw) : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveFavorites(items) {
-            localStorage.setItem(favoritesKey, JSON.stringify(items));
-        }
-
-        function renderFavorites() {
-            if (!favoriteItems) return;
-            const favorites = loadFavorites();
-            favoriteItems.innerHTML = '';
-
-            if (!favorites.length) {
-                const empty = document.createElement('span');
-                empty.className = 'portal-empty';
-                empty.textContent = 'Pagaidām nav favorītu.';
-                favoriteItems.appendChild(empty);
-                return;
-            }
-
-            favorites.forEach(item => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'recent-item';
-                button.dataset.name = item.name;
-                button.dataset.weight = String(item.weight || 100);
-                button.dataset.calories = String(item.calories || 0);
-                button.dataset.protein = String(item.protein || 0);
-                button.dataset.fat = String(item.fat || 0);
-                button.dataset.carbs = String(item.carbs || 0);
-                button.textContent = item.name;
-                favoriteItems.appendChild(button);
-            });
-        }
-
-        function saveFavoriteFromRow(row) {
-            const name = row.querySelector('.meal-item-name')?.value?.trim();
-            const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
-            if (!name || !weight) return;
-
-            const item = {
-                name,
-                weight,
-                calories: Number(row.querySelector('.meal-item-calories')?.value || 0),
-                protein: Number(row.querySelector('.meal-item-protein')?.value || 0),
-                fat: Number(row.querySelector('.meal-item-fat')?.value || 0),
-                carbs: Number(row.querySelector('.meal-item-carbs')?.value || 0)
-            };
-
-            const favorites = loadFavorites();
-            const exists = favorites.some(entry => entry.name.toLowerCase() === name.toLowerCase());
-            if (!exists) {
-                favorites.unshift(item);
-                saveFavorites(favorites.slice(0, 12));
-                renderFavorites();
-            }
-        }
-
-        function applyQuickChip(target) {
-            if (!(target instanceof HTMLElement)) return;
-            const typeValue = target.dataset.mealType;
-            const timeValue = target.dataset.time;
-            if (typeValue) {
-                document.getElementById('meal-type').value = typeValue;
-            }
-            if (timeValue) {
-                const now = new Date();
-                const offset = Number(timeValue);
-                if (Number.isFinite(offset)) {
-                    now.setMinutes(now.getMinutes() + offset);
+                const res = await fetch(`/api/meals/${encodeURIComponent(mealId)}?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(date)}`, { method: 'DELETE' });
+                if (res.ok || res.status === 204) {
+                    btn.closest('.meal-item-row')?.remove();
+                    allMeals = allMeals.filter(m => m.RowKey !== mealId);
+                    renderAllMeals();
                 }
-                const hour = String(now.getHours()).padStart(2, '0');
-                const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
-                const hourSelect = document.getElementById('meal-hour');
-                const minuteSelect = document.getElementById('meal-minute');
-                if (hourSelect) hourSelect.value = hour;
-                if (minuteSelect) minuteSelect.value = minute;
-            }
+            } catch {}
+        });
 
-            if (target.classList.contains('quick-chip')) {
-                target.classList.add('active');
-                setTimeout(() => target.classList.remove('active'), 600);
+        // ---- Water Tracker ----
+        function waterKey() { return WATER_KEY_PREFIX + formatDate(currentDate); }
+
+        function loadWater() {
+            const count = Number(localStorage.getItem(waterKey()) || 0);
+            renderWaterCups(count);
+        }
+
+        function saveWater(count) {
+            localStorage.setItem(waterKey(), String(count));
+            renderWaterCups(count);
+        }
+
+        function renderWaterCups(filled) {
+            const container = $('#water-cups');
+            if (!container) return;
+            const goal = targets.water;
+            let html = '';
+            for (let i = 0; i < goal; i++) {
+                html += `<button class="water-cup ${i < filled ? 'filled' : ''}" data-cup-index="${i}" aria-label="Glāze ${i+1}">
+                    <i class="ph${i < filled ? '-fill' : ''} ph-drop"></i>
+                </button>`;
+            }
+            container.innerHTML = html;
+            $('#water-current').textContent = Math.min(filled, goal);
+        }
+
+        $('#water-cups')?.addEventListener('click', (e) => {
+            const cup = e.target.closest('.water-cup');
+            if (!cup) return;
+            const idx = Number(cup.dataset.cupIndex);
+            const currentFilled = Number(localStorage.getItem(waterKey()) || 0);
+            // Toggle: if clicking last filled cup, unfill it; otherwise fill up to clicked
+            const newCount = (idx + 1 === currentFilled) ? idx : idx + 1;
+            saveWater(newCount);
+        });
+
+        // ---- Bottom Sheet ----
+        function openSheet(mealType) {
+            activeSheetMealType = mealType;
+            const labels = { breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda' };
+            $('#sheet-title').textContent = labels[mealType] || 'Pievienot ēdienu';
+            resetAddForm();
+            switchSheetTab('manual');
+            showSheet(true);
+        }
+
+        function showSheet(show) {
+            const overlay = $('#sheet-overlay');
+            const sheet = $('#add-sheet');
+            if (show) {
+                overlay.classList.remove('hidden');
+                sheet.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    overlay.classList.add('visible');
+                    sheet.classList.add('visible');
+                });
+                document.body.style.overflow = 'hidden';
+            } else {
+                overlay.classList.remove('visible');
+                sheet.classList.remove('visible');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    sheet.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
             }
         }
 
-        function resetMealForm() {
-            if (mealItems) mealItems.innerHTML = '';
-            addMealItemRow();
-            if (mealStatus) mealStatus.textContent = '';
-            const photoInput = document.getElementById('meal-photo');
-            if (photoInput) photoInput.value = '';
-            if (mealPhotoPreview) {
-                mealPhotoPreview.classList.add('hidden');
-                mealPhotoPreview.innerHTML = '';
-            }
-            setTimeToNow();
+        function closeSheet() { showSheet(false); }
+
+        $('#sheet-overlay')?.addEventListener('click', closeSheet);
+        $('#sheet-close')?.addEventListener('click', closeSheet);
+
+        // Sheet tabs
+        function switchSheetTab(tab) {
+            $$('.sheet-tab').forEach(t => t.classList.toggle('active', t.dataset.sheetTab === tab));
+            $$('.sheet-panel').forEach(p => p.classList.toggle('hidden', p.dataset.sheetPanel !== tab));
+            if (tab === 'favorites') renderFavoritesList();
+            if (tab === 'recent') renderRecentList();
         }
 
-        function copyLatestMeal() {
-            if (!lastMealsCache.length) return;
-            const latest = [...lastMealsCache].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-            if (!latest) return;
-            if (mealItems) mealItems.innerHTML = '';
-            (latest.items || []).forEach(item => addMealItemRow(item));
-            document.getElementById('meal-type').value = latest.mealType || 'snack';
-            const latestDate = new Date(latest.createdAt);
-            const hour = String(latestDate.getHours()).padStart(2, '0');
-            const minute = String(Math.floor(latestDate.getMinutes() / 5) * 5).padStart(2, '0');
-            const hourSelect = document.getElementById('meal-hour');
-            const minuteSelect = document.getElementById('meal-minute');
-            if (hourSelect) hourSelect.value = hour;
-            if (minuteSelect) minuteSelect.value = minute;
-            updateMealTotals();
+        document.addEventListener('click', (e) => {
+            const tab = e.target.closest('.sheet-tab');
+            if (tab) switchSheetTab(tab.dataset.sheetTab);
+        });
+
+        // Add meal buttons (section + buttons)
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-add-meal]');
+            if (btn) openSheet(btn.dataset.addMeal);
+        });
+
+        // FAB
+        $('#fab-add')?.addEventListener('click', () => {
+            // Smart default: pick meal type based on time of day
+            const h = new Date().getHours();
+            let type = 'snack';
+            if (h >= 5 && h < 11) type = 'breakfast';
+            else if (h >= 11 && h < 15) type = 'lunch';
+            else if (h >= 17 && h < 21) type = 'dinner';
+            openSheet(type);
+        });
+
+        // Empty state button
+        $('#empty-add-btn')?.addEventListener('click', () => {
+            const h = new Date().getHours();
+            let type = 'snack';
+            if (h >= 5 && h < 11) type = 'breakfast';
+            else if (h >= 11 && h < 15) type = 'lunch';
+            else if (h >= 17 && h < 21) type = 'dinner';
+            openSheet(type);
+        });
+
+        // ---- Add Food Form ----
+        function resetAddForm() {
+            const form = $('#add-food-form');
+            if (form) form.reset();
+            $('#food-weight').value = '100';
+            $('#food-calories').value = '';
+            $('#food-protein').value = '';
+            $('#food-fat').value = '';
+            $('#food-carbs').value = '';
+            const preview = $('#photo-preview');
+            if (preview) { preview.classList.add('hidden'); preview.innerHTML = ''; }
+            $('#sheet-status').textContent = '';
         }
 
-        async function readPhoto() {
-            const input = document.getElementById('meal-photo');
+        // Photo preview
+        $('#food-photo')?.addEventListener('change', (e) => {
+            const file = e.target.files?.[0];
+            const preview = $('#photo-preview');
+            if (!file || !preview) { preview?.classList.add('hidden'); return; }
+            const reader = new FileReader();
+            reader.onload = () => {
+                preview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        async function readPhotoAsDataUrl() {
+            const input = $('#food-photo');
             const file = input?.files?.[0];
             if (!file) return undefined;
             return new Promise(resolve => {
@@ -912,142 +1498,209 @@ import Layout from '../layouts/Layout.astro';
             });
         }
 
-        mealForm?.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            if (!userId) return;
-            const items = collectMealItems();
-            if (!items.length) {
-                if (mealStatus) mealStatus.textContent = 'Pievienojiet vismaz vienu ēdienu.';
+        // Submit add food
+        $('#add-food-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addFoodItem(false);
+        });
+
+        // Save + add to favorites
+        $('#save-and-fav')?.addEventListener('click', async () => {
+            await addFoodItem(true);
+        });
+
+        async function addFoodItem(alsoFavorite) {
+            const name = $('#food-name')?.value?.trim();
+            const weight = Number($('#food-weight')?.value || 100);
+            const calories = Number($('#food-calories')?.value || 0);
+            const protein = Number($('#food-protein')?.value || 0);
+            const fat = Number($('#food-fat')?.value || 0);
+            const carbs = Number($('#food-carbs')?.value || 0);
+
+            if (!name || !weight) {
+                $('#sheet-status').textContent = 'Ievadiet nosaukumu un svaru.';
                 return;
             }
 
-            if (mealStatus) mealStatus.textContent = 'Saglabā…';
+            const item = { name, nameEn: name, weight, calories, protein, fat, carbs, confidence: 1, userAdjusted: true };
+
+            if (alsoFavorite) {
+                saveFavorite(item);
+            }
+
+            $('#sheet-status').textContent = 'Saglabā…';
+            const submitBtn = $('#add-food-form button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            const photoUrl = await readPhotoAsDataUrl();
 
             const payload = {
                 userId,
-                mealType: document.getElementById('meal-type')?.value || 'snack',
-                createdAt: buildMealTime(),
-                photoUrl: await readPhoto(),
-                items: items.map(item => ({
-                    name: item.name,
-                    nameEn: item.name,
-                    weight: item.weight,
-                    calories: item.calories,
-                    protein: item.protein,
-                    fat: item.fat,
-                    carbs: item.carbs
-                }))
+                mealType: activeSheetMealType,
+                createdAt: new Date(formatDate(currentDate) + 'T' + String(new Date().getHours()).padStart(2,'0') + ':' + String(new Date().getMinutes()).padStart(2,'0') + ':00').toISOString(),
+                items: [item],
+                totalCalories: calories,
+                totalProtein: protein,
+                totalFat: fat,
+                totalCarbs: carbs,
+                confirmed: true,
+                photoUrl: photoUrl && photoUrl.length <= 50000 ? photoUrl : undefined
             };
 
             try {
-                const response = await fetch('/api/meals', {
+                const res = await fetch('/api/meals', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    const error = await response.json().catch(() => null);
-                    if (mealStatus) mealStatus.textContent = error?.error || 'Neizdevās saglabāt.';
+                if (!res.ok) {
+                    const err = await res.json().catch(() => null);
+                    $('#sheet-status').textContent = err?.error || 'Kļūda saglabājot.';
+                    if (submitBtn) submitBtn.disabled = false;
                     return;
                 }
 
-                if (mealStatus) mealStatus.textContent = 'Saglabāts!';
-                if (mealItems) mealItems.innerHTML = '';
-                addMealItemRow();
+                $('#sheet-status').textContent = 'Pievienots!';
+                setTimeout(() => {
+                    closeSheet();
+                    if (submitBtn) submitBtn.disabled = false;
+                }, 400);
                 await loadMeals();
-            } catch (error) {
-                if (mealStatus) mealStatus.textContent = (error as Error).message || 'Neizdevās saglabāt.';
+            } catch (err) {
+                $('#sheet-status').textContent = 'Kļūda: ' + (err.message || 'neizdevās saglabāt');
+                if (submitBtn) submitBtn.disabled = false;
             }
-        });
+        }
 
-        mealItems?.addEventListener('input', () => updateMealTotals());
-        mealItems?.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            if (target.classList.contains('meal-item-remove')) {
-                target.closest('.meal-item')?.remove();
-                updateMealTotals();
+        // ---- Favorites ----
+        function loadFavorites() {
+            try { return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]'); } catch { return []; }
+        }
+
+        function saveFavorite(item) {
+            const favs = loadFavorites();
+            const exists = favs.some(f => f.name.toLowerCase() === item.name.toLowerCase());
+            if (!exists) {
+                favs.unshift({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs });
+                localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs.slice(0, 30)));
+            }
+        }
+
+        function removeFavorite(name) {
+            const favs = loadFavorites().filter(f => f.name.toLowerCase() !== name.toLowerCase());
+            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+            renderFavoritesList();
+        }
+
+        function renderFavoritesList() {
+            const container = $('#fav-list');
+            const empty = $('#fav-empty');
+            if (!container) return;
+            const favs = loadFavorites();
+            if (!favs.length) {
+                container.innerHTML = '';
+                empty?.classList.remove('hidden');
                 return;
             }
-            if (target.classList.contains('meal-item-favorite')) {
-                const row = target.closest('.meal-item');
-                if (row) saveFavoriteFromRow(row);
+            empty?.classList.add('hidden');
+            container.innerHTML = favs.map(f => `
+                <div class="food-chip" data-fav-apply='${escapeHtml(JSON.stringify(f))}'>
+                    <div class="food-chip-body">
+                        <div class="food-chip-name">${escapeHtml(f.name)}</div>
+                        <div class="food-chip-detail">${f.weight}g · O ${f.protein}g · T ${f.fat}g · Og ${f.carbs}g</div>
+                    </div>
+                    <span class="food-chip-kcal">${f.calories} kcal</span>
+                    <button class="food-chip-del" data-fav-del="${escapeHtml(f.name)}" aria-label="Noņemt"><i class="ph ph-x"></i></button>
+                </div>
+            `).join('');
+        }
+
+        // Click favorite to apply
+        document.addEventListener('click', (e) => {
+            const del = e.target.closest('[data-fav-del]');
+            if (del) { e.stopPropagation(); removeFavorite(del.dataset.favDel); return; }
+            const chip = e.target.closest('[data-fav-apply]');
+            if (chip) {
+                try {
+                    const item = JSON.parse(chip.dataset.favApply);
+                    fillFormFromItem(item);
+                    switchSheetTab('manual');
+                } catch {}
             }
         });
 
-        addMealItem?.addEventListener('click', () => addMealItemRow());
+        // Clear all favorites
+        $('#clear-all-fav')?.addEventListener('click', () => {
+            localStorage.setItem(FAVORITES_KEY, '[]');
+            renderFavoritesList();
+        });
 
-        recentItems?.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            if (!target.classList.contains('recent-item')) return;
-            addMealItemRow({
-                name: target.dataset.name || '',
-                weight: Number(target.dataset.weight || 100),
-                calories: Number(target.dataset.calories || 0),
-                protein: Number(target.dataset.protein || 0),
-                fat: Number(target.dataset.fat || 0),
-                carbs: Number(target.dataset.carbs || 0)
+        // ---- Recent items ----
+        function renderRecentList() {
+            const container = $('#recent-list');
+            const empty = $('#recent-empty');
+            if (!container) return;
+
+            const items = [];
+            const seen = new Set();
+            // Collect from all meals, newest first
+            const sorted = [...allMeals].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            sorted.forEach(meal => {
+                (meal.items || []).forEach(item => {
+                    const key = item.name?.toLowerCase();
+                    if (!key || seen.has(key)) return;
+                    seen.add(key);
+                    items.push(item);
+                });
             });
-        });
 
-        favoriteItems?.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            if (!target.classList.contains('recent-item')) return;
-            addMealItemRow({
-                name: target.dataset.name || '',
-                weight: Number(target.dataset.weight || 100),
-                calories: Number(target.dataset.calories || 0),
-                protein: Number(target.dataset.protein || 0),
-                fat: Number(target.dataset.fat || 0),
-                carbs: Number(target.dataset.carbs || 0)
-            });
-        });
-
-        document.querySelector('.quick-actions')?.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            if (target.classList.contains('quick-chip')) {
-                applyQuickChip(target);
-            }
-        });
-
-        clearFavorites?.addEventListener('click', () => {
-            saveFavorites([]);
-            renderFavorites();
-        });
-
-        copyLastMeal?.addEventListener('click', () => copyLatestMeal());
-        clearMealForm?.addEventListener('click', () => resetMealForm());
-
-        document.getElementById('meal-photo')?.addEventListener('change', async (event) => {
-            const input = event.target;
-            if (!(input instanceof HTMLInputElement)) return;
-            const file = input.files?.[0];
-            if (!file) {
-                mealPhotoPreview?.classList.add('hidden');
-                mealPhotoPreview.innerHTML = '';
+            if (!items.length) {
+                container.innerHTML = '';
+                empty?.classList.remove('hidden');
                 return;
             }
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (!mealPhotoPreview) return;
-                mealPhotoPreview.innerHTML = `<img src="${reader.result}" alt="Meal preview">`;
-                mealPhotoPreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+            empty?.classList.add('hidden');
+
+            container.innerHTML = items.slice(0, 20).map(item => `
+                <div class="food-chip" data-recent-apply='${escapeHtml(JSON.stringify({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs }))}'>
+                    <div class="food-chip-body">
+                        <div class="food-chip-name">${escapeHtml(item.name)}</div>
+                        <div class="food-chip-detail">${item.weight}g · O ${Math.round((item.protein||0)*10)/10}g · T ${Math.round((item.fat||0)*10)/10}g · Og ${Math.round((item.carbs||0)*10)/10}g</div>
+                    </div>
+                    <span class="food-chip-kcal">${Math.round(item.calories||0)} kcal</span>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('click', (e) => {
+            const chip = e.target.closest('[data-recent-apply]');
+            if (chip) {
+                try {
+                    const item = JSON.parse(chip.dataset.recentApply);
+                    fillFormFromItem(item);
+                    switchSheetTab('manual');
+                } catch {}
+            }
         });
 
-        mealTimeNow?.addEventListener('click', () => setTimeToNow());
+        function fillFormFromItem(item) {
+            $('#food-name').value = item.name || '';
+            $('#food-weight').value = item.weight || 100;
+            $('#food-calories').value = item.calories || 0;
+            $('#food-protein').value = item.protein || 0;
+            $('#food-fat').value = item.fat || 0;
+            $('#food-carbs').value = item.carbs || 0;
+        }
 
-        reloadMeals?.addEventListener('click', () => loadMeals());
-        diaryDate?.addEventListener('change', () => loadMeals());
+        // ---- Keyboard shortcut: Escape to close sheet ----
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSheet();
+        });
 
-        setDateDefaults();
-        addMealItemRow();
-        renderFavorites();
+        // ---- Init ----
+        setAuthLinks();
+        updateDayUI();
         loadAuth();
     </script>
 </Layout>
