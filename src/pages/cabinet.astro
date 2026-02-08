@@ -129,40 +129,33 @@ import Layout from '../layouts/Layout.astro';
                                             <option value="50">50</option>
                                             <option value="55">55</option>
                                         </select>
+                                        <button type="button" class="btn-secondary btn-compact" id="meal-time-now">Tagad</button>
                                     </div>
                                 </div>
-                                <div>
-                                    <label>Svars (g)</label>
-                                    <input id="meal-weight" type="number" min="1" value="100" />
-                                </div>
                             </div>
+
                             <div>
-                                <label>Nosaukums</label>
-                                <input id="meal-name" type="text" placeholder="Piem., salāti" />
+                                <div class="portal-section-header">
+                                    <h4>Ēdieni maltītē</h4>
+                                    <button type="button" class="btn-secondary btn-compact" id="add-meal-item">+ Pievienot ēdienu</button>
+                                </div>
+                                <div id="meal-items" class="meal-items"></div>
+                                <div id="meal-totals" class="meal-totals hidden">
+                                    <span>Kopā: <strong id="meal-total-kcal">0</strong> kcal</span>
+                                    <span>O: <strong id="meal-total-protein">0</strong>g</span>
+                                    <span>T: <strong id="meal-total-fat">0</strong>g</span>
+                                    <span>Og: <strong id="meal-total-carbs">0</strong>g</span>
+                                </div>
                             </div>
-                            <div class="portal-row">
-                                <div>
-                                    <label>Kalorijas</label>
-                                    <input id="meal-calories" type="number" min="0" />
-                                </div>
-                                <div>
-                                    <label>Olbaltumvielas</label>
-                                    <input id="meal-protein" type="number" min="0" step="0.1" />
-                                </div>
-                            </div>
-                            <div class="portal-row">
-                                <div>
-                                    <label>Tauki</label>
-                                    <input id="meal-fat" type="number" min="0" step="0.1" />
-                                </div>
-                                <div>
-                                    <label>Ogļhidrāti</label>
-                                    <input id="meal-carbs" type="number" min="0" step="0.1" />
-                                </div>
+
+                            <div>
+                                <label>Ātrā pievienošana</label>
+                                <div id="recent-items" class="recent-items"></div>
                             </div>
                             <div>
                                 <label>Foto (neobligāti)</label>
                                 <input id="meal-photo" type="file" accept="image/*" />
+                                <div id="meal-photo-preview" class="meal-photo-preview hidden"></div>
                             </div>
                             <button class="btn-primary" type="submit" id="meal-submit">Saglabāt</button>
                             <div id="meal-status" class="portal-status"></div>
@@ -171,6 +164,17 @@ import Layout from '../layouts/Layout.astro';
 
                     <div class="card portal-card">
                         <h3>Maltītes</h3>
+                        <div id="meals-summary" class="meal-summary hidden">
+                            <div>
+                                <span>Kopā dienā</span>
+                                <strong id="day-total-kcal">0 kcal</strong>
+                            </div>
+                            <div class="meal-summary-macros">
+                                <span>O: <strong id="day-total-protein">0</strong>g</span>
+                                <span>T: <strong id="day-total-fat">0</strong>g</span>
+                                <span>Og: <strong id="day-total-carbs">0</strong>g</span>
+                            </div>
+                        </div>
                         <div id="meals-list" class="portal-meals"></div>
                         <div id="meals-empty" class="portal-empty hidden">Nav maltīšu šajā datumā.</div>
                     </div>
@@ -363,13 +367,29 @@ import Layout from '../layouts/Layout.astro';
         .portal-form input, .portal-form select { width: 100%; padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; }
         .time-select { display: flex; align-items: center; gap: 8px; }
         .time-select select { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; background: #fff; }
+        .btn-compact { padding: 8px 12px; font-size: 13px; }
         .portal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .portal-section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .portal-section-header h4 { margin: 0; font-size: 14px; color: #1f2937; }
+        .meal-items { display: flex; flex-direction: column; gap: 12px; }
+        .meal-item { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
+        .meal-item-grid { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
+        .meal-item-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+        .btn-ghost { background: transparent; border: 1px dashed #E6E0D6; color: #64748b; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+        .meal-totals { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #475569; margin-top: 8px; }
+        .recent-items { display: flex; flex-wrap: wrap; gap: 8px; }
+        .recent-item { border: 1px solid #E6E0D6; background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+        .meal-photo-preview { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E6E0D6; }
+        .meal-photo-preview img { width: 100%; display: block; }
         .portal-meals { display: flex; flex-direction: column; gap: 12px; }
         .portal-meal { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
         .portal-meal-header { display: flex; justify-content: space-between; font-weight: 600; }
         .portal-meal-meta { font-size: 12px; color: #64748b; margin-top: 4px; }
         .portal-meal-items { margin-top: 8px; font-size: 14px; color: #64748b; }
         .portal-meal-macros { margin-top: 8px; font-size: 12px; color: #64748b; display: flex; gap: 12px; }
+        .meal-summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #F6F1E8; margin-bottom: 12px; font-size: 13px; }
+        .meal-summary strong { font-size: 16px; color: #1B4332; }
+        .meal-summary-macros { display: flex; gap: 12px; }
         .portal-empty { margin-top: 12px; color: #64748b; }
         .portal-status { font-size: 12px; color: #64748b; }
         .btn-primary {
@@ -392,6 +412,8 @@ import Layout from '../layouts/Layout.astro';
         @media (max-width: 900px) {
             .portal-grid { grid-template-columns: 1fr; }
             .portal-header { flex-direction: column; align-items: flex-start; }
+            .meal-item-grid { grid-template-columns: 1fr 1fr; }
+            .meal-summary { flex-direction: column; align-items: flex-start; }
         }
         @media (min-width: 900px) {
             .mobile-tab-select { display: none; }
@@ -415,9 +437,33 @@ import Layout from '../layouts/Layout.astro';
         const reloadMeals = document.getElementById('reload-meals');
         const mealForm = document.getElementById('meal-form');
         const mealStatus = document.getElementById('meal-status');
+        const mealItems = document.getElementById('meal-items');
+        const addMealItem = document.getElementById('add-meal-item');
+        const mealTotals = document.getElementById('meal-totals');
+        const mealTotalKcal = document.getElementById('meal-total-kcal');
+        const mealTotalProtein = document.getElementById('meal-total-protein');
+        const mealTotalFat = document.getElementById('meal-total-fat');
+        const mealTotalCarbs = document.getElementById('meal-total-carbs');
+        const recentItems = document.getElementById('recent-items');
+        const mealPhotoPreview = document.getElementById('meal-photo-preview');
+        const mealTimeNow = document.getElementById('meal-time-now');
+        const mealsSummary = document.getElementById('meals-summary');
+        const dayTotalKcal = document.getElementById('day-total-kcal');
+        const dayTotalProtein = document.getElementById('day-total-protein');
+        const dayTotalFat = document.getElementById('day-total-fat');
+        const dayTotalCarbs = document.getElementById('day-total-carbs');
 
         const userName = document.getElementById('user-name');
         let userId = '';
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
 
         function setAuthLinks() {
             const origin = window.location.origin;
@@ -429,6 +475,10 @@ import Layout from '../layouts/Layout.astro';
         function setDateDefaults() {
             const today = new Date().toISOString().split('T')[0];
             if (diaryDate && !diaryDate.value) diaryDate.value = today;
+            setTimeToNow();
+        }
+
+        function setTimeToNow() {
             const now = new Date();
             const hour = String(now.getHours()).padStart(2, '0');
             const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
@@ -505,6 +555,7 @@ import Layout from '../layouts/Layout.astro';
             if (!meals.length) {
                 mealsList.innerHTML = '';
                 mealsEmpty.classList.remove('hidden');
+                mealsSummary?.classList.add('hidden');
                 return;
             }
             mealsEmpty.classList.add('hidden');
@@ -514,10 +565,19 @@ import Layout from '../layouts/Layout.astro';
                 dinner: 'Vakariņas',
                 snack: 'Uzkoda'
             };
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalFat = 0;
+            let totalCarbs = 0;
+
             mealsList.innerHTML = meals.map(meal => {
                 const time = new Date(meal.createdAt).toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
                 const mealType = mealTypeLabels[meal.mealType] || 'Maltīte';
-                const items = (meal.items || []).map(item => `${item.name} (${item.weight}g)`).join(', ');
+                const items = (meal.items || []).map(item => `${escapeHtml(item.name)} (${item.weight}g)`).join(', ');
+                totalCalories += Number(meal.totalCalories || 0);
+                totalProtein += Number(meal.totalProtein || 0);
+                totalFat += Number(meal.totalFat || 0);
+                totalCarbs += Number(meal.totalCarbs || 0);
                 return `
                     <div class="portal-meal">
                         <div class="portal-meal-header">
@@ -534,6 +594,144 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                 `;
             }).join('');
+
+            if (mealsSummary) mealsSummary.classList.remove('hidden');
+            if (dayTotalKcal) dayTotalKcal.textContent = `${Math.round(totalCalories)} kcal`;
+            if (dayTotalProtein) dayTotalProtein.textContent = `${Math.round(totalProtein * 10) / 10}`;
+            if (dayTotalFat) dayTotalFat.textContent = `${Math.round(totalFat * 10) / 10}`;
+            if (dayTotalCarbs) dayTotalCarbs.textContent = `${Math.round(totalCarbs * 10) / 10}`;
+
+            updateRecentItems(meals);
+        }
+
+        function addMealItemRow(item = {}) {
+            if (!mealItems) return;
+            const safeName = escapeHtml(item.name || '');
+            const row = document.createElement('div');
+            row.className = 'meal-item';
+            row.innerHTML = `
+                <div class="meal-item-grid">
+                    <div>
+                        <label>Nosaukums</label>
+                        <input type="text" class="meal-item-name" placeholder="Piem., griķi" value="${safeName}">
+                    </div>
+                    <div>
+                        <label>Svars (g)</label>
+                        <input type="number" min="1" class="meal-item-weight" value="${item.weight || 100}">
+                    </div>
+                    <div>
+                        <label>Kalorijas</label>
+                        <input type="number" min="0" class="meal-item-calories" value="${item.calories || 0}">
+                    </div>
+                    <div>
+                        <label>Olbaltumv.</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-protein" value="${item.protein || 0}">
+                    </div>
+                    <div>
+                        <label>Tauki</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-fat" value="${item.fat || 0}">
+                    </div>
+                    <div>
+                        <label>Ogļh.</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-carbs" value="${item.carbs || 0}">
+                    </div>
+                </div>
+                <div class="meal-item-actions">
+                    <button type="button" class="btn-ghost meal-item-remove">Noņemt</button>
+                </div>
+            `;
+            mealItems.appendChild(row);
+            updateMealTotals();
+        }
+
+        function updateMealTotals() {
+            if (!mealItems || !mealTotals) return;
+            const items = collectMealItems();
+            if (!items.length) {
+                mealTotals.classList.add('hidden');
+                return;
+            }
+
+            const totals = items.reduce((acc, item) => {
+                acc.calories += item.calories || 0;
+                acc.protein += item.protein || 0;
+                acc.fat += item.fat || 0;
+                acc.carbs += item.carbs || 0;
+                return acc;
+            }, { calories: 0, protein: 0, fat: 0, carbs: 0 });
+
+            mealTotals.classList.remove('hidden');
+            if (mealTotalKcal) mealTotalKcal.textContent = `${Math.round(totals.calories)}`;
+            if (mealTotalProtein) mealTotalProtein.textContent = `${Math.round(totals.protein * 10) / 10}`;
+            if (mealTotalFat) mealTotalFat.textContent = `${Math.round(totals.fat * 10) / 10}`;
+            if (mealTotalCarbs) mealTotalCarbs.textContent = `${Math.round(totals.carbs * 10) / 10}`;
+        }
+
+        function collectMealItems() {
+            if (!mealItems) return [];
+            const rows = Array.from(mealItems.querySelectorAll('.meal-item'));
+            return rows.map(row => {
+                const name = row.querySelector('.meal-item-name')?.value?.trim();
+                const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
+                const calories = Number(row.querySelector('.meal-item-calories')?.value || 0);
+                const protein = Number(row.querySelector('.meal-item-protein')?.value || 0);
+                const fat = Number(row.querySelector('.meal-item-fat')?.value || 0);
+                const carbs = Number(row.querySelector('.meal-item-carbs')?.value || 0);
+
+                return { name, weight, calories, protein, fat, carbs };
+            }).filter(item => item.name && item.weight);
+        }
+
+        function updateRecentItems(meals) {
+            if (!recentItems) return;
+            const items = [];
+            meals.forEach(meal => {
+                (meal.items || []).forEach(item => {
+                    if (!item?.name) return;
+                    items.push({
+                        name: item.name,
+                        weight: item.weight || 100,
+                        calories: item.calories || 0,
+                        protein: item.protein || 0,
+                        fat: item.fat || 0,
+                        carbs: item.carbs || 0
+                    });
+                });
+            });
+
+            const unique = [];
+            const seen = new Set();
+            for (let i = items.length - 1; i >= 0; i -= 1) {
+                const key = items[i].name.toLowerCase();
+                if (seen.has(key)) continue;
+                seen.add(key);
+                unique.push(items[i]);
+                if (unique.length >= 8) break;
+            }
+
+            recentItems.innerHTML = '';
+
+            if (!unique.length) {
+                const empty = document.createElement('span');
+                empty.className = 'portal-empty';
+                empty.textContent = 'Nav iepriekšēju ēdienu.';
+                recentItems.appendChild(empty);
+                return;
+            }
+
+            unique.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'recent-item';
+                button.dataset.name = item.name;
+                button.dataset.weight = String(item.weight || 100);
+                button.dataset.calories = String(item.calories || 0);
+                button.dataset.protein = String(item.protein || 0);
+                button.dataset.fat = String(item.fat || 0);
+                button.dataset.carbs = String(item.carbs || 0);
+                button.textContent = item.name;
+                recentItems.appendChild(button);
+            });
         }
 
         async function readPhoto() {
@@ -550,9 +748,11 @@ import Layout from '../layouts/Layout.astro';
         mealForm?.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (!userId) return;
-            const name = document.getElementById('meal-name')?.value?.trim();
-            const weight = Number(document.getElementById('meal-weight')?.value || 0);
-            if (!name || !weight) return;
+            const items = collectMealItems();
+            if (!items.length) {
+                if (mealStatus) mealStatus.textContent = 'Pievienojiet vismaz vienu ēdienu.';
+                return;
+            }
 
             if (mealStatus) mealStatus.textContent = 'Saglabā…';
 
@@ -561,15 +761,15 @@ import Layout from '../layouts/Layout.astro';
                 mealType: document.getElementById('meal-type')?.value || 'snack',
                 createdAt: buildMealTime(),
                 photoUrl: await readPhoto(),
-                items: [{
-                    name,
-                    nameEn: name,
-                    weight,
-                    calories: Number(document.getElementById('meal-calories')?.value || 0),
-                    protein: Number(document.getElementById('meal-protein')?.value || 0),
-                    fat: Number(document.getElementById('meal-fat')?.value || 0),
-                    carbs: Number(document.getElementById('meal-carbs')?.value || 0)
-                }]
+                items: items.map(item => ({
+                    name: item.name,
+                    nameEn: item.name,
+                    weight: item.weight,
+                    calories: item.calories,
+                    protein: item.protein,
+                    fat: item.fat,
+                    carbs: item.carbs
+                }))
             };
 
             try {
@@ -586,16 +786,65 @@ import Layout from '../layouts/Layout.astro';
                 }
 
                 if (mealStatus) mealStatus.textContent = 'Saglabāts!';
+                if (mealItems) mealItems.innerHTML = '';
+                addMealItemRow();
                 await loadMeals();
             } catch (error) {
                 if (mealStatus) mealStatus.textContent = (error as Error).message || 'Neizdevās saglabāt.';
             }
         });
 
+        mealItems?.addEventListener('input', () => updateMealTotals());
+        mealItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (target.classList.contains('meal-item-remove')) {
+                target.closest('.meal-item')?.remove();
+                updateMealTotals();
+            }
+        });
+
+        addMealItem?.addEventListener('click', () => addMealItemRow());
+
+        recentItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (!target.classList.contains('recent-item')) return;
+            addMealItemRow({
+                name: target.dataset.name || '',
+                weight: Number(target.dataset.weight || 100),
+                calories: Number(target.dataset.calories || 0),
+                protein: Number(target.dataset.protein || 0),
+                fat: Number(target.dataset.fat || 0),
+                carbs: Number(target.dataset.carbs || 0)
+            });
+        });
+
+        document.getElementById('meal-photo')?.addEventListener('change', async (event) => {
+            const input = event.target;
+            if (!(input instanceof HTMLInputElement)) return;
+            const file = input.files?.[0];
+            if (!file) {
+                mealPhotoPreview?.classList.add('hidden');
+                mealPhotoPreview.innerHTML = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (!mealPhotoPreview) return;
+                mealPhotoPreview.innerHTML = `<img src="${reader.result}" alt="Meal preview">`;
+                mealPhotoPreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        mealTimeNow?.addEventListener('click', () => setTimeToNow());
+
         reloadMeals?.addEventListener('click', () => loadMeals());
         diaryDate?.addEventListener('change', () => loadMeals());
 
         setDateDefaults();
+        addMealItemRow();
         loadAuth();
     </script>
 </Layout>
