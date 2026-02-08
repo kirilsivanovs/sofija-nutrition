@@ -709,6 +709,25 @@ import Layout from '../layouts/Layout.astro';
             transition: color 0.2s, background 0.2s;
         }
         .meal-item-delete:hover { color: #ef4444; background: #fef2f2; }
+        .meal-item-edit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+            border-radius: 8px;
+            color: #d1d5db;
+            font-size: 15px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .meal-item-edit:hover { color: var(--diary-green); background: #f0fdf4; }
+        .meal-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
 
         /* Section totals row */
         .meal-section-totals {
@@ -1093,6 +1112,8 @@ import Layout from '../layouts/Layout.astro';
         let currentDate = new Date();
         let allMeals = [];
         let activeSheetMealType = 'snack';
+        let editingMealId = null;
+        let editingMealDate = null;
         const FAVORITES_KEY = 'diary_favorites_v2';
         const TARGETS_KEY = 'diary_targets';
 
@@ -1288,9 +1309,14 @@ import Layout from '../layouts/Layout.astro';
                                         ${item.weight}g · Obv. ${Math.round(p*10)/10}g · Tauki ${Math.round(f*10)/10}g · Ogh. ${Math.round(c*10)/10}g
                                     </div>
                                 </div>
-                                <button class="meal-item-delete" data-delete-meal="${escapeHtml(meal.RowKey)}" data-delete-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" aria-label="Dzēst">
-                                    <i class="ph ph-trash"></i>
-                                </button>
+                                <div class="meal-item-actions">
+                                    <button class="meal-item-edit" data-edit-meal="${escapeHtml(meal.RowKey)}" data-edit-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" data-edit-type="${type}" data-edit-item='${escapeHtml(JSON.stringify({name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs}))}' aria-label="Rediģēt">
+                                        <i class="ph ph-pencil-simple"></i>
+                                    </button>
+                                    <button class="meal-item-delete" data-delete-meal="${escapeHtml(meal.RowKey)}" data-delete-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" aria-label="Dzēst">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                </div>
                             </div>`;
                     });
                 });
@@ -1368,14 +1394,51 @@ import Layout from '../layouts/Layout.astro';
             } catch {}
         });
 
+        // Edit meal
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-edit-meal]');
+            if (!btn) return;
+            const mealId = btn.dataset.editMeal;
+            const date = btn.dataset.editDate;
+            const type = btn.dataset.editType;
+            try {
+                const itemData = JSON.parse(btn.dataset.editItem);
+                openSheet(type, { mealId, date, ...itemData });
+            } catch {}
+        });
+
         // ---- Water Tracker (removed) ----
 
         // ---- Bottom Sheet ----
-        function openSheet(mealType) {
+        function openSheet(mealType, editData) {
             activeSheetMealType = mealType;
             const labels = { breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda' };
-            $('#sheet-title').textContent = labels[mealType] || 'Pievienot ēdienu';
-            resetAddForm();
+
+            if (editData) {
+                editingMealId = editData.mealId;
+                editingMealDate = editData.date;
+                $('#sheet-title').textContent = 'Rediģēt — ' + (labels[mealType] || '');
+                resetAddForm();
+                $('#food-name').value = editData.name || '';
+                $('#food-weight').value = editData.weight || 100;
+                $('#food-calories').value = editData.calories || '';
+                $('#food-protein').value = editData.protein || '';
+                $('#food-fat').value = editData.fat || '';
+                $('#food-carbs').value = editData.carbs || '';
+                const submitBtn = $('#submit-food-btn');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="ph ph-check"></i> Saglabāt';
+                }
+            } else {
+                editingMealId = null;
+                editingMealDate = null;
+                $('#sheet-title').textContent = labels[mealType] || 'Pievienot ēdienu';
+                resetAddForm();
+                const submitBtn = $('#submit-food-btn');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="ph ph-plus"></i> Pievienot';
+                }
+            }
             switchSheetTab('manual');
             showSheet(true);
         }
@@ -1402,7 +1465,11 @@ import Layout from '../layouts/Layout.astro';
             }
         }
 
-        function closeSheet() { showSheet(false); }
+        function closeSheet() {
+            editingMealId = null;
+            editingMealDate = null;
+            showSheet(false);
+        }
 
         $('#sheet-overlay')?.addEventListener('click', closeSheet);
         $('#sheet-close')?.addEventListener('click', closeSheet);
@@ -1525,25 +1592,43 @@ import Layout from '../layouts/Layout.astro';
 
             const photoUrl = await readPhotoAsDataUrl();
 
-            const payload = {
-                userId,
-                mealType: activeSheetMealType,
-                createdAt: new Date(formatDate(currentDate) + 'T' + String(new Date().getHours()).padStart(2,'0') + ':' + String(new Date().getMinutes()).padStart(2,'0') + ':00').toISOString(),
-                items: [item],
-                totalCalories: calories,
-                totalProtein: protein,
-                totalFat: fat,
-                totalCarbs: carbs,
-                confirmed: true,
-                photoUrl: photoUrl && photoUrl.length <= 50000 ? photoUrl : undefined
-            };
-
             try {
-                const res = await fetch('/api/meals', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                let res;
+                if (editingMealId) {
+                    // PATCH existing meal
+                    const payload = {
+                        items: [item],
+                        totalCalories: calories,
+                        totalProtein: protein,
+                        totalFat: fat,
+                        totalCarbs: carbs,
+                        photoUrl: photoUrl && photoUrl.length <= 50000 ? photoUrl : undefined
+                    };
+                    res = await fetch(`/api/meals/${encodeURIComponent(editingMealId)}?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(editingMealDate)}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    // POST new meal
+                    const payload = {
+                        userId,
+                        mealType: activeSheetMealType,
+                        createdAt: new Date(formatDate(currentDate) + 'T' + String(new Date().getHours()).padStart(2,'0') + ':' + String(new Date().getMinutes()).padStart(2,'0') + ':00').toISOString(),
+                        items: [item],
+                        totalCalories: calories,
+                        totalProtein: protein,
+                        totalFat: fat,
+                        totalCarbs: carbs,
+                        confirmed: true,
+                        photoUrl: photoUrl && photoUrl.length <= 50000 ? photoUrl : undefined
+                    };
+                    res = await fetch('/api/meals', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
 
                 if (!res.ok) {
                     const err = await res.json().catch(() => null);
@@ -1552,7 +1637,9 @@ import Layout from '../layouts/Layout.astro';
                     return;
                 }
 
-                $('#sheet-status').textContent = 'Pievienots!';
+                $('#sheet-status').textContent = editingMealId ? 'Saglabāts!' : 'Pievienots!';
+                editingMealId = null;
+                editingMealDate = null;
                 setTimeout(() => {
                     closeSheet();
                     if (submitBtn) submitBtn.disabled = false;
