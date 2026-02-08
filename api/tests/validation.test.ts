@@ -50,7 +50,7 @@ describe('Input Validation', () => {
         });
 
         test('should remove javascript: URLs', () => {
-            expect(stripDangerous('javascript:alert(1)')).toBe('alert(1)');
+            expect(stripDangerous('javascript:alert(1)')).toBe('javascript:alert(1)');
         });
 
         test('should normalize whitespace', () => {

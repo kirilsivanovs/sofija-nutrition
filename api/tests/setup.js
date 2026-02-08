@@ -6,6 +6,38 @@
 const originalLog = console.log;
 const originalWarn = console.warn;
 
+const redactString = (value) => {
+  return value
+    .replace(/authorization:\s*bearer\s+[^\s]+/ig, 'authorization: Bearer [REDACTED]')
+    .replace(/x-e2e-token\s*[:=]\s*[^\s]+/ig, 'x-e2e-token=[REDACTED]')
+    .replace(/e2e[_-]?test[_-]?token\s*[:=]\s*[^\s]+/ig, 'E2E_TEST_TOKEN=[REDACTED]');
+};
+
+const redactArg = (arg) => {
+  if (typeof arg === 'string') return redactString(arg);
+  if (!arg || typeof arg !== 'object') return arg;
+
+  const clone = Array.isArray(arg) ? [...arg] : { ...arg };
+  const sensitiveKeys = [
+    'authorization',
+    'Authorization',
+    'token',
+    'accessToken',
+    'refreshToken',
+    'apiKey',
+    'e2eToken',
+    'E2E_TEST_TOKEN'
+  ];
+
+  for (const key of sensitiveKeys) {
+    if (Object.prototype.hasOwnProperty.call(clone, key)) {
+      clone[key] = '[REDACTED]';
+    }
+  }
+
+  return clone;
+};
+
 // Подавляем известные информационные сообщения
 console.log = (...args) => {
   const message = args[0]?.toString() || '';
@@ -29,7 +61,7 @@ console.log = (...args) => {
     return; // Пропускаем
   }
   
-  originalLog.apply(console, args);
+  originalLog.apply(console, args.map(redactArg));
 };
 
 console.warn = (...args) => {
@@ -45,5 +77,5 @@ console.warn = (...args) => {
     return;
   }
   
-  originalWarn.apply(console, args);
+  originalWarn.apply(console, args.map(redactArg));
 };

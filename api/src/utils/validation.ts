@@ -78,20 +78,43 @@ export function escapeHtml(str: unknown): string {
  */
 export function stripDangerous(str: unknown): string {
   if (typeof str !== 'string') return '';
-  return str
-    // Удаляем script теги и их содержимое
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    // Удаляем event handlers
-    .replace(/\bon\w+\s*=/gi, '')
-    // Удаляем javascript: URLs
-    .replace(/javascript:/gi, '')
-    // Удаляем data: URLs (могут содержать вредоносный код)
-    .replace(/data:/gi, '')
-    // Удаляем HTML теги
-    .replace(/<[^>]*>/g, '')
-    // Нормализуем пробелы
+
+  const lower = str.toLowerCase();
+  let result = '';
+  let i = 0;
+
+  while (i < str.length) {
+    if (lower.startsWith('<script', i)) {
+      const end = lower.indexOf('</script>', i);
+      if (end === -1) break;
+      i = end + '</script>'.length;
+      continue;
+    }
+
+    if (lower.startsWith('<style', i)) {
+      const end = lower.indexOf('</style>', i);
+      if (end === -1) break;
+      i = end + '</style>'.length;
+      continue;
+    }
+
+    if (str[i] === '<') {
+      const end = str.indexOf('>', i);
+      if (end === -1) break;
+      i = end + 1;
+      continue;
+    }
+
+    result += str[i];
+    i += 1;
+  }
+
+  const normalized = result
+    .replace(/[\u0000-\u001F\u007F]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+
+  return escapeHtml(normalized);
 }
 
 // ============================================

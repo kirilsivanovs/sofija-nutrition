@@ -54,9 +54,22 @@ export function isValidTime(timeStr: string): boolean {
  */
 export function isValidEmail(email: string): boolean {
     if (!email) return false;
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+
+    const normalized = email.trim();
+    if (normalized.length > 254) return false;
+    if (normalized.includes(' ')) return false;
+
+    const atIndex = normalized.indexOf('@');
+    if (atIndex <= 0) return false;
+    if (atIndex !== normalized.lastIndexOf('@')) return false;
+
+    const local = normalized.slice(0, atIndex);
+    const domain = normalized.slice(atIndex + 1);
+    if (!local || !domain) return false;
+    if (!domain.includes('.')) return false;
+    if (domain.startsWith('.') || domain.endsWith('.')) return false;
+
+    return true;
 }
 
 /**
