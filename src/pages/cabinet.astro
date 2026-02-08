@@ -310,18 +310,25 @@ import Layout from '../layouts/Layout.astro';
             --macro-carbs: #43D9AD;
         }
 
-        /* ---- Reset for diary — override global button/a styles ---- */
+        /* ---- Reset for diary — nuclear override of global button/a styles ---- */
         .diary-header, .diary-main, .diary-fullscreen,
         .add-sheet, .sheet-overlay, .fab {
             font-family: var(--font-sans, 'Inter', sans-serif);
         }
-        /* Override global 44px touch-target rule for compact diary buttons */
+        /* Full reset: global.css sets display, padding, font-size, border-radius, min-h/w on all buttons */
+        .diary-header button,
+        .diary-header a,
         .diary-main button,
         .diary-main a,
+        .diary-fullscreen button,
+        .diary-fullscreen a,
         .add-sheet button,
         .add-sheet a {
-            min-height: unset;
-            min-width: unset;
+            all: unset;
+            box-sizing: border-box;
+            cursor: pointer;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* ---- Header ---- */
@@ -372,34 +379,33 @@ import Layout from '../layouts/Layout.astro';
             white-space: nowrap;
         }
         .btn-login {
-            display: inline-flex;
+            display: inline-flex !important;
             align-items: center;
             gap: 6px;
             padding: 10px 18px;
             background: var(--diary-green);
-            color: #fff;
+            color: #fff !important;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 500;
             text-decoration: none;
-            border: none;
-            cursor: pointer;
             transition: background 0.2s;
+            white-space: nowrap;
         }
         .btn-login:hover { background: var(--diary-green-light); }
         .btn-logout {
-            display: inline-flex;
+            display: inline-flex !important;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            color: var(--diary-text-dim);
+            width: 40px;
+            height: 40px;
+            color: var(--diary-text-dim) !important;
             border-radius: 10px;
             text-decoration: none;
             transition: background 0.2s, color 0.2s;
             font-size: 20px;
         }
-        .btn-logout:hover { background: #fef2f2; color: #dc2626; }
+        .btn-logout:hover { background: #fef2f2; color: #dc2626 !important; }
 
         /* ---- Full-screen states ---- */
         .diary-fullscreen {
@@ -449,19 +455,15 @@ import Layout from '../layouts/Layout.astro';
             padding: 16px 0 8px;
         }
         .day-nav-btn {
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: none;
+            width: 40px;
+            height: 40px;
             color: var(--diary-green);
-            font-size: 22px;
-            cursor: pointer;
+            font-size: 20px;
             border-radius: 12px;
             transition: background 0.15s;
-            padding: 0;
         }
         .day-nav-btn:hover { background: var(--diary-warm); }
         .day-nav-date {
@@ -469,18 +471,16 @@ import Layout from '../layouts/Layout.astro';
             flex-direction: column;
             align-items: center;
             gap: 2px;
-            padding: 8px 24px;
-            border: none;
-            background: none;
-            cursor: pointer;
+            padding: 8px 28px;
             border-radius: 12px;
             transition: background 0.15s;
         }
         .day-nav-date:hover { background: var(--diary-warm); }
         #day-label {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 17px;
             color: var(--diary-text);
+            letter-spacing: -0.2px;
         }
         .day-date-sub {
             font-size: 12px;
@@ -498,11 +498,11 @@ import Layout from '../layouts/Layout.astro';
         .summary-card {
             background: #fff;
             border: 1px solid var(--diary-border);
-            border-radius: var(--diary-radius);
-            padding: 24px 20px;
+            border-radius: 20px;
+            padding: 22px 20px;
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
             margin-bottom: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
         }
@@ -625,19 +625,17 @@ import Layout from '../layouts/Layout.astro';
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             transition: all 0.2s;
-            font-size: 18px;
+            font-size: 17px;
             color: #93c5fd;
-            padding: 0;
         }
         .water-cup.filled {
             background: linear-gradient(135deg, #3b82f6, #60a5fa);
             border-color: #3b82f6;
             color: #fff;
         }
-        .water-cup:hover { transform: scale(1.1); }
-        .water-cup:active { transform: scale(0.95); }
+        .water-cup:hover { transform: scale(1.08); }
+        .water-cup:active { transform: scale(0.93); }
 
         /* ---- Meal Sections ---- */
         .meal-section {
@@ -661,15 +659,16 @@ import Layout from '../layouts/Layout.astro';
             gap: 10px;
         }
         .meal-section-title i {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--diary-gold);
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fdf6ec;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #fdf6ec, #faf0de);
+            border-radius: 10px;
+            flex-shrink: 0;
         }
         .meal-section-title h3 {
             margin: 0;
@@ -677,6 +676,7 @@ import Layout from '../layouts/Layout.astro';
             font-size: 15px;
             font-weight: 600;
             color: var(--diary-text);
+            letter-spacing: -0.1px;
         }
         .meal-section-info {
             display: flex;
@@ -691,20 +691,15 @@ import Layout from '../layouts/Layout.astro';
         }
         .meal-section-kcal:empty { display: none; }
         .meal-add-btn {
-            width: 32px;
-            height: 32px;
-            min-width: 32px !important;
-            min-height: 32px !important;
-            border-radius: 50%;
-            border: 1.5px solid var(--diary-border);
-            background: none;
-            color: var(--diary-green);
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid var(--diary-border);
+            color: var(--diary-green);
+            font-size: 14px;
             transition: all 0.2s;
         }
         .meal-add-btn:hover {
@@ -717,21 +712,18 @@ import Layout from '../layouts/Layout.astro';
 
         /* Meal item row */
         .meal-item-row {
-            display: flex !important;
-            flex-direction: row !important;
+            display: flex;
+            flex-direction: row;
             align-items: center;
             padding: 10px 12px 10px 16px;
             border-top: 1px solid #f3efe8;
-            gap: 8px;
-            position: relative;
+            gap: 10px;
             transition: background 0.15s;
         }
-        .meal-item-row:hover { background: #fdfbf7; }
+        .meal-item-row:hover { background: #fcfaf6; }
         .meal-item-body {
-            flex: 1 1 auto;
+            flex: 1 1 0%;
             min-width: 0;
-            display: flex;
-            flex-direction: column;
         }
         .meal-item-name-row {
             display: flex;
@@ -759,30 +751,22 @@ import Layout from '../layouts/Layout.astro';
         }
         .meal-item-detail {
             font-size: 11px;
-            color: var(--diary-text-dim);
-            margin-top: 2px;
+            color: #94a3b8;
+            margin-top: 3px;
             font-variant-numeric: tabular-nums;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
         }
         .meal-item-delete {
-            width: 36px !important;
-            height: 36px !important;
-            min-width: 36px !important;
-            min-height: 36px !important;
-            max-width: 36px;
-            max-height: 36px;
-            border: none;
-            background: none;
-            color: #d1d5db;
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
             border-radius: 8px;
-            font-size: 16px;
+            color: #d1d5db;
+            font-size: 15px;
             transition: color 0.2s, background 0.2s;
-            flex-shrink: 0;
-            padding: 0;
         }
         .meal-item-delete:hover { color: #ef4444; background: #fef2f2; }
 
@@ -852,21 +836,16 @@ import Layout from '../layouts/Layout.astro';
             color: var(--diary-text);
         }
         .sheet-close {
-            width: 36px;
-            height: 36px;
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
-            border: none;
+            width: 34px;
+            height: 34px;
             background: var(--diary-warm);
             border-radius: 50%;
             color: var(--diary-text-dim);
-            cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             transition: background 0.15s;
-            min-width: 36px !important;
-            min-height: 36px !important;
-            padding: 0;
         }
         .sheet-close:hover { background: var(--diary-border); }
 
@@ -881,20 +860,16 @@ import Layout from '../layouts/Layout.astro';
         }
         .sheet-tab {
             flex: 1;
-            padding: 10px 8px;
-            border: none;
-            background: none;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--diary-text-dim);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
-            min-height: 40px;
+            padding: 10px 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--diary-text-dim);
+            border-radius: 10px;
+            transition: all 0.2s;
         }
         .sheet-tab.active {
             background: #fff;
@@ -962,50 +937,41 @@ import Layout from '../layouts/Layout.astro';
         }
         .btn-primary-sm {
             flex: 1;
-            padding: 14px 20px;
-            background: var(--diary-green);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: background 0.2s;
-            min-height: 48px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
+            color: #fff !important;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: opacity 0.2s;
         }
-        .btn-primary-sm:hover { background: var(--diary-green-light); }
+        .btn-primary-sm:hover { opacity: 0.9; }
         .btn-primary-sm:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-save-fav {
+            display: flex;
+            align-items: center;
+            gap: 5px;
             padding: 14px 16px;
             border: 1.5px solid var(--diary-border);
             border-radius: 12px;
             background: #fff;
-            color: var(--diary-text-dim);
+            color: var(--diary-text-dim) !important;
             font-size: 13px;
             font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
             transition: all 0.2s;
             white-space: nowrap;
-            min-height: 48px;
         }
-        .btn-save-fav:hover { border-color: var(--diary-gold); color: var(--diary-gold); }
+        .btn-save-fav:hover { border-color: var(--diary-gold); color: var(--diary-gold) !important; }
         .btn-text {
-            background: none;
-            border: none;
-            color: var(--diary-text-dim);
+            color: var(--diary-text-dim) !important;
             font-size: 13px;
-            cursor: pointer;
             padding: 8px;
-            min-height: 36px;
         }
-        .btn-text:hover { color: #ef4444; }
+        .btn-text:hover { color: #ef4444 !important; }
 
         /* Food chip list (favorites/recent panels) */
         .food-chip-list {
@@ -1045,19 +1011,15 @@ import Layout from '../layouts/Layout.astro';
             flex-shrink: 0;
         }
         .food-chip-del {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            min-height: 28px;
-            border: none;
-            background: none;
-            color: #d1d5db;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
             border-radius: 6px;
-            font-size: 16px;
+            color: #d1d5db;
+            font-size: 14px;
         }
         .food-chip-del:hover { color: #ef4444; }
 
@@ -1088,23 +1050,18 @@ import Layout from '../layouts/Layout.astro';
             position: fixed;
             bottom: 24px;
             right: 24px;
-            width: 56px;
-            height: 56px;
-            min-width: 56px !important;
-            min-height: 56px !important;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
-            color: #fff;
-            border: none;
-            box-shadow: 0 4px 16px rgba(27, 67, 50, 0.35);
-            font-size: 24px;
-            cursor: pointer;
-            display: flex !important;
+            color: #fff !important;
+            box-shadow: 0 4px 20px rgba(27, 67, 50, 0.35);
+            font-size: 22px;
+            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 90;
             transition: transform 0.2s, box-shadow 0.2s;
-            padding: 0;
         }
         .fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(27, 67, 50, 0.4); }
         @media (min-width: 520px) {
