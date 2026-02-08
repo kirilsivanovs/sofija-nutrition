@@ -888,7 +888,8 @@ import Layout from '../layouts/Layout.astro';
             flex-shrink: 0;
             border-top: 1px solid var(--diary-border);
         }
-        .btn-primary-sm {
+        .btn-primary-sm,
+        .add-sheet .btn-primary-sm {
             flex: 1;
             display: flex;
             align-items: center;
@@ -896,15 +897,17 @@ import Layout from '../layouts/Layout.astro';
             gap: 6px;
             padding: 14px 20px;
             background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
-            color: #fff !important;
+            color: #fff;
             border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             transition: opacity 0.2s;
+            cursor: pointer;
         }
         .btn-primary-sm:hover { opacity: 0.9; }
         .btn-primary-sm:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-save-fav {
+        .btn-save-fav,
+        .add-sheet .btn-save-fav {
             display: flex;
             align-items: center;
             gap: 5px;
@@ -912,13 +915,14 @@ import Layout from '../layouts/Layout.astro';
             border: 1.5px solid var(--diary-border);
             border-radius: 12px;
             background: #fff;
-            color: var(--diary-text-dim) !important;
+            color: var(--diary-text-dim);
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
             white-space: nowrap;
+            cursor: pointer;
         }
-        .btn-save-fav:hover { border-color: var(--diary-gold); color: var(--diary-gold) !important; }
+        .btn-save-fav:hover { border-color: var(--diary-gold); color: var(--diary-gold); }
         .btn-text {
             color: var(--diary-text-dim) !important;
             font-size: 13px;
