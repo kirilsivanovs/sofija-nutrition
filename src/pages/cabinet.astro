@@ -77,7 +77,7 @@ import Layout from '../layouts/Layout.astro';
             <div class="macro-bars">
                 <div class="macro-bar-item">
                     <div class="macro-bar-header">
-                        <span class="macro-name">Olbaltumv.</span>
+                        <span class="macro-name">Olbaltumvielas</span>
                         <span class="macro-value"><span id="macro-protein">0</span>/<span id="macro-protein-target">120</span>g</span>
                     </div>
                     <div class="macro-track"><div class="macro-fill macro-fill-protein" id="bar-protein"></div></div>
@@ -226,7 +226,7 @@ import Layout from '../layouts/Layout.astro';
                         <input id="food-fat" type="number" min="0" step="0.1" value="" placeholder="0" />
                     </div>
                     <div class="form-group">
-                        <label>Ogļh. (g)</label>
+                        <label>Ogļhidr. (g)</label>
                         <input id="food-carbs" type="number" min="0" step="0.1" value="" placeholder="0" />
                     </div>
                 </div>
@@ -1254,7 +1254,7 @@ import Layout from '../layouts/Layout.astro';
                                         <span class="meal-item-kcal">${Math.round(cal)} kcal</span>
                                     </div>
                                     <div class="meal-item-detail">
-                                        ${item.weight}g · O ${Math.round(p*10)/10}g · T ${Math.round(f*10)/10}g · Og ${Math.round(c*10)/10}g
+                                        ${item.weight}g · Olb. ${Math.round(p*10)/10}g · T. ${Math.round(f*10)/10}g · Ogl. ${Math.round(c*10)/10}g
                                     </div>
                                 </div>
                                 <button class="meal-item-delete" data-delete-meal="${escapeHtml(meal.RowKey)}" data-delete-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" aria-label="Dzēst">
@@ -1556,7 +1556,7 @@ import Layout from '../layouts/Layout.astro';
                 <div class="food-chip" data-fav-apply='${escapeHtml(JSON.stringify(f))}'>
                     <div class="food-chip-body">
                         <div class="food-chip-name">${escapeHtml(f.name)}</div>
-                        <div class="food-chip-detail">${f.weight}g · O ${f.protein}g · T ${f.fat}g · Og ${f.carbs}g</div>
+                        <div class="food-chip-detail">${f.weight}g · Olb. ${f.protein}g · T. ${f.fat}g · Ogl. ${f.carbs}g</div>
                     </div>
                     <span class="food-chip-kcal">${f.calories} kcal</span>
                     <button class="food-chip-del" data-fav-del="${escapeHtml(f.name)}" aria-label="Noņemt"><i class="ph ph-x"></i></button>
@@ -1614,7 +1614,7 @@ import Layout from '../layouts/Layout.astro';
                 <div class="food-chip" data-recent-apply='${escapeHtml(JSON.stringify({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs }))}'>
                     <div class="food-chip-body">
                         <div class="food-chip-name">${escapeHtml(item.name)}</div>
-                        <div class="food-chip-detail">${item.weight}g · O ${Math.round((item.protein||0)*10)/10}g · T ${Math.round((item.fat||0)*10)/10}g · Og ${Math.round((item.carbs||0)*10)/10}g</div>
+                        <div class="food-chip-detail">${item.weight}g · Olb. ${Math.round((item.protein||0)*10)/10}g · T. ${Math.round((item.fat||0)*10)/10}g · Ogl. ${Math.round((item.carbs||0)*10)/10}g</div>
                     </div>
                     <span class="food-chip-kcal">${Math.round(item.calories||0)} kcal</span>
                 </div>
