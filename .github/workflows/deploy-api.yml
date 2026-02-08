@@ -34,6 +34,10 @@ jobs:
         working-directory: api
         run: npm run build
 
+      - name: Install production dependencies in dist
+        working-directory: api/dist
+        run: npm install --omit=dev
+
       - name: Login to Azure
         uses: Azure/login@v2
         with:

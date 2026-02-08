@@ -4,24 +4,22 @@
 # ============================================
 name: Deploy Frontend
 
+concurrency:
+  group: deploy-frontend-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'shared/**'
-      - 'api/**'
-      - 'astro.config.mjs'
-      - 'tsconfig.json'
-      - 'package.json'
-      - 'package-lock.json'
   workflow_dispatch:
 
 jobs:
   deploy:
     name: Deploy to Azure Static Web Apps
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +32,9 @@ jobs:
           # ── Build config ──
           app_location: /
           output_location: dist
+          app_build_command: npm run build
           # Managed API — deploys Functions alongside frontend
           api_location: api
+          api_build_command: npm run build --prefix api
         env:
           NODE_VERSION: 20
