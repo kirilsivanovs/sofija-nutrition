@@ -304,17 +304,17 @@ export function logPotentialInjection(
 export function isSuspiciousInput(value: unknown): boolean {
   if (typeof value !== 'string') return false;
 
+  const lowered = value.toLowerCase();
+  if (lowered.includes('<script')) return true;
+  if (lowered.includes('javascript:')) return true;
+
   const suspiciousPatterns = [
     // SQL injection
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER)\b.*\b(FROM|INTO|SET|TABLE)\b)/i,
     // NoSQL injection
     /\$(?:where|gt|lt|ne|eq|regex)/i,
-    // Script injection
-    /<script\b[^>]*>[\s\S]*?<\/script>/i,
     // Event handlers
     /\bon\w+\s*=/i,
-    // JavaScript protocol
-    /javascript:/i,
     // Command injection
     /[;&|`$]|\$\(/,
   ];
