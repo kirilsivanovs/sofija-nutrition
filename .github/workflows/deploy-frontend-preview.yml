@@ -59,6 +59,7 @@ jobs:
     permissions:
       contents: read
       deployments: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
 
@@ -79,8 +80,10 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request?.number;
             const sha = context.payload.pull_request?.head?.sha || context.sha;
             const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            const urlRegex = /https:\/\/[\w.-]+\.azurestaticapps\.net\/?/gi;
 
             for (let attempt = 1; attempt <= 10; attempt += 1) {
               const deployments = await github.rest.repos.listDeployments({
@@ -105,6 +108,23 @@ jobs:
                 if (success?.environment_url) {
                   core.setOutput('url', success.environment_url);
                   return;
+                }
+              }
+
+              if (prNumber) {
+                const comments = await github.rest.issues.listComments({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  per_page: 50,
+                });
+
+                for (const comment of comments.data.slice().reverse()) {
+                  const matches = comment.body?.match(urlRegex);
+                  if (matches && matches.length) {
+                    core.setOutput('url', matches[matches.length - 1]);
+                    return;
+                  }
                 }
               }
 
