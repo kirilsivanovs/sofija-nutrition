@@ -730,6 +730,11 @@ import Layout from '../layouts/Layout.astro';
             font-variant-numeric: tabular-nums;
             font-weight: 500;
         }
+        .totals-short { display: none; }
+        @media (max-width: 420px) {
+            .totals-full { display: none; }
+            .totals-short { display: inline; }
+        }
 
         /* Day empty */
         .day-empty {
@@ -1296,7 +1301,8 @@ import Layout from '../layouts/Layout.astro';
                         <div class="meal-section-totals">
                             <span class="meal-section-totals-label">Kopā</span>
                             <span class="meal-section-totals-values">
-                                ${Math.round(sectionCal)} kcal · Obv. ${Math.round(sectionP*10)/10}g · Tauki ${Math.round(sectionF*10)/10}g · Ogh. ${Math.round(sectionC*10)/10}g
+                                <span class="totals-full">Olbaltumvielas ${Math.round(sectionP*10)/10}g · Tauki ${Math.round(sectionF*10)/10}g · Ogļhidrāti ${Math.round(sectionC*10)/10}g</span>
+                                <span class="totals-short">Obv. ${Math.round(sectionP*10)/10}g · Tauki ${Math.round(sectionF*10)/10}g · Ogh. ${Math.round(sectionC*10)/10}g</span>
                             </span>
                         </div>`;
                 }
