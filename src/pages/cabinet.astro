@@ -622,8 +622,8 @@ import Layout from '../layouts/Layout.astro';
             aspect-ratio: 1;
             width: 100%;
             border-radius: 10px;
-            border: 1.5px solid #e0e7ee;
-            background: #f8fafc;
+            border: 1.5px solid var(--diary-border);
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -640,7 +640,7 @@ import Layout from '../layouts/Layout.astro';
             left: 0;
             right: 0;
             height: 0%;
-            background: linear-gradient(180deg, #93c5fd 0%, #3b82f6 100%);
+            background: linear-gradient(180deg, #bfdbfe 0%, #60a5fa 100%);
             transition: height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             border-radius: inherit;
             z-index: 0;
@@ -648,13 +648,13 @@ import Layout from '../layouts/Layout.astro';
         .water-cup i { position: relative; z-index: 1; transition: color 0.3s, transform 0.3s; }
         .water-cup.filled {
             border-color: #93c5fd;
-            color: #fff;
+            color: #1e40af;
         }
         .water-cup.filled::before {
             height: 100%;
         }
         .water-cup.filled i { transform: scale(1.1); }
-        .water-cup:hover { transform: scale(1.08); border-color: #93c5fd; }
+        .water-cup:hover { transform: scale(1.08); }
         .water-cup:active { transform: scale(0.93); }
 
         /* ---- Meal Sections ---- */
@@ -799,50 +799,45 @@ import Layout from '../layouts/Layout.astro';
         .day-empty i { font-size: 48px; display: block; margin-bottom: 12px; color: var(--diary-border); }
         .day-empty p { margin: 0 0 16px; font-size: 15px; }
 
-        /* ---- Bottom Sheet ---- */
+        /* ---- Centered Modal ---- */
         .sheet-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.35);
+            background: rgba(0,0,0,0.4);
             z-index: 100;
             opacity: 0;
             transition: opacity 0.25s;
+            backdrop-filter: blur(4px);
         }
         .sheet-overlay.visible { opacity: 1; }
         .add-sheet {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            top: 50%;
+            left: 50%;
             z-index: 101;
             background: #fff;
-            border-radius: 20px 20px 0 0;
-            max-height: 96dvh;
+            border-radius: 20px;
+            width: calc(100% - 32px);
+            max-width: var(--diary-max-w);
+            max-height: 85dvh;
             display: flex;
             flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            transform: translate(-50%, -50%) scale(0.95);
+            opacity: 0;
+            transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s;
             padding: 0 20px;
-            padding-bottom: env(safe-area-inset-bottom, 16px);
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.05);
         }
-        .add-sheet.visible { transform: translateY(0); }
-        @media (min-width: 520px) {
-            .add-sheet {
-                max-width: var(--diary-max-w);
-                left: 50%;
-                transform: translate(-50%, 100%);
-            }
-            .add-sheet.visible {
-                transform: translate(-50%, 0);
-            }
+        .add-sheet.visible {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
         }
         .sheet-handle {
             width: 40px;
             height: 4px;
             border-radius: 2px;
             background: #d1d5db;
-            margin: 10px auto 8px;
+            margin: 12px auto 4px;
             flex-shrink: 0;
         }
         .sheet-header {
@@ -878,7 +873,7 @@ import Layout from '../layouts/Layout.astro';
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 20px;
+            padding-bottom: 8px;
         }
 
         /* Sheet tabs */
@@ -963,11 +958,18 @@ import Layout from '../layouts/Layout.astro';
         }
         .photo-preview img { width: 100%; display: block; object-fit: cover; max-height: 180px; }
 
-        /* Form actions */
+        /* Form actions — sticky at bottom */
         .form-actions {
             display: flex;
             gap: 10px;
             align-items: center;
+            padding: 12px 0 16px;
+            background: #fff;
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
+            border-top: 1px solid var(--diary-border);
+            margin-top: 4px;
         }
         .btn-primary-sm {
             flex: 1;
