@@ -75,6 +75,25 @@ import Layout from '../layouts/Layout.astro';
                     <div class="card portal-card">
                         <h3>Pievienot maltīti</h3>
                         <form id="meal-form" class="portal-form">
+                            <div class="quick-actions">
+                                <div class="quick-group">
+                                    <span class="quick-label">Tips</span>
+                                    <button type="button" class="quick-chip" data-meal-type="breakfast">Brokastis</button>
+                                    <button type="button" class="quick-chip" data-meal-type="lunch">Pusdienas</button>
+                                    <button type="button" class="quick-chip" data-meal-type="dinner">Vakariņas</button>
+                                    <button type="button" class="quick-chip" data-meal-type="snack">Uzkoda</button>
+                                </div>
+                                <div class="quick-group">
+                                    <span class="quick-label">Laiks</span>
+                                    <button type="button" class="quick-chip" data-time="now">Tagad</button>
+                                    <button type="button" class="quick-chip" data-time="-30">-30m</button>
+                                    <button type="button" class="quick-chip" data-time="+30">+30m</button>
+                                </div>
+                                <div class="quick-group">
+                                    <button type="button" class="btn-secondary btn-compact" id="copy-last-meal">Kopēt pēdējo maltīti</button>
+                                    <button type="button" class="btn-secondary btn-compact" id="clear-meal-form">Notīrīt</button>
+                                </div>
+                            </div>
                             <div>
                                 <label>Maltītes veids</label>
                                 <select id="meal-type">
@@ -149,7 +168,15 @@ import Layout from '../layouts/Layout.astro';
                             </div>
 
                             <div>
-                                <label>Ātrā pievienošana</label>
+                                <div class="portal-section-header">
+                                    <h4>Favorīti</h4>
+                                    <button type="button" class="btn-secondary btn-compact" id="clear-favorites">Notīrīt</button>
+                                </div>
+                                <div id="favorite-items" class="recent-items"></div>
+                            </div>
+
+                            <div>
+                                <label>Nesen lietots</label>
                                 <div id="recent-items" class="recent-items"></div>
                             </div>
                             <div>
@@ -369,12 +396,18 @@ import Layout from '../layouts/Layout.astro';
         .time-select select { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; background: #fff; }
         .btn-compact { padding: 8px 12px; font-size: 13px; }
         .portal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .quick-actions { display: flex; flex-direction: column; gap: 12px; padding: 12px; border: 1px dashed #E6E0D6; border-radius: 12px; background: #fff; }
+        .quick-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .quick-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 6px; }
+        .quick-chip { border: 1px solid #E6E0D6; background: #fff; color: #1f2937; padding: 6px 12px; border-radius: 999px; font-size: 12px; cursor: pointer; }
+        .quick-chip.active, .quick-chip:hover { background: #1B4332; color: #fff; border-color: #1B4332; }
         .portal-section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
         .portal-section-header h4 { margin: 0; font-size: 14px; color: #1f2937; }
         .meal-items { display: flex; flex-direction: column; gap: 12px; }
         .meal-item { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
-        .meal-item-grid { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
-        .meal-item-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+        .meal-item-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
+        .meal-item-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .meal-item-actions-left { display: flex; gap: 8px; }
         .btn-ghost { background: transparent; border: 1px dashed #E6E0D6; color: #64748b; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
         .meal-totals { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #475569; margin-top: 8px; }
         .recent-items { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -413,6 +446,7 @@ import Layout from '../layouts/Layout.astro';
             .portal-grid { grid-template-columns: 1fr; }
             .portal-header { flex-direction: column; align-items: flex-start; }
             .meal-item-grid { grid-template-columns: 1fr 1fr; }
+            .quick-group { align-items: flex-start; }
             .meal-summary { flex-direction: column; align-items: flex-start; }
         }
         @media (min-width: 900px) {
@@ -445,8 +479,12 @@ import Layout from '../layouts/Layout.astro';
         const mealTotalFat = document.getElementById('meal-total-fat');
         const mealTotalCarbs = document.getElementById('meal-total-carbs');
         const recentItems = document.getElementById('recent-items');
+        const favoriteItems = document.getElementById('favorite-items');
+        const clearFavorites = document.getElementById('clear-favorites');
         const mealPhotoPreview = document.getElementById('meal-photo-preview');
         const mealTimeNow = document.getElementById('meal-time-now');
+        const copyLastMeal = document.getElementById('copy-last-meal');
+        const clearMealForm = document.getElementById('clear-meal-form');
         const mealsSummary = document.getElementById('meals-summary');
         const dayTotalKcal = document.getElementById('day-total-kcal');
         const dayTotalProtein = document.getElementById('day-total-protein');
@@ -455,6 +493,9 @@ import Layout from '../layouts/Layout.astro';
 
         const userName = document.getElementById('user-name');
         let userId = '';
+        let lastMealsCache = [];
+
+        const favoritesKey = 'mealFavorites';
 
         function escapeHtml(value) {
             return String(value)
@@ -552,6 +593,7 @@ import Layout from '../layouts/Layout.astro';
 
         function renderMeals(meals) {
             if (!mealsList || !mealsEmpty) return;
+            lastMealsCache = Array.isArray(meals) ? meals : [];
             if (!meals.length) {
                 mealsList.innerHTML = '';
                 mealsEmpty.classList.remove('hidden');
@@ -602,6 +644,7 @@ import Layout from '../layouts/Layout.astro';
             if (dayTotalCarbs) dayTotalCarbs.textContent = `${Math.round(totalCarbs * 10) / 10}`;
 
             updateRecentItems(meals);
+            renderFavorites();
         }
 
         function addMealItemRow(item = {}) {
@@ -637,6 +680,9 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                 </div>
                 <div class="meal-item-actions">
+                    <div class="meal-item-actions-left">
+                        <button type="button" class="btn-ghost meal-item-favorite">Saglabāt favorītos</button>
+                    </div>
                     <button type="button" class="btn-ghost meal-item-remove">Noņemt</button>
                 </div>
             `;
@@ -734,6 +780,127 @@ import Layout from '../layouts/Layout.astro';
             });
         }
 
+        function loadFavorites() {
+            try {
+                const raw = localStorage.getItem(favoritesKey);
+                return raw ? JSON.parse(raw) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveFavorites(items) {
+            localStorage.setItem(favoritesKey, JSON.stringify(items));
+        }
+
+        function renderFavorites() {
+            if (!favoriteItems) return;
+            const favorites = loadFavorites();
+            favoriteItems.innerHTML = '';
+
+            if (!favorites.length) {
+                const empty = document.createElement('span');
+                empty.className = 'portal-empty';
+                empty.textContent = 'Pagaidām nav favorītu.';
+                favoriteItems.appendChild(empty);
+                return;
+            }
+
+            favorites.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'recent-item';
+                button.dataset.name = item.name;
+                button.dataset.weight = String(item.weight || 100);
+                button.dataset.calories = String(item.calories || 0);
+                button.dataset.protein = String(item.protein || 0);
+                button.dataset.fat = String(item.fat || 0);
+                button.dataset.carbs = String(item.carbs || 0);
+                button.textContent = item.name;
+                favoriteItems.appendChild(button);
+            });
+        }
+
+        function saveFavoriteFromRow(row) {
+            const name = row.querySelector('.meal-item-name')?.value?.trim();
+            const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
+            if (!name || !weight) return;
+
+            const item = {
+                name,
+                weight,
+                calories: Number(row.querySelector('.meal-item-calories')?.value || 0),
+                protein: Number(row.querySelector('.meal-item-protein')?.value || 0),
+                fat: Number(row.querySelector('.meal-item-fat')?.value || 0),
+                carbs: Number(row.querySelector('.meal-item-carbs')?.value || 0)
+            };
+
+            const favorites = loadFavorites();
+            const exists = favorites.some(entry => entry.name.toLowerCase() === name.toLowerCase());
+            if (!exists) {
+                favorites.unshift(item);
+                saveFavorites(favorites.slice(0, 12));
+                renderFavorites();
+            }
+        }
+
+        function applyQuickChip(target) {
+            if (!(target instanceof HTMLElement)) return;
+            const typeValue = target.dataset.mealType;
+            const timeValue = target.dataset.time;
+            if (typeValue) {
+                document.getElementById('meal-type').value = typeValue;
+            }
+            if (timeValue) {
+                const now = new Date();
+                const offset = Number(timeValue);
+                if (Number.isFinite(offset)) {
+                    now.setMinutes(now.getMinutes() + offset);
+                }
+                const hour = String(now.getHours()).padStart(2, '0');
+                const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
+                const hourSelect = document.getElementById('meal-hour');
+                const minuteSelect = document.getElementById('meal-minute');
+                if (hourSelect) hourSelect.value = hour;
+                if (minuteSelect) minuteSelect.value = minute;
+            }
+
+            if (target.classList.contains('quick-chip')) {
+                target.classList.add('active');
+                setTimeout(() => target.classList.remove('active'), 600);
+            }
+        }
+
+        function resetMealForm() {
+            if (mealItems) mealItems.innerHTML = '';
+            addMealItemRow();
+            if (mealStatus) mealStatus.textContent = '';
+            const photoInput = document.getElementById('meal-photo');
+            if (photoInput) photoInput.value = '';
+            if (mealPhotoPreview) {
+                mealPhotoPreview.classList.add('hidden');
+                mealPhotoPreview.innerHTML = '';
+            }
+            setTimeToNow();
+        }
+
+        function copyLatestMeal() {
+            if (!lastMealsCache.length) return;
+            const latest = [...lastMealsCache].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+            if (!latest) return;
+            if (mealItems) mealItems.innerHTML = '';
+            (latest.items || []).forEach(item => addMealItemRow(item));
+            document.getElementById('meal-type').value = latest.mealType || 'snack';
+            const latestDate = new Date(latest.createdAt);
+            const hour = String(latestDate.getHours()).padStart(2, '0');
+            const minute = String(Math.floor(latestDate.getMinutes() / 5) * 5).padStart(2, '0');
+            const hourSelect = document.getElementById('meal-hour');
+            const minuteSelect = document.getElementById('meal-minute');
+            if (hourSelect) hourSelect.value = hour;
+            if (minuteSelect) minuteSelect.value = minute;
+            updateMealTotals();
+        }
+
         async function readPhoto() {
             const input = document.getElementById('meal-photo');
             const file = input?.files?.[0];
@@ -801,6 +968,11 @@ import Layout from '../layouts/Layout.astro';
             if (target.classList.contains('meal-item-remove')) {
                 target.closest('.meal-item')?.remove();
                 updateMealTotals();
+                return;
+            }
+            if (target.classList.contains('meal-item-favorite')) {
+                const row = target.closest('.meal-item');
+                if (row) saveFavoriteFromRow(row);
             }
         });
 
@@ -819,6 +991,36 @@ import Layout from '../layouts/Layout.astro';
                 carbs: Number(target.dataset.carbs || 0)
             });
         });
+
+        favoriteItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (!target.classList.contains('recent-item')) return;
+            addMealItemRow({
+                name: target.dataset.name || '',
+                weight: Number(target.dataset.weight || 100),
+                calories: Number(target.dataset.calories || 0),
+                protein: Number(target.dataset.protein || 0),
+                fat: Number(target.dataset.fat || 0),
+                carbs: Number(target.dataset.carbs || 0)
+            });
+        });
+
+        document.querySelector('.quick-actions')?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (target.classList.contains('quick-chip')) {
+                applyQuickChip(target);
+            }
+        });
+
+        clearFavorites?.addEventListener('click', () => {
+            saveFavorites([]);
+            renderFavorites();
+        });
+
+        copyLastMeal?.addEventListener('click', () => copyLatestMeal());
+        clearMealForm?.addEventListener('click', () => resetMealForm());
 
         document.getElementById('meal-photo')?.addEventListener('change', async (event) => {
             const input = event.target;
@@ -845,6 +1047,7 @@ import Layout from '../layouts/Layout.astro';
 
         setDateDefaults();
         addMealItemRow();
+        renderFavorites();
         loadAuth();
     </script>
 </Layout>
