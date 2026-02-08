@@ -310,10 +310,18 @@ import Layout from '../layouts/Layout.astro';
             --macro-carbs: #43D9AD;
         }
 
-        /* ---- Reset for diary ---- */
+        /* ---- Reset for diary — override global button/a styles ---- */
         .diary-header, .diary-main, .diary-fullscreen,
         .add-sheet, .sheet-overlay, .fab {
             font-family: var(--font-sans, 'Inter', sans-serif);
+        }
+        /* Override global 44px touch-target rule for compact diary buttons */
+        .diary-main button,
+        .diary-main a,
+        .add-sheet button,
+        .add-sheet a {
+            min-height: unset;
+            min-width: unset;
         }
 
         /* ---- Header ---- */
@@ -441,7 +449,7 @@ import Layout from '../layouts/Layout.astro';
             padding: 16px 0 8px;
         }
         .day-nav-btn {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             width: 44px;
@@ -453,6 +461,7 @@ import Layout from '../layouts/Layout.astro';
             cursor: pointer;
             border-radius: 12px;
             transition: background 0.15s;
+            padding: 0;
         }
         .day-nav-btn:hover { background: var(--diary-warm); }
         .day-nav-date {
@@ -493,26 +502,26 @@ import Layout from '../layouts/Layout.astro';
             padding: 24px 20px;
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 28px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
         }
         .summary-ring-wrap {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             flex-shrink: 0;
         }
         .summary-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
         .ring-bg {
             fill: none;
             stroke: var(--diary-warm);
-            stroke-width: 10;
+            stroke-width: 8;
         }
         .ring-fill {
             fill: none;
             stroke: var(--diary-green);
-            stroke-width: 10;
+            stroke-width: 8;
             stroke-linecap: round;
             stroke-dasharray: 326.73;
             stroke-dashoffset: 326.73;
@@ -526,19 +535,21 @@ import Layout from '../layouts/Layout.astro';
             display: flex;
             flex-direction: column;
             align-items: center;
-            line-height: 1.2;
+            line-height: 1.15;
         }
         .ring-eaten {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: var(--diary-green);
+            font-variant-numeric: tabular-nums;
         }
         .ring-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--diary-text-dim);
+            margin-top: 1px;
         }
         .ring-unit {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--diary-text-dim);
             font-weight: 500;
         }
@@ -546,82 +557,87 @@ import Layout from '../layouts/Layout.astro';
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            min-width: 0;
         }
-        .macro-bar-item { display: flex; flex-direction: column; gap: 4px; }
+        .macro-bar-item { display: flex; flex-direction: column; gap: 5px; }
         .macro-bar-header {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            align-items: baseline;
+            font-size: 13px;
         }
         .macro-name { color: var(--diary-text-dim); font-weight: 500; }
-        .macro-value { color: var(--diary-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+        .macro-value { color: var(--diary-text); font-weight: 600; font-variant-numeric: tabular-nums; font-size: 12px; }
         .macro-track {
-            height: 6px;
+            height: 7px;
             background: var(--diary-warm);
-            border-radius: 3px;
+            border-radius: 4px;
             overflow: hidden;
         }
         .macro-fill {
             height: 100%;
-            border-radius: 3px;
+            border-radius: 4px;
             transition: width 0.6s ease;
             width: 0;
+            max-width: 100%;
         }
-        .macro-fill-protein { background: var(--macro-protein); }
-        .macro-fill-fat { background: var(--macro-fat); }
-        .macro-fill-carbs { background: var(--macro-carbs); }
+        .macro-fill-protein { background: linear-gradient(90deg, #5B8DEF, #7BA6F7); }
+        .macro-fill-fat { background: linear-gradient(90deg, #F59E42, #F7B76B); }
+        .macro-fill-carbs { background: linear-gradient(90deg, #43D9AD, #6AE6C5); }
 
         /* ---- Water Card ---- */
         .water-card {
             background: #fff;
             border: 1px solid var(--diary-border);
             border-radius: var(--diary-radius);
-            padding: 16px 20px;
+            padding: 14px 16px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
         }
         .water-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .water-title {
             display: flex;
             align-items: center;
             gap: 6px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--diary-text);
         }
-        .water-title i { font-size: 20px; color: #3b82f6; }
-        .water-count { font-size: 13px; color: var(--diary-text-dim); font-variant-numeric: tabular-nums; }
+        .water-title i { font-size: 18px; color: #3b82f6; }
+        .water-count { font-size: 12px; color: var(--diary-text-dim); font-variant-numeric: tabular-nums; }
         .water-cups {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
             gap: 6px;
-            flex-wrap: wrap;
         }
         .water-cup {
-            width: 36px;
-            height: 36px;
+            aspect-ratio: 1;
+            width: 100%;
             border-radius: 10px;
-            border: 1.5px solid #bfdbfe;
+            border: 1.5px solid #dbeafe;
             background: #f0f7ff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 16px;
+            font-size: 18px;
             color: #93c5fd;
+            padding: 0;
         }
         .water-cup.filled {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
             border-color: #3b82f6;
             color: #fff;
         }
-        .water-cup:hover { transform: scale(1.08); }
+        .water-cup:hover { transform: scale(1.1); }
+        .water-cup:active { transform: scale(0.95); }
 
         /* ---- Meal Sections ---- */
         .meal-section {
@@ -630,20 +646,31 @@ import Layout from '../layouts/Layout.astro';
             border-radius: var(--diary-radius);
             margin-bottom: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
         }
         .meal-section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 16px;
+            padding: 12px 16px;
+            min-height: 52px;
         }
         .meal-section-title {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
-        .meal-section-title i { font-size: 20px; color: var(--diary-gold); }
+        .meal-section-title i {
+            font-size: 20px;
+            color: var(--diary-gold);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fdf6ec;
+            border-radius: 8px;
+        }
         .meal-section-title h3 {
             margin: 0;
             font-family: var(--font-sans, 'Inter', sans-serif);
@@ -654,52 +681,63 @@ import Layout from '../layouts/Layout.astro';
         .meal-section-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         .meal-section-kcal {
             font-size: 13px;
             color: var(--diary-text-dim);
             font-variant-numeric: tabular-nums;
+            font-weight: 500;
         }
+        .meal-section-kcal:empty { display: none; }
         .meal-add-btn {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            min-height: 36px;
+            width: 32px;
+            height: 32px;
+            min-width: 32px !important;
+            min-height: 32px !important;
             border-radius: 50%;
-            border: 1.5px solid var(--diary-green);
+            border: 1.5px solid var(--diary-border);
             background: none;
             color: var(--diary-green);
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
+            padding: 0;
             transition: all 0.2s;
         }
         .meal-add-btn:hover {
             background: var(--diary-green);
             color: #fff;
+            border-color: var(--diary-green);
         }
+        .meal-section-items:empty + .meal-section-empty { display: block; }
         .meal-section-items { /* container for rendered items */ }
 
         /* Meal item row */
         .meal-item-row {
-            display: flex;
+            display: flex !important;
+            flex-direction: row !important;
             align-items: center;
-            padding: 10px 16px;
-            border-top: 1px solid #f1ede6;
-            gap: 10px;
+            padding: 10px 12px 10px 16px;
+            border-top: 1px solid #f3efe8;
+            gap: 8px;
             position: relative;
             transition: background 0.15s;
         }
         .meal-item-row:hover { background: #fdfbf7; }
-        .meal-item-body { flex: 1; min-width: 0; }
+        .meal-item-body {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
         .meal-item-name-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            gap: 8px;
+            gap: 12px;
         }
         .meal-item-name {
             font-size: 14px;
@@ -708,36 +746,43 @@ import Layout from '../layouts/Layout.astro';
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex: 1;
+            min-width: 0;
         }
         .meal-item-kcal {
             font-size: 13px;
             font-weight: 600;
-            color: var(--diary-text);
+            color: var(--diary-green);
             font-variant-numeric: tabular-nums;
             flex-shrink: 0;
+            white-space: nowrap;
         }
         .meal-item-detail {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--diary-text-dim);
             margin-top: 2px;
             font-variant-numeric: tabular-nums;
+            letter-spacing: 0.2px;
         }
         .meal-item-delete {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            min-height: 32px;
+            width: 36px !important;
+            height: 36px !important;
+            min-width: 36px !important;
+            min-height: 36px !important;
+            max-width: 36px;
+            max-height: 36px;
             border: none;
             background: none;
-            color: #cbd5e1;
-            display: flex;
+            color: #d1d5db;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 16px;
             transition: color 0.2s, background 0.2s;
             flex-shrink: 0;
+            padding: 0;
         }
         .meal-item-delete:hover { color: #ef4444; background: #fef2f2; }
 
@@ -809,7 +854,7 @@ import Layout from '../layouts/Layout.astro';
         .sheet-close {
             width: 36px;
             height: 36px;
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             border: none;
@@ -819,8 +864,9 @@ import Layout from '../layouts/Layout.astro';
             cursor: pointer;
             font-size: 18px;
             transition: background 0.15s;
-            min-width: 36px;
-            min-height: 36px;
+            min-width: 36px !important;
+            min-height: 36px !important;
+            padding: 0;
         }
         .sheet-close:hover { background: var(--diary-border); }
 
@@ -1044,20 +1090,21 @@ import Layout from '../layouts/Layout.astro';
             right: 24px;
             width: 56px;
             height: 56px;
-            min-width: 56px;
-            min-height: 56px;
+            min-width: 56px !important;
+            min-height: 56px !important;
             border-radius: 50%;
-            background: var(--diary-green);
+            background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
             color: #fff;
             border: none;
-            box-shadow: 0 4px 16px rgba(27, 67, 50, 0.3);
+            box-shadow: 0 4px 16px rgba(27, 67, 50, 0.35);
             font-size: 24px;
             cursor: pointer;
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             z-index: 90;
             transition: transform 0.2s, box-shadow 0.2s;
+            padding: 0;
         }
         .fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(27, 67, 50, 0.4); }
         @media (min-width: 520px) {
@@ -1070,9 +1117,12 @@ import Layout from '../layouts/Layout.astro';
         /* ---- Responsive ---- */
         @media (max-width: 500px) {
             .summary-card { flex-direction: column; gap: 16px; padding: 20px 16px; }
-            .summary-ring-wrap { width: 100px; height: 100px; }
-            .ring-eaten { font-size: 24px; }
+            .summary-ring-wrap { width: 100px; height: 100px; align-self: center; }
+            .ring-eaten { font-size: 22px; }
+            .macro-bars { width: 100%; }
             .form-row-3 { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+            .water-cups { grid-template-columns: repeat(8, 1fr); gap: 5px; }
+            .water-cup { font-size: 16px; }
         }
 
         /* Animation */
@@ -1087,6 +1137,15 @@ import Layout from '../layouts/Layout.astro';
         .meal-item-row {
             animation: fadeIn 0.25s ease;
         }
+
+        /* ---- Overflows indicator ---- */
+        .macro-fill.over {
+            background: linear-gradient(90deg, #ef4444, #f87171) !important;
+        }
+
+        /* ---- Kcal emphasis in meal rows ---- */
+        .meal-item-row:last-child { border-bottom: none; }
+        .meal-section-items:not(:empty) { padding-bottom: 4px; }
     </style>
 
     <!-- ============ SCRIPT ============ -->
@@ -1301,6 +1360,7 @@ import Layout from '../layouts/Layout.astro';
 
                 container.innerHTML = html;
                 if (kcalLabel) kcalLabel.textContent = sectionCal > 0 ? `${Math.round(sectionCal)} kcal` : '';
+                if (kcalLabel) kcalLabel.style.display = sectionCal > 0 ? '' : 'none';
             });
 
             // Update summary ring
@@ -1319,14 +1379,27 @@ import Layout from '../layouts/Layout.astro';
             if (cal > targets.calories && ring) ring.style.stroke = '#ef4444';
             else if (ring) ring.style.stroke = 'var(--diary-green)';
 
-            $('#ring-eaten').textContent = Math.round(cal);
+            const ringEaten = $('#ring-eaten');
+            if (ringEaten) {
+                ringEaten.textContent = Math.round(cal);
+                ringEaten.style.color = cal > targets.calories ? '#ef4444' : '';
+            }
+
             $('#macro-protein').textContent = Math.round(p);
             $('#macro-fat').textContent = Math.round(f);
             $('#macro-carbs').textContent = Math.round(c);
 
-            $('#bar-protein').style.width = `${Math.min(p / targets.protein * 100, 100)}%`;
-            $('#bar-fat').style.width = `${Math.min(f / targets.fat * 100, 100)}%`;
-            $('#bar-carbs').style.width = `${Math.min(c / targets.carbs * 100, 100)}%`;
+            setBarWidth('bar-protein', p, targets.protein);
+            setBarWidth('bar-fat', f, targets.fat);
+            setBarWidth('bar-carbs', c, targets.carbs);
+        }
+
+        function setBarWidth(id, value, target) {
+            const bar = $(`#${id}`);
+            if (!bar) return;
+            const pct = Math.min(value / target * 100, 100);
+            bar.style.width = `${pct}%`;
+            bar.classList.toggle('over', value > target);
         }
 
         // Delete meal
