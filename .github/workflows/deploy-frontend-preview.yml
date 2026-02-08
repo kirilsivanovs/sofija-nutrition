@@ -29,7 +29,7 @@ jobs:
     if: ${{ github.event.action != 'closed' && github.event_name == 'pull_request' }}
     permissions:
       contents: read
-      deployments: read
+      deployments: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
@@ -80,37 +80,38 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const sha = context.payload.pull_request?.head?.sha || context.sha;
-            const deployments = await github.rest.repos.listDeployments({
-              owner,
-              repo,
-              ref: sha,
-              per_page: 20,
-            });
+            const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-            if (!deployments.data.length) {
-              core.setFailed('No deployments found for this ref.');
-              return;
-            }
-
-            for (const deployment of deployments.data) {
-              const statuses = await github.rest.repos.listDeploymentStatuses({
+            for (let attempt = 1; attempt <= 10; attempt += 1) {
+              const deployments = await github.rest.repos.listDeployments({
                 owner,
                 repo,
-                deployment_id: deployment.id,
+                ref: sha,
                 per_page: 20,
               });
 
-              const success = statuses.data.find(
-                (status) => status.state === 'success' && status.environment_url
-              );
+              for (const deployment of deployments.data) {
+                const statuses = await github.rest.repos.listDeploymentStatuses({
+                  owner,
+                  repo,
+                  deployment_id: deployment.id,
+                  per_page: 20,
+                });
 
-              if (success?.environment_url) {
-                core.setOutput('url', success.environment_url);
-                return;
+                const success = statuses.data.find(
+                  (status) => status.state === 'success' && status.environment_url
+                );
+
+                if (success?.environment_url) {
+                  core.setOutput('url', success.environment_url);
+                  return;
+                }
               }
+
+              await delay(15000);
             }
 
-            core.setFailed('No successful deployment URL found.');
+            core.setFailed('No successful deployment URL found after retries.');
 
       - name: Run e2e tests
         env:
