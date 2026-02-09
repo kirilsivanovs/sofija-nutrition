@@ -4,6 +4,7 @@ import AdminHeader from '../../components/admin/AdminHeader.astro';
 import CalendarView from '../../components/admin/CalendarView.astro';
 import AvailabilityTab from '../../components/admin/AvailabilityTab.astro';
 import SettingsTab from '../../components/admin/SettingsTab.astro';
+import PatientList from '../../components/admin/PatientList/PatientList.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
@@ -58,23 +59,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                                 <i class="ph ph-arrows-clockwise"></i>
                             </button>
                         </div>
-                        <input id="patients-search" class="input-field" placeholder="Meklēt pēc ID" />
-                        <div class="patient-add" style="margin-top: 10px; display: flex; gap: 8px;">
-                            <input id="patients-add-id" class="input-field" placeholder="Ievadīt lietotāja ID" />
-                            <button id="patients-add-btn" class="btn-secondary btn-sm">Pievienot</button>
-                        </div>
-
-                        <div id="patients-loading" class="loading-state hidden" style="margin-top: 12px;">
-                            <div class="loading-spinner"></div>
-                            <span>Ielādē datus...</span>
-                        </div>
-
-                        <div id="patients-list" class="patients-list"></div>
-
-                        <div id="patients-empty" class="hidden empty-state" style="margin-top: 12px;">
-                            <i class="ph ph-users empty-icon"></i>
-                            <span>Nav pacientu</span>
-                        </div>
+                        
+                        <PatientList />
                     </div>
 
                     <div class="meals-main">
@@ -174,7 +160,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                             <span>Notīrīt</span>
                         </button>
                     </div>
-                    
+
                     <div id="batch-actions" class="hidden" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
                         <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                             <span style="font-weight: 600; color: var(--color-primary);">
@@ -1114,7 +1100,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         .legend-cancelled { background: #ef4444; }
 
         /* Calendar */
-        .calendar-wrapper { 
+        .calendar-wrapper {
             margin-bottom: 20px;
         }
 
@@ -1143,8 +1129,8 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             letter-spacing: 0.5px;
         }
 
-        .calendar-day-name.weekend { 
-            color: #fecaca; 
+        .calendar-day-name.weekend {
+            color: #fecaca;
         }
 
         .calendar-grid {
@@ -1171,7 +1157,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             gap: 6px;
         }
 
-        .calendar-cell:hover { 
+        .calendar-cell:hover {
             box-shadow: inset 0 0 0 3px var(--color-primary);
             z-index: 10;
             transform: scale(1.02);
@@ -1195,22 +1181,22 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         }
 
         /* Доступные дни - белый фон */
-        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.available { 
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.available {
             background-color: #ffffff !important;
         }
 
         /* Дни с записями - светло-зеленый */
-        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.booked { 
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.booked {
             background-color: #f0fdf4 !important;
         }
 
         /* Недоступные дни (выходные, нерабочие) - светло-красный фон */
-        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.weekend { 
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.weekend {
             background-color: #fff1f2 !important;
         }
 
         /* Праздники и блокированные - красный фон */
-        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.holiday { 
+        .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.holiday {
             background-color: #fee2e2 !important;
         }
 
@@ -1285,31 +1271,31 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             border-color: #22c55e;
             color: #166534;
         }
-        
-        .calendar-cell .booking-dot.confirmed span { 
-            background: #22c55e; 
+
+        .calendar-cell .booking-dot.confirmed span {
+            background: #22c55e;
         }
-        
+
         /* Красный кружок - отмененные */
         .calendar-cell .booking-dot.cancelled {
             background: rgba(239, 68, 68, 0.15);
             border-color: #ef4444;
             color: #991b1b;
         }
-        
-        .calendar-cell .booking-dot.cancelled span { 
-            background: #ef4444; 
+
+        .calendar-cell .booking-dot.cancelled span {
+            background: #ef4444;
         }
-        
+
         /* Желтый кружок - ждут оплаты */
         .calendar-cell .booking-dot.pending {
             background: rgba(250, 204, 21, 0.15);
             border-color: #facc15;
             color: #854d0e;
         }
-        
-        .calendar-cell .booking-dot.pending span { 
-            background: #facc15; 
+
+        .calendar-cell .booking-dot.pending span {
+            background: #facc15;
         }
 
         .calendar-cell .booking-count {
@@ -1580,7 +1566,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             margin-bottom: 24px;
         }
 
-        .vacation-form .input-field { 
+        .vacation-form .input-field {
             width: auto;
             min-width: 160px;
         }
@@ -1672,11 +1658,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         }
 
         .data-table tr:hover td { background: var(--color-cream); }
-        
+
         .data-table tr.row-selected {
             background: #dbeafe !important;
         }
-        
+
         .data-table tr.row-selected td {
             background: #dbeafe !important;
         }
@@ -1725,109 +1711,6 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             font-size: 16px;
             margin: 0;
             color: var(--color-text);
-        }
-
-        .patients-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .patient-item {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: center;
-            padding: 10px 12px;
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            background: var(--color-white);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .patient-item > div {
-            min-width: 0;
-        }
-
-        .patient-item:hover {
-            background: var(--color-cream);
-        }
-
-        .patient-item.active {
-            border-color: var(--color-primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .patient-id {
-            font-size: 13px;
-            color: var(--color-text);
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-        }
-
-        .patient-meta {
-            font-size: 12px;
-            color: var(--color-text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-        }
-
-        .patient-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-        }
-
-        .access-toggle {
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 999px;
-            padding: 4px 10px;
-            border: 1px solid transparent;
-            cursor: pointer;
-        }
-
-        .access-toggle.on {
-            background: rgba(34, 197, 94, 0.12);
-            color: #166534;
-            border-color: rgba(34, 197, 94, 0.3);
-        }
-
-        .access-toggle.off {
-            background: rgba(239, 68, 68, 0.12);
-            color: #991b1b;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-remove-patient {
-            background: transparent;
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--color-muted);
-            transition: all 0.2s;
-            font-size: 14px;
-            padding: 0;
-        }
-
-        .btn-remove-patient:hover {
-            background: rgba(239, 68, 68, 0.12);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #991b1b;
         }
 
         .meals-list {
@@ -2363,14 +2246,14 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         import { formatDate, formatDateReverse, formatTime, formatDateISO, initializeDateInputs } from '../../utils/admin/formatters';
         import { showToast, showConfirm } from '../../utils/admin/notifications';
         import { DAY_NAMES_FOR_SCHEDULE, MONTH_NAMES, SERVICE_NAMES } from '../../utils/admin/constants';
-        import { 
-            renderCalendar, 
-            showDayDetails, 
-            navigateMonth, 
-            goToToday, 
-            setCalendarData, 
-            getCurrentDate, 
-            setCurrentDate, 
+        import {
+            renderCalendar,
+            showDayDetails,
+            navigateMonth,
+            goToToday,
+            setCalendarData,
+            getCurrentDate,
+            setCurrentDate,
             getSelectedDate,
             setSelectedDate,
             getServiceName,
@@ -2387,12 +2270,14 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         } from '../../utils/admin/availability';
         import { initDatePicker } from '../../utils/admin/datePicker';
         import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays';
-        import { 
-            loadCalendarData, 
+        import {
+            loadCalendarData,
             confirmBooking as confirmBookingApi,
             cancelBooking as cancelBookingApi,
-            findFirstUpcomingBooking 
+            findFirstUpcomingBooking
         } from '../../utils/adminApiAdapter';
+        import { PatientService } from '../../services/admin/PatientService';
+        import { PatientListController } from '../../components/admin/PatientList/PatientListController';
 
         // Type declarations for global window functions
         declare global {
@@ -2413,15 +2298,50 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             endDate: string;
         }
 
-        const API_BASE = window.location.hostname === 'localhost' 
-            ? 'http://localhost:7071/api' 
+        interface MealItem {
+            name: string;
+            weight: number;
+            calories?: number;
+            protein?: number;
+            fat?: number;
+            carbs?: number;
+        }
+
+        interface Meal {
+            id?: string;
+            userId?: string;
+            createdAt: string;
+            mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+            totalCalories: number;
+            totalProtein: number;
+            totalFat: number;
+            totalCarbs: number;
+            items?: MealItem[];
+        }
+
+        interface DayData {
+            totalCalories: number;
+            totalProtein: number;
+            totalFat: number;
+            totalCarbs: number;
+            meals: Meal[];
+            mealsByType: {
+                breakfast: Meal[];
+                lunch: Meal[];
+                dinner: Meal[];
+                snack: Meal[];
+            };
+        }
+
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:7071/api'
             : '/api';
-        
+
         // E2E Test Token Support
         // Если в URL есть ?e2e_token=xxx, проверяем его и сохраняем
         const urlParams = new URLSearchParams(window.location.search);
         const e2eToken = urlParams.get('e2e_token') || sessionStorage.getItem('e2e_token');
-        
+
         if (e2eToken) {
             sessionStorage.setItem('e2e_token', e2eToken);
             // Убираем токен из URL для безопасности
@@ -2431,7 +2351,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 window.history.replaceState({}, '', newUrl);
             }
         }
-        
+
         // Функция для добавления токена к API запросам
         window.getAuthHeaders = function(): Record<string, string> {
             const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -2441,7 +2361,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             }
             return headers;
         };
-        
+
         // Calendar state managed by calendar.js
         let allBookings: any[] = [];
         let holidays: Record<string, string> = {};
@@ -2495,7 +2415,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             if (tabId === 'bookings') loadCalendar();
             if (tabId === 'availability') loadAvailability();
             if (tabId === 'settings') loadSettings();
-            if (tabId === 'meals') loadPatients();
+            if (tabId === 'meals') patientController.loadPatients();
             if (tabId === 'data') loadTableData();
         }
 
@@ -2510,13 +2430,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             });
         }
 
-        const patientsSearchInput = document.getElementById('patients-search') as HTMLInputElement | null;
-        const patientsAddInput = document.getElementById('patients-add-id') as HTMLInputElement | null;
-        const patientsAddBtn = document.getElementById('patients-add-btn');
+        // Initialize Patient Service and Controller
+        const patientService = new PatientService(API_BASE);
+        const patientController = new PatientListController(patientService);
+
         const patientsRefreshBtn = document.getElementById('patients-refresh');
-        const patientsLoading = document.getElementById('patients-loading');
-        const patientsEmpty = document.getElementById('patients-empty');
-        const patientsList = document.getElementById('patients-list');
 
         // Meals Calendar Elements
         const mealsPatientName = document.getElementById('meals-patient-name');
@@ -2531,11 +2449,29 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         const mealsEmpty = document.getElementById('meals-empty');
 
         let adminMeals: any[] = [];
-        let adminPatients: any[] = [];
-        let selectedPatientId = '';
         let selectedPatientName = '';
         let currentMealsDate = new Date();
         let mealsDataByDay: Map<string, any> = new Map();
+
+        // Initialize Patient List Controller
+        patientController.init({
+            searchInput: document.getElementById('patients-search-input') as HTMLInputElement | null,
+            addInput: document.getElementById('patients-add-input') as HTMLInputElement | null,
+            addButton: document.getElementById('patients-add-btn') as HTMLButtonElement | null,
+            listContainer: document.getElementById('patients-list'),
+            emptyContainer: document.getElementById('patients-empty'),
+            onPatientSelect: (patient) => {
+                selectedPatientName = patientService.getDisplayName(patient);
+                if (mealsPatientName) mealsPatientName.textContent = selectedPatientName;
+                if (mealsPatientId) mealsPatientId.textContent = patient.userId;
+                loadMealsForMonth();
+            },
+            onAccessUpdate: () => {
+                // Access updated successfully
+            },
+            onShowToast: showToast,
+            onShowConfirm: showConfirm
+        });
 
         // Month navigation
         mealsPrevMonthBtn?.addEventListener('click', () => {
@@ -2548,15 +2484,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         });
         mealsRefreshBtn?.addEventListener('click', () => loadMealsForMonth());
 
-        patientsRefreshBtn?.addEventListener('click', loadPatients);
-        patientsSearchInput?.addEventListener('input', applyPatientsFilter);
-        patientsAddBtn?.addEventListener('click', addPatientFromInput);
-        patientsAddInput?.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                addPatientFromInput();
-            }
-        });
+        patientsRefreshBtn?.addEventListener('click', () => patientController.loadPatients());
 
         function formatMealTime(value?: string): string {
             if (!value) return '';
@@ -2572,151 +2500,21 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             return date.toLocaleDateString('lv-LV');
         }
 
-        function applyPatientsFilter(): void {
-            const query = patientsSearchInput?.value?.trim().toLowerCase() || '';
-            const filtered = query
-                ? adminPatients.filter((patient: any) => {
-                    const userId = String(patient.userId || '').toLowerCase();
-                    const displayName = String(patient.displayName || '').toLowerCase();
-                    const email = String(patient.email || '').toLowerCase();
-                    return userId.includes(query) || displayName.includes(query) || email.includes(query);
-                })
-                : adminPatients;
-            renderPatients(filtered);
-        }
-
-        function renderPatients(patients: any[]): void {
-            if (!patientsList || !patientsEmpty) return;
-
-            if (!patients.length) {
-                patientsList.innerHTML = '';
-                patientsEmpty.classList.remove('hidden');
-                return;
-            }
-
-            patientsEmpty.classList.add('hidden');
-            patientsList.innerHTML = patients.map((patient: any) => {
-                const isActive = selectedPatientId === patient.userId;
-                const accessEnabled = Boolean(patient.accessEnabled);
-                const displayName = patient.displayName || patient.email || patient.userId;
-                const secondary = displayName !== patient.userId ? `ID: ${patient.userId}` : '';
-                return `
-                    <div class="patient-item ${isActive ? 'active' : ''}" data-user-id="${patient.userId}" role="button" tabindex="0">
-                        <div>
-                            <div class="patient-id">${displayName}</div>
-                            <div class="patient-meta">${secondary || `Pēdējais ieraksts: ${formatPatientDate(patient.lastMealAt)}`}</div>
-                        </div>
-                        <div class="patient-actions">
-                            <div class="patient-meta">${patient.mealsCount || 0} ier.</div>
-                            <div style="display: flex; gap: 4px; align-items: center;">
-                                <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${patient.userId}" data-enabled="${accessEnabled}">
-                                    ${accessEnabled ? 'Atļauts' : 'Slēgts'}
-                                </button>
-                                <button class="btn-remove-patient" data-user-id="${patient.userId}" title="Dzēst pacientu">
-                                    <i class="ph ph-x"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            patientsList.querySelectorAll('.patient-item').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const userId = (btn as HTMLElement).dataset.userId || '';
-                    if (!userId) return;
-                    const patient = adminPatients.find(p => p.userId === userId);
-                    selectedPatientId = userId;
-                    selectedPatientName = patient?.displayName || patient?.email || userId;
-                    applyPatientsFilter();
-                    loadMealsForMonth();
-                });
-            });
-
-            patientsList.querySelectorAll('.access-toggle').forEach(toggle => {
-                toggle.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    const button = event.currentTarget as HTMLButtonElement;
-                    const userId = button.dataset.userId || '';
-                    const enabled = button.dataset.enabled === 'true';
-                    if (!userId) return;
-                    updateAccess(userId, !enabled);
-                });
-            });
-
-            patientsList.querySelectorAll('.btn-remove-patient').forEach(btn => {
-                btn.addEventListener('click', async (event) => {
-                    event.stopPropagation();
-                    const button = event.currentTarget as HTMLButtonElement;
-                    const userId = button.dataset.userId || '';
-                    if (!userId) return;
-                    await removePatient(userId);
-                });
-            });
-        }
-
-        async function removePatient(userId: string): Promise<void> {
-            const patient = adminPatients.find(p => p.userId === userId);
-            const displayName = patient?.displayName || patient?.email || userId;
-            
-            const confirmed = await showConfirm(
-                `Vai tiešām dzēst pacientu "${displayName}" no saraksta? Šī darbība nedzēsīs viņa datus, tikai noņems no admin saraksta.`,
-                'Dzēst pacientu no saraksta'
-            );
-            
-            if (!confirmed) return;
-            
-            // Remove from local list
-            adminPatients = adminPatients.filter(p => p.userId !== userId);
-            
-            // If this was selected patient, clear selection
-            if (selectedPatientId === userId) {
-                selectedPatientId = '';
-                selectedPatientName = '';
-                if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
-                if (mealsEmpty) mealsEmpty.classList.remove('hidden');
-                if (mealsPatientName) mealsPatientName.textContent = 'Izvēlies pacientu';
-                if (mealsPatientId) mealsPatientId.textContent = '';
-            }
-            
-            applyPatientsFilter();
-            showToast('Pacients noņemts no saraksta', 'success');
-        }
-
-        function addPatientFromInput(): void {
-            const userId = patientsAddInput?.value?.trim() || '';
-            if (!userId) return;
-
-            if (!adminPatients.some(patient => patient.userId === userId)) {
-                adminPatients = [
-                    { userId, mealsCount: 0, lastMealAt: undefined, accessEnabled: false },
-                    ...adminPatients
-                ];
-            }
-
-            const patient = adminPatients.find(p => p.userId === userId);
-            selectedPatientId = userId;
-            selectedPatientName = patient?.displayName || patient?.email || userId;
-            if (patientsAddInput) patientsAddInput.value = '';
-            applyPatientsFilter();
-            loadMealsForMonth();
-        }
-
         // Calendar functions
         function formatMonthYear(date: Date): string {
-            const months = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 
+            const months = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs',
                            'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
             return `${months[date.getMonth()]} ${date.getFullYear()}`;
         }
 
-        function aggregateDataByDay(meals: any[]): Map<string, any> {
-            const dayMap = new Map<string, any>();
-            
+        function aggregateDataByDay(meals: Meal[]): Map<string, DayData> {
+            const dayMap = new Map<string, DayData>();
+
             meals.forEach(meal => {
                 if (!meal.createdAt) return;
                 const date = new Date(meal.createdAt);
                 const dateKey = date.toISOString().split('T')[0];
-                
+
                 if (!dayMap.has(dateKey)) {
                     dayMap.set(dateKey, {
                         totalCalories: 0,
@@ -2732,63 +2530,65 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                         }
                     });
                 }
-                
-                const dayData = dayMap.get(dateKey);
+
+                const dayData = dayMap.get(dateKey)!;
                 dayData.totalCalories += meal.totalCalories || 0;
                 dayData.totalProtein += meal.totalProtein || 0;
                 dayData.totalFat += meal.totalFat || 0;
                 dayData.totalCarbs += meal.totalCarbs || 0;
                 dayData.meals.push(meal);
-                
+
                 const mealType = meal.mealType || 'snack';
                 if (dayData.mealsByType[mealType]) {
                     dayData.mealsByType[mealType].push(meal);
                 }
             });
-            
+
             return dayMap;
         }
 
         function renderMealsCalendar(): void {
             if (!mealsCalendarGrid) return;
+
+            const selectedPatientId = patientController.getSelectedPatientId();
             
             if (!selectedPatientId) {
                 if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
                 if (mealsEmpty) mealsEmpty.classList.remove('hidden');
                 return;
             }
-            
+
             if (mealsEmpty) mealsEmpty.classList.add('hidden');
             if (mealsCalendarContainer) mealsCalendarContainer.classList.remove('hidden');
-            
+
             const year = currentMealsDate.getFullYear();
             const month = currentMealsDate.getMonth();
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
-            
+
             let startDay = firstDay.getDay() - 1;
             if (startDay < 0) startDay = 6;
-            
+
             const daysInMonth = lastDay.getDate();
             const cells: string[] = [];
-            
+
             // Empty cells before month starts
             for (let i = 0; i < startDay; i++) {
                 cells.push('<div class="meals-calendar-day empty"></div>');
             }
-            
+
             // Days of the month
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
                 const dateKey = date.toISOString().split('T')[0];
                 const dayData = mealsDataByDay.get(dateKey);
-                
+
                 if (dayData && dayData.meals.length > 0) {
                     const kcal = Math.round(dayData.totalCalories);
                     const protein = Math.round(dayData.totalProtein);
                     const fat = Math.round(dayData.totalFat);
                     const carbs = Math.round(dayData.totalCarbs);
-                    
+
                     cells.push(`
                         <div class="meals-calendar-day has-data" onclick="showDayMealsModal('${dateKey}')">
                             <div class="meals-day-number">${day}</div>
@@ -2808,38 +2608,40 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     `);
                 }
             }
-            
+
             mealsCalendarGrid.innerHTML = cells.join('');
         }
 
         async function loadMealsForMonth(): Promise<void> {
+            const selectedPatientId = patientController.getSelectedPatientId();
+            
             if (!selectedPatientId) {
                 showToast('Izvēlies pacientu', 'warning');
                 return;
             }
-            
+
             if (mealsLoading) mealsLoading.classList.remove('hidden');
             if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
-            
+
             // Enable/disable controls
             [mealsPrevMonthBtn, mealsNextMonthBtn, mealsRefreshBtn].forEach(btn => {
                 if (btn) btn.setAttribute('disabled', 'true');
             });
-            
+
             try {
                 const year = currentMealsDate.getFullYear();
                 const month = currentMealsDate.getMonth();
-                
+
                 // Get all days in month
                 const firstDay = `${year}-${String(month + 1).padStart(2, '0')}-01`;
                 const lastDay = new Date(year, month + 1, 0).getDate();
                 const lastDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-                
+
                 const response = await fetch(
                     `${API_BASE}/dashboard/meals/range?userId=${encodeURIComponent(selectedPatientId)}&startDate=${firstDay}&endDate=${lastDayStr}`,
                     { headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' } }
                 );
-                
+
                 if (!response.ok) {
                     const error = await response.json().catch(() => null);
                     showToast(error?.error || 'Neizdevās ielādēt datus', 'error');
@@ -2847,15 +2649,15 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     renderMealsCalendar();
                     return;
                 }
-                
+
                 const data = await response.json();
                 adminMeals = Array.isArray(data) ? data : [];
                 mealsDataByDay = aggregateDataByDay(adminMeals);
-                
+
                 if (mealsCurrentMonth) mealsCurrentMonth.textContent = formatMonthYear(currentMealsDate);
                 if (mealsPatientName) mealsPatientName.textContent = selectedPatientName || selectedPatientId;
                 if (mealsPatientId) mealsPatientId.textContent = `ID: ${selectedPatientId}`;
-                
+
                 renderMealsCalendar();
             } catch (error: unknown) {
                 showToast((error as Error).message, 'error');
@@ -2873,31 +2675,31 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         function showDayMealsModal(dateKey: string): void {
             const dayData = mealsDataByDay.get(dateKey);
             if (!dayData) return;
-            
+
             const modal = document.getElementById('meals-day-modal');
             const modalTitle = document.getElementById('meals-modal-title');
             const modalSummary = document.getElementById('meals-modal-summary');
             const modalContent = document.getElementById('meals-modal-content');
-            
+
             if (!modal || !modalTitle || !modalSummary || !modalContent) return;
-            
+
             // Format date
             const date = new Date(dateKey);
-            const formattedDate = date.toLocaleDateString('lv-LV', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const formattedDate = date.toLocaleDateString('lv-LV', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
-            
+
             modalTitle.textContent = formattedDate;
-            
+
             // Summary
             const kcal = Math.round(dayData.totalCalories);
             const protein = Math.round(dayData.totalProtein);
             const fat = Math.round(dayData.totalFat);
             const carbs = Math.round(dayData.totalCarbs);
-            
+
             modalSummary.innerHTML = `
                 <div class="meals-summary-row">
                     <span class="meals-summary-label">Kopā kalorijas:</span>
@@ -2916,7 +2718,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     <span class="meals-summary-value">${carbs}g</span>
                 </div>
             `;
-            
+
             // Meal types
             const typeLabels: Record<string, string> = {
                 breakfast: 'Brokastis',
@@ -2924,34 +2726,35 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 dinner: 'Vakariņas',
                 snack: 'Uzkodas'
             };
-            
+
             const typeIcons: Record<string, string> = {
                 breakfast: 'ph-coffee',
                 lunch: 'ph-bowl-food',
                 dinner: 'ph-fork-knife',
                 snack: 'ph-apple'
             };
-            
+
             const sections: string[] = [];
-            
-            Object.entries(dayData.mealsByType).forEach(([type, meals]) => {
+
+            Object.entries(dayData.mealsByType).forEach(([type, mealsUntyped]) => {
+                const meals = mealsUntyped as Meal[];
                 if (meals.length === 0) return;
-                
-                const typeKcal = meals.reduce((sum: number, m: any) => sum + (m.totalCalories || 0), 0);
-                const typeProtein = meals.reduce((sum: number, m: any) => sum + (m.totalProtein || 0), 0);
-                const typeFat = meals.reduce((sum: number, m: any) => sum + (m.totalFat || 0), 0);
-                const typeCarbs = meals.reduce((sum: number, m: any) => sum + (m.totalCarbs || 0), 0);
-                
-                const entries = meals.map((meal: any) => {
+
+                const typeKcal = meals.reduce((sum, m) => sum + (m.totalCalories || 0), 0);
+                const typeProtein = meals.reduce((sum, m) => sum + (m.totalProtein || 0), 0);
+                const typeFat = meals.reduce((sum, m) => sum + (m.totalFat || 0), 0);
+                const typeCarbs = meals.reduce((sum, m) => sum + (m.totalCarbs || 0), 0);
+
+                const entries = meals.map((meal) => {
                     const time = formatMealTime(meal.createdAt);
                     const items = (meal.items || [])
-                        .map((item: any) => `${item.name} (${item.weight}g)`)
+                        .map((item: MealItem) => `${item.name} (${item.weight}g)`)
                         .join(', ') || '—';
                     const calories = Math.round(meal.totalCalories || 0);
                     const protein = Math.round(meal.totalProtein || 0);
                     const fat = Math.round(meal.totalFat || 0);
                     const carbs = Math.round(meal.totalCarbs || 0);
-                    
+
                     return `
                         <div class="meal-entry">
                             <div class="meal-entry-time">${time}</div>
@@ -2965,7 +2768,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                         </div>
                     `;
                 }).join('');
-                
+
                 sections.push(`
                     <div class="meal-type-section">
                         <div class="meal-type-header">
@@ -2974,9 +2777,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                                 <span>${typeLabels[type]}</span>
                             </div>
                             <div class="meal-type-summary">
-                                ${Math.round(typeKcal)} kcal | 
-                                O:${Math.round(typeProtein)}g | 
-                                T:${Math.round(typeFat)}g | 
+                                ${Math.round(typeKcal)} kcal |
+                                O:${Math.round(typeProtein)}g |
+                                T:${Math.round(typeFat)}g |
                                 Og:${Math.round(typeCarbs)}g
                             </div>
                         </div>
@@ -2984,7 +2787,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     </div>
                 `);
             });
-            
+
             modalContent.innerHTML = sections.join('');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -3002,107 +2805,6 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         (window as any).showDayMealsModal = showDayMealsModal;
         (window as any).closeMealsModal = closeMealsModal;
 
-        async function loadPatients(): Promise<void> {
-            if (patientsLoading) patientsLoading.classList.remove('hidden');
-            if (patientsEmpty) patientsEmpty.classList.add('hidden');
-
-            try {
-                const [patientsResponse, accessResponse] = await Promise.all([
-                    fetch(`${API_BASE}/dashboard/patients`, {
-                        headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' }
-                    }),
-                    fetch(`${API_BASE}/dashboard/food-access`, {
-                        headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' }
-                    })
-                ]);
-
-                if (!patientsResponse.ok) {
-                    const error = await patientsResponse.json().catch(() => null);
-                    showToast(error?.error || 'Neizdevās ielādēt pacientus', 'error');
-                    adminPatients = [];
-                    renderPatients([]);
-                    return;
-                }
-
-                const patientsData = await patientsResponse.json();
-                const accessData = accessResponse.ok ? await accessResponse.json() : [];
-                const accessMap = new Map<string, { enabled: boolean; displayName?: string; email?: string }>();
-
-                if (Array.isArray(accessData)) {
-                    accessData.forEach((entry: any) => {
-                        if (!entry?.userId) return;
-                        accessMap.set(entry.userId, {
-                            enabled: Boolean(entry.enabled),
-                            displayName: entry.displayName,
-                            email: entry.email
-                        });
-                    });
-                }
-
-                const patientsArray = Array.isArray(patientsData) ? patientsData : [];
-                const patientMap = new Map<string, any>();
-
-                patientsArray.forEach((patient: any) => {
-                    if (!patient?.userId) return;
-                    const access = accessMap.get(patient.userId);
-                    patientMap.set(patient.userId, {
-                        ...patient,
-                        accessEnabled: access?.enabled ?? false,
-                        displayName: access?.displayName,
-                        email: access?.email
-                    });
-                });
-
-                if (Array.isArray(accessData)) {
-                    accessData.forEach((entry: any) => {
-                        const userId = entry?.userId ? String(entry.userId) : '';
-                        if (!userId || patientMap.has(userId)) return;
-                        patientMap.set(userId, {
-                            userId,
-                            mealsCount: 0,
-                            lastMealAt: undefined,
-                            accessEnabled: Boolean(entry.enabled),
-                            displayName: entry.displayName,
-                            email: entry.email
-                        });
-                    });
-                }
-
-                adminPatients = Array.from(patientMap.values());
-                applyPatientsFilter();
-            } catch (error: unknown) {
-                showToast((error as Error).message, 'error');
-                adminPatients = [];
-                renderPatients([]);
-            } finally {
-                if (patientsLoading) patientsLoading.classList.add('hidden');
-            }
-        }
-
-        async function updateAccess(userId: string, enabled: boolean): Promise<void> {
-            try {
-                const response = await fetch(`${API_BASE}/dashboard/food-access?userId=${encodeURIComponent(userId)}`, {
-                    method: 'PUT',
-                    headers: window.getAuthHeaders ? window.getAuthHeaders() : { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ enabled })
-                });
-
-                if (!response.ok) {
-                    const error = await response.json().catch(() => null);
-                    showToast(error?.error || 'Neizdevās atjaunināt piekļuvi', 'error');
-                    return;
-                }
-
-                adminPatients = adminPatients.map((patient: any) =>
-                    patient.userId === userId ? { ...patient, accessEnabled: enabled } : patient
-                );
-                applyPatientsFilter();
-                showToast(enabled ? 'Piekļuve ieslēgta' : 'Piekļuve izslēgta', 'success');
-            } catch (error: unknown) {
-                showToast((error as Error).message, 'error');
-            }
-        }
-
         const prevMonthBtn = document.getElementById('prev-month');
         const nextMonthBtn = document.getElementById('next-month');
         const todayBtn = document.getElementById('today-btn');
@@ -3110,29 +2812,29 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         const closeDayDetailsBtn = document.getElementById('close-day-details');
 
         if (prevMonthBtn) {
-            prevMonthBtn.addEventListener('click', () => { 
+            prevMonthBtn.addEventListener('click', () => {
                 const currentDate = getCurrentDate();
-                currentDate.setDate(1); 
-                currentDate.setMonth(currentDate.getMonth() - 1); 
+                currentDate.setDate(1);
+                currentDate.setMonth(currentDate.getMonth() - 1);
                 setCurrentDate(currentDate);
-                loadCalendar(); 
+                loadCalendar();
             });
         }
 
         if (nextMonthBtn) {
-            nextMonthBtn.addEventListener('click', () => { 
+            nextMonthBtn.addEventListener('click', () => {
                 const currentDate = getCurrentDate();
-                currentDate.setDate(1); 
-                currentDate.setMonth(currentDate.getMonth() + 1); 
+                currentDate.setDate(1);
+                currentDate.setMonth(currentDate.getMonth() + 1);
                 setCurrentDate(currentDate);
-                loadCalendar(); 
+                loadCalendar();
             });
         }
 
         if (todayBtn) {
-            todayBtn.addEventListener('click', () => { 
-                setCurrentDate(new Date()); 
-                loadCalendar(); 
+            todayBtn.addEventListener('click', () => {
+                setCurrentDate(new Date());
+                loadCalendar();
             });
         }
 
@@ -3152,11 +2854,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const container = document.getElementById('calendar-container');
             const dayDetails = document.getElementById('day-details');
             const currentMonthEl = document.getElementById('current-month');
-            
+
             if (loading) loading.classList.remove('hidden');
             if (container) container.classList.add('hidden');
             if (dayDetails) dayDetails.classList.add('hidden');
-            
+
             const currentDate = getCurrentDate();
             if (currentMonthEl) {
                 currentMonthEl.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
@@ -3164,10 +2866,10 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
             try {
                 const year = currentDate.getFullYear();
-                
+
                 // Use centralized API client
                 const data = await loadCalendarData(year);
-                
+
                 allBookings = data.bookings;
                 holidays = data.holidays;
                 schedule = data.schedule;
@@ -3176,10 +2878,10 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     startDate: v.start,
                     endDate: v.end
                 }));
-                
+
                 // Update calendar data in calendar module
                 setCalendarData({ bookings: allBookings, schedule, holidays, blockedDates, vacationPeriods });
-                
+
                 console.log('📅 Loaded vacation periods:', vacationPeriods);
                 renderCalendar();
                 if (loading) loading.classList.add('hidden');
@@ -3193,11 +2895,11 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         async function navigateToFirstUpcomingBooking() {
             try {
                 const firstBooking = await findFirstUpcomingBooking();
-                
+
                 if (firstBooking) {
                     const today = new Date();
                     const bookingDate = new Date(firstBooking.date);
-                    
+
                     // Если запись в другом месяце - переключаемся
                     if (bookingDate.getMonth() !== today.getMonth() || bookingDate.getFullYear() !== today.getFullYear()) {
                         setCurrentDate(new Date(bookingDate.getFullYear(), bookingDate.getMonth(), 1));
@@ -3220,7 +2922,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         window.confirmBooking = async function(id: string): Promise<void> {
             const confirmed = await showConfirm('Vai tiešām vēlaties apstiprināt šo ierakstu?', 'Apstiprināt ierakstu');
             if (!confirmed) return;
-            try { 
+            try {
                 await confirmBookingApi(id);
                 await loadCalendar();
                 // Refresh day details if a date is selected
@@ -3228,16 +2930,16 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 if (selectedDate) {
                     showDayDetails(selectedDate);
                 }
-                showToast('Ieraksts veiksmīgi apstiprināts', 'success'); 
-            } catch (e: unknown) { 
-                showToast((e as Error).message, 'error'); 
+                showToast('Ieraksts veiksmīgi apstiprināts', 'success');
+            } catch (e: unknown) {
+                showToast((e as Error).message, 'error');
             }
         };
 
         window.cancelBooking = async function(id: string): Promise<void> {
             const confirmed = await showConfirm('Vai tiešām vēlaties atcelt šo ierakstu?', 'Atcelt ierakstu');
             if (!confirmed) return;
-            try { 
+            try {
                 await cancelBookingApi(id);
                 await loadCalendar();
                 // Refresh day details if a date is selected
@@ -3245,9 +2947,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 if (selectedDate) {
                     showDayDetails(selectedDate);
                 }
-                showToast('Ieraksts veiksmīgi atcelts', 'success'); 
-            } catch (e: unknown) { 
-                showToast((e as Error).message, 'error'); 
+                showToast('Ieraksts veiksmīgi atcelts', 'success');
+            } catch (e: unknown) {
+                showToast((e as Error).message, 'error');
             }
         };
 
@@ -3304,23 +3006,23 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 const durationFollowup = document.getElementById('duration-followup') as HTMLInputElement | null;
                 const bankName = document.getElementById('bank-name') as HTMLInputElement | null;
                 const bankIban = document.getElementById('bank-iban') as HTMLInputElement | null;
-                
-                if (data.prices) { 
-                    if (priceInitial) priceInitial.value = data.prices.initial || 65; 
-                    if (priceFollowup) priceFollowup.value = data.prices.followup || 45; 
+
+                if (data.prices) {
+                    if (priceInitial) priceInitial.value = data.prices.initial || 65;
+                    if (priceFollowup) priceFollowup.value = data.prices.followup || 45;
                 }
-                if (data.contact) { 
-                    if (contactEmail) contactEmail.value = data.contact.email || ''; 
-                    if (contactPhone) contactPhone.value = data.contact.phone || ''; 
-                    if (contactAddress) contactAddress.value = data.contact.address || ''; 
+                if (data.contact) {
+                    if (contactEmail) contactEmail.value = data.contact.email || '';
+                    if (contactPhone) contactPhone.value = data.contact.phone || '';
+                    if (contactAddress) contactAddress.value = data.contact.address || '';
                 }
-                if (data.duration) { 
-                    if (durationInitial) durationInitial.value = data.duration.initial || 60; 
-                    if (durationFollowup) durationFollowup.value = data.duration.followup || 30; 
+                if (data.duration) {
+                    if (durationInitial) durationInitial.value = data.duration.initial || 60;
+                    if (durationFollowup) durationFollowup.value = data.duration.followup || 30;
                 }
-                if (data.bank) { 
-                    if (bankName) bankName.value = data.bank.name || ''; 
-                    if (bankIban) bankIban.value = data.bank.iban || ''; 
+                if (data.bank) {
+                    if (bankName) bankName.value = data.bank.name || '';
+                    if (bankIban) bankIban.value = data.bank.iban || '';
                 }
             }).catch(() => {});
         }
@@ -3337,22 +3039,22 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 const durationFollowup = (document.getElementById('duration-followup') as HTMLInputElement)?.value;
                 const bankName = (document.getElementById('bank-name') as HTMLInputElement)?.value;
                 const bankIban = (document.getElementById('bank-iban') as HTMLInputElement)?.value;
-                
-                const settings = { 
-                    prices: { initial: parseInt(priceInitial || '65'), followup: parseInt(priceFollowup || '45') }, 
-                    contact: { email: contactEmail || '', phone: contactPhone || '', address: contactAddress || '' }, 
-                    duration: { initial: parseInt(durationInitial || '60'), followup: parseInt(durationFollowup || '30') }, 
-                    bank: { name: bankName || '', iban: bankIban || '' } 
+
+                const settings = {
+                    prices: { initial: parseInt(priceInitial || '65'), followup: parseInt(priceFollowup || '45') },
+                    contact: { email: contactEmail || '', phone: contactPhone || '', address: contactAddress || '' },
+                    duration: { initial: parseInt(durationInitial || '60'), followup: parseInt(durationFollowup || '30') },
+                    bank: { name: bankName || '', iban: bankIban || '' }
                 };
-                try { 
-                    await fetch(API_BASE + '/dashboard/settings', { 
-                        method: 'PUT', 
-                        headers: { 'Content-Type': 'application/json' }, 
-                        body: JSON.stringify(settings) 
-                    }); 
-                    showToast('Iestatījumi saglabāti!', 'success'); 
-                } catch (e: unknown) { 
-                    showToast((e as Error).message, 'error'); 
+                try {
+                    await fetch(API_BASE + '/dashboard/settings', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(settings)
+                    });
+                    showToast('Iestatījumi saglabāti!', 'success');
+                } catch (e: unknown) {
+                    showToast((e as Error).message, 'error');
                 }
             });
         }
@@ -3373,52 +3075,52 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const container = document.getElementById('table-container');
             const filters = document.getElementById('table-filters');
             const empty = document.getElementById('table-empty');
-            
-            if (loading) loading.classList.remove('hidden'); 
-            if (container) container.classList.add('hidden'); 
+
+            if (loading) loading.classList.remove('hidden');
+            if (container) container.classList.add('hidden');
             if (empty) empty.classList.add('hidden');
-            
+
             selectedRows.clear();
             updateBatchActionsUI();
-            
-            try { 
-                const response = await fetch(API_BASE + '/dashboard/tables/' + tableName); 
-                const data = await response.json(); 
-                currentTableData = data; 
+
+            try {
+                const response = await fetch(API_BASE + '/dashboard/tables/' + tableName);
+                const data = await response.json();
+                currentTableData = data;
                 filteredTableData = data.entities || [];
-                
-                if (loading) loading.classList.add('hidden'); 
-                
-                if (!data.entities || data.entities.length === 0) { 
-                    if (empty) empty.classList.remove('hidden'); 
+
+                if (loading) loading.classList.add('hidden');
+
+                if (!data.entities || data.entities.length === 0) {
+                    if (empty) empty.classList.remove('hidden');
                     const countEl = document.getElementById('table-count');
-                    if (countEl) countEl.textContent = '0'; 
+                    if (countEl) countEl.textContent = '0';
                     if (filters) filters.classList.add('hidden');
-                    return; 
+                    return;
                 }
-                
+
                 if (filters) filters.classList.remove('hidden');
                 applyFilters();
-            } catch (error: unknown) { 
-                if (loading) loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>'; 
+            } catch (error: unknown) {
+                if (loading) loading.innerHTML = '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>';
             }
         }
 
         function applyFilters() {
             if (!currentTableData || !currentTableData.entities) return;
-            
+
             const searchEl = document.getElementById('table-search') as HTMLInputElement | null;
             const statusEl = document.getElementById('filter-status') as HTMLSelectElement | null;
             const dateFromEl = document.getElementById('filter-date-from') as HTMLInputElement | null;
             const dateToEl = document.getElementById('filter-date-to') as HTMLInputElement | null;
-            
+
             const searchTerm = searchEl?.value.toLowerCase() || '';
             const statusFilter = statusEl?.value || '';
             const dateFrom = dateFromEl?.value || '';
             const dateTo = dateToEl?.value || '';
-            
+
             let filtered = currentTableData.entities;
-            
+
             // Search filter
             if (searchTerm) {
                 filtered = filtered.filter((entity: any) => {
@@ -3428,36 +3130,36 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     });
                 });
             }
-            
+
             // Status filter
             if (statusFilter) {
                 filtered = filtered.filter((entity: any) => entity.status === statusFilter);
             }
-            
+
             // Date range filter
             if (dateFrom || dateTo) {
                 filtered = filtered.filter((entity: any) => {
                     const entityDate = entity.date;
                     if (!entityDate) return false;
-                    
+
                     const dateStr = entityDate.split('T')[0]; // Get yyyy-mm-dd part
-                    
+
                     if (dateFrom) {
                         const [day, month, year] = dateFrom.split('/');
                         const fromDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                         if (dateStr < fromDate) return false;
                     }
-                    
+
                     if (dateTo) {
                         const [day, month, year] = dateTo.split('/');
                         const toDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                         if (dateStr > toDate) return false;
                     }
-                    
+
                     return true;
                 });
             }
-            
+
             filteredTableData = filtered;
             renderTable();
             updateFilterCount();
@@ -3468,9 +3170,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const filtered = filteredTableData.length;
             const countEl = document.getElementById('filtered-count');
             const tableCountEl = document.getElementById('table-count');
-            
+
             if (tableCountEl) tableCountEl.textContent = String(total);
-            
+
             if (countEl) {
                 if (filtered < total) {
                     countEl.textContent = `(rāda ${filtered})`;
@@ -3488,23 +3190,23 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 currentSortColumn = column;
                 currentSortDirection = 'asc';
             }
-            
+
             filteredTableData.sort((a, b) => {
                 let valA = a[column];
                 let valB = b[column];
-                
+
                 // Handle null/undefined
                 if (valA === null || valA === undefined) return 1;
                 if (valB === null || valB === undefined) return -1;
-                
+
                 // Convert to string for comparison
                 valA = String(valA).toLowerCase();
                 valB = String(valB).toLowerCase();
-                
+
                 const comparison = valA < valB ? -1 : valA > valB ? 1 : 0;
                 return currentSortDirection === 'asc' ? comparison : -comparison;
             });
-            
+
             renderTable();
         }
 
@@ -3513,9 +3215,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const body = document.getElementById('table-body');
             const container = document.getElementById('table-container');
             const columns = currentTableData.columns || [];
-            
+
             if (!header || !body) return;
-            
+
             // Header with sorting
             const allSelected = filteredTableData.length > 0 && selectedRows.size === filteredTableData.length;
             header.innerHTML = `<tr>
@@ -3525,37 +3227,37 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 ${columns.map((col: any) => `
                     <th onclick="sortTable('${col}')" style="cursor: pointer; user-select: none;">
                         ${col}
-                        ${currentSortColumn === col ? 
-                            (currentSortDirection === 'asc' ? ' ▲' : ' ▼') : 
+                        ${currentSortColumn === col ?
+                            (currentSortDirection === 'asc' ? ' ▲' : ' ▼') :
                             ' ⇅'}
                     </th>
                 `).join('')}
                 <th>Darbības</th>
             </tr>`;
-            
+
             // Body
             body.innerHTML = filteredTableData.map((entity, index) => {
                 const pk = encodeURIComponent(entity.partitionKey || '');
                 const rk = encodeURIComponent(entity.rowKey || '');
                 const rowId = `${pk}_${rk}`;
                 const isSelected = selectedRows.has(rowId);
-                
+
                 return `<tr class="${isSelected ? 'row-selected' : ''}" data-row-id="${rowId}">
                     <td>
                         <input type="checkbox" class="row-checkbox" data-row-id="${rowId}" ${isSelected ? 'checked' : ''}>
                     </td>
-                    ${columns.map((col: any) => { 
-                        let value = entity[col]; 
-                        if (value === undefined || value === null) value = ''; 
-                        if (typeof value === 'object') value = JSON.stringify(value); 
-                        const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value; 
-                        let style = ''; 
-                        if (col === 'status') { 
-                            if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;'; 
-                            else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;'; 
-                            else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;'; 
-                        } 
-                        return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`; 
+                    ${columns.map((col: any) => {
+                        let value = entity[col];
+                        if (value === undefined || value === null) value = '';
+                        if (typeof value === 'object') value = JSON.stringify(value);
+                        const displayValue = String(value).length > 40 ? String(value).substring(0, 40) + '...' : value;
+                        let style = '';
+                        if (col === 'status') {
+                            if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;';
+                            else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;';
+                            else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;';
+                        }
+                        return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`;
                     }).join('')}
                     <td>
                         <button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" title="Dzēst">
@@ -3564,16 +3266,16 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     </td>
                 </tr>`;
             }).join('');
-            
+
             if (container) container.classList.remove('hidden');
-            
+
             // Attach checkbox listeners (remove old ones first to prevent duplicates)
             const selectAllCheckbox = document.getElementById('select-all');
             if (selectAllCheckbox) {
                 selectAllCheckbox.replaceWith(selectAllCheckbox.cloneNode(true));
                 document.getElementById('select-all')?.addEventListener('change', handleSelectAll);
             }
-            
+
             document.querySelectorAll('.row-checkbox').forEach(cb => {
                 cb.addEventListener('change', handleRowSelect);
             });
@@ -3582,7 +3284,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         function handleSelectAll(e: Event) {
             const checked = (e.target as HTMLInputElement).checked;
             selectedRows.clear();
-            
+
             if (checked) {
                 filteredTableData.forEach(entity => {
                     const pk = encodeURIComponent(entity.partitionKey || '');
@@ -3590,7 +3292,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     selectedRows.add(`${pk}_${rk}`);
                 });
             }
-            
+
             renderTable();
             updateBatchActionsUI();
         }
@@ -3599,15 +3301,15 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             const target = e.target as HTMLInputElement;
             const rowId = target.dataset.rowId;
             if (!rowId) return;
-            
+
             if (target.checked) {
                 selectedRows.add(rowId);
             } else {
                 selectedRows.delete(rowId);
             }
-            
+
             updateBatchActionsUI();
-            
+
             // Update row styling
             const row = document.querySelector(`tr[data-row-id="${rowId}"]`);
             if (row) {
@@ -3617,7 +3319,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     row.classList.remove('row-selected');
                 }
             }
-            
+
             // Update select-all checkbox
             const selectAll = document.getElementById('select-all') as HTMLInputElement | null;
             if (selectAll) {
@@ -3628,9 +3330,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         function updateBatchActionsUI() {
             const batchActions = document.getElementById('batch-actions');
             const selectedCount = document.getElementById('selected-count');
-            
+
             if (selectedCount) selectedCount.textContent = String(selectedRows.size);
-            
+
             if (selectedRows.size > 0) {
                 if (batchActions) batchActions.classList.remove('hidden');
             } else {
@@ -3640,28 +3342,28 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
         async function batchDelete() {
             if (selectedRows.size === 0) return;
-            
+
             const confirmed = await showConfirm(
                 `Vai tiešām dzēst ${selectedRows.size} ierakstu${selectedRows.size === 1 ? '' : 's'}?`,
                 'Dzēst ierakstus'
             );
-            
+
             if (!confirmed) return;
-            
+
             const tableSelectEl = document.getElementById('table-select') as HTMLSelectElement | null;
             const tableName = tableSelectEl?.value;
             if (!tableName) return;
             let successCount = 0;
             let errorCount = 0;
-            
+
             for (const rowId of selectedRows) {
                 const [pk, rk] = rowId.split('_').map(decodeURIComponent);
-                
+
                 try {
                     const response = await fetch(`${API_BASE}/dashboard/tables/${tableName}/${encodeURIComponent(pk)}/${encodeURIComponent(rk)}`, {
                         method: 'DELETE'
                     });
-                    
+
                     if (response.ok) {
                         successCount++;
                     } else {
@@ -3671,10 +3373,10 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     errorCount++;
                 }
             }
-            
+
             selectedRows.clear();
             await loadTableData();
-            
+
             if (errorCount === 0) {
                 showToast(`${successCount} ieraksti dzēsti`, 'success');
             } else {
@@ -3684,17 +3386,17 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 
         function batchExport() {
             if (selectedRows.size === 0) return;
-            
+
             const columns = currentTableData.columns;
             const selectedEntities = filteredTableData.filter(entity => {
                 const pk = encodeURIComponent(entity.partitionKey || '');
                 const rk = encodeURIComponent(entity.rowKey || '');
                 return selectedRows.has(`${pk}_${rk}`);
             });
-            
+
             const csvContent = [
                 columns.join(','),
-                ...selectedEntities.map((row: any) => 
+                ...selectedEntities.map((row: any) =>
                     columns.map((col: any) => {
                         let value = row[col];
                         if (value === undefined || value === null) return '';
@@ -3705,7 +3407,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     }).join(',')
                 )
             ].join('\n');
-            
+
             const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -3714,7 +3416,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             link.download = `${tableSelectEl2?.value || 'export'}_selected_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
             URL.revokeObjectURL(url);
-            
+
             showToast(`${selectedEntities.length} ieraksti eksportēti`, 'success');
         }
 
@@ -3745,13 +3447,13 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         document.getElementById('table-select')?.addEventListener('change', loadTableData);
         document.getElementById('refresh-table')?.addEventListener('click', loadTableData);
         document.getElementById('export-csv')?.addEventListener('click', exportTableToCSV);
-        
+
         // Filter listeners
         document.getElementById('table-search')?.addEventListener('input', applyFilters);
         document.getElementById('filter-status')?.addEventListener('change', applyFilters);
         document.getElementById('filter-date-from')?.addEventListener('change', applyFilters);
         document.getElementById('filter-date-to')?.addEventListener('change', applyFilters);
-        
+
         document.getElementById('clear-filters')?.addEventListener('click', () => {
             const searchEl = document.getElementById('table-search') as HTMLInputElement | null;
             const statusEl = document.getElementById('filter-status') as HTMLSelectElement | null;
@@ -3763,7 +3465,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             if (dateToEl) dateToEl.value = '';
             applyFilters();
         });
-        
+
         // Batch action listeners
         document.getElementById('batch-delete')?.addEventListener('click', batchDelete);
         document.getElementById('batch-export')?.addEventListener('click', batchExport);
@@ -3782,22 +3484,22 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 // Get user info from Azure Static Web Apps
                 const authResponse = await fetch('/.auth/me');
                 const authData = await authResponse.json();
-                
+
                 if (!authData.clientPrincipal) {
                     // Not authenticated - redirect to login
                     window.location.href = '/.auth/login/aad?post_login_redirect_uri=/admin';
                     return;
                 }
-                
+
                 const userEmail = authData.clientPrincipal.userDetails;
-                
+
                 // Admin email whitelist (synchronized with backend ADMIN_EMAILS env var)
                 const ADMIN_EMAILS = ['ivanovs.kirils95@gmail.com'];
-                
-                const isAdmin = ADMIN_EMAILS.some(email => 
+
+                const isAdmin = ADMIN_EMAILS.some(email =>
                     email.toLowerCase() === userEmail.toLowerCase()
                 );
-                
+
                 if (isAdmin) {
                     // Show admin content
                     const adminContent = document.getElementById('admin-content');
@@ -3816,7 +3518,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 if (unauthorizedPage) unauthorizedPage.style.display = 'flex';
             }
         }
-        
+
         // Run check when page loads
         checkAdminAccess();
     </script>

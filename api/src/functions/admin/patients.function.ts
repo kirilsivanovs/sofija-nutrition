@@ -46,3 +46,58 @@ app.http('admin-patients-get', {
   route: 'dashboard/patients',
   handler: adminListPatients
 });
+
+/**
+ * Admin endpoint to delete a patient and all their meals
+ * DELETE /api/dashboard/patients/:userId
+ */
+export async function adminDeletePatient(
+  request: HttpRequest,
+  context: InvocationContext
+): Promise<HttpResponseInit> {
+  context.log('Admin DELETE patient request');
+
+  const auth = checkAuthorizationWithLogging(request, context as any);
+  if (!auth.authorized) {
+    return unauthorizedResponse(auth.error || 'Unauthorized');
+  }
+
+  try {
+    const userId = request.params.userId;
+    if (!userId) {
+      return {
+        status: 400,
+        jsonBody: { error: 'userId is required' }
+      };
+    }
+
+    const repository = new MealsRepository(
+      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
+    );
+
+    const deletedCount = await repository.deleteAllUserMeals(userId);
+
+    context.log(`Deleted ${deletedCount} meals for user ${userId}`);
+
+    return {
+      status: 200,
+      jsonBody: { 
+        message: 'Patient deleted successfully',
+        deletedMeals: deletedCount
+      }
+    };
+  } catch (error) {
+    context.error('Error deleting patient:', error);
+    return {
+      status: 500,
+      jsonBody: { error: 'Failed to delete patient' }
+    };
+  }
+}
+
+app.http('admin-patients-delete', {
+  methods: ['DELETE'],
+  authLevel: 'anonymous',
+  route: 'dashboard/patients/{userId}',
+  handler: adminDeletePatient
+});

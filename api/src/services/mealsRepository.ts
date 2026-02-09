@@ -11,6 +11,7 @@ export interface IMealsRepository {
   getMealById(userId: string, date: string, mealId: string): Promise<Meal | null>;
   updateMeal(meal: Meal): Promise<Meal>;
   deleteMeal(userId: string, date: string, mealId: string): Promise<void>;
+  deleteAllUserMeals(userId: string): Promise<number>;
   getDailyStats(userId: string, date: string): Promise<DailyStats>;
   listPatientSummaries(limit?: number): Promise<AdminPatientSummary[]>;
 }
@@ -181,5 +182,33 @@ export class MealsRepository implements IMealsRepository {
     });
 
     return summaries.slice(0, limit);
+  }
+
+  async deleteAllUserMeals(userId: string): Promise<number> {
+    const entities = this.tableClient.listEntities({
+      queryOptions: { filter: `userId eq '${userId}'` }
+    });
+
+    let deletedCount = 0;
+    const deletePromises: Promise<any>[] = [];
+
+    for await (const entity of entities) {
+      const partitionKey = String(entity.partitionKey ?? entity.PartitionKey);
+      const rowKey = String(entity.rowKey ?? entity.RowKey);
+      deletePromises.push(this.tableClient.deleteEntity(partitionKey, rowKey));
+      deletedCount++;
+
+      // Batch delete to avoid overwhelming the service
+      if (deletePromises.length >= 50) {
+        await Promise.all(deletePromises);
+        deletePromises.length = 0;
+      }
+    }
+
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+    }
+
+    return deletedCount;
   }
 }
