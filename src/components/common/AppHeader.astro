@@ -23,15 +23,26 @@ const {
   showAuth = true,
   subtitle = ''
 } = Astro.props;
+
+// Generate unique IDs for mobile menu
+const mobileMenuId = `mobile-nav-menu-${variant}`;
 ---
 
 <header class={`app-header app-header--${variant}`}>
   <div class="app-header-inner">
     {showBurger && (
-      <button type="button" class="burger-btn" id="burger-btn" aria-label="Atvērt izvēlni">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button 
+        type="button" 
+        onclick={`this.classList.toggle('active');document.getElementById('${mobileMenuId}').classList.toggle('open');document.body.style.overflow=document.getElementById('${mobileMenuId}').classList.contains('open')?'hidden':'';`}
+        class="mobile-menu-btn"
+        style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
+        aria-label="Atvērt izvēlni"
+        aria-expanded="false"
+        aria-controls={mobileMenuId}
+      >
+        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
       </button>
     )}
 
@@ -73,6 +84,12 @@ const {
     )}
   </div>
 </header>
+
+{showBurger && (
+  <div id={mobileMenuId} class="mobile-nav-menu">
+    <slot name="mobile-menu" />
+  </div>
+)}
 
 <style>
   /* Header Base Styles */
@@ -181,30 +198,123 @@ const {
     border-color: var(--color-accent, #295d45);
   }
 
-  /* Burger Button */
-  .burger-btn {
+  /* Mobile Menu Button */
+  .mobile-menu-btn {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 999;
+    position: relative;
     background: none;
     border: none;
-    cursor: pointer;
-    padding: 8px;
-    margin-right: 12px;
-    z-index: 150;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
-  .burger-btn span {
+  .mobile-menu-btn span {
     display: block;
     width: 24px;
-    height: 3px;
+    height: 2px;
     background: var(--color-primary, #1b4332);
     border-radius: 2px;
     transition: all 0.3s ease;
+    pointer-events: none;
   }
 
-  .burger-btn:hover span {
+  .mobile-menu-btn:hover span {
     background: var(--color-accent, #295d45);
+  }
+
+  /* Hamburger animation to X */
+  .mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+  }
+
+  .mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+  }
+
+  /* Fullscreen Mobile Menu */
+  .mobile-nav-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* iOS Safari 100vh fix */
+    height: 100%;
+    height: 100dvh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    z-index: 998;
+    /* iOS Safari scroll fix */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-nav-menu.open {
+    display: flex;
+  }
+
+  /* Mobile menu items - можно стилизовать через slot */
+  .mobile-nav-menu :global(a),
+  .mobile-nav-menu :global(button) {
+    font-family: var(--font-serif, 'Playfair Display', serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text, #1f2937);
+    text-decoration: none;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-nav-menu :global(a:hover),
+  .mobile-nav-menu :global(button:hover) {
+    color: var(--color-primary, #1b4332);
+  }
+
+  /* Admin mobile menu items with icons */
+  .mobile-nav-menu :global(.mobile-nav-item) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+
+  .mobile-nav-menu :global(.mobile-nav-item:hover) {
+    background: rgba(27, 67, 50, 0.05);
+  }
+
+  .mobile-nav-menu :global(.mobile-nav-item.active) {
+    background: var(--color-primary, #1b4332);
+    color: white;
+  }
+
+  .mobile-nav-menu :global(.mobile-nav-item i) {
+    font-size: 1.5rem;
+  }
+
+  .mobile-nav-menu :global(.mobile-nav-item span) {
+    font-size: 1.25rem;
   }
 
   /* Responsive */
@@ -240,8 +350,10 @@ const {
   }
 
   @media (min-width: 768px) {
-    .burger-btn {
-      display: none;
+    .mobile-menu-btn,
+    .mobile-nav-menu,
+    .mobile-nav-menu.open {
+      display: none !important;
     }
     .app-header {
       padding: 18px 32px;
@@ -268,6 +380,52 @@ const {
     backdrop-filter: blur(8px);
   }
 </style>
+
+<script is:inline>
+  // Mobile menu functionality - inline for iOS Safari compatibility
+  (function() {
+    const btns = document.querySelectorAll('.mobile-menu-btn');
+    
+    btns.forEach(function(btn) {
+      const menuId = btn.getAttribute('aria-controls');
+      const menu = document.getElementById(menuId);
+      if (!menu) return;
+      
+      function toggle(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = menu.classList.toggle('open');
+        btn.classList.toggle('active', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        document.body.style.position = isOpen ? 'fixed' : '';
+        document.body.style.width = isOpen ? '100%' : '';
+        document.body.style.top = isOpen ? '0' : '';
+      }
+      
+      function close() {
+        menu.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+      }
+      
+      // Close on link/button click inside menu
+      const links = menu.querySelectorAll('a, button[data-tab]');
+      for (let i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', close, false);
+      }
+      
+      // Close on overlay click
+      menu.addEventListener('click', function(e) {
+        if (e.target === menu) close();
+      }, false);
+    });
+  })();
+</script>
 
 <script>
   // Initialize auth state for cabinet variant

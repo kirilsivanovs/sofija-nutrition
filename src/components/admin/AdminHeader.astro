@@ -7,40 +7,30 @@ import AppHeader from '../common/AppHeader.astro';
 ---
 
 <!-- Header with Burger Menu -->
-<AppHeader variant="admin" showBurger={true} subtitle="Administrācija" />
-
-<!-- Mobile Sidebar Menu -->
-<div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
-<nav class="mobile-sidebar" id="mobile-sidebar">
-    <div class="mobile-sidebar-header">
-        <span class="mobile-sidebar-title">Izvēlne</span>
-        <button type="button" class="mobile-sidebar-close" id="mobile-sidebar-close" aria-label="Aizvērt izvēlni">
-            <i class="ph ph-x"></i>
-        </button>
-    </div>
-    <div class="mobile-sidebar-nav">
-        <button class="mobile-nav-item active" data-tab="bookings">
-            <i class="ph ph-calendar-check"></i>
-            <span>Ieraksti</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="availability">
-            <i class="ph ph-clock"></i>
-            <span>Pieejamība</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="settings">
-            <i class="ph ph-gear"></i>
-            <span>Iestatījumi</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="meals">
-            <i class="ph ph-bowl-food"></i>
-            <span>Uzturs</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="data">
-            <i class="ph ph-database"></i>
-            <span>Dati</span>
-        </button>
-    </div>
-</nav>
+<AppHeader variant="admin" showBurger={true} subtitle="Administrācija">
+  <div slot="mobile-menu">
+    <button class="mobile-nav-item active" data-tab="bookings">
+      <i class="ph ph-calendar-check"></i>
+      <span>Ieraksti</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="availability">
+      <i class="ph ph-clock"></i>
+      <span>Pieejamība</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="settings">
+      <i class="ph ph-gear"></i>
+      <span>Iestatījumi</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="meals">
+      <i class="ph ph-bowl-food"></i>
+      <span>Uzturs</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="data">
+      <i class="ph ph-database"></i>
+      <span>Dati</span>
+    </button>
+  </div>
+</AppHeader>
 
 <!-- Desktop Navigation Tabs -->
 <nav class="admin-nav">
@@ -69,17 +59,11 @@ import AppHeader from '../common/AppHeader.astro';
 </nav>
 
 <script>
-    // Tab switching and burger menu logic
+    // Tab switching logic
     document.addEventListener('DOMContentLoaded', () => {
         const tabs = document.querySelectorAll('.admin-tab');
         const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
         const contents = document.querySelectorAll('.admin-content');
-        
-        // Burger menu
-        const burgerBtn = document.getElementById('app-header-burger');
-        const mobileSidebar = document.getElementById('mobile-sidebar');
-        const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
-        const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
         function switchTab(tabId: string) {
             // Update desktop tabs
@@ -114,18 +98,6 @@ import AppHeader from '../common/AppHeader.astro';
             document.dispatchEvent(loadEvent);
         }
 
-        function openMobileSidebar() {
-            mobileSidebar?.classList.add('open');
-            mobileSidebarOverlay?.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMobileSidebar() {
-            mobileSidebar?.classList.remove('open');
-            mobileSidebarOverlay?.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-
         // Desktop tabs
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -140,21 +112,8 @@ import AppHeader from '../common/AppHeader.astro';
                 const tabId = item.getAttribute('data-tab');
                 if (tabId) {
                     switchTab(tabId);
-                    closeMobileSidebar();
                 }
             });
-        });
-
-        // Burger menu controls
-        burgerBtn?.addEventListener('click', openMobileSidebar);
-        mobileSidebarClose?.addEventListener('click', closeMobileSidebar);
-        mobileSidebarOverlay?.addEventListener('click', closeMobileSidebar);
-
-        // Close sidebar on ESC key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileSidebar?.classList.contains('open')) {
-                closeMobileSidebar();
-            }
         });
     });
 </script>
