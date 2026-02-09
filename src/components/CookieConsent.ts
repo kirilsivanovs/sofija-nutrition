@@ -259,51 +259,62 @@ class CookieConsent {
       /* Mobile optimization */
       @media (max-width: 640px) {
         .cookie-consent-modal {
-          width: calc(100% - 32px);
-          max-width: 400px;
-          max-height: 90vh;
+          width: calc(100% - 24px);
+          max-width: none;
+          max-height: 75vh;
           border-radius: 12px;
-          margin: 0 16px;
+          margin: 0 12px;
         }
         
         .cookie-consent-header {
-          padding: 20px 16px 12px;
+          padding: 16px 12px 10px;
         }
         
         .cookie-consent-header h3 {
-          font-size: 20px;
+          font-size: 18px;
         }
         
         .cookie-consent-body {
-          padding: 16px;
-        }
-        
-        .cookie-consent-body > p {
-          font-size: 14px;
-          margin-bottom: 16px;
-        }
-        
-        .cookie-category {
           padding: 12px;
         }
         
-        .cookie-category-description {
+        .cookie-consent-body > p {
           font-size: 13px;
+          margin-bottom: 12px;
+          line-height: 1.5;
+        }
+        
+        .cookie-category {
+          padding: 10px;
+        }
+        
+        .cookie-category-description {
+          font-size: 12px;
+          line-height: 1.4;
         }
         
         .cookie-consent-footer {
-          padding: 16px;
+          padding: 12px;
           flex-direction: column;
+          gap: 8px;
         }
         
         .cookie-consent-footer button {
-          padding: 14px 20px;
-          font-size: 15px;
+          padding: 12px 16px;
+          font-size: 14px;
           width: 100%;
         }
         
         .btn-text {
-          padding: 12px;
+          padding: 10px;
+        }
+        
+        .cookie-consent-privacy {
+          padding: 0 12px 12px;
+        }
+        
+        .cookie-consent-privacy a {
+          font-size: 12px;
         }
       }
       
@@ -456,20 +467,7 @@ class CookieConsent {
         text-decoration: underline;
       }
       
-      @media (max-width: 640px) {
-        .cookie-consent-modal {
-          width: 95%;
-          max-height: 95vh;
-        }
-        
-        .cookie-consent-footer {
-          flex-direction: column;
-        }
-        
-        .cookie-consent-footer button {
-          width: 100%;
-        }
-      }
+
     `;
     document.head.appendChild(style);
   }
