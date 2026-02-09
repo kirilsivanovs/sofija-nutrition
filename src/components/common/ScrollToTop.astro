@@ -86,12 +86,7 @@
     let ticking = false;
 
     function getScrollTop() {
-      return (
-        window.pageYOffset ||
-        scrollRoot.scrollTop ||
-        document.body.scrollTop ||
-        0
-      );
+      return window.pageYOffset || scrollRoot.scrollTop || document.body.scrollTop || 0;
     }
 
     // Show/hide button based on scroll position

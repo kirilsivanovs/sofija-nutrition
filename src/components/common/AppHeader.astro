@@ -21,8 +21,7 @@ const { variant = 'public', showBurger = false, showAuth = true, subtitle = '' }
 
 // Generate unique IDs for mobile menu
 const mobileMenuId = `mobile-nav-menu-${variant}`;
-const logoutReturnPath =
-  variant === 'admin' ? '/admin' : variant === 'cabinet' ? '/cabinet' : '/';
+const logoutReturnPath = variant === 'admin' ? '/admin' : variant === 'cabinet' ? '/cabinet' : '/';
 const loginAfterLogout = `/.auth/login/aad?post_login_redirect_uri=${logoutReturnPath}`;
 const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(loginAfterLogout)}`;
 ---
