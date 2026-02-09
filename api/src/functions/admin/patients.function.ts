@@ -23,14 +23,16 @@ export async function adminListPatients(
     const limit = limitParam ? Math.min(Math.max(Number(limitParam) || 200, 1), 1000) : 200;
 
     const mealsRepository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
-    const accessRepository = new FoodAccessRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const accessRepository = new FoodAccessRepository(
+      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
+    );
 
     const patients = await mealsRepository.listPatientSummaries(limit);
     const accessRecords = await accessRepository.listAccess();
 
     // Enrich patient data with email and displayName from FoodAccess
-    const enrichedPatients = patients.map(patient => {
-      const access = accessRecords.find(a => a.userId === patient.userId);
+    const enrichedPatients = patients.map((patient) => {
+      const access = accessRecords.find((a) => a.userId === patient.userId);
       return {
         ...patient,
         email: access?.email,
