@@ -2598,8 +2598,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 btn.addEventListener('click', () => {
                     const userId = (btn as HTMLElement).dataset.userId || '';
                     if (!userId) return;
+                    const patient = adminPatients.find(p => p.userId === userId);
                     selectedPatientId = userId;
-                    selectedPatientName = userId;
+                    selectedPatientName = patient?.displayName || patient?.email || userId;
                     applyPatientsFilter();
                     loadMealsForMonth();
                 });
@@ -2628,8 +2629,9 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 ];
             }
 
+            const patient = adminPatients.find(p => p.userId === userId);
             selectedPatientId = userId;
-            selectedPatientName = userId;
+            selectedPatientName = patient?.displayName || patient?.email || userId;
             if (patientsAddInput) patientsAddInput.value = '';
             applyPatientsFilter();
             loadMealsForMonth();
@@ -2787,7 +2789,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                 
                 if (mealsCurrentMonth) mealsCurrentMonth.textContent = formatMonthYear(currentMealsDate);
                 if (mealsPatientName) mealsPatientName.textContent = selectedPatientName || selectedPatientId;
-                if (mealsPatientId) mealsPatientId.textContent = selectedPatientId;
+                if (mealsPatientId) mealsPatientId.textContent = `ID: ${selectedPatientId}`;
                 
                 renderMealsCalendar();
             } catch (error: unknown) {
