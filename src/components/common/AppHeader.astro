@@ -2,7 +2,7 @@
 /**
  * Universal Application Header Component
  * Unified header design for admin, cabinet, and booking modules
- * 
+ *
  * Props:
  * - variant: 'admin' | 'cabinet' | 'public'
  * - showBurger: boolean (show burger menu for mobile)
@@ -17,12 +17,7 @@ interface Props {
   subtitle?: string;
 }
 
-const { 
-  variant = 'public', 
-  showBurger = false, 
-  showAuth = true,
-  subtitle = ''
-} = Astro.props;
+const { variant = 'public', showBurger = false, showAuth = true, subtitle = '' } = Astro.props;
 
 // Generate unique IDs for mobile menu
 const mobileMenuId = `mobile-nav-menu-${variant}`;
@@ -30,65 +25,79 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
 
 <header class={`app-header app-header--${variant}`}>
   <div class="app-header-inner">
-    {showBurger && (
-      <button 
-        type="button" 
-        class="mobile-menu-btn"
-        style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
-        aria-label="Atvērt izvēlni"
-        aria-expanded="false"
-        aria-controls={mobileMenuId}
-      >
-        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-        <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-      </button>
-    )}
+    {
+      showBurger && (
+        <button
+          type="button"
+          class="mobile-menu-btn"
+          style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
+          aria-label="Atvērt izvēlni"
+          aria-expanded="false"
+          aria-controls={mobileMenuId}
+        >
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
+        </button>
+      )
+    }
 
     <a href="/" class="app-logo">
-      <img src="/assets/img/logo.svg" alt="Sofija Ivanova" class="app-logo-img">
+      <img src="/assets/img/logo.svg" alt="Sofija Ivanova" class="app-logo-img" />
       <div class="app-logo-text">
         <span class="app-logo-name">Sofija Ivanova</span>
         {subtitle && <span class="app-logo-sub">{subtitle}</span>}
       </div>
     </a>
 
-    {showAuth && (
-      <div class="app-auth">
-        {variant === 'admin' ? (
-          <>
-            <span id="user-info" class="app-user-name"></span>
-            <a href="/.auth/logout" class="app-logout">
-              <i class="ph ph-sign-out"></i>
-              <span>Iziet</span>
-            </a>
-          </>
-        ) : (
-          <>
-            <div id="auth-actions" class="app-auth-actions">
-              <a class="btn-login" id="login-aad" href={`/.auth/login/aad?post_login_redirect_uri=${variant === 'cabinet' ? '/cabinet' : '/'}`}>
-                <i class="ph ph-sign-in"></i>
-                <span class="login-text">Pieslēgties</span>
+    {
+      showAuth && (
+        <div class="app-auth">
+          {variant === 'admin' ? (
+            <>
+              <span id="user-info" class="app-user-name" />
+              <a href="/.auth/logout" class="app-logout">
+                <i class="ph ph-sign-out" />
+                <span>Iziet</span>
               </a>
-            </div>
-            <div id="auth-user" class="app-auth-user hidden">
-              <span id="user-name" class="app-user-name"></span>
-              <a id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/" class="app-logout">
-                <i class="ph ph-sign-out"></i>
-              </a>
-            </div>
-          </>
-        )}
-      </div>
-    )}
+            </>
+          ) : (
+            <>
+              <div id="auth-actions" class="app-auth-actions">
+                <a
+                  class="btn-login"
+                  id="login-aad"
+                  href={`/.auth/login/aad?post_login_redirect_uri=${variant === 'cabinet' ? '/cabinet' : '/'}`}
+                >
+                  <i class="ph ph-sign-in" />
+                  <span class="login-text">Pieslēgties</span>
+                </a>
+              </div>
+              <div id="auth-user" class="app-auth-user hidden">
+                <span id="user-name" class="app-user-name" />
+                <a
+                  id="logout-link"
+                  href="/.auth/logout?post_logout_redirect_uri=/"
+                  class="app-logout"
+                >
+                  <i class="ph ph-sign-out" />
+                </a>
+              </div>
+            </>
+          )}
+        </div>
+      )
+    }
   </div>
 </header>
 
-{showBurger && (
-  <div id={mobileMenuId} class="mobile-nav-menu">
-    <slot name="mobile-menu" />
-  </div>
-)}
+{
+  showBurger && (
+    <div id={mobileMenuId} class="mobile-nav-menu">
+      <slot name="mobile-menu" />
+    </div>
+  )
+}
 
 <style>
   /* Header Base Styles */
@@ -382,14 +391,14 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
 
 <script is:inline>
   // Mobile menu functionality - inline for iOS Safari compatibility
-  (function() {
+  (function () {
     const btns = document.querySelectorAll('.mobile-menu-btn');
-    
-    btns.forEach(function(btn) {
+
+    btns.forEach(function (btn) {
       const menuId = btn.getAttribute('aria-controls');
       const menu = document.getElementById(menuId);
       if (!menu) return;
-      
+
       function toggle(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -401,7 +410,7 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
         document.body.style.width = isOpen ? '100%' : '';
         document.body.style.top = isOpen ? '0' : '';
       }
-      
+
       function close() {
         menu.classList.remove('open');
         btn.classList.remove('active');
@@ -411,20 +420,24 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
         document.body.style.width = '';
         document.body.style.top = '';
       }
-      
+
       // Add click handler to button
       btn.addEventListener('click', toggle, false);
-      
+
       // Close on link/button click inside menu
       const links = menu.querySelectorAll('a, button[data-tab]');
       for (let i = 0; i < links.length; i++) {
         links[i].addEventListener('click', close, false);
       }
-      
+
       // Close on overlay click
-      menu.addEventListener('click', function(e) {
-        if (e.target === menu) close();
-      }, false);
+      menu.addEventListener(
+        'click',
+        function (e) {
+          if (e.target === menu) close();
+        },
+        false
+      );
     });
   })();
 </script>
@@ -435,7 +448,7 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
     const authActions = document.getElementById('auth-actions');
     const authUser = document.getElementById('auth-user');
     const userName = document.getElementById('user-name');
-    
+
     // Check authentication (this will be called by cabinet.astro's auth logic)
     (window as any).updateHeaderAuth = (user: any) => {
       if (user && authActions && authUser && userName) {
