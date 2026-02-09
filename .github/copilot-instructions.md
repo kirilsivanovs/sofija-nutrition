@@ -1,8 +1,29 @@
 # Copilot Instructions for Sofija Nutrition Project
 
-> **Philosophy**: Pragmatic excellence over dogmatic perfection. Ship quality code fast.
+> **Philosophy**: Clean, concise, and correct code first. Quality over shortcuts.
 
 ## 🔴 CRITICAL Rules (Never Break)
+
+### 0. Code Quality Standard
+**Write code that is clean, short, and correct.**
+
+Required:
+- Single responsibility per function/component/service
+- No duplication: extract shared logic early
+- Prefer clear, small functions over long blocks
+- Avoid `!important` (only if absolutely unavoidable and documented)
+- Avoid magic numbers/strings: use constants or enums
+- No dead code, commented-out code, or unused imports
+- Consistent naming and structure across files
+
+### 0.1 Mandatory Refactoring
+**Every change must improve code quality in the touched area.**
+
+Required:
+- Refactor duplicated/unclear logic when you touch it
+- Keep functions/components focused and short (split when they grow)
+- Replace hacks with proper solutions (no quick fixes)
+- If full refactor is too big, do a minimal cleanup **and** add a TODO/tech debt note
 
 ### 1. Mobile-First & Responsive Design
 **EVERY feature MUST work perfectly on ALL devices** - this is non-negotiable.
@@ -128,6 +149,7 @@ Each service:
 - BEM naming: `.block__element--modifier`
 - CSS custom properties for theming
 - Avoid inline styles (prefer classes)
+- Prefer local scope over global overrides
 
 ### Refactoring Strategy
 - Extract new features into clean structure FIRST
@@ -217,4 +239,4 @@ When shipping critical feature or fixing production bug:
 
 ---
 
-**Remember**: Perfect is the enemy of good. Ship quality code, iterate fast, refactor when it matters.
+**Remember**: Quality over shortcuts. Refactor as you touch the code.

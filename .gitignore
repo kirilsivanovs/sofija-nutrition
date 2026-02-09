@@ -66,3 +66,8 @@ ai-traces.txt
 # Internal documentation (not for public)
 # ============================================
 docs/
+
+# ============================================
+# Local Copilot instructions override
+# ============================================
+.github/copilot-instructions.md
