@@ -457,7 +457,7 @@
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 /* Content Header */
@@ -1176,7 +1176,7 @@
 }
 
 .calendar-cell.selected {
-  box-shadow: inset 0 0 0 4px var(--color-primary) !important;
+  box-shadow: inset 0 0 0 4px var(--color-primary);
   z-index: 11;
   transform: scale(1.02);
 }
@@ -1194,22 +1194,22 @@
 
 /* Доступные дни - белый фон */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.available {
-  background-color: #ffffff !important;
+  background-color: #ffffff;
 }
 
 /* Дни с записями - светло-зеленый */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.booked {
-  background-color: #f0fdf4 !important;
+  background-color: #f0fdf4;
 }
 
 /* Недоступные дни (выходные, нерабочие) - светло-красный фон */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.weekend {
-  background-color: #fff1f2 !important;
+  background-color: #fff1f2;
 }
 
 /* Праздники и блокированные - красный фон */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.holiday {
-  background-color: #fee2e2 !important;
+  background-color: #fee2e2;
 }
 
 .calendar-cell .day-number {
@@ -1717,11 +1717,11 @@
 }
 
 .data-table tr.row-selected {
-  background: #dbeafe !important;
+  background: #dbeafe;
 }
 
 .data-table tr.row-selected td {
-  background: #dbeafe !important;
+  background: #dbeafe;
 }
 
 .table-footer {

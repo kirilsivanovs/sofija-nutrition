@@ -89,7 +89,7 @@ function emailWrapper(content: string, { title = '' }: EmailWrapperOptions = {})
     <title>${title}</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>

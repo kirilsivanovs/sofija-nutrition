@@ -30,7 +30,7 @@
 
 .animate-on-scroll.is-visible {
     opacity: 1;
-    transform: none !important;
+    transform: none;
 }
 
 /* Staggered delay based on index */
@@ -314,10 +314,10 @@
     .credentials-badge,
     .chart-line-good,
     .chart-line-bad {
-        animation: none !important;
-        transition: opacity 0.3s ease !important;
-        transform: none !important;
-        opacity: 1 !important;
+        animation: none;
+        transition: opacity 0.3s ease;
+        transform: none;
+        opacity: 1;
     }
     
     .scroll-progress {

@@ -2,8 +2,8 @@
 
 /* iOS Safari link detection fix */
 a[x-apple-data-detectors] {
-    color: inherit !important;
-    text-decoration: none !important;
+    color: inherit;
+    text-decoration: none;
 }
 
 /* Smooth scrolling */
@@ -101,6 +101,6 @@ input:focus, textarea:focus, select:focus {
 @media (min-width: 768px) {
     .nav-links,
     .nav-links.mobile-open {
-        display: none !important;
+        display: none;
     }
 }
