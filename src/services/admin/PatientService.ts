@@ -93,22 +93,27 @@ export class PatientService {
   }
 
   /**
-   * Get display name for patient (fallback to email then userId)
+   * Get display name for patient (email first, then displayName, fallback to userId)
    */
   getDisplayName(patient: Patient): string {
-    return patient.displayName || patient.email || patient.userId;
+    return patient.email || patient.displayName || patient.userId;
   }
 
   /**
-   * Get secondary info (ID if name/email shown, or last meal date)
+   * Get secondary info (displayName if email shown, or last meal date)
    */
   getSecondaryInfo(patient: Patient): string {
-    const displayName = this.getDisplayName(patient);
+    // If showing email, show displayName as secondary
+    if (patient.email && patient.displayName) {
+      return patient.displayName;
+    }
 
-    if (displayName !== patient.userId) {
+    // If showing email/displayName, show ID 
+    if (patient.email || patient.displayName) {
       return `ID: ${patient.userId}`;
     }
 
+    // Otherwise show last meal date
     return patient.lastMealAt ? `Pēdējais ieraksts: ${this.formatDate(patient.lastMealAt)}` : '';
   }
 

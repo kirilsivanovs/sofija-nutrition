@@ -35,7 +35,7 @@
 }
 
 .patients-add button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background: var(--color-primary);
   color: white;
   border: none;
@@ -44,6 +44,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .patients-add button:hover {
@@ -117,10 +118,12 @@
   font-size: 11px;
   font-weight: 600;
   border-radius: 999px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
+  min-width: 65px;
+  text-align: center;
 }
 
 .access-toggle.on {
