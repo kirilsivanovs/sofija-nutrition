@@ -1211,6 +1211,7 @@ import AppHeader from '../components/common/AppHeader.astro';
   <script>
     // ---- Globals ----
     let userId = '';
+    let isCheckingAuth = false;
     let currentDate = new Date();
     let allMeals = [];
     let activeSheetMealType = 'snack';
@@ -1291,6 +1292,10 @@ import AppHeader from '../components/common/AppHeader.astro';
 
     // ---- Auth ----
     async function loadAuth() {
+      // Prevent concurrent auth checks
+      if (isCheckingAuth) return;
+      isCheckingAuth = true;
+      
       try {
         // Force fresh auth check (Safari cache workaround)
         const res = await fetch('/.auth/me', {
@@ -1304,6 +1309,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         const p = data?.clientPrincipal;
         if (!p) {
           showScreen('login');
+          isCheckingAuth = false;
           return;
         }
         userId = p.userId;
@@ -1319,6 +1325,8 @@ import AppHeader from '../components/common/AppHeader.astro';
         await loadAccess();
       } catch {
         showScreen('login');
+      } finally {
+        isCheckingAuth = false;
       }
     }
 
@@ -1994,16 +2002,29 @@ import AppHeader from '../components/common/AppHeader.astro';
       if (e.key === 'Escape') closeSheet();
     });
 
-    // ---- Re-check auth when page becomes visible (Safari tab switching) ----
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
+    // ---- Re-check auth with debounce (Safari logout sync) ----
+    let authCheckTimeout = null;
+    
+    function debouncedAuthCheck() {
+      // Skip if already checking or user is already authenticated
+      if (isCheckingAuth || userId) return;
+      
+      clearTimeout(authCheckTimeout);
+      authCheckTimeout = setTimeout(() => {
         loadAuth();
+      }, 2000); // Wait 2 seconds before re-checking
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && !userId) {
+        debouncedAuthCheck();
       }
     });
 
-    // ---- Re-check auth when window regains focus (Safari logout sync) ----
     window.addEventListener('focus', () => {
-      loadAuth();
+      if (!userId) {
+        debouncedAuthCheck();
+      }
     });
 
     // ---- Init ----
