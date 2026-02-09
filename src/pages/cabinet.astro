@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AppHeader from '../components/common/AppHeader.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
 <Layout title="Uztura dienasgrāmata — Pacienta kabinets">
@@ -1942,4 +1943,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     updateDayUI();
     loadAuth();
   </script>
+
+  <!-- Scroll to Top Button -->
+  <ScrollToTop />
 </Layout>

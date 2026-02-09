@@ -432,6 +432,11 @@ a.nav-tab {
   margin: 0 !important;
 }
 
+.nav-tab i {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
 .nav-tab:hover,
 nav .nav-tab:hover,
 a.nav-tab:hover {

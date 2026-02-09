@@ -7,6 +7,7 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 import PatientList from '../../components/admin/PatientList/PatientList.astro';
 import MealsTab from '../../components/admin/MealsTab/MealsTab.astro';
 import DataTab from '../../components/admin/DataTab/DataTab.astro';
+import ScrollToTop from '../../components/common/ScrollToTop.astro';
 import '../../styles/admin.css';
 ---
 
@@ -386,4 +387,7 @@ import '../../styles/admin.css';
     // Run check when page loads
     checkAdminAccess();
   </script>
+
+  <!-- Scroll to Top Button -->
+  <ScrollToTop />
 </Layout>

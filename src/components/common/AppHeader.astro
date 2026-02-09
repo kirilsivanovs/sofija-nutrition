@@ -33,7 +33,6 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
     {showBurger && (
       <button 
         type="button" 
-        onclick={`this.classList.toggle('active');document.getElementById('${mobileMenuId}').classList.toggle('open');document.body.style.overflow=document.getElementById('${mobileMenuId}').classList.contains('open')?'hidden':'';`}
         class="mobile-menu-btn"
         style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
         aria-label="Atvērt izvēlni"
@@ -412,6 +411,9 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
         document.body.style.width = '';
         document.body.style.top = '';
       }
+      
+      // Add click handler to button
+      btn.addEventListener('click', toggle, false);
       
       // Close on link/button click inside menu
       const links = menu.querySelectorAll('a, button[data-tab]');

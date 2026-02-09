@@ -1,0 +1,116 @@
+---
+/**
+ * Scroll to Top Button
+ * Shows when user scrolls down, hides at the top
+ * Universal component for all pages
+ */
+---
+
+<button
+  id="scroll-to-top"
+  class="scroll-to-top"
+  aria-label="Atgriezties uz augšu"
+  title="Atgriezties uz augšu"
+>
+  <i class="ph ph-arrow-up"></i>
+</button>
+
+<style>
+  .scroll-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .scroll-to-top:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(27, 67, 50, 0.35);
+  }
+
+  .scroll-to-top:active {
+    transform: scale(0.95);
+  }
+
+  .scroll-to-top i {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .scroll-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+    }
+
+    .scroll-to-top i {
+      font-size: 20px;
+    }
+  }
+
+  /* Ensure it doesn't overlap with cookie settings */
+  @media (max-width: 480px) {
+    .scroll-to-top {
+      bottom: 80px; /* Above cookie button */
+    }
+  }
+</style>
+
+<script>
+  // Scroll to top functionality
+  (function() {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+
+    // Show/hide button based on scroll position
+    function toggleButton() {
+      if (window.scrollY > 400) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    }
+
+    // Smooth scroll to top
+    function scrollToTop(e: Event) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Event listeners
+    window.addEventListener('scroll', toggleButton, { passive: true });
+    scrollBtn.addEventListener('click', scrollToTop);
+    
+    // Check initial position
+    toggleButton();
+  })();
+</script>
