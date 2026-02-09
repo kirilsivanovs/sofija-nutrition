@@ -392,53 +392,62 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
 <script is:inline>
   // Mobile menu functionality - inline for iOS Safari compatibility
   (function () {
-    const btns = document.querySelectorAll('.mobile-menu-btn');
+    function initBurgerMenu() {
+      const btns = document.querySelectorAll('.mobile-menu-btn');
 
-    btns.forEach(function (btn) {
-      const menuId = btn.getAttribute('aria-controls');
-      const menu = document.getElementById(menuId);
-      if (!menu) return;
+      btns.forEach(function (btn) {
+        const menuId = btn.getAttribute('aria-controls');
+        const menu = document.getElementById(menuId);
+        if (!menu) return;
 
-      function toggle(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const isOpen = menu.classList.toggle('open');
-        btn.classList.toggle('active', isOpen);
-        btn.setAttribute('aria-expanded', String(isOpen));
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-        document.body.style.position = isOpen ? 'fixed' : '';
-        document.body.style.width = isOpen ? '100%' : '';
-        document.body.style.top = isOpen ? '0' : '';
-      }
+        function toggle(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const isOpen = menu.classList.toggle('open');
+          btn.classList.toggle('active', isOpen);
+          btn.setAttribute('aria-expanded', String(isOpen));
+          document.body.style.overflow = isOpen ? 'hidden' : '';
+          document.body.style.position = isOpen ? 'fixed' : '';
+          document.body.style.width = isOpen ? '100%' : '';
+          document.body.style.top = isOpen ? '0' : '';
+        }
 
-      function close() {
-        menu.classList.remove('open');
-        btn.classList.remove('active');
-        btn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-      }
+        function close() {
+          menu.classList.remove('open');
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
+        }
 
-      // Add click handler to button
-      btn.addEventListener('click', toggle, false);
+        // Add click handler to button
+        btn.addEventListener('click', toggle, false);
 
-      // Close on link/button click inside menu
-      const links = menu.querySelectorAll('a, button[data-tab]');
-      for (let i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', close, false);
-      }
+        // Close on link/button click inside menu
+        const links = menu.querySelectorAll('a, button[data-tab]');
+        for (let i = 0; i < links.length; i++) {
+          links[i].addEventListener('click', close, false);
+        }
 
-      // Close on overlay click
-      menu.addEventListener(
-        'click',
-        function (e) {
-          if (e.target === menu) close();
-        },
-        false
-      );
-    });
+        // Close on overlay click
+        menu.addEventListener(
+          'click',
+          function (e) {
+            if (e.target === menu) close();
+          },
+          false
+        );
+      });
+    }
+
+    // Initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBurgerMenu);
+    } else {
+      initBurgerMenu();
+    }
   })();
 </script>
 

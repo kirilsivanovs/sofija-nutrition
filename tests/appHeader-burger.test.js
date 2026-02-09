@@ -116,6 +116,9 @@ describe('AppHeader Burger Menu', () => {
     });
   }
 
+  // Initialize immediately (simulating DOMContentLoaded already fired)
+  initBurgerMenu();
+
   describe('Initial State', () => {
     test('burger button should exist', () => {
       expect(mobileMenuBtn).not.toBeNull();
