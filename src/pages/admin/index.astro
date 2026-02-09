@@ -120,45 +120,14 @@ import '../../styles/admin.css';
       initializeDateInputs,
     } from '../../utils/admin/formatters';
     import { showToast, showConfirm } from '../../utils/admin/notifications';
-    import {
-      DAY_NAMES_FOR_SCHEDULE,
-      MONTH_NAMES,
-      SERVICE_NAMES,
-    } from '../../utils/admin/constants';
-    import {
-      renderCalendar,
-      showDayDetails,
-      navigateMonth,
-      goToToday,
-      setCalendarData,
-      getCurrentDate,
-      setCurrentDate,
-      getSelectedDate,
-      setSelectedDate,
-      getServiceName,
-      getStatusText,
-    } from '../../utils/admin/calendar';
-    import {
-      loadAvailabilityForm,
-      saveAvailability,
-      addVacation,
-      removeVacation as removeVacationUtil,
-      addBlockedDate,
-      removeBlockedDate as removeBlockedDateUtil,
-      setupVacationDateValidation,
-    } from '../../utils/admin/availability';
     import { initDatePicker } from '../../utils/admin/datePicker';
-    import { loadHolidays, setupHolidaysListeners } from '../../utils/admin/holidays';
-    import {
-      loadCalendarData,
-      confirmBooking as confirmBookingApi,
-      cancelBooking as cancelBookingApi,
-      findFirstUpcomingBooking,
-    } from '../../utils/adminApiAdapter';
     import { PatientService } from '../../services/admin/PatientService';
     import { PatientListController } from '../../components/admin/PatientList/PatientListController';
     import { MealsTabController } from '../../components/admin/MealsTab/MealsTab';
     import { DataTabController } from '../../components/admin/DataTab/DataTab';
+    import { CalendarViewController } from '../../components/admin/CalendarViewController';
+    import { AvailabilityController } from '../../components/admin/AvailabilityController';
+    import { SettingsController } from '../../components/admin/SettingsController';
 
     // Type declarations for global window functions
     declare global {
@@ -243,15 +212,6 @@ import '../../styles/admin.css';
       return headers;
     };
 
-    // Calendar state managed by calendar.js
-    let allBookings: any[] = [];
-    let holidays: Record<string, string> = {};
-    let schedule: Record<string, any> = {};
-    let blockedDates = new Set<string>();
-    let vacationPeriods: VacationPeriod[] = [];
-    const dayNamesForSchedule = DAY_NAMES_FOR_SCHEDULE;
-    const monthNames = MONTH_NAMES;
-
     // Initialize date inputs and date picker on page load
     initializeDateInputs();
     initDatePicker();
@@ -301,9 +261,9 @@ import '../../styles/admin.css';
       const tabEl = document.getElementById('tab-' + tabId);
       if (tabEl) tabEl.classList.remove('hidden');
       if (mobileSelect) mobileSelect.value = tabId;
-      if (tabId === 'bookings') loadCalendar();
-      if (tabId === 'availability') loadAvailability();
-      if (tabId === 'settings') loadSettings();
+      if (tabId === 'bookings') calendarController.loadCalendar();
+      if (tabId === 'availability') availabilityController.loadAvailability();
+      if (tabId === 'settings') settingsController.loadSettings();
       if (tabId === 'meals') patientController.loadPatients();
       if (tabId === 'data') dataTabController.loadTableData();
     }
@@ -366,312 +326,18 @@ import '../../styles/admin.css';
     );
     dataTabController.init();
 
-    // Utility functions still used elsewhere
-    function formatPatientDate(value?: string): string {
-      if (!value) return '—';
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return '—';
-      return date.toLocaleDateString('lv-LV');
-    }
+    // Initialize Calendar View Controller
+    const calendarController = new CalendarViewController(API_BASE, showToast, showConfirm);
+    calendarController.init();
 
-    const prevMonthBtn = document.getElementById('prev-month');
-    const nextMonthBtn = document.getElementById('next-month');
-    const todayBtn = document.getElementById('today-btn');
-    const refreshBookingsBtn = document.getElementById('refresh-bookings');
-    const closeDayDetailsBtn = document.getElementById('close-day-details');
+    // Initialize Availability Controller
+    const availabilityController = new AvailabilityController(API_BASE);
+    availabilityController.init();
 
-    if (prevMonthBtn) {
-      prevMonthBtn.addEventListener('click', () => {
-        const currentDate = getCurrentDate();
-        currentDate.setDate(1);
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        setCurrentDate(currentDate);
-        loadCalendar();
-      });
-    }
+    // Initialize Settings Controller
+    const settingsController = new SettingsController(API_BASE, showToast);
+    settingsController.init();
 
-    if (nextMonthBtn) {
-      nextMonthBtn.addEventListener('click', () => {
-        const currentDate = getCurrentDate();
-        currentDate.setDate(1);
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        setCurrentDate(currentDate);
-        loadCalendar();
-      });
-    }
-
-    if (todayBtn) {
-      todayBtn.addEventListener('click', () => {
-        setCurrentDate(new Date());
-        loadCalendar();
-      });
-    }
-
-    if (refreshBookingsBtn) {
-      refreshBookingsBtn.addEventListener('click', loadCalendar);
-    }
-
-    if (closeDayDetailsBtn) {
-      closeDayDetailsBtn.addEventListener('click', () => {
-        const dayDetails = document.getElementById('day-details');
-        if (dayDetails) dayDetails.classList.add('hidden');
-      });
-    }
-
-    async function loadCalendar() {
-      const loading = document.getElementById('bookings-loading');
-      const container = document.getElementById('calendar-container');
-      const dayDetails = document.getElementById('day-details');
-      const currentMonthEl = document.getElementById('current-month');
-
-      if (loading) loading.classList.remove('hidden');
-      if (container) container.classList.add('hidden');
-      if (dayDetails) dayDetails.classList.add('hidden');
-
-      const currentDate = getCurrentDate();
-      if (currentMonthEl) {
-        currentMonthEl.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-      }
-
-      try {
-        const year = currentDate.getFullYear();
-
-        // Use centralized API client
-        const data = await loadCalendarData(year);
-
-        allBookings = data.bookings;
-        holidays = data.holidays;
-        schedule = data.schedule;
-        blockedDates = data.blockedDates as Set<string>;
-        vacationPeriods = data.vacations.map((v: { start: string; end: string }) => ({
-          startDate: v.start,
-          endDate: v.end,
-        }));
-
-        // Update calendar data in calendar module
-        setCalendarData({
-          bookings: allBookings,
-          schedule,
-          holidays,
-          blockedDates,
-          vacationPeriods,
-        });
-
-        console.log('📅 Loaded vacation periods:', vacationPeriods);
-        renderCalendar();
-        if (loading) loading.classList.add('hidden');
-        if (container) container.classList.remove('hidden');
-      } catch (error: unknown) {
-        if (loading)
-          loading.innerHTML =
-            '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>';
-      }
-    }
-
-    // Находит ближайшую будущую запись и переключает календарь на этот месяц
-    async function navigateToFirstUpcomingBooking() {
-      try {
-        const firstBooking = await findFirstUpcomingBooking();
-
-        if (firstBooking) {
-          const today = new Date();
-          const bookingDate = new Date(firstBooking.date);
-
-          // Если запись в другом месяце - переключаемся
-          if (
-            bookingDate.getMonth() !== today.getMonth() ||
-            bookingDate.getFullYear() !== today.getFullYear()
-          ) {
-            setCurrentDate(new Date(bookingDate.getFullYear(), bookingDate.getMonth(), 1));
-            console.log(`📅 Переключено на месяц с ближайшей записью: ${firstBooking.date}`);
-          }
-        }
-      } catch (error) {
-        console.error('Ошибка при поиске ближайших записей:', error);
-      }
-    }
-
-    // Expose showDayDetails to window for calendar cells onclick
-    window.showDayDetails = showDayDetails;
-
-    // Helper function to check if date is in vacation period (for non-calendar use)
-    function isDateInVacation(dateStr: string): boolean {
-      return vacationPeriods.some((v) => dateStr >= v.startDate && dateStr <= v.endDate);
-    }
-
-    window.confirmBooking = async function (id: string): Promise<void> {
-      const confirmed = await showConfirm(
-        'Vai tiešām vēlaties apstiprināt šo ierakstu?',
-        'Apstiprināt ierakstu'
-      );
-      if (!confirmed) return;
-      try {
-        await confirmBookingApi(id);
-        await loadCalendar();
-        // Refresh day details if a date is selected
-        const selectedDate = getSelectedDate();
-        if (selectedDate) {
-          showDayDetails(selectedDate);
-        }
-        showToast('Ieraksts veiksmīgi apstiprināts', 'success');
-      } catch (e: unknown) {
-        showToast((e as Error).message, 'error');
-      }
-    };
-
-    window.cancelBooking = async function (id: string): Promise<void> {
-      const confirmed = await showConfirm(
-        'Vai tiešām vēlaties atcelt šo ierakstu?',
-        'Atcelt ierakstu'
-      );
-      if (!confirmed) return;
-      try {
-        await cancelBookingApi(id);
-        await loadCalendar();
-        // Refresh day details if a date is selected
-        const selectedDate = getSelectedDate();
-        if (selectedDate) {
-          showDayDetails(selectedDate);
-        }
-        showToast('Ieraksts veiksmīgi atcelts', 'success');
-      } catch (e: unknown) {
-        showToast((e as Error).message, 'error');
-      }
-    };
-
-    // Availability functions using utilities
-    function loadAvailability() {
-      loadAvailabilityForm(API_BASE, () => loadHolidays(API_BASE));
-      setupVacationDateValidation();
-    }
-
-    // Setup holidays listeners
-    setupHolidaysListeners(API_BASE);
-
-    const saveAvailabilityBtn = document.getElementById('save-availability');
-    if (saveAvailabilityBtn) {
-      saveAvailabilityBtn.addEventListener('click', () => saveAvailability(API_BASE));
-    }
-
-    const addVacationBtn = document.getElementById('add-vacation');
-    if (addVacationBtn) {
-      addVacationBtn.addEventListener('click', () => {
-        addVacation(API_BASE, () => {
-          loadAvailability();
-          loadCalendar();
-        });
-      });
-    }
-
-    window.removeVacation = async function (id: string): Promise<void> {
-      await removeVacationUtil(API_BASE, id, () => {
-        loadAvailability();
-        loadCalendar();
-      });
-    };
-
-    const addBlockedDateBtn = document.getElementById('add-blocked-date');
-    if (addBlockedDateBtn) {
-      addBlockedDateBtn.addEventListener('click', () => {
-        addBlockedDate(API_BASE, loadAvailability);
-      });
-    }
-
-    window.removeBlockedDate = async function (date: string): Promise<void> {
-      await removeBlockedDateUtil(API_BASE, date, loadAvailability);
-    };
-
-    function loadSettings() {
-      fetch(API_BASE + '/dashboard/settings')
-        .then((r) => r.json())
-        .then((data) => {
-          const priceInitial = document.getElementById('price-initial') as HTMLInputElement | null;
-          const priceFollowup = document.getElementById(
-            'price-followup'
-          ) as HTMLInputElement | null;
-          const contactEmail = document.getElementById('contact-email') as HTMLInputElement | null;
-          const contactPhone = document.getElementById('contact-phone') as HTMLInputElement | null;
-          const contactAddress = document.getElementById(
-            'contact-address'
-          ) as HTMLInputElement | null;
-          const durationInitial = document.getElementById(
-            'duration-initial'
-          ) as HTMLInputElement | null;
-          const durationFollowup = document.getElementById(
-            'duration-followup'
-          ) as HTMLInputElement | null;
-          const bankName = document.getElementById('bank-name') as HTMLInputElement | null;
-          const bankIban = document.getElementById('bank-iban') as HTMLInputElement | null;
-
-          if (data.prices) {
-            if (priceInitial) priceInitial.value = data.prices.initial || 65;
-            if (priceFollowup) priceFollowup.value = data.prices.followup || 45;
-          }
-          if (data.contact) {
-            if (contactEmail) contactEmail.value = data.contact.email || '';
-            if (contactPhone) contactPhone.value = data.contact.phone || '';
-            if (contactAddress) contactAddress.value = data.contact.address || '';
-          }
-          if (data.duration) {
-            if (durationInitial) durationInitial.value = data.duration.initial || 60;
-            if (durationFollowup) durationFollowup.value = data.duration.followup || 30;
-          }
-          if (data.bank) {
-            if (bankName) bankName.value = data.bank.name || '';
-            if (bankIban) bankIban.value = data.bank.iban || '';
-          }
-        })
-        .catch(() => {});
-    }
-
-    const saveSettingsBtn = document.getElementById('save-settings');
-    if (saveSettingsBtn) {
-      saveSettingsBtn.addEventListener('click', async () => {
-        const priceInitial = (document.getElementById('price-initial') as HTMLInputElement)?.value;
-        const priceFollowup = (document.getElementById('price-followup') as HTMLInputElement)
-          ?.value;
-        const contactEmail = (document.getElementById('contact-email') as HTMLInputElement)?.value;
-        const contactPhone = (document.getElementById('contact-phone') as HTMLInputElement)?.value;
-        const contactAddress = (document.getElementById('contact-address') as HTMLInputElement)
-          ?.value;
-        const durationInitial = (document.getElementById('duration-initial') as HTMLInputElement)
-          ?.value;
-        const durationFollowup = (document.getElementById('duration-followup') as HTMLInputElement)
-          ?.value;
-        const bankName = (document.getElementById('bank-name') as HTMLInputElement)?.value;
-        const bankIban = (document.getElementById('bank-iban') as HTMLInputElement)?.value;
-
-        const settings = {
-          prices: {
-            initial: parseInt(priceInitial || '65'),
-            followup: parseInt(priceFollowup || '45'),
-          },
-          contact: {
-            email: contactEmail || '',
-            phone: contactPhone || '',
-            address: contactAddress || '',
-          },
-          duration: {
-            initial: parseInt(durationInitial || '60'),
-            followup: parseInt(durationFollowup || '30'),
-          },
-          bank: { name: bankName || '', iban: bankIban || '' },
-        };
-        try {
-          await fetch(API_BASE + '/dashboard/settings', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(settings),
-          });
-          showToast('Iestatījumi saglabāti!', 'success');
-        } catch (e: unknown) {
-          showToast((e as Error).message, 'error');
-        }
-      });
-    }
-
-    // При первой загрузке - переходим к месяцу с ближайшими записями
-    navigateToFirstUpcomingBooking().then(() => loadCalendar());
   </script>
 
   <!-- Admin Access Check -->

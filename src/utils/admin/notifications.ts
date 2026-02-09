@@ -4,6 +4,9 @@
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
+export type ShowToastFn = (message: string, type?: ToastType, title?: string | null) => void;
+export type ShowConfirmFn = (message: string, title?: string) => Promise<boolean>;
+
 export function showToast(message: string, type: ToastType = 'info', title: string | null = null): void {
     const container = document.getElementById('toast-container');
     if (!container) {
