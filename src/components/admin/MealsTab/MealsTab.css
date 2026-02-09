@@ -116,7 +116,7 @@
     max-height: none;
     padding: 12px;
   }
-  .meals-calendar {
+  .meals-main {
     order: 1;
   }
   .meals-calendar-grid {
@@ -142,6 +142,9 @@
 @media (max-width: 480px) {
   .meals-sidebar {
     padding: 8px;
+  }
+  .meals-sidebar-header h3 {
+    font-size: 14px;
   }
   .meals-list {
     gap: 12px;

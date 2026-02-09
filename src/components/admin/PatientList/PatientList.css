@@ -169,3 +169,70 @@
   padding: 40px 20px;
   color: var(--color-text-light);
 }
+
+/* Mobile optimization for patient list */
+@media (max-width: 768px) {
+  .patient-item {
+    padding: 10px;
+    gap: 10px;
+  }
+  .patient-id {
+    font-size: 12px;
+    max-width: 150px;
+  }
+  .patient-meta {
+    font-size: 11px;
+    max-width: 150px;
+  }
+  .access-toggle {
+    font-size: 10px;
+    padding: 4px 10px;
+    min-width: 55px;
+  }
+  .btn-remove-patient {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .patients-search input {
+    font-size: 12px;
+    padding: 7px 28px 7px 10px;
+  }
+  .patients-add input {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+  .patients-add button {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .patient-item {
+    padding: 8px;
+    gap: 8px;
+    border-radius: 8px;
+  }
+  .patient-id {
+    font-size: 11px;
+    max-width: 120px;
+  }
+  .patient-meta {
+    font-size: 10px;
+    max-width: 120px;
+  }
+  .patient-actions {
+    gap: 4px;
+  }
+  .access-toggle {
+    font-size: 9px;
+    padding: 3px 8px;
+    min-width: 50px;
+  }
+  .btn-remove-patient {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+}
