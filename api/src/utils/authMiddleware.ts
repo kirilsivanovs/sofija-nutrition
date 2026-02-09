@@ -1,10 +1,10 @@
 /**
  * Authentication Middleware for Admin API (TypeScript)
- * 
+ *
  * Поддерживает два типа авторизации:
  * 1. SWA Built-in Auth (Microsoft OAuth) - через x-ms-client-principal header
  * 2. E2E Token Auth - через X-E2E-Token header (только для тестов)
- * 
+ *
  * ВАЖНО: Доступ к admin API разрешен только определенным email'ам,
  * указанным в переменной окружения ADMIN_EMAILS (разделенные запятыми)
  */
@@ -13,7 +13,7 @@ import {
   logAuthFailure,
   logAuthSuccess,
   logAdminAccessDenied,
-  logAdminAccessGranted
+  logAdminAccessGranted,
 } from './securityLogger';
 
 // ============================================
@@ -27,8 +27,8 @@ export function getAllowedAdminEmails(): string[] {
   const adminEmailsEnv = process.env.ADMIN_EMAILS || 'ivanovs.kirils95@gmail.com';
   return adminEmailsEnv
     .split(',')
-    .map(email => email.trim().toLowerCase())
-    .filter(email => email.length > 0);
+    .map((email) => email.trim().toLowerCase())
+    .filter((email) => email.length > 0);
 }
 
 /**
@@ -100,7 +100,10 @@ interface ClientPrincipal {
 /**
  * Проверяет авторизацию запроса
  */
-export function checkAuthorization(request: HttpRequest, context: FunctionContext | null = null): AuthResult {
+export function checkAuthorization(
+  request: HttpRequest,
+  context: FunctionContext | null = null
+): AuthResult {
   // Метод 1: SWA Built-in Auth
   const clientPrincipal = request.headers.get('x-ms-client-principal');
   if (clientPrincipal) {
@@ -111,24 +114,24 @@ export function checkAuthorization(request: HttpRequest, context: FunctionContex
       // Проверяем что пользователь authenticated и является администратором
       if (principal.userId && principal.identityProvider) {
         const userEmail = principal.userDetails;
-        
+
         // Проверяем email на список разрешенных администраторов
         if (!isAdminEmail(userEmail)) {
           return {
             authorized: false,
-            error: `Access denied: Email ${userEmail} is not authorized for admin access`
+            error: `Access denied: Email ${userEmail} is not authorized for admin access`,
           };
         }
-        
+
         return {
           authorized: true,
           user: {
             id: principal.userId,
             name: principal.userDetails || 'Admin',
             provider: principal.identityProvider,
-            roles: principal.userRoles || []
+            roles: principal.userRoles || [],
           },
-          method: 'swa-auth'
+          method: 'swa-auth',
         };
       }
     } catch {
@@ -147,16 +150,17 @@ export function checkAuthorization(request: HttpRequest, context: FunctionContex
         id: 'e2e-test-user',
         name: 'E2E Test Runner',
         provider: 'e2e-token',
-        roles: ['authenticated', 'admin']
+        roles: ['authenticated', 'admin'],
       },
-      method: 'e2e-token'
+      method: 'e2e-token',
     };
   }
 
   // Метод 3: Проверка что запрос идёт с доверенного origin (для локальной разработки)
   const origin = request.headers.get('origin') || '';
   const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
-  const isDevMode = process.env.NODE_ENV === 'development' || process.env.FUNCTIONS_WORKER_RUNTIME === 'node';
+  const isDevMode =
+    process.env.NODE_ENV === 'development' || process.env.FUNCTIONS_WORKER_RUNTIME === 'node';
 
   if (isLocalhost && isDevMode) {
     return {
@@ -165,15 +169,15 @@ export function checkAuthorization(request: HttpRequest, context: FunctionContex
         id: 'local-dev',
         name: 'Local Developer',
         provider: 'localhost',
-        roles: ['authenticated', 'admin']
+        roles: ['authenticated', 'admin'],
       },
-      method: 'localhost'
+      method: 'localhost',
     };
   }
 
   return {
     authorized: false,
-    error: 'Unauthorized: Missing valid authentication'
+    error: 'Unauthorized: Missing valid authentication',
   };
 }
 
@@ -205,13 +209,13 @@ export function unauthorizedResponse(message = 'Unauthorized'): UnauthorizedResp
       success: false,
       error: {
         code: 'UNAUTHORIZED',
-        message
+        message,
       },
       meta: {
         timestamp: new Date().toISOString(),
-        hint: 'Use SWA auth or provide X-E2E-Token header'
-      }
-    }
+        hint: 'Use SWA auth or provide X-E2E-Token header',
+      },
+    },
   };
 }
 
@@ -224,5 +228,5 @@ module.exports = {
   checkAuthorizationWithLogging,
   unauthorizedResponse,
   isAdminEmail,
-  getAllowedAdminEmails
+  getAllowedAdminEmails,
 };
