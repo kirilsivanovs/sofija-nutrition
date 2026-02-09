@@ -8,7 +8,7 @@
 
 .meals-layout {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 450px 1fr;
   gap: 20px;
   align-items: start;
 }
