@@ -5,9 +5,11 @@
 ## 🔴 CRITICAL Rules (Never Break)
 
 ### 0. Code Quality Standard
+
 **Write code that is clean, short, and correct.**
 
 Required:
+
 - Single responsibility per function/component/service
 - No duplication: extract shared logic early
 - Prefer clear, small functions over long blocks
@@ -17,24 +19,29 @@ Required:
 - Consistent naming and structure across files
 
 ### 0.1 Mandatory Refactoring
+
 **Every change must improve code quality in the touched area.**
 
 Required:
+
 - Refactor duplicated/unclear logic when you touch it
 - Keep functions/components focused and short (split when they grow)
 - Replace hacks with proper solutions (no quick fixes)
 - If full refactor is too big, do a minimal cleanup **and** add a TODO/tech debt note
 
 ### 1. Mobile-First & Responsive Design
+
 **EVERY feature MUST work perfectly on ALL devices** - this is non-negotiable.
 
 #### Device Coverage
+
 - **Mobile**: 320px - 480px (iPhone SE, Galaxy S)
 - **Phablets**: 480px - 768px
 - **Tablets**: 768px - 1024px (iPad)
 - **Desktop**: 1024px+ (monitors)
 
 #### Premium UX Requirements
+
 ✅ Touch targets ≥ 44x44px (Apple HIG)
 ✅ Text ≥ 16px on mobile (readable without zoom)
 ✅ No horizontal scroll on any device
@@ -43,17 +50,29 @@ Required:
 
 ```css
 /* Mobile First - base styles for 320px+ */
-.component { padding: 16px; font-size: 14px; }
+.component {
+  padding: 16px;
+  font-size: 14px;
+}
 
-@media (min-width: 480px) { /* Phablets */ }
-@media (min-width: 768px) { /* Tablets */ }
-@media (min-width: 1024px) { /* Desktop */ }
-@media (min-width: 1280px) { /* Large desktop */ }
+@media (min-width: 480px) {
+  /* Phablets */
+}
+@media (min-width: 768px) {
+  /* Tablets */
+}
+@media (min-width: 1024px) {
+  /* Desktop */
+}
+@media (min-width: 1280px) {
+  /* Large desktop */
+}
 ```
 
 **GOLDEN RULE**: Mobile works poorly = bug. Fix before commit.
 
 ### 2. TypeScript Strict Mode
+
 - **NO `any` types** - use `unknown` or proper interfaces
 - Define interfaces for all data structures
 - Use enums for constants
@@ -61,12 +80,14 @@ Required:
 - Zero tolerance for compilation errors
 
 ### 3. Business-Critical Testing
+
 Write tests for code that handles:
 ✅ **Payments/Billing** - money transactions
 ✅ **Booking system** - prevent double-booking
 ✅ **Auth/Security** - access control
 
 **Coverage Goals:**
+
 - Critical logic: 80%+
 - Services: 70%+
 - Utils: 60%+
@@ -80,6 +101,7 @@ describe('BookingService', () => {
 ```
 
 ### 4. Clean Commits
+
 - Fix all linting/TypeScript errors before commit
 - Remove dead code (unused imports, commented code)
 - Use conventional commits: `feat:`, `fix:`, `refactor:`
@@ -91,6 +113,7 @@ describe('BookingService', () => {
 ### Component Structure - Hybrid Approach
 
 **Large components (> 150 lines)** → Split into files:
+
 ```
 src/components/admin/MealsCalendar/
   MealsCalendar.astro       # HTML template
@@ -99,6 +122,7 @@ src/components/admin/MealsCalendar/
 ```
 
 **Small components (< 150 lines)** → Single `.astro` file OK:
+
 ```astro
 ---
 // Button.astro
@@ -112,12 +136,14 @@ const { label, onClick } = Astro.props;
 ```
 
 ### SOLID / DRY Principles
+
 - **Single Responsibility**: Each class/function does ONE thing
 - **DRY**: Copy-pasting 2+ times? Extract to utility/service
 - **Prefer**: Classes for complex logic, pure functions for simple transforms
 - **Methods/Functions**: Aim for < 50 lines (use judgment, not dogma)
 
 ### Services Layer
+
 ```
 src/services/admin/
   BookingService.ts     # Booking logic
@@ -126,16 +152,19 @@ src/services/admin/
 ```
 
 Each service:
+
 - Clear constructor dependencies
 - Typed return values (no `any`)
 - Methods < 50 lines (ideal), < 80 (acceptable)
 
 ### Page Files
+
 - Prefer < 300 lines including frontmatter
 - If > 500 lines → consider extracting components
 - Import and compose, don't inline everything
 
 ### Testing (Recommended)
+
 - Complex business rules with multiple conditions
 - Data transformations with edge cases
 - Features that broke before (regression tests)
@@ -146,17 +175,20 @@ Each service:
 ## 🟢 NICE TO HAVE (When Time Permits)
 
 ### CSS Best Practices
+
 - BEM naming: `.block__element--modifier`
 - CSS custom properties for theming
 - Avoid inline styles (prefer classes)
 - Prefer local scope over global overrides
 
 ### Refactoring Strategy
+
 - Extract new features into clean structure FIRST
 - Gradually improve old code when touching it
 - Don't rewrite everything at once
 
 ### Documentation
+
 - JSDoc for complex functions
 - README for each major module
 - Inline comments for "why", not "what"
@@ -166,14 +198,17 @@ Each service:
 ## ⚡ Pragmatic Exceptions
 
 ### MVP / Hotfix Mode
+
 When shipping critical feature or fixing production bug:
 
 ✅ **STILL REQUIRED:**
+
 - Mobile responsiveness
 - TypeScript strict mode
 - Basic error handling
 
 ⏸️ **CAN DEFER:**
+
 - Perfect component structure → Create TODO
 - Full test coverage → Add after ship
 - Complete refactoring → Tech debt ticket
@@ -185,6 +220,7 @@ When shipping critical feature or fixing production bug:
 **Phase 3 (Q3 2026):** Full rewrite with proper architecture
 
 **When touching legacy code:**
+
 1. Add new feature in clean way (separate function/class)
 2. Don't refactor entire file (scope creep)
 3. Create tech debt ticket for future cleanup
@@ -203,6 +239,7 @@ When shipping critical feature or fixing production bug:
 ---
 
 ## Technology Stack
+
 - **Frontend**: Astro 4.x, TypeScript, Tailwind CSS
 - **Auth**: Azure Static Web Apps (AAD OAuth)
 - **API**: Azure Functions v4
@@ -212,6 +249,7 @@ When shipping critical feature or fixing production bug:
 ## Development Workflow
 
 ### Starting New Feature
+
 1. ✅ Mobile-first design (sketch 320px layout)
 2. ✅ Define TypeScript interfaces
 3. ✅ Create component/service structure
@@ -223,6 +261,7 @@ When shipping critical feature or fixing production bug:
 9. ✅ Commit with conventional message
 
 ### Self-Check Before Commit
+
 1. Works on mobile 320px? ✅
 2. No TypeScript errors? ✅
 3. Business-critical → Has tests? ✅
@@ -231,6 +270,7 @@ When shipping critical feature or fixing production bug:
 ---
 
 ## Latvian UI Translations
+
 - "Dzēst" = Delete
 - "Atcelt" = Cancel
 - "Saglabāt" = Save
