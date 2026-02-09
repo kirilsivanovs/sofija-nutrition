@@ -108,7 +108,7 @@ export class PatientService {
       return patient.displayName;
     }
 
-    // If showing email/displayName, show ID 
+    // If showing email/displayName, show ID
     if (patient.email || patient.displayName) {
       return `ID: ${patient.userId}`;
     }
