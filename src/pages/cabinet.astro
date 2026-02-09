@@ -1292,7 +1292,14 @@ import AppHeader from '../components/common/AppHeader.astro';
     // ---- Auth ----
     async function loadAuth() {
       try {
-        const res = await fetch('/.auth/me');
+        // Force fresh auth check (Safari cache workaround)
+        const res = await fetch('/.auth/me', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+        });
         const data = await res.json();
         const p = data?.clientPrincipal;
         if (!p) {
@@ -1303,6 +1310,12 @@ import AppHeader from '../components/common/AppHeader.astro';
         $('#user-name').textContent = p.userDetails || p.userId;
         $('#auth-actions').classList.add('hidden');
         $('#auth-user').classList.remove('hidden');
+        
+        // Update AppHeader auth state if available
+        if (typeof window.updateHeaderAuth === 'function') {
+          window.updateHeaderAuth(p);
+        }
+        
         await loadAccess();
       } catch {
         showScreen('login');
@@ -1311,7 +1324,14 @@ import AppHeader from '../components/common/AppHeader.astro';
 
     async function loadAccess() {
       try {
-        const res = await fetch('/api/food/access');
+        // Force fresh access check (Safari cache workaround)
+        const res = await fetch('/api/food/access', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+        });
         if (!res.ok) {
           showScreen('no-access');
           return;
@@ -1972,6 +1992,18 @@ import AppHeader from '../components/common/AppHeader.astro';
     // ---- Keyboard shortcut: Escape to close sheet ----
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeSheet();
+    });
+
+    // ---- Re-check auth when page becomes visible (Safari tab switching) ----
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        loadAuth();
+      }
+    });
+
+    // ---- Re-check auth when window regains focus (Safari logout sync) ----
+    window.addEventListener('focus', () => {
+      loadAuth();
     });
 
     // ---- Init ----
