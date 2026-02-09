@@ -4,9 +4,10 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Sofija Ivanova | Uztura Speciāliste Rīgā | Diabēta Profilakse un CGM Analīze">
     <!-- Header -->
-    <header class="bg-white/95 backdrop-blur-sm py-4 md:py-5 sticky top-0 z-50 shadow-sm border-b border-gray-100/50">
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <nav class="flex justify-between items-center">
+    <header class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-gray-100/50">
+        <!-- Top Bar with Logo and Language -->
+        <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
+            <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <a href="#" class="no-underline cursor-pointer group">
                     <div class="flex items-center gap-3">
@@ -18,21 +19,11 @@ import Layout from '../layouts/Layout.astro';
                     </div>
                 </a>
                 
-                <!-- Desktop Nav -->
-                <div class="hidden md:flex items-center gap-8">
-                    <div class="flex gap-5">
-                        <a href="#program" data-i18n="nav_program" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Programma</a>
-                        <a href="#how-it-works" data-i18n="nav_how" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Kā tas strādā</a>
-                        <a href="#about" data-i18n="nav_about" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Par mani</a>
-                        <a href="#contact" data-i18n="nav_contact" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Pieteikties</a>
-                        <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Pacienta kabinets</a>
-                    </div>
-                    
-                    <div class="flex gap-2 text-sm border-l border-gray-200 pl-4">
-                        <button class="lang-btn btn-chip" data-lang="lv">LV</button>
-                        <button class="lang-btn btn-chip" data-lang="en">EN</button>
-                        <button class="lang-btn btn-chip" data-lang="ru">RU</button>
-                    </div>
+                <!-- Language Switcher (Desktop) -->
+                <div class="hidden md:flex gap-2 text-sm">
+                    <button class="lang-btn btn-chip" data-lang="lv">LV</button>
+                    <button class="lang-btn btn-chip" data-lang="en">EN</button>
+                    <button class="lang-btn btn-chip" data-lang="ru">RU</button>
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -41,7 +32,21 @@ import Layout from '../layouts/Layout.astro';
                     <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
                     <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
                 </button>
-            </nav>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs (Desktop) -->
+        <nav class="hidden md:block border-t border-gray-100">
+            <div class="max-w-6xl mx-auto px-4 md:px-8">
+                <div class="flex gap-1">
+                    <a href="#program" data-i18n="nav_program" class="nav-tab">Programma</a>
+                    <a href="#how-it-works" data-i18n="nav_how" class="nav-tab">Kā tas strādā</a>
+                    <a href="#about" data-i18n="nav_about" class="nav-tab">Par mani</a>
+                    <a href="#contact" data-i18n="nav_contact" class="nav-tab">Pieteikties</a>
+                    <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab">Pacienta kabinets</a>
+                </div>
+            </div>
+        </nav>
             
             <!-- Mobile Nav -->
             <div id="mobile-nav-menu" class="mobile-nav-menu">
