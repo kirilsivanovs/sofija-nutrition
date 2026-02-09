@@ -477,88 +477,9 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
     }
   })();
 
-  // Logout functionality - Clear cookies and storage (Safari-compatible)
-  (function () {
-    function clearAllCookies() {
-      const cookies = document.cookie.split(';');
-      const hostname = window.location.hostname;
-      const domains = [
-        hostname,
-        '.' + hostname,
-        hostname.replace(/^www\./, ''),
-        '.' + hostname.replace(/^www\./, ''),
-      ];
-      const paths = ['/', '/cabinet', '/admin'];
-
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf('=');
-        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-
-        // Clear for all domain and path combinations
-        for (const domain of domains) {
-          for (const path of paths) {
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path}`;
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain}`;
-            // Safari-specific: also try with secure flag
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain};secure`;
-          }
-        }
-      }
-    }
-
-    function handleLogout(e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const logoutUrl = e.currentTarget.getAttribute('href');
-
-      try {
-        // Clear all storage
-        if (typeof localStorage !== 'undefined') localStorage.clear();
-        if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
-
-        // Clear all cookies (Safari-compatible)
-        clearAllCookies();
-
-        // Clear IndexedDB (if any)
-        if (window.indexedDB && window.indexedDB.databases) {
-          window.indexedDB.databases().then((dbs) => {
-            dbs.forEach((db) => {
-              if (db.name) window.indexedDB.deleteDatabase(db.name);
-            });
-          }).catch(() => {});
-        }
-
-        // Force cache clear for Safari
-        if ('caches' in window) {
-          caches.keys().then((names) => {
-            names.forEach((name) => caches.delete(name));
-          }).catch(() => {});
-        }
-      } catch (err) {
-        console.error('Error clearing session:', err);
-      }
-
-      // Redirect to Azure logout with force reload
-      setTimeout(() => {
-        window.location.replace(logoutUrl || '/.auth/logout?post_logout_redirect_uri=/');
-      }, 100);
-    }
-
-    function initLogout() {
-      const logoutLinks = document.querySelectorAll('.app-logout');
-      logoutLinks.forEach((link) => {
-        link.addEventListener('click', handleLogout, false);
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLogout);
-    } else {
-      initLogout();
-    }
-  })();
+  // Logout: Azure SWA handles session cleanup server-side via /.auth/logout
+  // No need to manually clear cookies/storage — auth cookies are httpOnly.
+  // The <a href="/.auth/logout?post_logout_redirect_uri=..."> link works as-is.
 </script>
 
 <script>
