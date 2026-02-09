@@ -331,11 +331,11 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
   .mobile-nav-menu :global(.mobile-nav-item i) {
     display: none; /* Hide icons in simple view to match main or keep if desired? Main has no icons usually in simple menus but let's hide them to make it look cleaner if that's the goal. Wait, main index.astro has icons. I will keep them but adjust style if needed. */
   }
-  
+
   /* Re-enable icons if they exist in main */
   .mobile-nav-menu :global(.mobile-nav-item i) {
-     display: inline-block;
-     font-size: 1.5rem;
+    display: inline-block;
+    font-size: 1.5rem;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item span) {
@@ -478,21 +478,24 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
   })();
 
   // Logout functionality - Clear cookies and storage
-  (function() {
+  (function () {
     function handleLogout(e) {
       // Allow the link navigation to proceed, but clear data first
       try {
         localStorage.clear();
         sessionStorage.clear();
-        
+
         // Clear all cookies
-        const cookies = document.cookie.split(";");
+        const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i];
-          const eqPos = cookie.indexOf("=");
+          const eqPos = cookie.indexOf('=');
           const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+          document.cookie =
+            name +
+            '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' +
+            window.location.hostname;
         }
       } catch (err) {
         console.error('Error clearing session:', err);
@@ -501,7 +504,7 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
 
     function initLogout() {
       const logoutLinks = document.querySelectorAll('.app-logout');
-      logoutLinks.forEach(link => {
+      logoutLinks.forEach((link) => {
         link.addEventListener('click', handleLogout);
       });
     }
