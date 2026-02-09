@@ -98,7 +98,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .patient-meta {
@@ -107,7 +108,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .patient-actions {
@@ -176,13 +178,15 @@
     padding: 10px;
     gap: 10px;
   }
+  .patient-item > div:first-child {
+    min-width: 0;
+    max-width: calc(100% - 80px);
+  }
   .patient-id {
     font-size: 12px;
-    max-width: 150px;
   }
   .patient-meta {
     font-size: 11px;
-    max-width: 150px;
   }
   .access-toggle {
     font-size: 10px;
@@ -214,13 +218,14 @@
     gap: 8px;
     border-radius: 8px;
   }
+  .patient-item > div:first-child {
+    max-width: calc(100% - 70px);
+  }
   .patient-id {
     font-size: 11px;
-    max-width: 120px;
   }
   .patient-meta {
     font-size: 10px;
-    max-width: 120px;
   }
   .patient-actions {
     gap: 4px;
