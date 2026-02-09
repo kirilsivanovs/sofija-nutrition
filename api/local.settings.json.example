@@ -8,6 +8,7 @@
     "E2E_TEST_TOKEN": "<generate-with: openssl rand -hex 32>",
     "BUSINESS_EMAIL": "your-email@example.com",
     "BUSINESS_NAME": "Your Business Name",
+    "ADMIN_EMAILS": "ivanovs.kirils95@gmail.com",
     "FUNCTIONS_CORS_ALLOWED_ORIGINS": "http://localhost:4321,http://localhost:3000,https://your-domain.com",
     
     "USE_MOCK_AI": "false",

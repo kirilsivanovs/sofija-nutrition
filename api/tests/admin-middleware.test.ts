@@ -17,6 +17,7 @@ import {
 } from '../src/utils/odataSanitizer';
 
 const VALID_ADMIN_KEY = process.env.ADMIN_API_KEY || 'test-admin-key-12345';
+const ADMIN_EMAIL = 'ivanovs.kirils95@gmail.com';
 
 // Helper to create mock request
 function createMockRequest(headers: Record<string, string> = {}) {
@@ -36,6 +37,17 @@ function createMockRequest(headers: Record<string, string> = {}) {
 // ============================================
 
 describe('Admin Authorization Middleware', () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+        process.env = { ...originalEnv };
+        process.env.ADMIN_EMAILS = ADMIN_EMAIL;
+    });
+
+    afterAll(() => {
+        process.env = originalEnv;
+    });
+
     describe('checkAuthorization', () => {
         it('should reject requests without admin key', () => {
             const req = createMockRequest({});
@@ -60,7 +72,7 @@ describe('Admin Authorization Middleware', () => {
             // Mock SWA auth header with base64-encoded principal
             const principal = {
                 userId: 'test-user-123',
-                userDetails: 'Test Admin',
+                userDetails: ADMIN_EMAIL,
                 identityProvider: 'google',
                 userRoles: ['admin']
             };
