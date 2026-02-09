@@ -321,7 +321,7 @@ nav .flex.gap-1::-webkit-scrollbar {
 
 .mobile-menu-btn.active span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
-  background: var(--color-secondary, #c9a36a);
+  background: var(--color-primary, #1b4332);
 }
 
 .mobile-menu-btn.active span:nth-child(2) {
@@ -330,7 +330,7 @@ nav .flex.gap-1::-webkit-scrollbar {
 
 .mobile-menu-btn.active span:nth-child(3) {
   transform: rotate(-45deg) translate(5px, -5px);
-  background: var(--color-secondary, #c9a36a);
+  background: var(--color-primary, #1b4332);
 }
 
 /* Mobile Navigation Menu - Premium Fullscreen */
@@ -343,7 +343,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   bottom: 0;
   height: 100%;
   height: 100dvh;
-  background: linear-gradient(165deg, #152e24 0%, var(--color-primary) 40%, #0f2119 100%);
+  background: linear-gradient(170deg, #ffffff 0%, var(--color-cream, #faf6ef) 50%, #f5efe5 100%);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -364,7 +364,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   height: 60%;
   background: linear-gradient(180deg, transparent, var(--color-secondary, #c9a36a), transparent);
   transform: translateY(-50%);
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .mobile-nav-menu.open {
@@ -381,7 +381,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   font-family: var(--font-serif, 'Cormorant Garamond', serif);
   font-size: 1.35rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-primary, #1b4332);
   text-decoration: none;
   background: none;
   border: none;
@@ -395,14 +395,15 @@ nav .flex.gap-1::-webkit-scrollbar {
 }
 
 .mobile-nav-menu .mobile-nav-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: rgba(27, 67, 50, 0.05);
+  color: var(--color-primary, #1b4332);
   transform: translateX(4px);
 }
 
 .mobile-nav-menu .mobile-nav-item.active {
-  color: var(--color-secondary, #c9a36a);
-  background: rgba(201, 163, 106, 0.1);
+  color: var(--color-primary, #1b4332);
+  background: rgba(27, 67, 50, 0.06);
+  font-weight: 600;
 }
 
 .mobile-nav-menu .mobile-nav-item.active::before {
@@ -415,20 +416,6 @@ nav .flex.gap-1::-webkit-scrollbar {
   height: 24px;
   background: var(--color-secondary, #c9a36a);
   border-radius: 0 3px 3px 0;
-}
-
-.mobile-nav-menu .mobile-nav-item i {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-  width: 28px;
-  text-align: center;
-  opacity: 0.7;
-  transition: opacity 0.3s;
-}
-
-.mobile-nav-menu .mobile-nav-item:hover i,
-.mobile-nav-menu .mobile-nav-item.active i {
-  opacity: 1;
 }
 
 /* Mobile nav - transform existing nav-links on mobile */

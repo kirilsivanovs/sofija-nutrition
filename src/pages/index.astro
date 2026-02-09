@@ -56,25 +56,25 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     <nav class="hidden md:block border-t border-gray-100">
       <div class="max-w-6xl mx-auto px-4 md:px-8">
         <div class="flex gap-1">
-          <a href="#program" data-i18n="nav_program" class="nav-tab">
+          <a href="#program" class="nav-tab">
             <i class="ph ph-flower-lotus"></i>
-            <span>Programma</span>
+            <span data-i18n="nav_program">Programma</span>
           </a>
-          <a href="#how-it-works" data-i18n="nav_how" class="nav-tab">
+          <a href="#how-it-works" class="nav-tab">
             <i class="ph ph-steps"></i>
-            <span>Kā tas strādā</span>
+            <span data-i18n="nav_how">Kā tas strādā</span>
           </a>
-          <a href="#about" data-i18n="nav_about" class="nav-tab">
+          <a href="#about" class="nav-tab">
             <i class="ph ph-user-circle"></i>
-            <span>Par mani</span>
+            <span data-i18n="nav_about">Par mani</span>
           </a>
-          <a href="#contact" data-i18n="nav_contact" class="nav-tab">
+          <a href="#contact" class="nav-tab">
             <i class="ph ph-calendar-check"></i>
-            <span>Pieteikties</span>
+            <span data-i18n="nav_contact">Pieteikties</span>
           </a>
           <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab">
             <i class="ph ph-user"></i>
-            <span>Pacienta kabinets</span>
+            <span data-i18n="nav_cabinet">Pacienta kabinets</span>
           </a>
         </div>
       </div>
@@ -82,26 +82,11 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 
     <!-- Mobile Nav -->
     <div id="mobile-nav-menu" class="mobile-nav-menu">
-      <a href="#program" data-i18n="nav_program" class="mobile-nav-item">
-        <i class="ph ph-flower-lotus"></i>
-        <span>Programma</span>
-      </a>
-      <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">
-        <i class="ph ph-steps"></i>
-        <span>Kā tas strādā</span>
-      </a>
-      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">
-        <i class="ph ph-user-circle"></i>
-        <span>Par mani</span>
-      </a>
-      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">
-        <i class="ph ph-calendar-check"></i>
-        <span>Pieteikties</span>
-      </a>
-      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="mobile-nav-item">
-        <i class="ph ph-user"></i>
-        <span>Pacienta kabinets</span>
-      </a>
+      <a href="#program" data-i18n="nav_program" class="mobile-nav-item">Programma</a>
+      <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">Kā tas strādā</a>
+      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
+      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
+      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" data-i18n="nav_cabinet" class="mobile-nav-item">Pacienta kabinets</a>
       <div class="flex gap-4 pt-6 border-t border-gray-200">
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>

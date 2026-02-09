@@ -9,26 +9,11 @@ import AppHeader from '../common/AppHeader.astro';
 <!-- Header with Burger Menu -->
 <AppHeader variant="admin" showBurger={true} subtitle="Administrācija">
   <div slot="mobile-menu">
-    <button class="mobile-nav-item active" data-tab="bookings">
-      <i class="ph ph-calendar-check"></i>
-      <span>Ieraksti</span>
-    </button>
-    <button class="mobile-nav-item" data-tab="availability">
-      <i class="ph ph-clock"></i>
-      <span>Pieejamība</span>
-    </button>
-    <button class="mobile-nav-item" data-tab="settings">
-      <i class="ph ph-gear"></i>
-      <span>Iestatījumi</span>
-    </button>
-    <button class="mobile-nav-item" data-tab="meals">
-      <i class="ph ph-bowl-food"></i>
-      <span>Uzturs</span>
-    </button>
-    <button class="mobile-nav-item" data-tab="data">
-      <i class="ph ph-database"></i>
-      <span>Dati</span>
-    </button>
+    <button class="mobile-nav-item active" data-tab="bookings">Ieraksti</button>
+    <button class="mobile-nav-item" data-tab="availability">Pieejamība</button>
+    <button class="mobile-nav-item" data-tab="settings">Iestatījumi</button>
+    <button class="mobile-nav-item" data-tab="meals">Uzturs</button>
+    <button class="mobile-nav-item" data-tab="data">Dati</button>
   </div>
 </AppHeader>
 

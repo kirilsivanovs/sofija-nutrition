@@ -31,15 +31,9 @@ describe('AppHeader Burger Menu', () => {
         </div>
       </header>
       <div id="mobile-nav-menu-admin" class="mobile-nav-menu">
-        <button class="mobile-nav-item active" data-tab="bookings">
-          <span>Ieraksti</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="availability">
-          <span>Pieejamība</span>
-        </button>
-        <button class="mobile-nav-item" data-tab="settings">
-          <span>Iestatījumi</span>
-        </button>
+        <button class="mobile-nav-item active" data-tab="bookings">Ieraksti</button>
+        <button class="mobile-nav-item" data-tab="availability">Pieejamība</button>
+        <button class="mobile-nav-item" data-tab="settings">Iestatījumi</button>
       </div>
     `;
 
@@ -284,19 +278,18 @@ describe('AppHeader Burger Menu', () => {
       expect(icons.length).toBe(0);
     });
 
-    test('mobile menu items should only have text spans', () => {
+    test('mobile menu items should only have plain text', () => {
       const items = mobileNavMenu.querySelectorAll('.mobile-nav-item');
       items.forEach((item) => {
-        const span = item.querySelector('span');
         const icon = item.querySelector('i');
-        expect(span).not.toBeNull();
         expect(icon).toBeNull();
+        expect(item.textContent.trim().length).toBeGreaterThan(0);
       });
     });
 
     test('should have correct menu item labels in Latvian', () => {
-      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item span')).map(
-        (span) => span.textContent
+      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item')).map(
+        (item) => item.textContent.trim()
       );
 
       expect(labels).toContain('Ieraksti');
