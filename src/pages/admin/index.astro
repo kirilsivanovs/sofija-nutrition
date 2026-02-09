@@ -1808,6 +1808,28 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             border-color: rgba(239, 68, 68, 0.3);
         }
 
+        .btn-remove-patient {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--color-muted);
+            transition: all 0.2s;
+            font-size: 14px;
+            padding: 0;
+        }
+
+        .btn-remove-patient:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #991b1b;
+        }
+
         .meals-list {
             display: grid;
             gap: 16px;
@@ -2586,9 +2608,14 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                         </div>
                         <div class="patient-actions">
                             <div class="patient-meta">${patient.mealsCount || 0} ier.</div>
-                            <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${patient.userId}" data-enabled="${accessEnabled}">
-                                ${accessEnabled ? 'Atļauts' : 'Slēgts'}
-                            </button>
+                            <div style="display: flex; gap: 4px; align-items: center;">
+                                <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${patient.userId}" data-enabled="${accessEnabled}">
+                                    ${accessEnabled ? 'Atļauts' : 'Slēgts'}
+                                </button>
+                                <button class="btn-remove-patient" data-user-id="${patient.userId}" title="Dzēst pacientu">
+                                    <i class="ph ph-x"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -2616,6 +2643,44 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
                     updateAccess(userId, !enabled);
                 });
             });
+
+            patientsList.querySelectorAll('.btn-remove-patient').forEach(btn => {
+                btn.addEventListener('click', async (event) => {
+                    event.stopPropagation();
+                    const button = event.currentTarget as HTMLButtonElement;
+                    const userId = button.dataset.userId || '';
+                    if (!userId) return;
+                    await removePatient(userId);
+                });
+            });
+        }
+
+        async function removePatient(userId: string): Promise<void> {
+            const patient = adminPatients.find(p => p.userId === userId);
+            const displayName = patient?.displayName || patient?.email || userId;
+            
+            const confirmed = await showConfirm(
+                `Vai tiešām dzēst pacientu "${displayName}" no saraksta? Šī darbība nedzēsīs viņa datus, tikai noņems no admin saraksta.`,
+                'Dzēst pacientu no saraksta'
+            );
+            
+            if (!confirmed) return;
+            
+            // Remove from local list
+            adminPatients = adminPatients.filter(p => p.userId !== userId);
+            
+            // If this was selected patient, clear selection
+            if (selectedPatientId === userId) {
+                selectedPatientId = '';
+                selectedPatientName = '';
+                if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
+                if (mealsEmpty) mealsEmpty.classList.remove('hidden');
+                if (mealsPatientName) mealsPatientName.textContent = 'Izvēlies pacientu';
+                if (mealsPatientId) mealsPatientId.textContent = '';
+            }
+            
+            applyPatientsFilter();
+            showToast('Pacients noņemts no saraksta', 'success');
         }
 
         function addPatientFromInput(): void {
