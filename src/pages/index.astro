@@ -68,21 +68,29 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- Mobile Nav -->
     <div id="mobile-nav-menu" class="mobile-nav-menu">
-      <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-3 px-2"
-        >Programma</a
-      >
-      <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-3 px-2"
-        >Kā tas strādā</a
-      >
-      <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-3 px-2">Par mani</a>
-      <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-3 px-2"
-        >Pieteikties</a
-      >
+      <a href="#program" data-i18n="nav_program" class="mobile-nav-item">
+        <i class="ph ph-flower-lotus"></i>
+        <span>Programma</span>
+      </a>
+      <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">
+        <i class="ph ph-steps"></i>
+        <span>Kā tas strādā</span>
+      </a>
+      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">
+        <i class="ph ph-user-circle"></i>
+        <span>Par mani</span>
+      </a>
+      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">
+        <i class="ph ph-calendar-check"></i>
+        <span>Pieteikties</span>
+      </a>
       <a
         href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
-        class="text-lg text-gray-700 py-3 px-2">Pacienta kabinets</a
-      >
-      <div class="flex gap-4 pt-4 border-t">
+        class="mobile-nav-item">
+        <i class="ph ph-user"></i>
+        <span>Pacienta kabinets</span>
+      </a>
+      <div class="flex gap-4 pt-6 border-t border-gray-200">
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
