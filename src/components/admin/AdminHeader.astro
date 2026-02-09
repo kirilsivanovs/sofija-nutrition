@@ -29,86 +29,86 @@ import AppHeader from '../common/AppHeader.astro';
 
 <!-- Desktop Navigation Tabs -->
 <nav class="admin-nav">
-    <div class="admin-nav-inner">
-        <button class="admin-tab active" data-tab="bookings">
-            <i class="ph ph-calendar-check"></i>
-            <span>Ieraksti</span>
-        </button>
-        <button class="admin-tab" data-tab="availability">
-            <i class="ph ph-clock"></i>
-            <span>Pieejamība</span>
-        </button>
-        <button class="admin-tab" data-tab="settings">
-            <i class="ph ph-gear"></i>
-            <span>Iestatījumi</span>
-        </button>
-        <button class="admin-tab" data-tab="meals">
-            <i class="ph ph-bowl-food"></i>
-            <span>Uzturs</span>
-        </button>
-        <button class="admin-tab" data-tab="data">
-            <i class="ph ph-database"></i>
-            <span>Dati</span>
-        </button>
-    </div>
+  <div class="admin-nav-inner">
+    <button class="admin-tab active" data-tab="bookings">
+      <i class="ph ph-calendar-check"></i>
+      <span>Ieraksti</span>
+    </button>
+    <button class="admin-tab" data-tab="availability">
+      <i class="ph ph-clock"></i>
+      <span>Pieejamība</span>
+    </button>
+    <button class="admin-tab" data-tab="settings">
+      <i class="ph ph-gear"></i>
+      <span>Iestatījumi</span>
+    </button>
+    <button class="admin-tab" data-tab="meals">
+      <i class="ph ph-bowl-food"></i>
+      <span>Uzturs</span>
+    </button>
+    <button class="admin-tab" data-tab="data">
+      <i class="ph ph-database"></i>
+      <span>Dati</span>
+    </button>
+  </div>
 </nav>
 
 <script>
-    // Tab switching logic
-    document.addEventListener('DOMContentLoaded', () => {
-        const tabs = document.querySelectorAll('.admin-tab');
-        const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
-        const contents = document.querySelectorAll('.admin-content');
+  // Tab switching logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.admin-tab');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+    const contents = document.querySelectorAll('.admin-content');
 
-        function switchTab(tabId: string) {
-            // Update desktop tabs
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-tab') === tabId) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-
-            // Update mobile nav items
-            mobileNavItems.forEach(item => {
-                if (item.getAttribute('data-tab') === tabId) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-
-            // Update content
-            contents.forEach(content => {
-                if (content.id === `tab-${tabId}`) {
-                    content.classList.remove('hidden');
-                } else {
-                    content.classList.add('hidden');
-                }
-            });
-
-            // Trigger load event for the tab
-            const loadEvent = new CustomEvent('tabChanged', { detail: { tabId } });
-            document.dispatchEvent(loadEvent);
+    function switchTab(tabId: string) {
+      // Update desktop tabs
+      tabs.forEach((tab) => {
+        if (tab.getAttribute('data-tab') === tabId) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
         }
+      });
 
-        // Desktop tabs
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.getAttribute('data-tab');
-                if (tabId) switchTab(tabId);
-            });
-        });
+      // Update mobile nav items
+      mobileNavItems.forEach((item) => {
+        if (item.getAttribute('data-tab') === tabId) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
 
-        // Mobile nav items
-        mobileNavItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const tabId = item.getAttribute('data-tab');
-                if (tabId) {
-                    switchTab(tabId);
-                }
-            });
-        });
+      // Update content
+      contents.forEach((content) => {
+        if (content.id === `tab-${tabId}`) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+
+      // Trigger load event for the tab
+      const loadEvent = new CustomEvent('tabChanged', { detail: { tabId } });
+      document.dispatchEvent(loadEvent);
+    }
+
+    // Desktop tabs
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        if (tabId) switchTab(tabId);
+      });
     });
+
+    // Mobile nav items
+    mobileNavItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const tabId = item.getAttribute('data-tab');
+        if (tabId) {
+          switchTab(tabId);
+        }
+      });
+    });
+  });
 </script>

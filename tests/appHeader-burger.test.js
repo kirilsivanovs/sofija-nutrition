@@ -16,8 +16,8 @@ describe('AppHeader Burger Menu', () => {
     document.body.innerHTML = `
       <header class="app-header app-header--admin">
         <div class="app-header-inner">
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="mobile-menu-btn"
             style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
             aria-label="Atvērt izvēlni"
@@ -106,9 +106,13 @@ describe('AppHeader Burger Menu', () => {
       }
 
       // Close on overlay click
-      menu.addEventListener('click', function (e) {
-        if (e.target === menu) close();
-      }, false);
+      menu.addEventListener(
+        'click',
+        function (e) {
+          if (e.target === menu) close();
+        },
+        false
+      );
     });
   }
 
@@ -145,20 +149,20 @@ describe('AppHeader Burger Menu', () => {
   describe('Opening Menu', () => {
     test('clicking burger button should open menu', () => {
       mobileMenuBtn.click();
-      
+
       expect(mobileNavMenu.classList.contains('open')).toBe(true);
       expect(mobileMenuBtn.classList.contains('active')).toBe(true);
     });
 
     test('opening menu should update aria-expanded', () => {
       mobileMenuBtn.click();
-      
+
       expect(mobileMenuBtn.getAttribute('aria-expanded')).toBe('true');
     });
 
     test('opening menu should lock body scroll', () => {
       mobileMenuBtn.click();
-      
+
       expect(document.body.style.overflow).toBe('hidden');
       expect(document.body.style.position).toBe('fixed');
       expect(document.body.style.width).toBe('100%');
@@ -168,7 +172,7 @@ describe('AppHeader Burger Menu', () => {
 
     test('opening menu should add active class to burger', () => {
       mobileMenuBtn.click();
-      
+
       expect(mobileMenuBtn.classList.contains('active')).toBe(true);
     });
   });
@@ -181,14 +185,14 @@ describe('AppHeader Burger Menu', () => {
 
     test('clicking burger button again should close menu', () => {
       mobileMenuBtn.click();
-      
+
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
       expect(mobileMenuBtn.classList.contains('active')).toBe(false);
     });
 
     test('closing menu should restore body scroll', () => {
       mobileMenuBtn.click();
-      
+
       expect(document.body.style.overflow).toBe('');
       expect(document.body.style.position).toBe('');
       expect(document.body.style.width).toBe('');
@@ -197,14 +201,14 @@ describe('AppHeader Burger Menu', () => {
 
     test('closing menu should update aria-expanded to false', () => {
       mobileMenuBtn.click();
-      
+
       expect(mobileMenuBtn.getAttribute('aria-expanded')).toBe('false');
     });
 
     test('clicking menu item should close menu', () => {
       const menuItem = mobileNavMenu.querySelector('button[data-tab]');
       menuItem.dispatchEvent(new Event('click'));
-      
+
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
       expect(mobileMenuBtn.classList.contains('active')).toBe(false);
       expect(document.body.style.overflow).toBe('');
@@ -216,9 +220,9 @@ describe('AppHeader Burger Menu', () => {
         cancelable: true,
       });
       Object.defineProperty(clickEvent, 'target', { value: mobileNavMenu, enumerable: true });
-      
+
       mobileNavMenu.dispatchEvent(clickEvent);
-      
+
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
       expect(mobileMenuBtn.classList.contains('active')).toBe(false);
     });
@@ -229,15 +233,15 @@ describe('AppHeader Burger Menu', () => {
       // Open
       mobileMenuBtn.click();
       expect(mobileNavMenu.classList.contains('open')).toBe(true);
-      
+
       // Close
       mobileMenuBtn.click();
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
-      
+
       // Open again
       mobileMenuBtn.click();
       expect(mobileNavMenu.classList.contains('open')).toBe(true);
-      
+
       // Close again
       mobileMenuBtn.click();
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
@@ -246,7 +250,7 @@ describe('AppHeader Burger Menu', () => {
     test('aria-expanded should match menu state', () => {
       mobileMenuBtn.click();
       expect(mobileMenuBtn.getAttribute('aria-expanded')).toBe('true');
-      
+
       mobileMenuBtn.click();
       expect(mobileMenuBtn.getAttribute('aria-expanded')).toBe('false');
     });
@@ -265,7 +269,7 @@ describe('AppHeader Burger Menu', () => {
 
     test('burger lines should have pointer-events:none', () => {
       const spans = mobileMenuBtn.querySelectorAll('span');
-      spans.forEach(span => {
+      spans.forEach((span) => {
         expect(span.getAttribute('style')).toContain('pointer-events:none');
       });
     });
@@ -279,7 +283,7 @@ describe('AppHeader Burger Menu', () => {
 
     test('mobile menu items should only have text spans', () => {
       const items = mobileNavMenu.querySelectorAll('.mobile-nav-item');
-      items.forEach(item => {
+      items.forEach((item) => {
         const span = item.querySelector('span');
         const icon = item.querySelector('i');
         expect(span).not.toBeNull();
@@ -288,9 +292,10 @@ describe('AppHeader Burger Menu', () => {
     });
 
     test('should have correct menu item labels in Latvian', () => {
-      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item span'))
-        .map(span => span.textContent);
-      
+      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item span')).map(
+        (span) => span.textContent
+      );
+
       expect(labels).toContain('Ieraksti');
       expect(labels).toContain('Pieejamība');
       expect(labels).toContain('Iestatījumi');
@@ -304,9 +309,9 @@ describe('AppHeader Burger Menu', () => {
         cancelable: true,
       });
       const preventDefaultSpy = jest.spyOn(clickEvent, 'preventDefault');
-      
+
       mobileMenuBtn.dispatchEvent(clickEvent);
-      
+
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
@@ -316,9 +321,9 @@ describe('AppHeader Burger Menu', () => {
         cancelable: true,
       });
       const stopPropagationSpy = jest.spyOn(clickEvent, 'stopPropagation');
-      
+
       mobileMenuBtn.dispatchEvent(clickEvent);
-      
+
       expect(stopPropagationSpy).toHaveBeenCalled();
     });
   });
