@@ -211,16 +211,19 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
     gap: 6px;
     cursor: pointer;
     z-index: 999;
     position: relative;
     background: none;
     border: none;
-    padding: 0;
+    padding: 12px;
+    min-width: 48px;
+    min-height: 48px;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
     touch-action: manipulation;
   }
 
