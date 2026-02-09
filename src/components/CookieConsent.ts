@@ -261,60 +261,79 @@ class CookieConsent {
         .cookie-consent-modal {
           width: calc(100% - 24px);
           max-width: none;
-          max-height: 75vh;
+          max-height: 80vh;
           border-radius: 12px;
           margin: 0 12px;
         }
         
         .cookie-consent-header {
-          padding: 16px 12px 10px;
+          padding: 12px;
         }
         
         .cookie-consent-header h3 {
-          font-size: 18px;
+          font-size: 16px;
         }
         
         .cookie-consent-body {
-          padding: 12px;
+          padding: 8px 12px;
         }
         
         .cookie-consent-body > p {
-          font-size: 13px;
-          margin-bottom: 12px;
-          line-height: 1.5;
-        }
-        
-        .cookie-category {
-          padding: 10px;
-        }
-        
-        .cookie-category-description {
           font-size: 12px;
+          margin-bottom: 8px;
           line-height: 1.4;
         }
         
-        .cookie-consent-footer {
-          padding: 12px;
-          flex-direction: column;
+        .cookie-categories {
           gap: 8px;
         }
         
+        .cookie-category {
+          padding: 8px;
+          border-width: 1px;
+        }
+        
+        .cookie-category-header {
+          margin-bottom: 0;
+        }
+        
+        .cookie-category-header label {
+          gap: 8px;
+        }
+        
+        .cookie-category-header input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+        }
+        
+        .cookie-category-header strong {
+          font-size: 13px;
+        }
+        
+        .cookie-category-description {
+          display: none;
+        }
+        
+        .cookie-consent-footer {
+          padding: 10px 12px;
+          flex-direction: column;
+          gap: 6px;
+        }
+        
         .cookie-consent-footer button {
-          padding: 12px 16px;
-          font-size: 14px;
+          padding: 10px 14px;
+          font-size: 13px;
           width: 100%;
+          border-radius: 6px;
         }
         
         .btn-text {
-          padding: 10px;
+          padding: 8px;
+          font-size: 12px;
         }
         
         .cookie-consent-privacy {
-          padding: 0 12px 12px;
-        }
-        
-        .cookie-consent-privacy a {
-          font-size: 12px;
+          display: none;
         }
       }
       
@@ -354,7 +373,7 @@ class CookieConsent {
       .cookie-categories {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
       }
       
       .cookie-category {
