@@ -23,12 +23,9 @@ export class PatientService {
    * Fetch list of patients from API
    */
   async fetchPatients(limit = 200): Promise<Patient[]> {
-    const response = await fetch(
-      `${this.apiBase}/dashboard/patients?limit=${limit}`,
-      {
-        headers: this.getAuthHeaders()
-      }
-    );
+    const response = await fetch(`${this.apiBase}/dashboard/patients?limit=${limit}`, {
+      headers: this.getAuthHeaders(),
+    });
 
     if (!response.ok) {
       throw new Error('Failed to fetch patients');
@@ -45,7 +42,7 @@ export class PatientService {
       `${this.apiBase}/dashboard/patients/${encodeURIComponent(userId)}`,
       {
         method: 'DELETE',
-        headers: this.getAuthHeaders()
+        headers: this.getAuthHeaders(),
       }
     );
 
@@ -64,7 +61,7 @@ export class PatientService {
     const response = await fetch(`${this.apiBase}/dashboard/food-access`, {
       method: 'POST',
       headers: this.getAuthHeaders(),
-      body: JSON.stringify({ userId, accessEnabled: enabled })
+      body: JSON.stringify({ userId, accessEnabled: enabled }),
     });
 
     if (!response.ok) {
@@ -82,14 +79,16 @@ export class PatientService {
     }
 
     const lowerQuery = query.toLowerCase().trim();
-    return patients.filter(p => {
+    return patients.filter((p) => {
       const userId = p.userId?.toLowerCase() || '';
       const displayName = p.displayName?.toLowerCase() || '';
       const email = p.email?.toLowerCase() || '';
-      
-      return userId.includes(lowerQuery) 
-        || displayName.includes(lowerQuery)
-        || email.includes(lowerQuery);
+
+      return (
+        userId.includes(lowerQuery) ||
+        displayName.includes(lowerQuery) ||
+        email.includes(lowerQuery)
+      );
     });
   }
 
@@ -105,14 +104,12 @@ export class PatientService {
    */
   getSecondaryInfo(patient: Patient): string {
     const displayName = this.getDisplayName(patient);
-    
+
     if (displayName !== patient.userId) {
       return `ID: ${patient.userId}`;
     }
-    
-    return patient.lastMealAt 
-      ? `Pēdējais ieraksts: ${this.formatDate(patient.lastMealAt)}`
-      : '';
+
+    return patient.lastMealAt ? `Pēdējais ieraksts: ${this.formatDate(patient.lastMealAt)}` : '';
   }
 
   /**

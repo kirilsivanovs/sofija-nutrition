@@ -1,164 +1,164 @@
 .patients-search {
-    position: relative;
-    margin-bottom: 12px;
+  position: relative;
+  margin-bottom: 12px;
 }
 
 .patients-search input {
-    width: 100%;
-    padding: 8px 32px 8px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 13px;
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .patients-search .search-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--color-text-light);
-    pointer-events: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-light);
+  pointer-events: none;
 }
 
 .patients-add {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .patients-add input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 13px;
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .patients-add button {
-    padding: 8px 16px;
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
+  padding: 8px 16px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .patients-add button:hover {
-    background: var(--color-primary-dark);
+  background: var(--color-primary-dark);
 }
 
 .patients-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .patient-item {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: var(--color-white);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
 }
 
 .patient-item > div:first-child {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .patient-item:hover {
-    background: var(--color-cream);
+  background: var(--color-cream);
 }
 
 .patient-item.active {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-sm);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .patient-id {
-    font-size: 13px;
-    color: var(--color-text);
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px;
+  font-size: 13px;
+  color: var(--color-text);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
 .patient-meta {
-    font-size: 12px;
-    color: var(--color-text-light);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px;
+  font-size: 12px;
+  color: var(--color-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
 .patient-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .access-toggle {
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 999px;
-    padding: 4px 10px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .access-toggle.on {
-    background: rgba(34, 197, 94, 0.12);
-    color: #166534;
-    border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.12);
+  color: #166534;
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
 .access-toggle.off {
-    background: rgba(239, 68, 68, 0.12);
-    color: #991b1b;
-    border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.12);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .btn-remove-patient {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--color-muted);
-    transition: all 0.2s;
-    font-size: 14px;
-    padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-muted);
+  transition: all 0.2s;
+  font-size: 14px;
+  padding: 0;
 }
 
 .btn-remove-patient:hover {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: #991b1b;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #991b1b;
 }
 
 .patients-empty {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--color-text-light);
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-light);
 }

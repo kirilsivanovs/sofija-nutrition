@@ -9,7 +9,7 @@ export class PatientListController {
   private patients: Patient[] = [];
   private filteredPatients: Patient[] = [];
   private selectedPatientId: string = '';
-  
+
   // DOM elements
   private searchInput: HTMLInputElement | null = null;
   private addInput: HTMLInputElement | null = null;
@@ -90,7 +90,7 @@ export class PatientListController {
 
     this.emptyContainer.classList.add('hidden');
     this.listContainer.innerHTML = this.filteredPatients
-      .map(patient => this.renderPatientItem(patient))
+      .map((patient) => this.renderPatientItem(patient))
       .join('');
 
     this.attachItemListeners();
@@ -138,14 +138,14 @@ export class PatientListController {
    * Attach listeners to patient item elements
    */
   private attachItemListeners(): void {
-    this.listContainer?.querySelectorAll('.patient-item').forEach(item => {
+    this.listContainer?.querySelectorAll('.patient-item').forEach((item) => {
       item.addEventListener('click', () => {
         const userId = (item as HTMLElement).dataset.userId || '';
         if (userId) this.handleSelectPatient(userId);
       });
     });
 
-    this.listContainer?.querySelectorAll('.access-toggle').forEach(toggle => {
+    this.listContainer?.querySelectorAll('.access-toggle').forEach((toggle) => {
       toggle.addEventListener('click', (event) => {
         event.stopPropagation();
         const button = event.currentTarget as HTMLButtonElement;
@@ -155,7 +155,7 @@ export class PatientListController {
       });
     });
 
-    this.listContainer?.querySelectorAll('.btn-remove-patient').forEach(btn => {
+    this.listContainer?.querySelectorAll('.btn-remove-patient').forEach((btn) => {
       btn.addEventListener('click', async (event) => {
         event.stopPropagation();
         const button = event.currentTarget as HTMLButtonElement;
@@ -169,7 +169,7 @@ export class PatientListController {
    * Handle patient selection
    */
   private handleSelectPatient(userId: string): void {
-    const patient = this.patients.find(p => p.userId === userId);
+    const patient = this.patients.find((p) => p.userId === userId);
     if (!patient) return;
 
     this.selectedPatientId = userId;
@@ -183,12 +183,12 @@ export class PatientListController {
   private async handleToggleAccess(userId: string, enabled: boolean): Promise<void> {
     try {
       await this.service.updateAccess(userId, enabled);
-      
-      const patient = this.patients.find(p => p.userId === userId);
+
+      const patient = this.patients.find((p) => p.userId === userId);
       if (patient) {
         patient.accessEnabled = enabled;
       }
-      
+
       this.onAccessUpdate?.(userId, enabled);
       this.applyFilter();
       this.onShowToast?.(enabled ? 'Piekļuve atļauta' : 'Piekļuve liegta', 'success');
@@ -202,7 +202,7 @@ export class PatientListController {
    * Handle patient removal
    */
   private async handleRemovePatient(userId: string): Promise<void> {
-    const patient = this.patients.find(p => p.userId === userId);
+    const patient = this.patients.find((p) => p.userId === userId);
     if (!patient) return;
 
     const displayName = this.service.getDisplayName(patient);
@@ -217,13 +217,13 @@ export class PatientListController {
 
     try {
       const result = await this.service.deletePatient(userId);
-      
-      this.patients = this.patients.filter(p => p.userId !== userId);
-      
+
+      this.patients = this.patients.filter((p) => p.userId !== userId);
+
       if (this.selectedPatientId === userId) {
         this.selectedPatientId = '';
       }
-      
+
       this.applyFilter();
       this.onShowToast?.(`Pacients un ${result.deletedMeals || 0} ieraksti dzēsti`, 'success');
     } catch (error) {
@@ -240,7 +240,7 @@ export class PatientListController {
     if (!userId) return;
 
     // Check if patient already exists
-    if (this.patients.some(p => p.userId === userId)) {
+    if (this.patients.some((p) => p.userId === userId)) {
       this.onShowToast?.('Šis pacients jau ir sarakstā', 'info');
       return;
     }
@@ -249,16 +249,16 @@ export class PatientListController {
     const newPatient: Patient = {
       userId,
       mealsCount: 0,
-      accessEnabled: false
+      accessEnabled: false,
     };
 
     this.patients.unshift(newPatient);
     this.applyFilter();
-    
+
     if (this.addInput) {
       this.addInput.value = '';
     }
-    
+
     this.onShowToast?.('Pacients pievienots', 'success');
   }
 

@@ -21,21 +21,19 @@ export async function adminListPatients(
     const limitParam = request.query.get('limit');
     const limit = limitParam ? Math.min(Math.max(Number(limitParam) || 200, 1), 1000) : 200;
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
 
     const patients = await repository.listPatientSummaries(limit);
 
     return {
       status: 200,
-      jsonBody: patients
+      jsonBody: patients,
     };
   } catch (error) {
     context.error('Error getting admin patients:', error);
     return {
       status: 500,
-      jsonBody: { error: 'Failed to get patients' }
+      jsonBody: { error: 'Failed to get patients' },
     };
   }
 }
@@ -44,7 +42,7 @@ app.http('admin-patients-get', {
   methods: ['GET'],
   authLevel: 'anonymous',
   route: 'dashboard/patients',
-  handler: adminListPatients
+  handler: adminListPatients,
 });
 
 /**
@@ -67,13 +65,11 @@ export async function adminDeletePatient(
     if (!userId) {
       return {
         status: 400,
-        jsonBody: { error: 'userId is required' }
+        jsonBody: { error: 'userId is required' },
       };
     }
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
 
     const deletedCount = await repository.deleteAllUserMeals(userId);
 
@@ -81,16 +77,16 @@ export async function adminDeletePatient(
 
     return {
       status: 200,
-      jsonBody: { 
+      jsonBody: {
         message: 'Patient deleted successfully',
-        deletedMeals: deletedCount
-      }
+        deletedMeals: deletedCount,
+      },
     };
   } catch (error) {
     context.error('Error deleting patient:', error);
     return {
       status: 500,
-      jsonBody: { error: 'Failed to delete patient' }
+      jsonBody: { error: 'Failed to delete patient' },
     };
   }
 }
@@ -99,5 +95,5 @@ app.http('admin-patients-delete', {
   methods: ['DELETE'],
   authLevel: 'anonymous',
   route: 'dashboard/patients/{userId}',
-  handler: adminDeletePatient
+  handler: adminDeletePatient,
 });
