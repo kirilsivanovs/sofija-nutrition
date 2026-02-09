@@ -620,7 +620,12 @@ export class DataTabController {
    */
   private showError(message: string): void {
     if (this.elements.loading) {
-      this.elements.loading.innerHTML = `<span style="color:#dc2626;">Kļūda: ${message}</span>`;
+      // Use textContent to avoid interpreting the message as HTML (prevents XSS)
+      this.elements.loading.innerHTML = '';
+      const span = document.createElement('span');
+      span.style.color = '#dc2626';
+      span.textContent = `Kļūda: ${message}`;
+      this.elements.loading.appendChild(span);
     }
   }
 }
