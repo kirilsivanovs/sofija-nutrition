@@ -1498,6 +1498,10 @@
   color: var(--color-text-light);
 }
 
+.loading-state.hidden {
+  display: none;
+}
+
 .loading-spinner {
   width: 36px;
   height: 36px;
