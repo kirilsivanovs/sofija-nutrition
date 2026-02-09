@@ -266,12 +266,19 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     align-items: center;
     gap: 0;
     padding: 80px 40px 60px;
-    background: linear-gradient(165deg, #152e24 0%, var(--color-primary, #1b4332) 40%, #0f2119 100%);
+    background: linear-gradient(
+      165deg,
+      #152e24 0%,
+      var(--color-primary, #1b4332) 40%,
+      #0f2119 100%
+    );
     z-index: 998;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+    transition:
+      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.4s;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -340,12 +347,24 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     transform: translateX(0);
   }
 
-  .mobile-nav-menu.open :global(:nth-child(1)) { transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1); }
-  .mobile-nav-menu.open :global(:nth-child(2)) { transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1); }
-  .mobile-nav-menu.open :global(:nth-child(3)) { transition: all 0.4s 0.20s cubic-bezier(0.4, 0, 0.2, 1); }
-  .mobile-nav-menu.open :global(:nth-child(4)) { transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1); }
-  .mobile-nav-menu.open :global(:nth-child(5)) { transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1); }
-  .mobile-nav-menu.open :global(:nth-child(6)) { transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(1)) {
+    transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobile-nav-menu.open :global(:nth-child(2)) {
+    transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobile-nav-menu.open :global(:nth-child(3)) {
+    transition: all 0.4s 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobile-nav-menu.open :global(:nth-child(4)) {
+    transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobile-nav-menu.open :global(:nth-child(5)) {
+    transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobile-nav-menu.open :global(:nth-child(6)) {
+    transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   .mobile-nav-menu :global(a:hover),
   .mobile-nav-menu :global(button:hover) {

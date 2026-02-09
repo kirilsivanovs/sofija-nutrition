@@ -380,7 +380,9 @@ nav a:not(.nav-tab):hover,
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.4s;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -525,13 +527,27 @@ nav .flex.gap-1::-webkit-scrollbar {
   transform: translateX(0);
 }
 
-.mobile-nav-menu.open .mobile-nav-item:nth-child(1) { transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(2) { transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(3) { transition: all 0.4s 0.20s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(4) { transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(5) { transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(6) { transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1); }
-.mobile-nav-menu.open .mobile-nav-item:nth-child(7) { transition: all 0.4s 0.44s cubic-bezier(0.4, 0, 0.2, 1); }
+.mobile-nav-menu.open .mobile-nav-item:nth-child(1) {
+  transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(2) {
+  transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(3) {
+  transition: all 0.4s 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(4) {
+  transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(5) {
+  transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(6) {
+  transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-nav-menu.open .mobile-nav-item:nth-child(7) {
+  transition: all 0.4s 0.44s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 .mobile-nav-menu .mobile-nav-item:hover {
   color: #ffffff;
