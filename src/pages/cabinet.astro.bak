@@ -1,0 +1,1053 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Pacienta kabinets">
+    <section class="portal-hero">
+        <div class="portal-container">
+            <div class="portal-header">
+                <a href="/" class="portal-logo">
+                    <img src="/assets/img/logo.svg" alt="SI Logo" class="portal-logo-img" />
+                    <div class="portal-logo-text">
+                        <span class="portal-logo-name">Sofija Ivanova</span>
+                        <span class="portal-logo-sub">Pacienta kabinets</span>
+                    </div>
+                </a>
+                <div class="portal-auth" id="auth-actions">
+                    <!-- Google login temporary disabled until configured in Azure Portal - see docs/GOOGLE_AUTH_SETUP.md -->
+                    <!-- <a class="btn-secondary" id="login-google" href="/.auth/login/google?post_login_redirect_uri=/cabinet">Pieslēgties ar Google</a> -->
+                    <a class="btn-primary" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">Pieslēgties</a>
+                </div>
+                <div class="portal-auth hidden" id="auth-user">
+                    <div class="portal-user-inline">
+                        <span id="user-name" class="portal-user-name">—</span>
+                        <a class="portal-logout" id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/cabinet">
+                            <i class="ph ph-sign-out"></i>
+                            <span>Iziet</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="mobile-tab-select">
+        <select class="mobile-tab-dropdown" aria-label="Kabineta izvēlne">
+            <option value="meals" selected>Uztura dienasgrāmata</option>
+        </select>
+    </div>
+
+    <nav class="admin-nav" aria-label="Kabineta izvēlne">
+        <div class="admin-nav-inner">
+            <button class="admin-tab active" type="button">
+                <i class="ph ph-bowl-food"></i>
+                <span>Uztura dienasgrāmata</span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="portal-content">
+        <div class="portal-container">
+            <div id="login-hint" class="card portal-card">
+                <h3>Pieslēdzieties, lai turpinātu</h3>
+                <p>Lai piekļūtu uztura dienasgrāmatai, lūdzu autorizējieties ar Google vai Microsoft.</p>
+            </div>
+
+            <div id="no-access" class="card hidden">
+                <h3>Uztura dienasgrāmata nav aktivizēta</h3>
+                <p>Lai aktivizētu, lūdzu sazinieties ar administratoru.</p>
+            </div>
+
+            <div id="diary" class="hidden">
+                <div class="card portal-card">
+                    <div class="portal-controls">
+                        <div>
+                            <label>Datums</label>
+                            <input id="diary-date" type="date" />
+                        </div>
+                        <div class="portal-actions">
+                            <button id="reload-meals" class="btn-secondary">Atjaunot</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portal-grid">
+                    <div class="card portal-card">
+                        <h3>Pievienot maltīti</h3>
+                        <form id="meal-form" class="portal-form">
+                            <div class="quick-actions">
+                                <div class="quick-group">
+                                    <span class="quick-label">Tips</span>
+                                    <button type="button" class="quick-chip" data-meal-type="breakfast">Brokastis</button>
+                                    <button type="button" class="quick-chip" data-meal-type="lunch">Pusdienas</button>
+                                    <button type="button" class="quick-chip" data-meal-type="dinner">Vakariņas</button>
+                                    <button type="button" class="quick-chip" data-meal-type="snack">Uzkoda</button>
+                                </div>
+                                <div class="quick-group">
+                                    <span class="quick-label">Laiks</span>
+                                    <button type="button" class="quick-chip" data-time="now">Tagad</button>
+                                    <button type="button" class="quick-chip" data-time="-30">-30m</button>
+                                    <button type="button" class="quick-chip" data-time="+30">+30m</button>
+                                </div>
+                                <div class="quick-group">
+                                    <button type="button" class="btn-secondary btn-compact" id="copy-last-meal">Kopēt pēdējo maltīti</button>
+                                    <button type="button" class="btn-secondary btn-compact" id="clear-meal-form">Notīrīt</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Maltītes veids</label>
+                                <select id="meal-type">
+                                    <option value="breakfast">Brokastis</option>
+                                    <option value="lunch">Pusdienas</option>
+                                    <option value="dinner">Vakariņas</option>
+                                    <option value="snack">Uzkoda</option>
+                                </select>
+                            </div>
+                            <div class="portal-row">
+                                <div>
+                                    <label>Laiks (24h)</label>
+                                    <div class="time-select">
+                                        <select id="meal-hour" aria-label="Stunda">
+                                            <option value="00">00</option>
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                        </select>
+                                        <span>:</span>
+                                        <select id="meal-minute" aria-label="Minūtes">
+                                            <option value="00">00</option>
+                                            <option value="05">05</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="25">25</option>
+                                            <option value="30">30</option>
+                                            <option value="35">35</option>
+                                            <option value="40">40</option>
+                                            <option value="45">45</option>
+                                            <option value="50">50</option>
+                                            <option value="55">55</option>
+                                        </select>
+                                        <button type="button" class="btn-secondary btn-compact" id="meal-time-now">Tagad</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="portal-section-header">
+                                    <h4>Ēdieni maltītē</h4>
+                                    <button type="button" class="btn-secondary btn-compact" id="add-meal-item">+ Pievienot ēdienu</button>
+                                </div>
+                                <div id="meal-items" class="meal-items"></div>
+                                <div id="meal-totals" class="meal-totals hidden">
+                                    <span>Kopā: <strong id="meal-total-kcal">0</strong> kcal</span>
+                                    <span>O: <strong id="meal-total-protein">0</strong>g</span>
+                                    <span>T: <strong id="meal-total-fat">0</strong>g</span>
+                                    <span>Og: <strong id="meal-total-carbs">0</strong>g</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="portal-section-header">
+                                    <h4>Favorīti</h4>
+                                    <button type="button" class="btn-secondary btn-compact" id="clear-favorites">Notīrīt</button>
+                                </div>
+                                <div id="favorite-items" class="recent-items"></div>
+                            </div>
+
+                            <div>
+                                <label>Nesen lietots</label>
+                                <div id="recent-items" class="recent-items"></div>
+                            </div>
+                            <div>
+                                <label>Foto (neobligāti)</label>
+                                <input id="meal-photo" type="file" accept="image/*" />
+                                <div id="meal-photo-preview" class="meal-photo-preview hidden"></div>
+                            </div>
+                            <button class="btn-primary" type="submit" id="meal-submit">Saglabāt</button>
+                            <div id="meal-status" class="portal-status"></div>
+                        </form>
+                    </div>
+
+                    <div class="card portal-card">
+                        <h3>Maltītes</h3>
+                        <div id="meals-summary" class="meal-summary hidden">
+                            <div>
+                                <span>Kopā dienā</span>
+                                <strong id="day-total-kcal">0 kcal</strong>
+                            </div>
+                            <div class="meal-summary-macros">
+                                <span>O: <strong id="day-total-protein">0</strong>g</span>
+                                <span>T: <strong id="day-total-fat">0</strong>g</span>
+                                <span>Og: <strong id="day-total-carbs">0</strong>g</span>
+                            </div>
+                        </div>
+                        <div id="meals-list" class="portal-meals"></div>
+                        <div id="meals-empty" class="portal-empty hidden">Nav maltīšu šajā datumā.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .portal-hero {
+            padding: 20px 0;
+            background: #fff;
+            border-bottom: 1px solid #E6E0D6;
+        }
+        .portal-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .portal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .portal-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .portal-logo-img { height: 36px; width: auto; }
+
+        .portal-logo-text { display: flex; flex-direction: column; }
+
+        .portal-logo-name {
+            font-family: var(--font-serif, 'Cormorant Garamond', serif);
+            font-size: 21px;
+            font-weight: 600;
+            color: #1B4332;
+            line-height: 1.2;
+        }
+
+        .portal-logo-sub {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+        }
+
+        .mobile-tab-select {
+            display: block;
+            padding: 18px 24px;
+            background: #fff;
+            border-bottom: 1px solid #E6E0D6;
+        }
+
+        .mobile-tab-dropdown {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            border: 1px solid #E6E0D6;
+            border-radius: 10px;
+            background: #fff;
+            color: #1f2937;
+            cursor: pointer;
+        }
+
+        .mobile-tab-dropdown:focus {
+            outline: none;
+            border-color: #1B4332;
+        }
+
+        .admin-nav {
+            display: none;
+            background: #fff;
+            border-bottom: 1px solid #E6E0D6;
+        }
+
+        .admin-nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+            overflow-x: auto;
+        }
+
+        .admin-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 18px;
+            border: none;
+            background: none;
+            font-family: var(--font-sans, 'Inter', sans-serif);
+            font-size: 15px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .admin-tab i { font-size: 20px; }
+
+        .admin-tab:hover {
+            color: #1B4332;
+            background: #F6F1E8;
+        }
+
+        .admin-tab.active {
+            color: #1B4332;
+            border-bottom-color: #a78f72;
+        }
+        .portal-auth {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .portal-auth a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            color: var(--color-text-light, #64748b);
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .portal-auth a:hover {
+            background: #f1f5f9;
+            color: #1B4332;
+        }
+        .portal-card {
+            margin-top: 16px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #E6E0D6;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 12px -4px rgba(17,24,39,0.12);
+        }
+        .portal-user-inline {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .portal-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            color: var(--color-text-light, #64748b);
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .portal-logout:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .portal-user-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; }
+        .portal-user-name { font-size: 15px; font-weight: 400; color: #64748b; }
+        .portal-user-email { color: #64748b; font-size: 14px; }
+        .portal-access { margin-top: 12px; font-weight: 600; }
+        .portal-content { padding: 20px 0 60px; background: #FBF8F2; }
+        .portal-content { min-height: 60vh; }
+        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .portal-controls { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+        .portal-controls label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; }
+        .portal-controls input { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; }
+        .portal-form { display: flex; flex-direction: column; gap: 12px; }
+        .portal-form label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; }
+        .portal-form input, .portal-form select { width: 100%; padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; }
+        .time-select { display: flex; align-items: center; gap: 8px; }
+        .time-select select { padding: 8px 10px; border: 1px solid #E6E0D6; border-radius: 8px; background: #fff; }
+        .btn-compact { padding: 8px 12px; font-size: 13px; }
+        .portal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .quick-actions { display: flex; flex-direction: column; gap: 12px; padding: 12px; border: 1px dashed #E6E0D6; border-radius: 12px; background: #fff; }
+        .quick-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .quick-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 6px; }
+        .quick-chip { border: 1px solid #E6E0D6; background: #fff; color: #1f2937; padding: 6px 12px; border-radius: 999px; font-size: 12px; cursor: pointer; }
+        .quick-chip.active, .quick-chip:hover { background: #1B4332; color: #fff; border-color: #1B4332; }
+        .portal-section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .portal-section-header h4 { margin: 0; font-size: 14px; color: #1f2937; }
+        .meal-items { display: flex; flex-direction: column; gap: 12px; }
+        .meal-item { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
+        .meal-item-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
+        .meal-item-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .meal-item-actions-left { display: flex; gap: 8px; }
+        .btn-ghost { background: transparent; border: 1px dashed #E6E0D6; color: #64748b; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+        .meal-totals { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #475569; margin-top: 8px; }
+        .recent-items { display: flex; flex-wrap: wrap; gap: 8px; }
+        .recent-item { border: 1px solid #E6E0D6; background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+        .meal-photo-preview { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E6E0D6; }
+        .meal-photo-preview img { width: 100%; display: block; }
+        .portal-meals { display: flex; flex-direction: column; gap: 12px; }
+        .portal-meal { border: 1px solid #E6E0D6; border-radius: 12px; padding: 12px; background: #fff; }
+        .portal-meal-header { display: flex; justify-content: space-between; font-weight: 600; }
+        .portal-meal-meta { font-size: 12px; color: #64748b; margin-top: 4px; }
+        .portal-meal-items { margin-top: 8px; font-size: 14px; color: #64748b; }
+        .portal-meal-macros { margin-top: 8px; font-size: 12px; color: #64748b; display: flex; gap: 12px; }
+        .meal-summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: #F6F1E8; margin-bottom: 12px; font-size: 13px; }
+        .meal-summary strong { font-size: 16px; color: #1B4332; }
+        .meal-summary-macros { display: flex; gap: 12px; }
+        .portal-empty { margin-top: 12px; color: #64748b; }
+        .portal-status { font-size: 12px; color: #64748b; }
+        .btn-primary {
+            background: #1B4332;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: #F6F1E8;
+            color: #1B4332;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #E6E0D6;
+            cursor: pointer;
+        }
+        .hidden { display: none !important; }
+        @media (max-width: 900px) {
+            .portal-grid { grid-template-columns: 1fr; }
+            .portal-header { flex-direction: column; align-items: flex-start; }
+            .meal-item-grid { grid-template-columns: 1fr 1fr; }
+            .quick-group { align-items: flex-start; }
+            .meal-summary { flex-direction: column; align-items: flex-start; }
+        }
+        @media (min-width: 900px) {
+            .mobile-tab-select { display: none; }
+            .admin-nav { display: block; }
+        }
+    </style>
+
+    <script>
+        const authActions = document.getElementById('auth-actions');
+        const authUser = document.getElementById('auth-user');
+        const loginGoogle = document.getElementById('login-google');
+        const loginAad = document.getElementById('login-aad');
+        const logoutLink = document.getElementById('logout-link');
+        const noAccess = document.getElementById('no-access');
+        const loginHint = document.getElementById('login-hint');
+        const diary = document.getElementById('diary');
+        const mealsList = document.getElementById('meals-list');
+        const mealsEmpty = document.getElementById('meals-empty');
+
+        const diaryDate = document.getElementById('diary-date');
+        const reloadMeals = document.getElementById('reload-meals');
+        const mealForm = document.getElementById('meal-form');
+        const mealStatus = document.getElementById('meal-status');
+        const mealItems = document.getElementById('meal-items');
+        const addMealItem = document.getElementById('add-meal-item');
+        const mealTotals = document.getElementById('meal-totals');
+        const mealTotalKcal = document.getElementById('meal-total-kcal');
+        const mealTotalProtein = document.getElementById('meal-total-protein');
+        const mealTotalFat = document.getElementById('meal-total-fat');
+        const mealTotalCarbs = document.getElementById('meal-total-carbs');
+        const recentItems = document.getElementById('recent-items');
+        const favoriteItems = document.getElementById('favorite-items');
+        const clearFavorites = document.getElementById('clear-favorites');
+        const mealPhotoPreview = document.getElementById('meal-photo-preview');
+        const mealTimeNow = document.getElementById('meal-time-now');
+        const copyLastMeal = document.getElementById('copy-last-meal');
+        const clearMealForm = document.getElementById('clear-meal-form');
+        const mealsSummary = document.getElementById('meals-summary');
+        const dayTotalKcal = document.getElementById('day-total-kcal');
+        const dayTotalProtein = document.getElementById('day-total-protein');
+        const dayTotalFat = document.getElementById('day-total-fat');
+        const dayTotalCarbs = document.getElementById('day-total-carbs');
+
+        const userName = document.getElementById('user-name');
+        let userId = '';
+        let lastMealsCache = [];
+
+        const favoritesKey = 'mealFavorites';
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function setAuthLinks() {
+            const origin = window.location.origin;
+            if (loginGoogle) loginGoogle.setAttribute('href', `${origin}/.auth/login/google?post_login_redirect_uri=/cabinet`);
+            if (loginAad) loginAad.setAttribute('href', `${origin}/.auth/login/aad?post_login_redirect_uri=/cabinet`);
+            if (logoutLink) logoutLink.setAttribute('href', `${origin}/.auth/logout?post_logout_redirect_uri=/cabinet`);
+        }
+
+        function setDateDefaults() {
+            const today = new Date().toISOString().split('T')[0];
+            if (diaryDate && !diaryDate.value) diaryDate.value = today;
+            setTimeToNow();
+        }
+
+        function setTimeToNow() {
+            const now = new Date();
+            const hour = String(now.getHours()).padStart(2, '0');
+            const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
+            const hourSelect = document.getElementById('meal-hour');
+            const minuteSelect = document.getElementById('meal-minute');
+            if (hourSelect) hourSelect.value = hour;
+            if (minuteSelect) minuteSelect.value = minute;
+        }
+
+        async function loadAuth() {
+            try {
+                const response = await fetch('/.auth/me');
+                const data = await response.json();
+                const principal = data?.clientPrincipal;
+                if (!principal) {
+                    authUser?.classList.add('hidden');
+                    diary?.classList.add('hidden');
+                    noAccess?.classList.add('hidden');
+                    loginHint?.classList.remove('hidden');
+                    return;
+                }
+
+                userId = principal.userId;
+                if (userName) userName.textContent = principal.userDetails || principal.userId;
+                authActions?.classList.add('hidden');
+                authUser?.classList.remove('hidden');
+                loginHint?.classList.add('hidden');
+
+                await loadAccess();
+            } catch {
+                authCard?.classList.add('hidden');
+            }
+        }
+
+        setAuthLinks();
+
+        async function loadAccess() {
+            const response = await fetch('/api/food/access');
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+            const enabled = Boolean(data?.enabled);
+
+            if (!enabled) {
+                noAccess?.classList.remove('hidden');
+                diary?.classList.add('hidden');
+            } else {
+                noAccess?.classList.add('hidden');
+                diary?.classList.remove('hidden');
+                await loadMeals();
+            }
+        }
+
+        function buildMealTime() {
+            const hourValue = document.getElementById('meal-hour')?.value || '12';
+            const minuteValue = document.getElementById('meal-minute')?.value || '00';
+            const [hour, minute] = [hourValue, minuteValue].map(Number);
+            const date = new Date(diaryDate?.value || new Date().toISOString().split('T')[0]);
+            date.setHours(hour || 0, minute || 0, 0, 0);
+            return date.toISOString();
+        }
+
+        async function loadMeals() {
+            if (!userId || !diaryDate?.value) return;
+            const response = await fetch(`/api/meals?userId=${encodeURIComponent(userId)}&date=${encodeURIComponent(diaryDate.value)}`);
+            const meals = response.ok ? await response.json() : [];
+            renderMeals(Array.isArray(meals) ? meals : []);
+        }
+
+        function renderMeals(meals) {
+            if (!mealsList || !mealsEmpty) return;
+            lastMealsCache = Array.isArray(meals) ? meals : [];
+            if (!meals.length) {
+                mealsList.innerHTML = '';
+                mealsEmpty.classList.remove('hidden');
+                mealsSummary?.classList.add('hidden');
+                return;
+            }
+            mealsEmpty.classList.add('hidden');
+            const mealTypeLabels = {
+                breakfast: 'Brokastis',
+                lunch: 'Pusdienas',
+                dinner: 'Vakariņas',
+                snack: 'Uzkoda'
+            };
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalFat = 0;
+            let totalCarbs = 0;
+
+            mealsList.innerHTML = meals.map(meal => {
+                const time = new Date(meal.createdAt).toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
+                const mealType = mealTypeLabels[meal.mealType] || 'Maltīte';
+                const items = (meal.items || []).map(item => `${escapeHtml(item.name)} (${item.weight}g)`).join(', ');
+                totalCalories += Number(meal.totalCalories || 0);
+                totalProtein += Number(meal.totalProtein || 0);
+                totalFat += Number(meal.totalFat || 0);
+                totalCarbs += Number(meal.totalCarbs || 0);
+                return `
+                    <div class="portal-meal">
+                        <div class="portal-meal-header">
+                            <span>${mealType}</span>
+                            <span>${meal.totalCalories || 0} kcal</span>
+                        </div>
+                        <div class="portal-meal-meta">${time}</div>
+                        <div class="portal-meal-items">${items || '—'}</div>
+                        <div class="portal-meal-macros">
+                            <span>O: ${meal.totalProtein || 0}g</span>
+                            <span>T: ${meal.totalFat || 0}g</span>
+                            <span>Og: ${meal.totalCarbs || 0}g</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (mealsSummary) mealsSummary.classList.remove('hidden');
+            if (dayTotalKcal) dayTotalKcal.textContent = `${Math.round(totalCalories)} kcal`;
+            if (dayTotalProtein) dayTotalProtein.textContent = `${Math.round(totalProtein * 10) / 10}`;
+            if (dayTotalFat) dayTotalFat.textContent = `${Math.round(totalFat * 10) / 10}`;
+            if (dayTotalCarbs) dayTotalCarbs.textContent = `${Math.round(totalCarbs * 10) / 10}`;
+
+            updateRecentItems(meals);
+            renderFavorites();
+        }
+
+        function addMealItemRow(item = {}) {
+            if (!mealItems) return;
+            const safeName = escapeHtml(item.name || '');
+            const row = document.createElement('div');
+            row.className = 'meal-item';
+            row.innerHTML = `
+                <div class="meal-item-grid">
+                    <div>
+                        <label>Nosaukums</label>
+                        <input type="text" class="meal-item-name" placeholder="Piem., griķi" value="${safeName}">
+                    </div>
+                    <div>
+                        <label>Svars (g)</label>
+                        <input type="number" min="1" class="meal-item-weight" value="${item.weight || 100}">
+                    </div>
+                    <div>
+                        <label>Kalorijas</label>
+                        <input type="number" min="0" class="meal-item-calories" value="${item.calories || 0}">
+                    </div>
+                    <div>
+                        <label>Olbaltumv.</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-protein" value="${item.protein || 0}">
+                    </div>
+                    <div>
+                        <label>Tauki</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-fat" value="${item.fat || 0}">
+                    </div>
+                    <div>
+                        <label>Ogļh.</label>
+                        <input type="number" min="0" step="0.1" class="meal-item-carbs" value="${item.carbs || 0}">
+                    </div>
+                </div>
+                <div class="meal-item-actions">
+                    <div class="meal-item-actions-left">
+                        <button type="button" class="btn-ghost meal-item-favorite">Saglabāt favorītos</button>
+                    </div>
+                    <button type="button" class="btn-ghost meal-item-remove">Noņemt</button>
+                </div>
+            `;
+            mealItems.appendChild(row);
+            updateMealTotals();
+        }
+
+        function updateMealTotals() {
+            if (!mealItems || !mealTotals) return;
+            const items = collectMealItems();
+            if (!items.length) {
+                mealTotals.classList.add('hidden');
+                return;
+            }
+
+            const totals = items.reduce((acc, item) => {
+                acc.calories += item.calories || 0;
+                acc.protein += item.protein || 0;
+                acc.fat += item.fat || 0;
+                acc.carbs += item.carbs || 0;
+                return acc;
+            }, { calories: 0, protein: 0, fat: 0, carbs: 0 });
+
+            mealTotals.classList.remove('hidden');
+            if (mealTotalKcal) mealTotalKcal.textContent = `${Math.round(totals.calories)}`;
+            if (mealTotalProtein) mealTotalProtein.textContent = `${Math.round(totals.protein * 10) / 10}`;
+            if (mealTotalFat) mealTotalFat.textContent = `${Math.round(totals.fat * 10) / 10}`;
+            if (mealTotalCarbs) mealTotalCarbs.textContent = `${Math.round(totals.carbs * 10) / 10}`;
+        }
+
+        function collectMealItems() {
+            if (!mealItems) return [];
+            const rows = Array.from(mealItems.querySelectorAll('.meal-item'));
+            return rows.map(row => {
+                const name = row.querySelector('.meal-item-name')?.value?.trim();
+                const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
+                const calories = Number(row.querySelector('.meal-item-calories')?.value || 0);
+                const protein = Number(row.querySelector('.meal-item-protein')?.value || 0);
+                const fat = Number(row.querySelector('.meal-item-fat')?.value || 0);
+                const carbs = Number(row.querySelector('.meal-item-carbs')?.value || 0);
+
+                return { name, weight, calories, protein, fat, carbs };
+            }).filter(item => item.name && item.weight);
+        }
+
+        function updateRecentItems(meals) {
+            if (!recentItems) return;
+            const items = [];
+            meals.forEach(meal => {
+                (meal.items || []).forEach(item => {
+                    if (!item?.name) return;
+                    items.push({
+                        name: item.name,
+                        weight: item.weight || 100,
+                        calories: item.calories || 0,
+                        protein: item.protein || 0,
+                        fat: item.fat || 0,
+                        carbs: item.carbs || 0
+                    });
+                });
+            });
+
+            const unique = [];
+            const seen = new Set();
+            for (let i = items.length - 1; i >= 0; i -= 1) {
+                const key = items[i].name.toLowerCase();
+                if (seen.has(key)) continue;
+                seen.add(key);
+                unique.push(items[i]);
+                if (unique.length >= 8) break;
+            }
+
+            recentItems.innerHTML = '';
+
+            if (!unique.length) {
+                const empty = document.createElement('span');
+                empty.className = 'portal-empty';
+                empty.textContent = 'Nav iepriekšēju ēdienu.';
+                recentItems.appendChild(empty);
+                return;
+            }
+
+            unique.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'recent-item';
+                button.dataset.name = item.name;
+                button.dataset.weight = String(item.weight || 100);
+                button.dataset.calories = String(item.calories || 0);
+                button.dataset.protein = String(item.protein || 0);
+                button.dataset.fat = String(item.fat || 0);
+                button.dataset.carbs = String(item.carbs || 0);
+                button.textContent = item.name;
+                recentItems.appendChild(button);
+            });
+        }
+
+        function loadFavorites() {
+            try {
+                const raw = localStorage.getItem(favoritesKey);
+                return raw ? JSON.parse(raw) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveFavorites(items) {
+            localStorage.setItem(favoritesKey, JSON.stringify(items));
+        }
+
+        function renderFavorites() {
+            if (!favoriteItems) return;
+            const favorites = loadFavorites();
+            favoriteItems.innerHTML = '';
+
+            if (!favorites.length) {
+                const empty = document.createElement('span');
+                empty.className = 'portal-empty';
+                empty.textContent = 'Pagaidām nav favorītu.';
+                favoriteItems.appendChild(empty);
+                return;
+            }
+
+            favorites.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'recent-item';
+                button.dataset.name = item.name;
+                button.dataset.weight = String(item.weight || 100);
+                button.dataset.calories = String(item.calories || 0);
+                button.dataset.protein = String(item.protein || 0);
+                button.dataset.fat = String(item.fat || 0);
+                button.dataset.carbs = String(item.carbs || 0);
+                button.textContent = item.name;
+                favoriteItems.appendChild(button);
+            });
+        }
+
+        function saveFavoriteFromRow(row) {
+            const name = row.querySelector('.meal-item-name')?.value?.trim();
+            const weight = Number(row.querySelector('.meal-item-weight')?.value || 0);
+            if (!name || !weight) return;
+
+            const item = {
+                name,
+                weight,
+                calories: Number(row.querySelector('.meal-item-calories')?.value || 0),
+                protein: Number(row.querySelector('.meal-item-protein')?.value || 0),
+                fat: Number(row.querySelector('.meal-item-fat')?.value || 0),
+                carbs: Number(row.querySelector('.meal-item-carbs')?.value || 0)
+            };
+
+            const favorites = loadFavorites();
+            const exists = favorites.some(entry => entry.name.toLowerCase() === name.toLowerCase());
+            if (!exists) {
+                favorites.unshift(item);
+                saveFavorites(favorites.slice(0, 12));
+                renderFavorites();
+            }
+        }
+
+        function applyQuickChip(target) {
+            if (!(target instanceof HTMLElement)) return;
+            const typeValue = target.dataset.mealType;
+            const timeValue = target.dataset.time;
+            if (typeValue) {
+                document.getElementById('meal-type').value = typeValue;
+            }
+            if (timeValue) {
+                const now = new Date();
+                const offset = Number(timeValue);
+                if (Number.isFinite(offset)) {
+                    now.setMinutes(now.getMinutes() + offset);
+                }
+                const hour = String(now.getHours()).padStart(2, '0');
+                const minute = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
+                const hourSelect = document.getElementById('meal-hour');
+                const minuteSelect = document.getElementById('meal-minute');
+                if (hourSelect) hourSelect.value = hour;
+                if (minuteSelect) minuteSelect.value = minute;
+            }
+
+            if (target.classList.contains('quick-chip')) {
+                target.classList.add('active');
+                setTimeout(() => target.classList.remove('active'), 600);
+            }
+        }
+
+        function resetMealForm() {
+            if (mealItems) mealItems.innerHTML = '';
+            addMealItemRow();
+            if (mealStatus) mealStatus.textContent = '';
+            const photoInput = document.getElementById('meal-photo');
+            if (photoInput) photoInput.value = '';
+            if (mealPhotoPreview) {
+                mealPhotoPreview.classList.add('hidden');
+                mealPhotoPreview.innerHTML = '';
+            }
+            setTimeToNow();
+        }
+
+        function copyLatestMeal() {
+            if (!lastMealsCache.length) return;
+            const latest = [...lastMealsCache].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+            if (!latest) return;
+            if (mealItems) mealItems.innerHTML = '';
+            (latest.items || []).forEach(item => addMealItemRow(item));
+            document.getElementById('meal-type').value = latest.mealType || 'snack';
+            const latestDate = new Date(latest.createdAt);
+            const hour = String(latestDate.getHours()).padStart(2, '0');
+            const minute = String(Math.floor(latestDate.getMinutes() / 5) * 5).padStart(2, '0');
+            const hourSelect = document.getElementById('meal-hour');
+            const minuteSelect = document.getElementById('meal-minute');
+            if (hourSelect) hourSelect.value = hour;
+            if (minuteSelect) minuteSelect.value = minute;
+            updateMealTotals();
+        }
+
+        async function readPhoto() {
+            const input = document.getElementById('meal-photo');
+            const file = input?.files?.[0];
+            if (!file) return undefined;
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result?.toString());
+                reader.readAsDataURL(file);
+            });
+        }
+
+        mealForm?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!userId) return;
+            const items = collectMealItems();
+            if (!items.length) {
+                if (mealStatus) mealStatus.textContent = 'Pievienojiet vismaz vienu ēdienu.';
+                return;
+            }
+
+            if (mealStatus) mealStatus.textContent = 'Saglabā…';
+
+            const payload = {
+                userId,
+                mealType: document.getElementById('meal-type')?.value || 'snack',
+                createdAt: buildMealTime(),
+                photoUrl: await readPhoto(),
+                items: items.map(item => ({
+                    name: item.name,
+                    nameEn: item.name,
+                    weight: item.weight,
+                    calories: item.calories,
+                    protein: item.protein,
+                    fat: item.fat,
+                    carbs: item.carbs
+                }))
+            };
+
+            try {
+                const response = await fetch('/api/meals', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => null);
+                    if (mealStatus) mealStatus.textContent = error?.error || 'Neizdevās saglabāt.';
+                    return;
+                }
+
+                if (mealStatus) mealStatus.textContent = 'Saglabāts!';
+                if (mealItems) mealItems.innerHTML = '';
+                addMealItemRow();
+                await loadMeals();
+            } catch (error) {
+                if (mealStatus) mealStatus.textContent = (error as Error).message || 'Neizdevās saglabāt.';
+            }
+        });
+
+        mealItems?.addEventListener('input', () => updateMealTotals());
+        mealItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (target.classList.contains('meal-item-remove')) {
+                target.closest('.meal-item')?.remove();
+                updateMealTotals();
+                return;
+            }
+            if (target.classList.contains('meal-item-favorite')) {
+                const row = target.closest('.meal-item');
+                if (row) saveFavoriteFromRow(row);
+            }
+        });
+
+        addMealItem?.addEventListener('click', () => addMealItemRow());
+
+        recentItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (!target.classList.contains('recent-item')) return;
+            addMealItemRow({
+                name: target.dataset.name || '',
+                weight: Number(target.dataset.weight || 100),
+                calories: Number(target.dataset.calories || 0),
+                protein: Number(target.dataset.protein || 0),
+                fat: Number(target.dataset.fat || 0),
+                carbs: Number(target.dataset.carbs || 0)
+            });
+        });
+
+        favoriteItems?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (!target.classList.contains('recent-item')) return;
+            addMealItemRow({
+                name: target.dataset.name || '',
+                weight: Number(target.dataset.weight || 100),
+                calories: Number(target.dataset.calories || 0),
+                protein: Number(target.dataset.protein || 0),
+                fat: Number(target.dataset.fat || 0),
+                carbs: Number(target.dataset.carbs || 0)
+            });
+        });
+
+        document.querySelector('.quick-actions')?.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (target.classList.contains('quick-chip')) {
+                applyQuickChip(target);
+            }
+        });
+
+        clearFavorites?.addEventListener('click', () => {
+            saveFavorites([]);
+            renderFavorites();
+        });
+
+        copyLastMeal?.addEventListener('click', () => copyLatestMeal());
+        clearMealForm?.addEventListener('click', () => resetMealForm());
+
+        document.getElementById('meal-photo')?.addEventListener('change', async (event) => {
+            const input = event.target;
+            if (!(input instanceof HTMLInputElement)) return;
+            const file = input.files?.[0];
+            if (!file) {
+                mealPhotoPreview?.classList.add('hidden');
+                mealPhotoPreview.innerHTML = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (!mealPhotoPreview) return;
+                mealPhotoPreview.innerHTML = `<img src="${reader.result}" alt="Meal preview">`;
+                mealPhotoPreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        mealTimeNow?.addEventListener('click', () => setTimeToNow());
+
+        reloadMeals?.addEventListener('click', () => loadMeals());
+        diaryDate?.addEventListener('change', () => loadMeals());
+
+        setDateDefaults();
+        addMealItemRow();
+        renderFavorites();
+        loadAuth();
+    </script>
+</Layout>
