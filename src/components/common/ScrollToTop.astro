@@ -18,8 +18,8 @@
 <style>
   .scroll-to-top {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 16px;
+    left: 16px;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -63,8 +63,6 @@
   /* Mobile adjustments */
   @media (max-width: 768px) {
     .scroll-to-top {
-      bottom: 20px;
-      right: 20px;
       width: 44px;
       height: 44px;
     }
@@ -73,17 +71,10 @@
       font-size: 20px;
     }
   }
-
-  /* Ensure it doesn't overlap with cookie settings */
-  @media (max-width: 480px) {
-    .scroll-to-top {
-      bottom: 80px; /* Above cookie button */
-    }
-  }
 </style>
 
-<script>
-  // Scroll to top functionality
+<script is:inline>
+  // Scroll to top functionality - inline for compatibility
   (function () {
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
@@ -98,11 +89,11 @@
     }
 
     // Smooth scroll to top
-    function scrollToTop(e: Event) {
+    function scrollToTop(e) {
       e.preventDefault();
       window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: 'smooth'
       });
     }
 
