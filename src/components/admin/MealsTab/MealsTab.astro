@@ -1,0 +1,90 @@
+---
+import './MealsTab.css';
+import PatientList from '../PatientList/PatientList.astro';
+---
+
+<div class="content-header">
+  <h2 class="content-title">Uztura dienasgrāmata</h2>
+</div>
+
+<div class="meals-layout">
+  <div class="card meals-sidebar">
+    <div class="meals-sidebar-header">
+      <h3>Pacienti</h3>
+      <button id="patients-refresh" class="btn-secondary btn-sm">
+        <i class="ph ph-arrows-clockwise"></i>
+      </button>
+    </div>
+
+    <PatientList />
+  </div>
+
+  <div class="meals-main">
+    <!-- Calendar Header with Month Navigation -->
+    <div class="card" style="margin-bottom: 20px; padding: 20px;">
+      <div class="meals-calendar-header">
+        <div>
+          <h3 id="meals-patient-name" class="meals-patient-title">Izvēlies pacientu</h3>
+          <p id="meals-patient-id" class="meals-patient-subtitle"></p>
+        </div>
+        <div class="meals-month-nav">
+          <button id="meals-prev-month" class="btn-icon" disabled>
+            <i class="ph ph-caret-left"></i>
+          </button>
+          <span id="meals-current-month" class="meals-month-label">—</span>
+          <button id="meals-next-month" class="btn-icon" disabled>
+            <i class="ph ph-caret-right"></i>
+          </button>
+          <button
+            id="meals-refresh"
+            class="btn-secondary btn-sm"
+            style="margin-left: 12px;"
+            disabled
+          >
+            <i class="ph ph-arrows-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="meals-loading" class="loading-state hidden">
+      <div class="loading-spinner"></div>
+      <span>Ielādē datus...</span>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div id="meals-calendar-container" class="hidden">
+      <div class="meals-calendar-weekdays">
+        <div>P</div>
+        <div>O</div>
+        <div>T</div>
+        <div>C</div>
+        <div>Pk</div>
+        <div>S</div>
+        <div>Sv</div>
+      </div>
+      <div id="meals-calendar-grid" class="meals-calendar-grid"></div>
+    </div>
+
+    <div id="meals-empty" class="empty-state">
+      <i class="ph ph-users empty-icon"></i>
+      <span>Izvēlies pacientu no saraksta</span>
+    </div>
+  </div>
+</div>
+
+<!-- Meals Day Details Modal -->
+<div id="meals-day-modal" class="modal-overlay" style="display: none;">
+  <div class="modal-container meals-modal">
+    <div class="modal-header">
+      <h3 id="meals-modal-title">Dienasgrāmata</h3>
+      <button onclick="closeMealsModal()" class="modal-close">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+    <div class="modal-body meals-modal-body">
+      <div id="meals-modal-summary" class="meals-day-summary-total"></div>
+      <div id="meals-modal-content" class="meals-modal-content"></div>
+    </div>
+  </div>
+</div>

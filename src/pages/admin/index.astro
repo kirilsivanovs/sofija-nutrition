@@ -5,6 +5,7 @@ import CalendarView from '../../components/admin/CalendarView.astro';
 import AvailabilityTab from '../../components/admin/AvailabilityTab.astro';
 import SettingsTab from '../../components/admin/SettingsTab.astro';
 import PatientList from '../../components/admin/PatientList/PatientList.astro';
+import MealsTab from '../../components/admin/MealsTab/MealsTab.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
@@ -56,75 +57,7 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
 
       <!-- Meals Tab -->
       <div id="tab-meals" class="admin-content hidden">
-        <div class="content-header">
-          <h2 class="content-title">Uztura dienasgrāmata</h2>
-        </div>
-
-        <div class="meals-layout">
-          <div class="card meals-sidebar">
-            <div class="meals-sidebar-header">
-              <h3>Pacienti</h3>
-              <button id="patients-refresh" class="btn-secondary btn-sm">
-                <i class="ph ph-arrows-clockwise"></i>
-              </button>
-            </div>
-
-            <PatientList />
-          </div>
-
-          <div class="meals-main">
-            <!-- Calendar Header with Month Navigation -->
-            <div class="card" style="margin-bottom: 20px; padding: 20px;">
-              <div class="meals-calendar-header">
-                <div>
-                  <h3 id="meals-patient-name" class="meals-patient-title">Izvēlies pacientu</h3>
-                  <p id="meals-patient-id" class="meals-patient-subtitle"></p>
-                </div>
-                <div class="meals-month-nav">
-                  <button id="meals-prev-month" class="btn-icon" disabled>
-                    <i class="ph ph-caret-left"></i>
-                  </button>
-                  <span id="meals-current-month" class="meals-month-label">—</span>
-                  <button id="meals-next-month" class="btn-icon" disabled>
-                    <i class="ph ph-caret-right"></i>
-                  </button>
-                  <button
-                    id="meals-refresh"
-                    class="btn-secondary btn-sm"
-                    style="margin-left: 12px;"
-                    disabled
-                  >
-                    <i class="ph ph-arrows-clockwise"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div id="meals-loading" class="loading-state hidden">
-              <div class="loading-spinner"></div>
-              <span>Ielādē datus...</span>
-            </div>
-
-            <!-- Calendar Grid -->
-            <div id="meals-calendar-container" class="hidden">
-              <div class="meals-calendar-weekdays">
-                <div>P</div>
-                <div>O</div>
-                <div>T</div>
-                <div>C</div>
-                <div>Pk</div>
-                <div>S</div>
-                <div>Sv</div>
-              </div>
-              <div id="meals-calendar-grid" class="meals-calendar-grid"></div>
-            </div>
-
-            <div id="meals-empty" class="empty-state">
-              <i class="ph ph-users empty-icon"></i>
-              <span>Izvēlies pacientu no saraksta</span>
-            </div>
-          </div>
-        </div>
+        <MealsTab />
       </div>
 
       <!-- Data Tab -->
@@ -1864,7 +1797,7 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
 
     .meals-layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 20px;
       align-items: start;
     }
@@ -2537,6 +2470,7 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
     } from '../../utils/adminApiAdapter';
     import { PatientService } from '../../services/admin/PatientService';
     import { PatientListController } from '../../components/admin/PatientList/PatientListController';
+    import { MealsTabController } from '../../components/admin/MealsTab/MealsTab';
 
     // Type declarations for global window functions
     declare global {
@@ -2703,24 +2637,14 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
     const patientService = new PatientService(API_BASE);
     const patientController = new PatientListController(patientService);
 
-    const patientsRefreshBtn = document.getElementById('patients-refresh');
-
-    // Meals Calendar Elements
-    const mealsPatientName = document.getElementById('meals-patient-name');
-    const mealsPatientId = document.getElementById('meals-patient-id');
-    const mealsCurrentMonth = document.getElementById('meals-current-month');
-    const mealsPrevMonthBtn = document.getElementById('meals-prev-month');
-    const mealsNextMonthBtn = document.getElementById('meals-next-month');
-    const mealsRefreshBtn = document.getElementById('meals-refresh');
-    const mealsLoading = document.getElementById('meals-loading');
-    const mealsCalendarContainer = document.getElementById('meals-calendar-container');
-    const mealsCalendarGrid = document.getElementById('meals-calendar-grid');
-    const mealsEmpty = document.getElementById('meals-empty');
-
-    let adminMeals: any[] = [];
-    let selectedPatientName = '';
-    let currentMealsDate = new Date();
-    let mealsDataByDay: Map<string, any> = new Map();
+    // Initialize MealsTab Controller
+    const mealsTabController = new MealsTabController(
+      {
+        patientController,
+        onShowToast: showToast,
+      },
+      API_BASE
+    );
 
     // Initialize Patient List Controller
     patientController.init({
@@ -2730,10 +2654,9 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
       listContainer: document.getElementById('patients-list'),
       emptyContainer: document.getElementById('patients-empty'),
       onPatientSelect: (patient) => {
-        selectedPatientName = patientService.getDisplayName(patient);
-        if (mealsPatientName) mealsPatientName.textContent = selectedPatientName;
-        if (mealsPatientId) mealsPatientId.textContent = patient.userId;
-        loadMealsForMonth();
+        const displayName = patientService.getDisplayName(patient);
+        mealsTabController.setSelectedPatientName(displayName);
+        mealsTabController.loadMealsForMonth();
       },
       onAccessUpdate: () => {
         // Access updated successfully
@@ -2742,357 +2665,16 @@ import PatientList from '../../components/admin/PatientList/PatientList.astro';
       onShowConfirm: showConfirm,
     });
 
-    // Month navigation
-    mealsPrevMonthBtn?.addEventListener('click', () => {
-      currentMealsDate.setMonth(currentMealsDate.getMonth() - 1);
-      loadMealsForMonth();
-    });
-    mealsNextMonthBtn?.addEventListener('click', () => {
-      currentMealsDate.setMonth(currentMealsDate.getMonth() + 1);
-      loadMealsForMonth();
-    });
-    mealsRefreshBtn?.addEventListener('click', () => loadMealsForMonth());
+    // Initialize MealsTab after Patient Controller
+    mealsTabController.init();
 
-    patientsRefreshBtn?.addEventListener('click', () => patientController.loadPatients());
-
-    function formatMealTime(value?: string): string {
-      if (!value) return '';
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return '';
-      return date.toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
-    }
-
+    // Utility functions still used elsewhere
     function formatPatientDate(value?: string): string {
       if (!value) return '—';
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return '—';
       return date.toLocaleDateString('lv-LV');
     }
-
-    // Calendar functions
-    function formatMonthYear(date: Date): string {
-      const months = [
-        'Janvāris',
-        'Februāris',
-        'Marts',
-        'Aprīlis',
-        'Maijs',
-        'Jūnijs',
-        'Jūlijs',
-        'Augusts',
-        'Septembris',
-        'Oktobris',
-        'Novembris',
-        'Decembris',
-      ];
-      return `${months[date.getMonth()]} ${date.getFullYear()}`;
-    }
-
-    function aggregateDataByDay(meals: Meal[]): Map<string, DayData> {
-      const dayMap = new Map<string, DayData>();
-
-      meals.forEach((meal) => {
-        if (!meal.createdAt) return;
-        const date = new Date(meal.createdAt);
-        const dateKey = date.toISOString().split('T')[0];
-
-        if (!dayMap.has(dateKey)) {
-          dayMap.set(dateKey, {
-            totalCalories: 0,
-            totalProtein: 0,
-            totalFat: 0,
-            totalCarbs: 0,
-            meals: [],
-            mealsByType: {
-              breakfast: [],
-              lunch: [],
-              dinner: [],
-              snack: [],
-            },
-          });
-        }
-
-        const dayData = dayMap.get(dateKey)!;
-        dayData.totalCalories += meal.totalCalories || 0;
-        dayData.totalProtein += meal.totalProtein || 0;
-        dayData.totalFat += meal.totalFat || 0;
-        dayData.totalCarbs += meal.totalCarbs || 0;
-        dayData.meals.push(meal);
-
-        const mealType = meal.mealType || 'snack';
-        if (dayData.mealsByType[mealType]) {
-          dayData.mealsByType[mealType].push(meal);
-        }
-      });
-
-      return dayMap;
-    }
-
-    function renderMealsCalendar(): void {
-      if (!mealsCalendarGrid) return;
-
-      const selectedPatientId = patientController.getSelectedPatientId();
-
-      if (!selectedPatientId) {
-        if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
-        if (mealsEmpty) mealsEmpty.classList.remove('hidden');
-        return;
-      }
-
-      if (mealsEmpty) mealsEmpty.classList.add('hidden');
-      if (mealsCalendarContainer) mealsCalendarContainer.classList.remove('hidden');
-
-      const year = currentMealsDate.getFullYear();
-      const month = currentMealsDate.getMonth();
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-
-      let startDay = firstDay.getDay() - 1;
-      if (startDay < 0) startDay = 6;
-
-      const daysInMonth = lastDay.getDate();
-      const cells: string[] = [];
-
-      // Empty cells before month starts
-      for (let i = 0; i < startDay; i++) {
-        cells.push('<div class="meals-calendar-day empty"></div>');
-      }
-
-      // Days of the month
-      for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(year, month, day);
-        const dateKey = date.toISOString().split('T')[0];
-        const dayData = mealsDataByDay.get(dateKey);
-
-        if (dayData && dayData.meals.length > 0) {
-          const kcal = Math.round(dayData.totalCalories);
-          const protein = Math.round(dayData.totalProtein);
-          const fat = Math.round(dayData.totalFat);
-          const carbs = Math.round(dayData.totalCarbs);
-
-          cells.push(`
-                        <div class="meals-calendar-day has-data" onclick="showDayMealsModal('${dateKey}')">
-                            <div class="meals-day-number">${day}</div>
-                            <div class="meals-day-kcal">${kcal} kcal</div>
-                            <div class="meals-day-macros">
-                                <span>O:${protein}</span>
-                                <span>T:${fat}</span>
-                                <span>Og:${carbs}</span>
-                            </div>
-                        </div>
-                    `);
-        } else {
-          cells.push(`
-                        <div class="meals-calendar-day">
-                            <div class="meals-day-number">${day}</div>
-                        </div>
-                    `);
-        }
-      }
-
-      mealsCalendarGrid.innerHTML = cells.join('');
-    }
-
-    async function loadMealsForMonth(): Promise<void> {
-      const selectedPatientId = patientController.getSelectedPatientId();
-
-      if (!selectedPatientId) {
-        showToast('Izvēlies pacientu', 'warning');
-        return;
-      }
-
-      if (mealsLoading) mealsLoading.classList.remove('hidden');
-      if (mealsCalendarContainer) mealsCalendarContainer.classList.add('hidden');
-
-      // Enable/disable controls
-      [mealsPrevMonthBtn, mealsNextMonthBtn, mealsRefreshBtn].forEach((btn) => {
-        if (btn) btn.setAttribute('disabled', 'true');
-      });
-
-      try {
-        const year = currentMealsDate.getFullYear();
-        const month = currentMealsDate.getMonth();
-
-        // Get all days in month
-        const firstDay = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-        const lastDay = new Date(year, month + 1, 0).getDate();
-        const lastDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-
-        const response = await fetch(
-          `${API_BASE}/dashboard/meals/range?userId=${encodeURIComponent(selectedPatientId)}&startDate=${firstDay}&endDate=${lastDayStr}`,
-          {
-            headers: window.getAuthHeaders
-              ? window.getAuthHeaders()
-              : { 'Content-Type': 'application/json' },
-          }
-        );
-
-        if (!response.ok) {
-          const error = await response.json().catch(() => null);
-          showToast(error?.error || 'Neizdevās ielādēt datus', 'error');
-          mealsDataByDay = new Map();
-          renderMealsCalendar();
-          return;
-        }
-
-        const data = await response.json();
-        adminMeals = Array.isArray(data) ? data : [];
-        mealsDataByDay = aggregateDataByDay(adminMeals);
-
-        if (mealsCurrentMonth) mealsCurrentMonth.textContent = formatMonthYear(currentMealsDate);
-        if (mealsPatientName)
-          mealsPatientName.textContent = selectedPatientName || selectedPatientId;
-        if (mealsPatientId) mealsPatientId.textContent = `ID: ${selectedPatientId}`;
-
-        renderMealsCalendar();
-      } catch (error: unknown) {
-        showToast((error as Error).message, 'error');
-        mealsDataByDay = new Map();
-        renderMealsCalendar();
-      } finally {
-        if (mealsLoading) mealsLoading.classList.add('hidden');
-        [mealsPrevMonthBtn, mealsNextMonthBtn, mealsRefreshBtn].forEach((btn) => {
-          if (btn) btn.removeAttribute('disabled');
-        });
-      }
-    }
-
-    // Modal functions for day details
-    function showDayMealsModal(dateKey: string): void {
-      const dayData = mealsDataByDay.get(dateKey);
-      if (!dayData) return;
-
-      const modal = document.getElementById('meals-day-modal');
-      const modalTitle = document.getElementById('meals-modal-title');
-      const modalSummary = document.getElementById('meals-modal-summary');
-      const modalContent = document.getElementById('meals-modal-content');
-
-      if (!modal || !modalTitle || !modalSummary || !modalContent) return;
-
-      // Format date
-      const date = new Date(dateKey);
-      const formattedDate = date.toLocaleDateString('lv-LV', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      modalTitle.textContent = formattedDate;
-
-      // Summary
-      const kcal = Math.round(dayData.totalCalories);
-      const protein = Math.round(dayData.totalProtein);
-      const fat = Math.round(dayData.totalFat);
-      const carbs = Math.round(dayData.totalCarbs);
-
-      modalSummary.innerHTML = `
-                <div class="meals-summary-row">
-                    <span class="meals-summary-label">Kopā kalorijas:</span>
-                    <span class="meals-summary-value">${kcal} kcal</span>
-                </div>
-                <div class="meals-summary-row">
-                    <span class="meals-summary-label">Olbaltumvielas:</span>
-                    <span class="meals-summary-value">${protein}g</span>
-                </div>
-                <div class="meals-summary-row">
-                    <span class="meals-summary-label">Tauki:</span>
-                    <span class="meals-summary-value">${fat}g</span>
-                </div>
-                <div class="meals-summary-row">
-                    <span class="meals-summary-label">Ogļhidrāti:</span>
-                    <span class="meals-summary-value">${carbs}g</span>
-                </div>
-            `;
-
-      // Meal types
-      const typeLabels: Record<string, string> = {
-        breakfast: 'Brokastis',
-        lunch: 'Pusdienas',
-        dinner: 'Vakariņas',
-        snack: 'Uzkodas',
-      };
-
-      const typeIcons: Record<string, string> = {
-        breakfast: 'ph-coffee',
-        lunch: 'ph-bowl-food',
-        dinner: 'ph-fork-knife',
-        snack: 'ph-apple',
-      };
-
-      const sections: string[] = [];
-
-      Object.entries(dayData.mealsByType).forEach(([type, mealsUntyped]) => {
-        const meals = mealsUntyped as Meal[];
-        if (meals.length === 0) return;
-
-        const typeKcal = meals.reduce((sum, m) => sum + (m.totalCalories || 0), 0);
-        const typeProtein = meals.reduce((sum, m) => sum + (m.totalProtein || 0), 0);
-        const typeFat = meals.reduce((sum, m) => sum + (m.totalFat || 0), 0);
-        const typeCarbs = meals.reduce((sum, m) => sum + (m.totalCarbs || 0), 0);
-
-        const entries = meals
-          .map((meal) => {
-            const time = formatMealTime(meal.createdAt);
-            const items =
-              (meal.items || [])
-                .map((item: MealItem) => `${item.name} (${item.weight}g)`)
-                .join(', ') || '—';
-            const calories = Math.round(meal.totalCalories || 0);
-            const protein = Math.round(meal.totalProtein || 0);
-            const fat = Math.round(meal.totalFat || 0);
-            const carbs = Math.round(meal.totalCarbs || 0);
-
-            return `
-                        <div class="meal-entry">
-                            <div class="meal-entry-time">${time}</div>
-                            <div class="meal-entry-items">${items}</div>
-                            <div class="meal-entry-macros">
-                                <span>${calories} kcal</span>
-                                <span>O: ${protein}g</span>
-                                <span>T: ${fat}g</span>
-                                <span>Og: ${carbs}g</span>
-                            </div>
-                        </div>
-                    `;
-          })
-          .join('');
-
-        sections.push(`
-                    <div class="meal-type-section">
-                        <div class="meal-type-header">
-                            <div class="meal-type-title">
-                                <i class="ph ${typeIcons[type]}"></i>
-                                <span>${typeLabels[type]}</span>
-                            </div>
-                            <div class="meal-type-summary">
-                                ${Math.round(typeKcal)} kcal |
-                                O:${Math.round(typeProtein)}g |
-                                T:${Math.round(typeFat)}g |
-                                Og:${Math.round(typeCarbs)}g
-                            </div>
-                        </div>
-                        ${entries}
-                    </div>
-                `);
-      });
-
-      modalContent.innerHTML = sections.join('');
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMealsModal(): void {
-      const modal = document.getElementById('meals-day-modal');
-      if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-    }
-
-    // Expose to window for onclick handlers
-    (window as any).showDayMealsModal = showDayMealsModal;
-    (window as any).closeMealsModal = closeMealsModal;
 
     const prevMonthBtn = document.getElementById('prev-month');
     const nextMonthBtn = document.getElementById('next-month');
