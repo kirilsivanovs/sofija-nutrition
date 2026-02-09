@@ -239,9 +239,10 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     background: var(--color-accent, #295d45);
   }
 
-  /* Hamburger animation to X */
+  /* Hamburger animation to X — gold on active */
   .mobile-menu-btn.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 6px);
+    background: var(--color-secondary, #c9a36a);
   }
 
   .mobile-menu-btn.active span:nth-child(2) {
@@ -250,32 +251,48 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   .mobile-menu-btn.active span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -6px);
+    background: var(--color-secondary, #c9a36a);
   }
 
-  /* Premium Mobile Menu - Synced with Main */
+  /* ── Premium Fullscreen Mobile Menu ── */
   .mobile-nav-menu {
     position: fixed;
     inset: 0;
-    /* iOS Safari 100vh fix */
     height: 100%;
     height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    padding: 28px 20px 40px;
-    background: rgba(255, 255, 255, 0.98);
+    gap: 0;
+    padding: 80px 40px 60px;
+    background: linear-gradient(165deg, #152e24 0%, var(--color-primary, #1b4332) 40%, #0f2119 100%);
     z-index: 998;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition:
-      opacity 0.3s ease,
-      visibility 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+  }
+
+  /* Decorative gold accent line */
+  .mobile-nav-menu::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, transparent, var(--color-secondary, #c9a36a), transparent);
+    transform: translateY(-50%);
+    transition: height 0.6s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.4;
+  }
+
+  .mobile-nav-menu.open::before {
+    height: 60%;
   }
 
   .mobile-nav-menu > * {
@@ -289,55 +306,92 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     pointer-events: auto;
   }
 
+  /* Premium nav items */
   .mobile-nav-menu :global(a),
   .mobile-nav-menu :global(button) {
-    font-family: var(--font-serif, 'Playfair Display', serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-text, #1f2937);
-    text-decoration: none;
-    transition: color 0.3s;
-    background: transparent;
-    border: none;
-    padding: 0;
-    min-height: auto;
-    width: auto;
-    box-shadow: none;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
+    gap: 16px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-family: var(--font-serif, 'Cormorant Garamond', serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    background: transparent;
+    border: none;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 56px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: none;
+    position: relative;
+    letter-spacing: 0.02em;
+    /* Staggered entrance */
+    opacity: 0;
+    transform: translateX(-20px);
   }
+
+  .mobile-nav-menu.open :global(a),
+  .mobile-nav-menu.open :global(button) {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .mobile-nav-menu.open :global(:nth-child(1)) { transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(2)) { transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(3)) { transition: all 0.4s 0.20s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(4)) { transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(5)) { transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-nav-menu.open :global(:nth-child(6)) { transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1); }
 
   .mobile-nav-menu :global(a:hover),
   .mobile-nav-menu :global(button:hover) {
-    transform: none;
-    color: var(--color-primary, #1b4332);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
     box-shadow: none;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item) {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item.active) {
-    background: transparent;
-    color: var(--color-primary, #1b4332);
+    color: var(--color-secondary, #c9a36a);
+    background: rgba(201, 163, 106, 0.1);
   }
 
-  .mobile-nav-menu :global(.mobile-nav-item i) {
-    display: none; /* Hide icons in simple view to match main or keep if desired? Main has no icons usually in simple menus but let's hide them to make it look cleaner if that's the goal. Wait, main index.astro has icons. I will keep them but adjust style if needed. */
+  .mobile-nav-menu :global(.mobile-nav-item.active)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: var(--color-secondary, #c9a36a);
+    border-radius: 0 3px 3px 0;
   }
 
-  /* Re-enable icons if they exist in main */
   .mobile-nav-menu :global(.mobile-nav-item i) {
     display: inline-block;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    width: 28px;
+    text-align: center;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+
+  .mobile-nav-menu :global(.mobile-nav-item:hover i),
+  .mobile-nav-menu :global(.mobile-nav-item.active i) {
+    opacity: 1;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item span) {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
   }
 
   /* Responsive */

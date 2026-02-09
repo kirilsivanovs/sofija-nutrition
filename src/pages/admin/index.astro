@@ -251,17 +251,10 @@ import '../../styles/admin.css';
     }
 
     const tabBtns = document.querySelectorAll('.admin-tab');
-    const tabContents = document.querySelectorAll('.admin-content');
     const mobileSelect = document.getElementById('mobile-tab-selector') as HTMLSelectElement | null;
 
-    function switchTab(tabId: string) {
-      tabBtns.forEach((b) => b.classList.remove('active'));
-      const activeBtn = document.querySelector(`.admin-tab[data-tab="${tabId}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      tabContents.forEach((c) => c.classList.add('hidden'));
-      const tabEl = document.getElementById('tab-' + tabId);
-      if (tabEl) tabEl.classList.remove('hidden');
-      if (mobileSelect) mobileSelect.value = tabId;
+    // Data loading triggered by AdminHeader's tabChanged event
+    function loadTabData(tabId: string) {
       if (tabId === 'bookings') calendarController.loadCalendar();
       if (tabId === 'availability') availabilityController.loadAvailability();
       if (tabId === 'settings') settingsController.loadSettings();
@@ -269,16 +262,15 @@ import '../../styles/admin.css';
       if (tabId === 'data') dataTabController.loadTableData();
     }
 
-    tabBtns.forEach((btn) =>
-      btn.addEventListener('click', () => {
-        const tab = (btn as HTMLElement).dataset.tab;
-        if (tab) switchTab(tab);
-      })
-    );
+    document.addEventListener('tabChanged', (e: Event) => {
+      const tabId = (e as CustomEvent).detail?.tabId;
+      if (tabId) loadTabData(tabId);
+    });
+
     if (mobileSelect) {
       mobileSelect.addEventListener('change', (e) => {
         const target = e.target as HTMLSelectElement;
-        switchTab(target.value);
+        loadTabData(target.value);
       });
     }
 
