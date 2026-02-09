@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { MealsRepository } from '../../services/mealsRepository';
+import { FoodAccessRepository } from '../../services/foodAccessRepository';
 import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
 
 /**
@@ -21,13 +22,26 @@ export async function adminListPatients(
     const limitParam = request.query.get('limit');
     const limit = limitParam ? Math.min(Math.max(Number(limitParam) || 200, 1), 1000) : 200;
 
-    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const mealsRepository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const accessRepository = new FoodAccessRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
 
-    const patients = await repository.listPatientSummaries(limit);
+    const patients = await mealsRepository.listPatientSummaries(limit);
+    const accessRecords = await accessRepository.listAccess();
+
+    // Enrich patient data with email and displayName from FoodAccess
+    const enrichedPatients = patients.map(patient => {
+      const access = accessRecords.find(a => a.userId === patient.userId);
+      return {
+        ...patient,
+        email: access?.email,
+        displayName: access?.displayName,
+        accessEnabled: access?.enabled ?? false,
+      };
+    });
 
     return {
       status: 200,
-      jsonBody: patients,
+      jsonBody: enrichedPatients,
     };
   } catch (error) {
     context.error('Error getting admin patients:', error);
