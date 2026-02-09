@@ -20,12 +20,12 @@ import Layout from '../layouts/Layout.astro';
                 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center gap-8">
-                    <div class="flex gap-6">
-                        <a href="#program" data-i18n="nav_program" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Programma</a>
-                        <a href="#how-it-works" data-i18n="nav_how" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Kā tas strādā</a>
-                        <a href="#about" data-i18n="nav_about" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Par mani</a>
-                        <a href="#contact" data-i18n="nav_contact" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Pieteikties</a>
-                        <a href="/cabinet" class="text-base font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full">Pacienta kabinets</a>
+                    <div class="flex gap-5">
+                        <a href="#program" data-i18n="nav_program" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Programma</a>
+                        <a href="#how-it-works" data-i18n="nav_how" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Kā tas strādā</a>
+                        <a href="#about" data-i18n="nav_about" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Par mani</a>
+                        <a href="#contact" data-i18n="nav_contact" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Pieteikties</a>
+                        <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="text-sm font-medium text-gray-600 transition-colors cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full whitespace-nowrap">Pacienta kabinets</a>
                     </div>
                     
                     <div class="flex gap-2 text-sm border-l border-gray-200 pl-4">
@@ -49,7 +49,7 @@ import Layout from '../layouts/Layout.astro';
                 <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-3 px-2">Kā tas strādā</a>
                 <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-3 px-2">Par mani</a>
                 <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-3 px-2">Pieteikties</a>
-                <a href="/cabinet" class="text-lg text-gray-700 py-3 px-2">Pacienta kabinets</a>
+                <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="text-lg text-gray-700 py-3 px-2">Pacienta kabinets</a>
                 <div class="flex gap-4 pt-4 border-t">
                     <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
                     <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
@@ -817,8 +817,16 @@ import Layout from '../layouts/Layout.astro';
                 display: none;
             }
             .cookie-settings-btn {
-                padding: 10px;
-                border-radius: 50%;
+                width: 44px !important;
+                height: 44px !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
+                justify-content: center;
+                min-width: 44px;
+                min-height: 44px;
+            }
+            .cookie-settings-btn svg {
+                margin: 0;
             }
         }
     </style>

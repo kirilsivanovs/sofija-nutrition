@@ -11,6 +11,7 @@ export interface IMealsRepository {
   getMealById(userId: string, date: string, mealId: string): Promise<Meal | null>;
   updateMeal(meal: Meal): Promise<Meal>;
   deleteMeal(userId: string, date: string, mealId: string): Promise<void>;
+  deleteAllUserMeals(userId: string): Promise<number>;
   getDailyStats(userId: string, date: string): Promise<DailyStats>;
   listPatientSummaries(limit?: number): Promise<AdminPatientSummary[]>;
 }
@@ -42,7 +43,7 @@ export class MealsRepository implements IMealsRepository {
       totalCarbs: meal.totalCarbs,
       confirmed: meal.confirmed ?? false,
       createdAt: meal.createdAt ?? new Date().toISOString(),
-      confirmedAt: meal.confirmedAt
+      confirmedAt: meal.confirmedAt,
     };
   }
 
@@ -63,7 +64,7 @@ export class MealsRepository implements IMealsRepository {
       totalCarbs: Number(entity.totalCarbs ?? 0),
       confirmed: Boolean(entity.confirmed ?? false),
       createdAt: String(entity.createdAt ?? new Date().toISOString()),
-      confirmedAt: entity.confirmedAt ? String(entity.confirmedAt) : undefined
+      confirmedAt: entity.confirmedAt ? String(entity.confirmedAt) : undefined,
     };
   }
 
@@ -73,14 +74,14 @@ export class MealsRepository implements IMealsRepository {
     return {
       ...meal,
       createdAt: entity.createdAt,
-      confirmed: entity.confirmed
+      confirmed: entity.confirmed,
     };
   }
 
   async getMealsByDate(userId: string, date: string): Promise<Meal[]> {
     const partitionKey = `${userId}_${date}`;
     const entities = this.tableClient.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${partitionKey}'` }
+      queryOptions: { filter: `PartitionKey eq '${partitionKey}'` },
     });
 
     const meals: Meal[] = [];
@@ -88,9 +89,7 @@ export class MealsRepository implements IMealsRepository {
       meals.push(this.fromEntity(entity as Record<string, unknown>));
     }
 
-    return meals.sort((a, b) => 
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
+    return meals.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   }
 
   async getMealById(userId: string, date: string, mealId: string): Promise<Meal | null> {
@@ -109,7 +108,7 @@ export class MealsRepository implements IMealsRepository {
     return {
       ...meal,
       createdAt: entity.createdAt,
-      confirmed: entity.confirmed
+      confirmed: entity.confirmed,
     };
   }
 
@@ -120,19 +119,19 @@ export class MealsRepository implements IMealsRepository {
 
   async getDailyStats(userId: string, date: string): Promise<DailyStats> {
     const meals = await this.getMealsByDate(userId, date);
-    
-    const confirmedMeals = meals.filter(m => m.confirmed);
-    
+
+    const confirmedMeals = meals.filter((m) => m.confirmed);
+
     const stats: DailyStats = {
       date,
       totalCalories: 0,
       totalProtein: 0,
       totalFat: 0,
       totalCarbs: 0,
-      mealsCount: confirmedMeals.length
+      mealsCount: confirmedMeals.length,
     };
 
-    confirmedMeals.forEach(meal => {
+    confirmedMeals.forEach((meal) => {
       stats.totalCalories += meal.totalCalories;
       stats.totalProtein += meal.totalProtein;
       stats.totalFat += meal.totalFat;
@@ -144,7 +143,7 @@ export class MealsRepository implements IMealsRepository {
 
   async listPatientSummaries(limit = 200): Promise<AdminPatientSummary[]> {
     const entities = this.tableClient.listEntities({
-      queryOptions: { select: ['userId', 'createdAt'] }
+      queryOptions: { select: ['userId', 'createdAt'] },
     });
 
     const map = new Map<string, AdminPatientSummary>();
@@ -169,7 +168,7 @@ export class MealsRepository implements IMealsRepository {
         map.set(userId, {
           userId,
           mealsCount: 1,
-          lastMealAt: createdAt || undefined
+          lastMealAt: createdAt || undefined,
         });
       }
     }
@@ -181,5 +180,33 @@ export class MealsRepository implements IMealsRepository {
     });
 
     return summaries.slice(0, limit);
+  }
+
+  async deleteAllUserMeals(userId: string): Promise<number> {
+    const entities = this.tableClient.listEntities({
+      queryOptions: { filter: `userId eq '${userId}'` },
+    });
+
+    let deletedCount = 0;
+    const deletePromises: Promise<any>[] = [];
+
+    for await (const entity of entities) {
+      const partitionKey = String(entity.partitionKey ?? entity.PartitionKey);
+      const rowKey = String(entity.rowKey ?? entity.RowKey);
+      deletePromises.push(this.tableClient.deleteEntity(partitionKey, rowKey));
+      deletedCount++;
+
+      // Batch delete to avoid overwhelming the service
+      if (deletePromises.length >= 50) {
+        await Promise.all(deletePromises);
+        deletePromises.length = 0;
+      }
+    }
+
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+    }
+
+    return deletedCount;
   }
 }
