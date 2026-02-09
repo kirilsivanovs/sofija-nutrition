@@ -253,14 +253,17 @@ class CookieConsent {
         overflow-y: auto;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         animation: slideUp 0.3s ease-out;
+        margin: 0 auto;
       }
       
       /* Mobile optimization */
       @media (max-width: 640px) {
         .cookie-consent-modal {
-          width: 95%;
-          max-height: 80vh;
+          width: calc(100% - 32px);
+          max-width: 400px;
+          max-height: 90vh;
           border-radius: 12px;
+          margin: 0 16px;
         }
         
         .cookie-consent-header {

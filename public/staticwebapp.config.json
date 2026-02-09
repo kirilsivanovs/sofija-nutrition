@@ -5,6 +5,11 @@
     },
     "routes": [
         {
+            "route": "/patient",
+            "redirect": "/cabinet",
+            "statusCode": 301
+        },
+        {
             "route": "/cabinet",
             "allowedRoles": ["authenticated"]
         },
