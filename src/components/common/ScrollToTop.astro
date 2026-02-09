@@ -81,26 +81,50 @@
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
 
+    const scrollRoot = document.scrollingElement || document.documentElement;
+    const SCROLL_THRESHOLD = 200;
+    let ticking = false;
+
+    function getScrollTop() {
+      return (
+        window.pageYOffset ||
+        scrollRoot.scrollTop ||
+        document.body.scrollTop ||
+        0
+      );
+    }
+
     // Show/hide button based on scroll position
     function toggleButton() {
-      if (window.scrollY > 400) {
+      if (getScrollTop() > SCROLL_THRESHOLD) {
         scrollBtn.classList.add('visible');
       } else {
         scrollBtn.classList.remove('visible');
       }
     }
 
-    // Smooth scroll to top
-    function scrollToTop(e) {
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        toggleButton();
+        ticking = false;
       });
     }
 
+    // Smooth scroll to top
+    function scrollToTop(e) {
+      e.preventDefault();
+      if (scrollRoot && typeof scrollRoot.scrollTo === 'function') {
+        scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
     // Event listeners
-    window.addEventListener('scroll', toggleButton, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
     scrollBtn.addEventListener('click', scrollToTop);
 
     // Check initial position

@@ -21,6 +21,10 @@ const { variant = 'public', showBurger = false, showAuth = true, subtitle = '' }
 
 // Generate unique IDs for mobile menu
 const mobileMenuId = `mobile-nav-menu-${variant}`;
+const logoutReturnPath =
+  variant === 'admin' ? '/admin' : variant === 'cabinet' ? '/cabinet' : '/';
+const loginAfterLogout = `/.auth/login/aad?post_login_redirect_uri=${logoutReturnPath}`;
+const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(loginAfterLogout)}`;
 ---
 
 <header class={`app-header app-header--${variant}`}>
@@ -56,7 +60,7 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
           {variant === 'admin' ? (
             <>
               <span id="user-info" class="app-user-name" />
-              <a href="/.auth/logout" class="app-logout">
+              <a href={logoutUrl} class="app-logout">
                 <i class="ph ph-sign-out" />
                 <span>Iziet</span>
               </a>
@@ -75,11 +79,7 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
               </div>
               <div id="auth-user" class="app-auth-user hidden">
                 <span id="user-name" class="app-user-name" />
-                <a
-                  id="logout-link"
-                  href="/.auth/logout?post_logout_redirect_uri=/"
-                  class="app-logout"
-                >
+                <a id="logout-link" href={logoutUrl} class="app-logout">
                   <i class="ph ph-sign-out" />
                 </a>
               </div>
@@ -252,77 +252,104 @@ const mobileMenuId = `mobile-nav-menu-${variant}`;
     transform: rotate(-45deg) translate(5px, -6px);
   }
 
-  /* Fullscreen Mobile Menu */
+  /* Premium Mobile Menu */
   .mobile-nav-menu {
-    display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     /* iOS Safari 100vh fix */
     height: 100%;
     height: 100dvh;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(8px);
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 12px;
+    padding: 28px 20px 40px;
+    background: linear-gradient(160deg, #fbf8f2 0%, #ffffff 48%, #f6f1e8 100%);
     z-index: 998;
-    /* iOS Safari scroll fix */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.98);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      visibility 0.3s ease;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
 
-  .mobile-nav-menu.open {
-    display: flex;
+  .mobile-nav-menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(201, 163, 106, 0.18), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(27, 67, 50, 0.12), transparent 40%);
+    pointer-events: none;
   }
 
-  /* Mobile menu items - можно стилизовать через slot */
+  .mobile-nav-menu > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mobile-nav-menu.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
   .mobile-nav-menu :global(a),
   .mobile-nav-menu :global(button) {
     font-family: var(--font-serif, 'Playfair Display', serif);
-    font-size: 1.5rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--color-text, #1f2937);
     text-decoration: none;
-    transition: color 0.3s;
-    background: none;
-    border: none;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(27, 67, 50, 0.12);
+    border-radius: 16px;
+    padding: 14px 18px;
+    min-height: 52px;
+    width: min(360px, 92vw);
+    box-shadow: 0 12px 30px rgba(27, 67, 50, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     cursor: pointer;
+    position: relative;
+    z-index: 1;
   }
 
   .mobile-nav-menu :global(a:hover),
   .mobile-nav-menu :global(button:hover) {
+    transform: translateY(-1px);
+    border-color: rgba(27, 67, 50, 0.3);
+    box-shadow: 0 16px 36px rgba(27, 67, 50, 0.16);
     color: var(--color-primary, #1b4332);
   }
 
-  /* Admin mobile menu items with icons */
   .mobile-nav-menu :global(.mobile-nav-item) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 24px;
-    border-radius: 12px;
-    transition: all 0.2s;
-  }
-
-  .mobile-nav-menu :global(.mobile-nav-item:hover) {
-    background: rgba(27, 67, 50, 0.05);
+    justify-content: flex-start;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item.active) {
-    background: var(--color-primary, #1b4332);
+    background: linear-gradient(135deg, var(--color-primary, #1b4332), #295d45);
     color: white;
+    border-color: transparent;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item i) {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item span) {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
   }
 
   /* Responsive */

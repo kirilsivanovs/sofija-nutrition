@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AppHeader from '../components/common/AppHeader.astro';
-import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
 <Layout title="Uztura dienasgrāmata — Pacienta kabinets">
@@ -573,6 +572,10 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       justify-content: center;
       width: 30px;
       height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      padding: 0;
+      flex: 0 0 30px;
       border-radius: 50%;
       border: 1.5px solid var(--diary-border);
       color: var(--diary-green);
@@ -798,6 +801,10 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       justify-content: center;
       width: 34px;
       height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      padding: 0;
+      flex: 0 0 34px;
       background: var(--diary-warm);
       border-radius: 50%;
       color: var(--diary-text-dim);
@@ -1944,6 +1951,4 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     loadAuth();
   </script>
 
-  <!-- Scroll to Top Button -->
-  <ScrollToTop />
 </Layout>

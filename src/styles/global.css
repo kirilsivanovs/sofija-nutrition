@@ -365,29 +365,52 @@ nav a:not(.nav-tab):hover,
 
 /* Mobile Menu Styles */
 .mobile-nav-menu {
-  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   /* iOS Safari 100vh fix */
   height: 100%;
   height: 100dvh;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(8px);
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 12px;
+  padding: 28px 20px 40px;
+  background: linear-gradient(160deg, #fbf8f2 0%, #ffffff 48%, #f6f1e8 100%);
   z-index: 998;
-  /* iOS Safari scroll fix */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s ease;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
+.mobile-nav-menu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(201, 163, 106, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 30%, rgba(27, 67, 50, 0.12), transparent 40%);
+  pointer-events: none;
+}
+
+.mobile-nav-menu > * {
+  position: relative;
+  z-index: 1;
+}
+
 .mobile-nav-menu.open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
 }
 
 /* Hamburger animation */
@@ -469,33 +492,41 @@ nav .flex.gap-1::-webkit-scrollbar {
 .mobile-nav-menu .mobile-nav-item {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-family: var(--font-sans);
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-family: var(--font-serif, 'Playfair Display', serif);
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #1f2937;
   text-decoration: none;
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(27, 67, 50, 0.12);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   min-height: 52px;
+  width: min(360px, 92vw);
+  box-shadow: 0 12px 30px rgba(27, 67, 50, 0.12);
+  position: relative;
+  z-index: 1;
 }
 
 .mobile-nav-menu .mobile-nav-item:hover {
-  background: var(--color-cream);
+  transform: translateY(-1px);
+  border-color: rgba(27, 67, 50, 0.3);
+  box-shadow: 0 16px 36px rgba(27, 67, 50, 0.16);
   color: var(--color-primary);
 }
 
 .mobile-nav-menu .mobile-nav-item.active {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), #295d45);
   color: white;
+  border-color: transparent;
 }
 
 .mobile-nav-menu .mobile-nav-item i {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
 }
 
