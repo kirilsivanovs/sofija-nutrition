@@ -3,16 +3,19 @@
  * 🔴 CRITICAL: Защита admin API от несанкционированного доступа
  */
 
-import { checkAuthorization, unauthorizedResponse } from '../src/utils/authMiddleware';
+import { checkAuthorization, unauthorizedResponse, isAdminEmail, getAllowedAdminEmails } from '../src/utils/authMiddleware';
 
 describe('Auth Middleware', () => {
     const originalEnv = process.env;
     const TEST_E2E_TOKEN = 'valid-test-token-12345';
+    const ADMIN_EMAIL = 'ivanovs.kirils95@gmail.com';
+    const NON_ADMIN_EMAIL = 'kirilsivanovs@pingserverdevad.onmicrosoft.com';
 
     beforeEach(() => {
         jest.resetModules();
         process.env = { ...originalEnv };
         process.env.E2E_TEST_TOKEN = TEST_E2E_TOKEN;
+        process.env.ADMIN_EMAILS = ADMIN_EMAIL;
     });
 
     afterAll(() => {
@@ -20,11 +23,11 @@ describe('Auth Middleware', () => {
     });
 
     describe('SWA Built-in Auth (x-ms-client-principal)', () => {
-        test('should authorize valid SWA principal', () => {
+        test('should authorize valid SWA principal with admin email', () => {
             const principal = {
                 userId: 'user-123',
                 identityProvider: 'aad',
-                userDetails: 'admin@example.com',
+                userDetails: ADMIN_EMAIL,
                 userRoles: ['authenticated', 'admin']
             };
             const encodedPrincipal = Buffer.from(JSON.stringify(principal)).toString('base64');
@@ -41,6 +44,28 @@ describe('Auth Middleware', () => {
             expect(result.method).toBe('swa-auth');
             expect(result.user.id).toBe('user-123');
             expect(result.user.provider).toBe('aad');
+        });
+
+        test('should reject SWA principal with non-admin email', () => {
+            const principal = {
+                userId: 'user-456',
+                identityProvider: 'aad',
+                userDetails: NON_ADMIN_EMAIL,
+                userRoles: ['authenticated']
+            };
+            const encodedPrincipal = Buffer.from(JSON.stringify(principal)).toString('base64');
+
+            const mockRequest = {
+                headers: {
+                    get: (name) => name === 'x-ms-client-principal' ? encodedPrincipal : null
+                }
+            };
+
+            const result = checkAuthorization(mockRequest);
+
+            expect(result.authorized).toBe(false);
+            expect(result.error).toContain('Access denied');
+            expect(result.error).toContain(NON_ADMIN_EMAIL);
         });
 
         test('should reject malformed SWA principal', () => {
@@ -207,7 +232,8 @@ describe('Auth Middleware', () => {
 
             const principal = {
                 userId: 'swa-user',
-                identityProvider: 'aad'
+                identityProvider: 'aad',
+                userDetails: ADMIN_EMAIL
             };
             const encodedPrincipal = Buffer.from(JSON.stringify(principal)).toString('base64');
 
@@ -225,6 +251,49 @@ describe('Auth Middleware', () => {
 
             expect(result.authorized).toBe(true);
             expect(result.method).toBe('swa-auth'); // SWA имеет приоритет
+        });
+    });
+
+    describe('Admin Email Authorization', () => {
+        test('should allow admin email (case-insensitive)', () => {
+            process.env.ADMIN_EMAILS = 'admin@example.com,ivanovs.kirils95@gmail.com';
+            
+            expect(isAdminEmail('admin@example.com')).toBe(true);
+            expect(isAdminEmail('ADMIN@EXAMPLE.COM')).toBe(true);
+            expect(isAdminEmail('Admin@Example.Com')).toBe(true);
+            expect(isAdminEmail('ivanovs.kirils95@gmail.com')).toBe(true);
+        });
+
+        test('should reject non-admin email', () => {
+            process.env.ADMIN_EMAILS = 'admin@example.com';
+            
+            expect(isAdminEmail('user@example.com')).toBe(false);
+            expect(isAdminEmail('kirilsivanovs@pingserverdevad.onmicrosoft.com')).toBe(false);
+        });
+
+        test('should reject undefined or empty email', () => {
+            expect(isAdminEmail(undefined)).toBe(false);
+            expect(isAdminEmail('')).toBe(false);
+        });
+
+        test('should parse multiple admin emails from env', () => {
+            process.env.ADMIN_EMAILS = 'admin1@test.com, admin2@test.com , admin3@test.com';
+            
+            const emails = getAllowedAdminEmails();
+            
+            expect(emails).toContain('admin1@test.com');
+            expect(emails).toContain('admin2@test.com');
+            expect(emails).toContain('admin3@test.com');
+            expect(emails.length).toBe(3);
+        });
+
+        test('should use default admin email if ADMIN_EMAILS not set', () => {
+            delete process.env.ADMIN_EMAILS;
+            
+            const emails = getAllowedAdminEmails();
+            
+            expect(emails).toContain('ivanovs.kirils95@gmail.com');
+            expect(emails.length).toBe(1);
         });
     });
 });

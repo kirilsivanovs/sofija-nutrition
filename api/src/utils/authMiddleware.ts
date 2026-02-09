@@ -4,6 +4,9 @@
  * Поддерживает два типа авторизации:
  * 1. SWA Built-in Auth (Microsoft OAuth) - через x-ms-client-principal header
  * 2. E2E Token Auth - через X-E2E-Token header (только для тестов)
+ * 
+ * ВАЖНО: Доступ к admin API разрешен только определенным email'ам,
+ * указанным в переменной окружения ADMIN_EMAILS (разделенные запятыми)
  */
 
 import {
@@ -12,6 +15,30 @@ import {
   logAdminAccessDenied,
   logAdminAccessGranted
 } from './securityLogger';
+
+// ============================================
+// Admin Email Configuration
+// ============================================
+
+/**
+ * Получает список разрешенных admin email'ов
+ */
+export function getAllowedAdminEmails(): string[] {
+  const adminEmailsEnv = process.env.ADMIN_EMAILS || 'ivanovs.kirils95@gmail.com';
+  return adminEmailsEnv
+    .split(',')
+    .map(email => email.trim().toLowerCase())
+    .filter(email => email.length > 0);
+}
+
+/**
+ * Проверяет, является ли email администратором
+ */
+export function isAdminEmail(email: string | undefined): boolean {
+  if (!email) return false;
+  const allowedEmails = getAllowedAdminEmails();
+  return allowedEmails.includes(email.toLowerCase());
+}
 
 // ============================================
 // Types
@@ -81,8 +108,18 @@ export function checkAuthorization(request: HttpRequest, context: FunctionContex
       const decoded = Buffer.from(clientPrincipal, 'base64').toString('utf-8');
       const principal: ClientPrincipal = JSON.parse(decoded);
 
-      // Проверяем что пользователь authenticated
+      // Проверяем что пользователь authenticated и является администратором
       if (principal.userId && principal.identityProvider) {
+        const userEmail = principal.userDetails;
+        
+        // Проверяем email на список разрешенных администраторов
+        if (!isAdminEmail(userEmail)) {
+          return {
+            authorized: false,
+            error: `Access denied: Email ${userEmail} is not authorized for admin access`
+          };
+        }
+        
         return {
           authorized: true,
           user: {
@@ -185,5 +222,7 @@ export function unauthorizedResponse(message = 'Unauthorized'): UnauthorizedResp
 module.exports = {
   checkAuthorization,
   checkAuthorizationWithLogging,
-  unauthorizedResponse
+  unauthorizedResponse,
+  isAdminEmail,
+  getAllowedAdminEmails
 };
