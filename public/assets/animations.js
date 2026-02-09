@@ -190,19 +190,7 @@ class ScrollAnimations {
     }
 
     initParallax() {
-        const heroImage = document.querySelector('section:first-of-type img');
-        
-        if (heroImage) {
-            const container = heroImage.closest('div');
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const rate = scrolled * 0.2;
-                
-                if (scrolled < window.innerHeight && container) {
-                    container.style.transform = `translateY(${rate}px)`;
-                }
-            }, { passive: true });
-        }
+        // Parallax removed — caused hero image to shift down and overlap content below on scroll
     }
 
     initScrollProgress() {
@@ -210,11 +198,18 @@ class ScrollAnimations {
         progressBar.className = 'scroll-progress';
         document.body.appendChild(progressBar);
 
+        let progressTicking = false;
         window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (scrollTop / docHeight) * 100;
-            progressBar.style.width = `${progress}%`;
+            if (!progressTicking) {
+                progressTicking = true;
+                requestAnimationFrame(() => {
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    if (docHeight > 0) {
+                        progressBar.style.width = `${(window.pageYOffset / docHeight) * 100}%`;
+                    }
+                    progressTicking = false;
+                });
+            }
         }, { passive: true });
     }
 

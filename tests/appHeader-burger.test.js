@@ -288,8 +288,8 @@ describe('AppHeader Burger Menu', () => {
     });
 
     test('should have correct menu item labels in Latvian', () => {
-      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item')).map(
-        (item) => item.textContent.trim()
+      const labels = Array.from(mobileNavMenu.querySelectorAll('.mobile-nav-item')).map((item) =>
+        item.textContent.trim()
       );
 
       expect(labels).toContain('Ieraksti');

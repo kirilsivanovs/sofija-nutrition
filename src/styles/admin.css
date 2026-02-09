@@ -938,10 +938,18 @@
   .calendar-card {
     overflow-x: auto;
     overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
   }
   .calendar-header-row,
   .calendar-grid {
-    min-width: 600px;
+    /* 5 weekday columns fill viewport, Sat-Sun overflow for horizontal scroll */
+    grid-template-columns: repeat(7, calc(100% / 5));
+    min-width: 0;
+  }
+  .calendar-day-name {
+    padding: 10px 4px;
+    font-size: 12px;
+    letter-spacing: 0;
   }
 }
 
@@ -2153,16 +2161,15 @@
   /* Calendar mobile optimization */
   .calendar-grid {
     min-height: auto;
-    overflow-x: auto;
     font-size: 11px;
   }
   .calendar-cell {
-    min-height: 80px;
-    padding: 6px;
+    min-height: 70px;
+    padding: 4px;
     font-size: 11px;
   }
   .calendar-cell .day-number {
-    font-size: 14px;
+    font-size: 13px;
   }
   .calendar-cell .day-time {
     font-size: 10px;

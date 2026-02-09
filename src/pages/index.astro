@@ -6,7 +6,8 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 <Layout title="Sofija Ivanova | Uztura Speciāliste Rīgā | Diabēta Profilakse un CGM Analīze">
   <!-- Header -->
   <header
-    class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-gray-100/50"
+    class="bg-white/95 backdrop-blur-sm sticky top-0 z-[1000] shadow-sm border-b border-gray-100/50 transition-transform duration-300"
+    id="site-header"
   >
     <!-- Top Bar with Logo and Language -->
     <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
@@ -86,7 +87,11 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">Kā tas strādā</a>
       <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
       <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
-      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" data-i18n="nav_cabinet" class="mobile-nav-item">Pacienta kabinets</a>
+      <a
+        href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
+        data-i18n="nav_cabinet"
+        class="mobile-nav-item">Pacienta kabinets</a
+      >
       <div class="flex gap-4 pt-6 border-t border-gray-200">
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
@@ -149,6 +154,36 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         },
         false
       );
+    })();
+  </script>
+
+  <!-- Smart Header: hide on scroll down, show on scroll up -->
+  <script is:inline>
+    (function () {
+      var header = document.getElementById('site-header');
+      if (!header) return;
+      var lastY = 0;
+      var ticking = false;
+      var threshold = 60; // px before hiding kicks in
+
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function () {
+            var y = window.pageYOffset;
+            var menuOpen = document.querySelector('.mobile-nav-menu.open');
+            if (menuOpen) { ticking = false; return; }
+
+            if (y > threshold && y > lastY) {
+              header.style.transform = 'translateY(-100%)';
+            } else {
+              header.style.transform = 'translateY(0)';
+            }
+            lastY = y;
+            ticking = false;
+          });
+        }
+      }, { passive: true });
     })();
   </script>
 

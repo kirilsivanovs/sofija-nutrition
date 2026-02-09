@@ -14,7 +14,7 @@
   background: linear-gradient(90deg, #1b4332, #d4a574);
   width: 0%;
   z-index: 9999;
-  transition: width 0.1s ease-out;
+  will-change: width;
 }
 
 /* ============================================
@@ -25,7 +25,6 @@
   transition:
     opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: opacity, transform;
 }
 
 .animate-on-scroll.is-visible {
@@ -339,12 +338,8 @@
 /* ============================================
    PERFORMANCE OPTIMIZATIONS
    ============================================ */
-.animate-on-scroll {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
 
-/* Prevent layout shift */
+/* Prevent layout shift - use 'content' instead of 'layout style' for Safari compat */
 section {
-  contain: layout style;
+  contain: content;
 }

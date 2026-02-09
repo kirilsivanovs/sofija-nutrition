@@ -1509,9 +1509,15 @@ import AppHeader from '../components/common/AppHeader.astro';
       // Update summary ring
       updateSummary(grandCal, grandP, grandF, grandC);
 
-      // Show/hide empty state
+      // Show/hide empty state & meal sections
       const dayEmpty = $('#day-empty');
-      if (dayEmpty) dayEmpty.classList.toggle('hidden', totalItems > 0);
+      const summaryCard = $('.summary-card');
+      const mealSections = document.querySelectorAll('.meal-section');
+      const isEmpty = totalItems === 0;
+
+      if (dayEmpty) dayEmpty.classList.toggle('hidden', !isEmpty);
+      if (summaryCard) summaryCard.classList.toggle('hidden', isEmpty);
+      mealSections.forEach((s) => s.classList.toggle('hidden', isEmpty));
     }
 
     function updateSummary(cal, p, f, c) {
