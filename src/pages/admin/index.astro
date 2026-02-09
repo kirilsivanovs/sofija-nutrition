@@ -7,7 +7,24 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
 ---
 
 <Layout title="Sofija Nutrition - Admin Panel">
-    <div class="admin-wrapper">
+    <!-- Unauthorized Access Message (shown if not admin) -->
+    <div id="unauthorized-page" class="unauthorized-wrapper" style="display: none;">
+        <div class="unauthorized-container">
+            <div class="unauthorized-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="m15 9-6 6"></path>
+                    <path d="m9 9 6 6"></path>
+                </svg>
+            </div>
+            <h1 class="unauthorized-title">Piekļuve liegta</h1>
+            <p class="unauthorized-message">Jūsu e-pasta adrese nav autorizēta administratora piekļuvei.</p>
+            <p class="unauthorized-email" id="unauthorized-email"></p>
+            <a href="/" class="btn-home">Atgriezties uz sākumlapu</a>
+        </div>
+    </div>
+
+    <div class="admin-wrapper" id="admin-content" style="display: none;">
         <AdminHeader />
 
         <!-- Main Content -->
@@ -248,6 +265,79 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* Unauthorized Access Page */
+        .unauthorized-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8faf9 0%, #e8f0ed 100%);
+            padding: 2rem;
+        }
+
+        .unauthorized-container {
+            text-align: center;
+            max-width: 500px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .unauthorized-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+        }
+
+        .unauthorized-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .unauthorized-message {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .unauthorized-email {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            font-family: monospace;
+            margin-bottom: 2rem;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 32px;
+            background: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+        }
+
+        .btn-home:hover {
+            background: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(27, 67, 50, 0.3);
+        }
 
         .admin-wrapper {
             min-height: 100vh;
@@ -3049,5 +3139,52 @@ import SettingsTab from '../../components/admin/SettingsTab.astro';
             renderTable();
             updateBatchActionsUI();
         });
+    </script>
+
+    <!-- Admin Access Check -->
+    <script>
+        // Check if user is authorized admin before showing admin panel
+        async function checkAdminAccess() {
+            try {
+                // Get user info from Azure Static Web Apps
+                const authResponse = await fetch('/.auth/me');
+                const authData = await authResponse.json();
+                
+                if (!authData.clientPrincipal) {
+                    // Not authenticated - redirect to login
+                    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/admin';
+                    return;
+                }
+                
+                const userEmail = authData.clientPrincipal.userDetails;
+                
+                // Admin email whitelist (synchronized with backend ADMIN_EMAILS env var)
+                const ADMIN_EMAILS = ['ivanovs.kirils95@gmail.com'];
+                
+                const isAdmin = ADMIN_EMAILS.some(email => 
+                    email.toLowerCase() === userEmail.toLowerCase()
+                );
+                
+                if (isAdmin) {
+                    // Show admin content
+                    const adminContent = document.getElementById('admin-content');
+                    if (adminContent) adminContent.style.display = 'block';
+                } else {
+                    // Show unauthorized page
+                    const unauthorizedPage = document.getElementById('unauthorized-page');
+                    const emailDisplay = document.getElementById('unauthorized-email');
+                    if (unauthorizedPage) unauthorizedPage.style.display = 'flex';
+                    if (emailDisplay) emailDisplay.textContent = userEmail;
+                }
+            } catch (error) {
+                console.error('Admin access check failed:', error);
+                // On error, show unauthorized page
+                const unauthorizedPage = document.getElementById('unauthorized-page');
+                if (unauthorizedPage) unauthorizedPage.style.display = 'flex';
+            }
+        }
+        
+        // Run check when page loads
+        checkAdminAccess();
     </script>
 </Layout>
