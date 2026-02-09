@@ -5,11 +5,6 @@
     },
     "routes": [
         {
-            "route": "/patient",
-            "redirect": "/cabinet",
-            "statusCode": 301
-        },
-        {
             "route": "/cabinet",
             "allowedRoles": ["authenticated"]
         },
@@ -40,10 +35,6 @@
         }
     ],
     "responseOverrides": {
-        "401": {
-            "redirect": "/.auth/login/aad?post_login_redirect_uri=/admin",
-            "statusCode": 302
-        },
         "404": {
             "rewrite": "/error.html"
         }
