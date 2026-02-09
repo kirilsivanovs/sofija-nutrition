@@ -1,0 +1,288 @@
+---
+/**
+ * Universal Application Header Component
+ * Unified header design for admin, cabinet, and booking modules
+ * 
+ * Props:
+ * - variant: 'admin' | 'cabinet' | 'public'
+ * - showBurger: boolean (show burger menu for mobile)
+ * - showAuth: boolean (show login/logout)
+ * - subtitle: string (header subtitle text)
+ */
+
+interface Props {
+  variant?: 'admin' | 'cabinet' | 'public';
+  showBurger?: boolean;
+  showAuth?: boolean;
+  subtitle?: string;
+}
+
+const { 
+  variant = 'public', 
+  showBurger = false, 
+  showAuth = true,
+  subtitle = ''
+} = Astro.props;
+---
+
+<header class={`app-header app-header--${variant}`}>
+  <div class="app-header-inner">
+    {showBurger && (
+      <button type="button" class="burger-btn" id="burger-btn" aria-label="Atvērt izvēlni">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    )}
+
+    <a href="/" class="app-logo">
+      <img src="/assets/img/logo.svg" alt="Sofija Ivanova" class="app-logo-img">
+      <div class="app-logo-text">
+        <span class="app-logo-name">Sofija Ivanova</span>
+        {subtitle && <span class="app-logo-sub">{subtitle}</span>}
+      </div>
+    </a>
+
+    {showAuth && (
+      <div class="app-auth">
+        {variant === 'admin' ? (
+          <>
+            <span id="user-info" class="app-user-name"></span>
+            <a href="/.auth/logout" class="app-logout">
+              <i class="ph ph-sign-out"></i>
+              <span>Iziet</span>
+            </a>
+          </>
+        ) : (
+          <>
+            <div id="auth-actions" class="app-auth-actions">
+              <a class="btn-login" id="login-aad" href={`/.auth/login/aad?post_login_redirect_uri=${variant === 'cabinet' ? '/cabinet' : '/'}`}>
+                <i class="ph ph-sign-in"></i>
+                <span class="login-text">Pieslēgties</span>
+              </a>
+            </div>
+            <div id="auth-user" class="app-auth-user hidden">
+              <span id="user-name" class="app-user-name"></span>
+              <a id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/" class="app-logout">
+                <i class="ph ph-sign-out"></i>
+              </a>
+            </div>
+          </>
+        )}
+      </div>
+    )}
+  </div>
+</header>
+
+<style>
+  /* Header Base Styles */
+  .app-header {
+    background: var(--color-white, #ffffff);
+    border-bottom: 2px solid var(--color-primary, #1b4332);
+    padding: 14px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.08);
+  }
+
+  .app-header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* Logo Styles */
+  .app-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .app-logo:hover {
+    opacity: 0.85;
+  }
+
+  .app-logo-img {
+    height: 42px;
+    width: auto;
+  }
+
+  .app-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .app-logo-name {
+    font-family: var(--font-serif, 'Playfair Display', serif);
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--color-primary, #1b4332);
+    line-height: 1.1;
+  }
+
+  .app-logo-sub {
+    font-size: 11px;
+    color: var(--color-text-light, #6b7280);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  /* Auth Styles */
+  .app-auth {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .app-user-name {
+    font-size: 14px;
+    color: var(--color-text, #1f2937);
+    font-weight: 500;
+    display: none;
+  }
+
+  .app-logout,
+  .btn-login {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--color-text-light, #6b7280);
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .app-logout:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+  }
+
+  .btn-login {
+    background: var(--color-primary, #1b4332);
+    color: white;
+    border-color: var(--color-primary, #1b4332);
+  }
+
+  .btn-login:hover {
+    background: var(--color-accent, #295d45);
+    border-color: var(--color-accent, #295d45);
+  }
+
+  /* Burger Button */
+  .burger-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+    z-index: 150;
+  }
+
+  .burger-btn span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: var(--color-primary, #1b4332);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .burger-btn:hover span {
+    background: var(--color-accent, #295d45);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .app-header {
+      padding: 12px 16px;
+    }
+    .app-logo-img {
+      height: 38px;
+    }
+    .app-logo-name {
+      font-size: 18px;
+    }
+    .app-logo-sub {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+    }
+    .app-logout span,
+    .login-text {
+      display: none;
+    }
+    .app-logout,
+    .btn-login {
+      padding: 8px;
+      font-size: 20px;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .app-user-name {
+      display: block;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .burger-btn {
+      display: none;
+    }
+    .app-header {
+      padding: 18px 32px;
+    }
+    .app-logo-img {
+      height: 48px;
+    }
+    .app-logo-name {
+      font-size: 26px;
+    }
+    .app-logout span,
+    .login-text {
+      display: inline;
+    }
+  }
+
+  /* Variant-specific adjustments */
+  .app-header--cabinet {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .app-header--public {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+  }
+</style>
+
+<script>
+  // Initialize auth state for cabinet variant
+  if (document.querySelector('.app-header--cabinet')) {
+    const authActions = document.getElementById('auth-actions');
+    const authUser = document.getElementById('auth-user');
+    const userName = document.getElementById('user-name');
+    
+    // Check authentication (this will be called by cabinet.astro's auth logic)
+    (window as any).updateHeaderAuth = (user: any) => {
+      if (user && authActions && authUser && userName) {
+        authActions.classList.add('hidden');
+        authUser.classList.remove('hidden');
+        userName.textContent = user.userDetails || user.userId || '';
+      }
+    };
+  }
+</script>

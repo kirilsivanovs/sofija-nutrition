@@ -1,36 +1,13 @@
 ---
 /**
  * Admin Header Component
- * Includes logo, user info, and navigation tabs
+ * Includes logo, user info, burger menu, and navigation tabs
  */
+import AppHeader from '../common/AppHeader.astro';
 ---
 
-<!-- Header -->
-<header class="admin-header">
-    <div class="admin-header-inner">
-        <!-- Burger Menu Button (Mobile only) -->
-        <button type="button" class="burger-btn" id="burger-btn" aria-label="Atvērt izvēlni">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <a href="/" class="admin-logo">
-            <img src="/assets/img/logo.svg" alt="SI Logo" class="admin-logo-img">
-            <div class="admin-logo-text">
-                <span class="admin-logo-name">Sofija Ivanova</span>
-                <span class="admin-logo-sub">Administrācija</span>
-            </div>
-        </a>
-        <div class="admin-user">
-            <span id="user-info" class="admin-user-name"></span>
-            <a href="/.auth/logout" class="admin-logout">
-                <i class="ph ph-sign-out"></i>
-                <span>Iziet</span>
-            </a>
-        </div>
-    </div>
-</header>
+<!-- Header with Burger Menu -->
+<AppHeader variant="admin" showBurger={true} subtitle="Administrācija" />
 
 <!-- Mobile Sidebar Menu -->
 <div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
@@ -99,7 +76,7 @@
         const contents = document.querySelectorAll('.admin-content');
         
         // Burger menu
-        const burgerBtn = document.getElementById('burger-btn');
+        const burgerBtn = document.getElementById('app-header-burger');
         const mobileSidebar = document.getElementById('mobile-sidebar');
         const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
         const mobileSidebarClose = document.getElementById('mobile-sidebar-close');

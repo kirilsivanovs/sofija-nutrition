@@ -1,31 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AppHeader from '../components/common/AppHeader.astro';
 ---
 
 <Layout title="Uztura dienasgrāmata — Pacienta kabinets">
     <!-- ============ HEADER ============ -->
-    <header class="diary-header">
-        <div class="diary-container">
-            <a href="/" class="diary-logo">
-                <img src="/assets/img/logo.svg" alt="SI" class="diary-logo-img" />
-                <div class="diary-logo-text">
-                    <span class="diary-logo-name">Sofija Ivanova</span>
-                    <span class="diary-logo-sub">Uztura dienasgrāmata</span>
-                </div>
-            </a>
-            <div id="auth-actions" class="diary-auth">
-                <a class="btn-login" id="login-aad" href="/.auth/login/aad?post_login_redirect_uri=/cabinet">
-                    <i class="ph ph-sign-in"></i> Pieslēgties
-                </a>
-            </div>
-            <div id="auth-user" class="diary-auth hidden">
-                <span id="user-name" class="diary-user-name"></span>
-                <a id="logout-link" href="/.auth/logout?post_logout_redirect_uri=/" class="btn-logout">
-                    <i class="ph ph-sign-out"></i>
-                </a>
-            </div>
-        </div>
-    </header>
+    <AppHeader variant="cabinet" showAuth={true} subtitle="Uztura dienasgrāmata" />
 
     <!-- ============ AUTH SCREENS ============ -->
     <div id="login-hint" class="diary-fullscreen">
@@ -300,103 +280,6 @@ import Layout from '../layouts/Layout.astro';
             --macro-fat: #F59E42;
             --macro-carbs: #43D9AD;
         }
-
-        /* ---- Reset for diary — nuclear override of global button/a styles ---- */
-        .diary-header, .diary-main, .diary-fullscreen,
-        .add-sheet, .sheet-overlay, .fab {
-            font-family: var(--font-sans, 'Inter', sans-serif);
-        }
-        /* Full reset: global.css sets display, padding, font-size, border-radius, min-h/w on all buttons */
-        .diary-header button,
-        .diary-header a,
-        .diary-main button,
-        .diary-main a,
-        .diary-fullscreen button,
-        .diary-fullscreen a,
-        .add-sheet button,
-        .add-sheet a {
-            all: unset;
-            box-sizing: border-box;
-            cursor: pointer;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* ---- Header ---- */
-        .diary-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: #fff;
-            border-bottom: 1px solid var(--diary-border);
-            padding: 12px 0;
-        }
-        .diary-container {
-            max-width: var(--diary-max-w);
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .diary-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .diary-logo-img { height: 32px; width: auto; }
-        .diary-logo-text { display: flex; flex-direction: column; }
-        .diary-logo-name {
-            font-family: var(--font-serif, 'Cormorant Garamond', serif);
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--diary-green);
-            line-height: 1.2;
-        }
-        .diary-logo-sub {
-            font-size: 11px;
-            color: var(--diary-text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-        .diary-auth { display: flex; align-items: center; gap: 10px; }
-        .diary-user-name {
-            font-size: 14px;
-            color: var(--diary-text-dim);
-            max-width: 140px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .btn-login {
-            display: inline-flex !important;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 18px;
-            background: var(--diary-green);
-            color: #fff !important;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
-        .btn-login:hover { background: var(--diary-green-light); }
-        .btn-logout {
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            color: var(--diary-text-dim) !important;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: background 0.2s, color 0.2s;
-            font-size: 20px;
-        }
-        .btn-logout:hover { background: #fef2f2; color: #dc2626 !important; }
 
         /* ---- Full-screen states ---- */
         .diary-fullscreen {
@@ -1157,14 +1040,6 @@ import Layout from '../layouts/Layout.astro';
         }
 
         // ---- Auth ----
-        function setAuthLinks() {
-            const o = window.location.origin;
-            const loginAad = $('#login-aad');
-            const logoutLink = $('#logout-link');
-            if (loginAad) loginAad.setAttribute('href', `${o}/.auth/login/aad?post_login_redirect_uri=/cabinet`);
-            if (logoutLink) logoutLink.setAttribute('href', `${o}/.auth/logout?post_logout_redirect_uri=/`);
-        }
-
         async function loadAuth() {
             try {
                 const res = await fetch('/.auth/me');
@@ -1777,7 +1652,6 @@ import Layout from '../layouts/Layout.astro';
         });
 
         // ---- Init ----
-        setAuthLinks();
         updateDayUI();
         loadAuth();
     </script>
