@@ -3,841 +3,1258 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Sofija Ivanova | Uztura Speciāliste Rīgā | Diabēta Profilakse un CGM Analīze">
-    <!-- Header -->
-    <header class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-gray-100/50">
-        <!-- Top Bar with Logo and Language -->
-        <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <a href="#" class="no-underline cursor-pointer group">
-                    <div class="flex items-center gap-3">
-                        <img src="/assets/img/logo.svg" alt="SI Logo" class="h-8 md:h-10 w-auto">
-                        <div class="flex flex-col">
-                            <span class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors">Sofija Ivanova</span>
-                            <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest" data-i18n="header_subtitle">Uztura speciāliste · PhD</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Language Switcher (Desktop) -->
-                <div class="hidden md:flex gap-2 text-sm">
-                    <button class="lang-btn btn-chip" data-lang="lv">LV</button>
-                    <button class="lang-btn btn-chip" data-lang="en">EN</button>
-                    <button class="lang-btn btn-chip" data-lang="ru">RU</button>
-                </div>
-                
-                <!-- Mobile Menu Button -->
-                <button type="button" onclick="this.classList.toggle('active');document.getElementById('mobile-nav-menu').classList.toggle('open');document.body.style.overflow=document.getElementById('mobile-nav-menu').classList.contains('open')?'hidden':'';" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer" style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
-                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-                    <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-                </button>
+  <!-- Header -->
+  <header
+    class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-gray-100/50"
+  >
+    <!-- Top Bar with Logo and Language -->
+    <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
+      <div class="flex justify-between items-center">
+        <!-- Logo -->
+        <a href="#" class="no-underline cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <img src="/assets/img/logo.svg" alt="SI Logo" class="h-8 md:h-10 w-auto" />
+            <div class="flex flex-col">
+              <span
+                class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors"
+                >Sofija Ivanova</span
+              >
+              <span
+                class="text-xs md:text-sm text-gray-500 uppercase tracking-widest"
+                data-i18n="header_subtitle">Uztura speciāliste · PhD</span
+              >
             </div>
+          </div>
+        </a>
+
+        <!-- Language Switcher (Desktop) -->
+        <div class="hidden md:flex gap-2 text-sm">
+          <button class="lang-btn btn-chip" data-lang="lv">LV</button>
+          <button class="lang-btn btn-chip" data-lang="en">EN</button>
+          <button class="lang-btn btn-chip" data-lang="ru">RU</button>
         </div>
-        
-        <!-- Navigation Tabs (Desktop) -->
-        <nav class="hidden md:block border-t border-gray-100">
-            <div class="max-w-6xl mx-auto px-4 md:px-8">
-                <div class="flex gap-1">
-                    <a href="#program" data-i18n="nav_program" class="nav-tab">Programma</a>
-                    <a href="#how-it-works" data-i18n="nav_how" class="nav-tab">Kā tas strādā</a>
-                    <a href="#about" data-i18n="nav_about" class="nav-tab">Par mani</a>
-                    <a href="#contact" data-i18n="nav_contact" class="nav-tab">Pieteikties</a>
-                    <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab">Pacienta kabinets</a>
-                </div>
-            </div>
-        </nav>
-            
-            <!-- Mobile Nav -->
-            <div id="mobile-nav-menu" class="mobile-nav-menu">
-                <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-3 px-2">Programma</a>
-                <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-3 px-2">Kā tas strādā</a>
-                <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-3 px-2">Par mani</a>
-                <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-3 px-2">Pieteikties</a>
-                <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="text-lg text-gray-700 py-3 px-2">Pacienta kabinets</a>
-                <div class="flex gap-4 pt-4 border-t">
-                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
-                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
-                    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
-                </div>
-            </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          type="button"
+          onclick="this.classList.toggle('active');document.getElementById('mobile-nav-menu').classList.toggle('open');document.body.style.overflow=document.getElementById('mobile-nav-menu').classList.contains('open')?'hidden':'';"
+          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer"
+          style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
+          aria-label="Menu"
+          aria-expanded="false"
+          aria-controls="mobile-nav-menu"
+        >
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Desktop) -->
+    <nav class="hidden md:block border-t border-gray-100">
+      <div class="max-w-6xl mx-auto px-4 md:px-8">
+        <div class="flex gap-1">
+          <a href="#program" data-i18n="nav_program" class="nav-tab">Programma</a>
+          <a href="#how-it-works" data-i18n="nav_how" class="nav-tab">Kā tas strādā</a>
+          <a href="#about" data-i18n="nav_about" class="nav-tab">Par mani</a>
+          <a href="#contact" data-i18n="nav_contact" class="nav-tab">Pieteikties</a>
+          <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab"
+            >Pacienta kabinets</a
+          >
         </div>
-        
-        <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
-        <script is:inline>
-        (function() {
-            var btn = document.querySelector('.mobile-menu-btn');
-            var menu = document.querySelector('.mobile-nav-menu');
-            if (!btn || !menu) return;
-            
-            function toggle(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var isOpen = menu.classList.toggle('open');
-                btn.classList.toggle('active', isOpen);
-                btn.setAttribute('aria-expanded', String(isOpen));
-                document.body.style.overflow = isOpen ? 'hidden' : '';
-                document.body.style.position = isOpen ? 'fixed' : '';
-                document.body.style.width = isOpen ? '100%' : '';
-                document.body.style.top = isOpen ? '0' : '';
-            }
-            
-            function close() {
-                menu.classList.remove('open');
-                btn.classList.remove('active');
-                btn.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
-                document.body.style.position = '';
-                document.body.style.width = '';
-                document.body.style.top = '';
-            }
-            
-            // Multiple event types for iOS Safari
-            btn.addEventListener('click', toggle, false);
-            btn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                toggle(e);
-            }, { passive: false });
-            
-            // Close on link click
-            var links = menu.querySelectorAll('a');
-            for (var i = 0; i < links.length; i++) {
-                links[i].addEventListener('click', close, false);
-            }
-            
-            // Close on overlay click
-            menu.addEventListener('click', function(e) {
-                if (e.target === menu) close();
-            }, false);
-        })();
-        </script>
-    </header>
+      </div>
+    </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="relative py-8 md:py-12 lg:py-16 flex items-center overflow-hidden bg-bg-light">
-        <!-- Clean, professional background - subtle gradient accent -->
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary/[0.03] to-transparent -z-10"></div>
-        
-        <div class="max-w-6xl mx-auto px-4 md:px-8 w-full">
-            <!-- Integrated hero card -->
-            <div class="bg-white/95 rounded-3xl shadow-[0_20px_50px_rgba(17,24,39,0.12)] border border-white/70 overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-5">
-                    <!-- Photo - takes 2 columns -->
-                    <div class="lg:col-span-2 relative" style="transform: none !important;">
-                        <img 
-                            src="/assets/img/photo in medical gown.png" 
-                            alt="Sofija Ivanova - Sertificēta uztura speciāliste Rīgā" 
-                            class="w-full h-64 md:h-80 lg:h-full lg:min-h-full object-cover object-[68%_top] lg:absolute lg:inset-0"
-                            style="transform: none !important;"
-                        >
-                        <!-- Gradient overlay on mobile -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent lg:hidden"></div>
-                    </div>
-                    
-                    <!-- Text Content - takes 3 columns -->
-                    <div class="lg:col-span-3 p-6 md:p-10 lg:p-12">
-                        <!-- Badge -->
-                        <div class="inline-flex items-center gap-2 bg-cream px-4 py-2 rounded-full mb-6">
-                            <i class="ph ph-seal-check text-secondary text-lg"></i>
-                            <span class="text-sm md:text-base text-primary font-medium" data-i18n="hero_badge">Reģistrēta ārstniecības persona Nr. 75650061277</span>
-                        </div>
-                        
-                        <!-- Heading -->
-                        <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary leading-tight mb-4 md:mb-6" data-i18n="hero_title">
-                            14 dienās no cukura svārstībām līdz stabilam glikozes līmenim
-                        </h1>
-                        
-                        <!-- Subtitle -->
-                        <p class="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed mb-6 md:mb-8" data-i18n="hero_subtitle">
-                            PhD pētniece un reģistrēta uztura speciāliste, kas palīdz cilvēkiem ar prediabētu un insulīna rezistenci stabilizēt cukura līmeni, izmantojot CGM datus.
-                        </p>
+    <!-- Mobile Nav -->
+    <div id="mobile-nav-menu" class="mobile-nav-menu">
+      <a href="#program" data-i18n="nav_program" class="text-lg text-gray-700 py-3 px-2"
+        >Programma</a
+      >
+      <a href="#how-it-works" data-i18n="nav_how" class="text-lg text-gray-700 py-3 px-2"
+        >Kā tas strādā</a
+      >
+      <a href="#about" data-i18n="nav_about" class="text-lg text-gray-700 py-3 px-2">Par mani</a>
+      <a href="#contact" data-i18n="nav_contact" class="text-lg text-gray-700 py-3 px-2"
+        >Pieteikties</a
+      >
+      <a
+        href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
+        class="text-lg text-gray-700 py-3 px-2">Pacienta kabinets</a
+      >
+      <div class="flex gap-4 pt-4 border-t">
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
+      </div>
+    </div>
+  </header>
 
-                        <!-- Benefits - horizontal on desktop, vertical on mobile -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 md:mb-8">
-                            <div class="flex items-center gap-3">
-                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_1">14 dienu CGM monitorēšana</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_2">Datu analīze saprotamā valodā</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_3">Personalizēts uztura plāns</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_4">Fokuss uz prediabētu</span>
-                            </div>
-                        </div>
+  <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
+  <script is:inline>
+    (function () {
+      var btn = document.querySelector('.mobile-menu-btn');
+      var menu = document.querySelector('.mobile-nav-menu');
+      if (!btn || !menu) return;
 
-                        <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="#program" class="btn-cta btn-solid text-base md:text-lg" data-i18n="hero_cta_primary">
-                                Pieteikties 14 dienu programmai
-                            </a>
-                            <a href="#contact" class="btn-cta btn-outline text-base md:text-lg" data-i18n="hero_cta_secondary">
-                                Bezmaksas 15 min konsultācija
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      function toggle(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var isOpen = menu.classList.toggle('open');
+        btn.classList.toggle('active', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        document.body.style.position = isOpen ? 'fixed' : '';
+        document.body.style.width = isOpen ? '100%' : '';
+        document.body.style.top = isOpen ? '0' : '';
+      }
 
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-16 md:py-24 bg-white/95">
-        
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-12 md:mb-16">
-                <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3" data-i18n="how_title">Kā tas strādā?</h2>
-                <p class="text-gray-700 text-base md:text-lg max-w-2xl mx-auto" data-i18n="how_subtitle">Vienkāršs process, ko varēsiet iekļaut savā ikdienā</p>
-            </div>
+      function close() {
+        menu.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+      }
 
-            <!-- Process Steps -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                <!-- Step 1 -->
-                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
-                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-syringe text-primary text-2xl"></i>
-                    </div>
-                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_1_title">1. Uzliekam CGM sensoru</h4>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_1_desc">Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.</p>
-                </div>
-                
-                <!-- Step 2 -->
-                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
-                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-calendar-check text-primary text-2xl"></i>
-                    </div>
-                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_2_title">2. Dzīvojiet savu ierasto dzīvi</h4>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_2_desc">Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.</p>
-                </div>
-                
-                <!-- Step 3 -->
-                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
-                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-chart-line text-primary text-2xl"></i>
-                    </div>
-                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_3_title">3. Analizējam datus kopā</h4>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_3_desc">Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.</p>
-                </div>
-                
-                <!-- Step 4 -->
-                <div class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
-                    <div class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4">
-                        <i class="ph ph-list-checks text-primary text-2xl"></i>
-                    </div>
-                    <h4 class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums" data-i18n="step_4_title">4. Saņemat personalizētu plānu</h4>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_4_desc">Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      // Multiple event types for iOS Safari
+      btn.addEventListener('click', toggle, false);
+      btn.addEventListener(
+        'touchstart',
+        function (e) {
+          e.preventDefault();
+          toggle(e);
+        },
+        { passive: false }
+      );
 
-    <!-- Program Section -->
-    <section id="program" class="py-16 md:py-24 bg-linear-to-br from-cream to-bg-light">
-        
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <!-- Hero image for program -->
-            <div class="relative rounded-2xl overflow-hidden shadow-xl mb-12">
-                <img 
-                    src="/assets/img/healthy-food-cgm.png" 
-                    alt="Vesela uzturs un CGM datu analīze" 
-                    class="w-full aspect-[21/9] object-cover"
-                >
-                <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex items-center">
-                    <div class="p-8 md:p-12 max-w-lg">
-                        <span class="inline-block bg-secondary text-white text-sm font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4" data-i18n="program_badge">Galvenais pakalpojums</span>
-                        <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3" data-i18n="program_title">14 dienu CGM programma</h2>
-                        <p class="text-white/90 text-base" data-i18n="program_subtitle">Pilna diagnostika un personalizēts rīcības plāns</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-                <!-- Program Info -->
-                <div class="lg:col-span-3">
-                    
-                    <!-- What's Included -->
-                    <div class="mb-8">
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_includes_title">Kas iekļauts:</h4>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_1">CGM sensora uzlikšana uz 14 dienām</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_2">Glikozes datu analīze un detalizēta atskaite</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_3">60 min konsultācija (online vai klātienē)</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_4">Personalizēts uztura plāns uz 4 nedēļām</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_5">Follow-up zvans pēc 2–3 nedēļām</span>
-                            </li>
-                        </ul>
-                    </div>
+      // Close on link click
+      var links = menu.querySelectorAll('a');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', close, false);
+      }
 
-                    <!-- Who Is It For -->
-                    <div>
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="program_for_title">Kam paredzēts:</h4>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_1">Cilvēkiem ar prediabētu vai insulīna rezistenci</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_2">Cilvēkiem ar 2. tipa diabēta risku</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
-                                <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_3">Cilvēkiem ar svara svārstībām un hronisko nogurumu</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Price Card -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white/95 p-6 md:p-8 rounded-2xl shadow-lg border border-[#E6E0D6] sticky top-24">
-                        <!-- Price -->
-                        <div class="text-center pb-6 border-b border-gray-100 mb-6">
-                            <span class="text-sm uppercase tracking-wider text-gray-500 block mb-2" data-i18n="price_label">Programmas cena</span>
-                            <span class="font-serif text-4xl md:text-5xl font-bold text-primary block" data-i18n="price_value">no 249 €</span>
-                            <span class="text-sm text-gray-500 mt-1 block" data-i18n="price_note">CGM sensors iekļauts cenā</span>
-                        </div>
-                        
-                        <!-- Results -->
-                        <div class="mb-6">
-                            <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4" data-i18n="result_title">Rezultāts:</h4>
-                            <div class="space-y-3">
-                                <p class="flex items-start gap-2 text-base text-gray-700">
-                                    <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
-                                    <span data-i18n="result_1">Sapratīsiet, kuri ēdieni tieši Jums izraisa straujus cukura lēcienus</span>
-                                </p>
-                                <p class="flex items-start gap-2 text-base text-gray-700">
-                                    <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
-                                    <span data-i18n="result_2">Saņemsiet konkrētu rīcības plānu, kā stabilizēt glikozes līmeni ikdienā</span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- CTA -->
-                        <a href="#contact" class="btn-cta btn-solid w-full text-base md:text-lg" data-i18n="program_cta">Pieteikties programmai</a>
-                        
-                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-6">
-                            <i class="ph ph-shield-check text-accent"></i>
-                            <span data-i18n="program_guarantee">Pirmā konsultācija bezmaksas</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Approach Section -->
-    <section id="approach" class="py-16 md:py-24 bg-white">
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary" data-i18n="approach_title">Kāpēc vispārīgas diētas nestrādā?</h2>
-            </div>
-
-            <!-- Two-row layout -->
-            <div class="space-y-8">
-                <!-- Row 1: Text + Chart -->
-                <div class="bg-cream rounded-2xl p-6 md:p-10 lg:p-12">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-4" data-i18n="cgm_unique_title">Jūsu organisms reaģē atšķirīgi</h3>
-                            <p class="text-gray-700 leading-relaxed" data-i18n="cgm_unique_desc">Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.</p>
-                        </div>
-                        
-                        <!-- Chart -->
-                        <div class="bg-white/95 rounded-xl p-4 md:p-6 shadow-sm border border-gray-100/70">
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
-                                <span class="text-sm font-medium text-gray-700" data-i18n="chart_glucose_response">Glikozes reakcija</span>
-                                <div class="flex gap-4 text-sm">
-                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent shrink-0"></span> <span data-i18n="chart_after">Pēc programmas</span></span>
-                                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span> <span data-i18n="chart_before">Pirms</span></span>
-                                </div>
-                            </div>
-                            <svg viewBox="0 0 400 150" class="w-full h-auto" role="img" aria-label="Glikozes līmeņa grafiks">
-                                <line x1="0" y1="30" x2="400" y2="30" stroke="#eee" />
-                                <line x1="0" y1="75" x2="400" y2="75" stroke="#eee" />
-                                <line x1="0" y1="120" x2="400" y2="120" stroke="#eee" />
-                                <path d="M0,100 C50,100 60,40 90,40 S120,110 150,110 S180,20 210,20 S240,100 270,100 S300,50 330,50 S360,110 400,110" 
-                                      fill="none" stroke="#e63946" stroke-width="2" stroke-dasharray="5,5" />
-                                <path d="M0,80 C50,80 80,70 120,75 S180,65 220,70 S280,75 320,72 S360,78 400,75" 
-                                      fill="none" stroke="#2D6A4F" stroke-width="3" />
-                                <circle cx="90" cy="40" r="4" fill="#e63946" />
-                                <circle cx="210" cy="20" r="4" fill="#e63946" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 2: Photo + Benefits -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <!-- Photo of doctor analyzing data -->
-                    <div class="relative rounded-2xl overflow-hidden shadow-xl">
-                        <img 
-                            src="/assets/img/doctor-analyzing-cgm.png" 
-                            alt="Uztura speciāliste analizē CGM datus" 
-                            class="w-full aspect-[4/3] object-cover"
-                        >
-                    </div>
-                    
-                    <!-- Benefits -->
-                    <div class="bg-primary/5 rounded-2xl p-6 md:p-8">
-                        <h3 class="font-serif text-xl md:text-2xl font-bold text-primary mb-6" data-i18n="cgm_how_helps">Kā CGM palīdz?</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
-                                    <i class="ph ph-chart-line-up text-white text-lg"></i>
-                                </div>
-                                <div>
-                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_1_title">Reāllaika monitorings</strong>
-                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_1_desc">Redzat, kā organisms reaģē uz katru maltīti</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
-                                    <i class="ph ph-database text-white text-lg"></i>
-                                </div>
-                                <div>
-                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_2_title">20 000+ mērījumu</strong>
-                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_2_desc">Pilnīgs priekšstats par 14 dienām</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
-                                    <i class="ph ph-target text-white text-lg"></i>
-                                </div>
-                                <div>
-                                    <strong class="text-primary block mb-1" data-i18n="cgm_benefit_3_title">Precīzas rekomendācijas</strong>
-                                    <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_3_desc">Zinām, ko mainīt tieši Jums</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Proof Stat -->
-    <section class="py-12 md:py-16 bg-linear-to-r from-primary to-accent text-white text-center">
-        <div class="max-w-4xl mx-auto px-4">
-            <span class="font-serif text-5xl md:text-7xl font-bold text-secondary block mb-2">58%</span>
-            <p class="text-lg md:text-xl text-white/90 mb-2" data-i18n="proof_stat">diabēta gadījumu var novērst ar personalizētu uzturu</p>
-            <cite class="text-sm text-white/60">Diabetes Prevention Program, NIH</cite>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section id="testimonials" class="py-16 md:py-20 lg:py-24 bg-cream">
-        
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <div class="text-center mb-10 md:mb-14">
-                <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3" data-i18n="testimonials_sectionTitle">Atsauksmes</span>
-                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold" data-i18n="testimonials_title">Ko saka klienti</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
-                    <div class="p-6 md:p-8 flex-1">
-                        <div class="flex gap-1 mb-4 text-secondary">
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_1">Vienmēr domāju, ka ēdu veselīgi — brokastīs biezpiens ar medu, pusdienās salāti. Bet sensors parādīja, ka mans cukurs lēkā kā amerikāņu kalniņos. Pēc Sofijas ieteikumiem — stabils līmenis un 4 kg mazāk bez badošanās.</p>
-                    </div>
-                    <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">M</div>
-                            <div>
-                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_1_author">Maija, 47 gadi</strong>
-                                <p class="text-sm text-gray-500" data-i18n="testimonial_1_condition">Prediabēts, vielmaiņas sindroms</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 2 -->
-                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
-                    <div class="p-6 md:p-8 flex-1">
-                        <div class="flex gap-1 mb-4 text-secondary">
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_2">Kā IT speciālists visu dzīvi sēdēju pie datora un ēdu nesaregulēti. Kad ārsts teica par insulīna rezistenci, nobijos. Sofijas pieeja ar CGM bija kā hakeris manam ķermenim — beidzot sapratu, kas īsti notiek.</p>
-                    </div>
-                    <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">R</div>
-                            <div>
-                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_2_author">Rihards, 35 gadi</strong>
-                                <p class="text-sm text-gray-500" data-i18n="testimonial_2_condition">Insulīna rezistence</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 3 -->
-                <div class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70">
-                    <div class="p-6 md:p-8 flex-1">
-                        <div class="flex gap-1 mb-4 text-secondary">
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                            <i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_3">Pēc grūtniecības diabēta ārsti teica — uzmanies, citādi būs īstais diabēts. Bet neviens neteica KĀ. Sofija ne tikai izskaidroja, bet arī parādīja ar datiem, kāpēc tieši manam organismam vajag citādu pieeju.</p>
-                    </div>
-                    <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">K</div>
-                            <div>
-                                <strong class="text-primary font-semibold text-base" data-i18n="testimonial_3_author">Kristīne, 34 gadi</strong>
-                                <p class="text-sm text-gray-500" data-i18n="testimonial_3_condition">Pēc gestācijas diabēta</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white to-cream">
-        
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <!-- Two-column layout with photo -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
-                <!-- Photo Column -->
-                <div class="relative">
-                    <div class="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(17,24,39,0.18)] border border-white/60">
-                        <img 
-                            src="/assets/img/aboutme.png" 
-                            alt="Sofija Ivanova konsultācijā ar pacientu" 
-                            class="w-full aspect-[4/3] object-cover"
-                        >
-                        <!-- Decorative frame -->
-                        <div class="absolute inset-0 border-2 border-white/20 rounded-2xl"></div>
-                    </div>
-                    <!-- Floating credential badge -->
-                    <div class="absolute -bottom-6 -right-6 bg-white/95 rounded-xl shadow-lg p-4 hidden md:block border border-gray-100/70">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-                                <i class="ph ph-seal-check text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <span class="text-sm text-gray-500 block" data-i18n="reg_number_label">Reģistrācijas Nr.</span>
-                                <span class="text-primary font-semibold">75650061277</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Decorative element -->
-                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
-                </div>
-                
-                <!-- Text Column -->
-                <div>
-                    <span class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4" data-i18n="about_tag">Par mani</span>
-                    <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold mb-6">
-                        Dr. Sofija Ivanova
-                    </h2>
-                    <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
-                        Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Strādāju ar cilvēkiem, kuriem ir prediabēts vai insulīna rezistence.
-                    </p>
-                    <p class="text-base text-gray-600 leading-relaxed mb-8" data-i18n="about_text">
-                        Mana pieeja balstās uz zinātni un individuāliem datiem. CGM sensors 14 dienas fiksē Jūsu organisma reakciju uz ēdienu — tas ļauj izveidot uztura plānu, kas strādā tieši Jums.
-                    </p>
-                    
-                    <!-- Credentials inline -->
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                                <i class="ph ph-graduation-cap text-primary text-lg"></i>
-                            </div>
-                            <div>
-                                <strong class="text-primary font-semibold" data-i18n="cred_2_title">PhD pētniece</strong>
-                                <span class="text-gray-500 text-sm block" data-i18n="cred_2_loc">Latvijas Universitāte</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                                <i class="ph ph-certificate text-primary text-lg"></i>
-                            </div>
-                            <div>
-                                <strong class="text-primary font-semibold" data-i18n="cred_3_title">MSc Uzturzinātnē</strong>
-                                <span class="text-gray-500 text-sm block" data-i18n="cred_3_loc">Rīgas Stradiņa universitāte</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                                <i class="ph ph-heart-half text-primary text-lg"></i>
-                            </div>
-                            <div>
-                                <strong class="text-primary font-semibold" data-i18n="clients_count">500+ klienti</strong>
-                                <span class="text-gray-500 text-sm block" data-i18n="clients_improved">ar uzlabotiem rādītājiem</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Science & Conference Gallery -->
-            <div>
-                <div class="text-center mb-10">
-                    <h3 class="font-serif text-2xl md:text-3xl text-primary font-bold mb-3" data-i18n="science_title">Zinātniskā darbība</h3>
-                    <p class="text-gray-700 max-w-2xl mx-auto" data-i18n="science_subtitle">Aktīvi piedalos starptautiskās konferencēs un zinātnes popularizēšanas pasākumos</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Featured Card -->
-                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
-                        <div class="aspect-[4/3] overflow-hidden">
-                            <img src="/assets/img/zinatnieku_nakts.png" alt="Zinātnieku nakts Latvijā" loading="lazy" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-secondary bg-secondary/10 rounded-full px-3 py-1 mb-3">
-                                <i class="ph ph-lightbulb"></i>
-                                <span data-i18n="gallery_2_tag">Izglītība</span>
-                            </div>
-                            <h4 class="font-serif text-lg text-primary font-semibold mb-2" data-i18n="gallery_2_title">Zinātnieku nakts</h4>
-                            <p class="text-sm text-gray-600" data-i18n="gallery_2_desc">Ikgadējais zinātnes popularizēšanas pasākums Latvijā</p>
-                        </div>
-                    </div>
-                    
-                    <!-- EASD Card -->
-                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
-                        <div class="aspect-[4/3] overflow-hidden relative">
-                            <img src="/assets/img/conference_EASD2025_Vienna.jpg" alt="EASD 2025 konference Vīnē" loading="lazy" class="w-full h-full object-cover">
-                            <div class="absolute top-3 right-3 bg-accent text-white text-sm font-bold px-2.5 py-1 rounded-full">2025</div>
-                        </div>
-                        <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full px-3 py-1 mb-3">
-                                <i class="ph ph-globe"></i>
-                                <span data-i18n="gallery_1_tag">Starptautisks</span>
-                            </div>
-                            <h4 class="font-serif text-lg text-primary font-semibold mb-2" data-i18n="gallery_1_title">EASD 2025, Vīne</h4>
-                            <p class="text-sm text-gray-600" data-i18n="gallery_1_desc">Eiropas Diabēta pētījumu asociācijas kongress</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Hospital Card -->
-                    <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70">
-                        <div class="aspect-[4/3] overflow-hidden">
-                            <img src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg" alt="Veselībpratības diena Stradiņa slimnīcā" loading="lazy" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-5">
-                            <div class="inline-flex items-center gap-1.5 text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 mb-3">
-                                <i class="ph ph-hospital"></i>
-                                <span data-i18n="gallery_3_tag">Klīniskais</span>
-                            </div>
-                            <h4 class="font-serif text-lg text-primary font-semibold mb-2" data-i18n="gallery_3_title">Veselībpratības diena</h4>
-                            <p class="text-sm text-gray-600" data-i18n="gallery_3_desc">Paula Stradiņa Klīniskā universitātes slimnīca</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lead Magnet -->
-    <section class="lead-magnet py-16 md:py-20">
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <div class="bg-primary rounded-2xl p-6 md:p-10 lg:p-12 shadow-[0_16px_40px_rgba(27,67,50,0.25)]">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <!-- Text -->
-                    <div class="text-white">
-                        <span class="inline-block bg-secondary text-white text-sm font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4" data-i18n="lead_badge">Bezmaksas PDF</span>
-                        <h3 class="font-serif text-xl md:text-2xl lg:text-3xl font-bold mb-3" data-i18n="lead_title">7 ikdienas paradumi, kas paaugstina cukuru</h3>
-                        <p class="text-white/80 mb-6" data-i18n="lead_desc">Uzziniet, kādi paradumi latviešu vidū palielina diabēta risku, un kā tos mainīt.</p>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-2">
-                                <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
-                                <span class="text-sm text-white/90" data-i18n="lead_item_1">Kāpēc brokastu izlaišana paaugstina cukuru</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
-                                <span class="text-sm text-white/90" data-i18n="lead_item_2">Vai augļi ir veselīgi? Atkarīgs no tā...</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
-                                <span class="text-sm text-white/90" data-i18n="lead_item_3">3 vienkārši soļi, ko sākt jau šodien</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Form -->
-                    <div class="bg-white rounded-xl p-6 md:p-8">
-                        <form id="leadForm" class="space-y-4">
-                            <input 
-                                type="email" 
-                                placeholder="Jūsu e-pasts" 
-                                data-i18n="lead_placeholder" 
-                                required
-                                class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all min-h-[52px]"
-                            >
-                            <button type="submit" class="btn-cta btn-solid w-full text-base md:text-lg" data-i18n="lead_btn">Saņemt PDF</button>
-                        </form>
-                        <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-4">
-                            <i class="ph ph-lock"></i>
-                            <span data-i18n="lead_note">Nekāda spama. Jebkurā brīdī varat atteikties.</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-16 md:py-20 bg-linear-to-r from-primary to-accent text-white text-center">
-        
-        <div class="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
-            <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4" data-i18n="cta_title">Vēlaties uzzināt, kā Jūsu organisms reaģē uz ēdienu?</h2>
-            <p class="text-lg text-white/80 mb-8" data-i18n="cta_desc">Sāciet ar bezmaksas 15 min konsultāciju</p>
-            <a href="#contact" class="btn-cta btn-light text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" data-i18n="cta_btn">
-                Pieteikties konsultācijai
-            </a>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 md:py-24 bg-cream">
-        
-        <div class="max-w-5xl mx-auto px-4 md:px-8">
-            <div class="text-center mb-10">
-                <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary" data-i18n="booking_title">Rezervējiet konsultāciju</h2>
-            </div>
-            
-            <!-- Booking Calendar -->
-            <div id="bookingCalendar" class="bg-cream rounded-2xl p-6 md:p-8"></div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-primary text-white py-12">
-        <div class="max-w-6xl mx-auto px-4 md:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                <!-- Brand -->
-                <div class="text-center md:text-left">
-                    <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
-                    <p class="text-white/70 text-sm" data-i18n="footer_subtitle">Uztura speciāliste · PhD · Reģ. Nr. 75650061277</p>
-                </div>
-                
-                <!-- Contact Links -->
-                <div class="flex items-center gap-4 text-sm">
-                    <a href="mailto:info@sofijaivanova.lv" class="text-white/80 hover:text-white transition-colors">info@sofijaivanova.lv</a>
-                    <span class="text-white/40">·</span>
-                    <a href="https://wa.me/37120000000" class="text-white/80 hover:text-white transition-colors">WhatsApp</a>
-                </div>
-            </div>
-            
-            <div class="border-t border-white/20 pt-6 text-center">
-                <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
-            </div>
-        </div>
-    </footer>
-    
-    <!-- Cookie Settings Button (fixed bottom-right) - Minimal Premium Design -->
-    <button 
-        onclick="window.showCookieSettings()" 
-        class="cookie-settings-btn"
-        aria-label="Sīkdatņu iestatījumi"
-    >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
-            <circle cx="15" cy="8" r="1" fill="currentColor"/>
-            <circle cx="10" cy="14" r="1" fill="currentColor"/>
-            <circle cx="16" cy="13" r="1.5" fill="currentColor"/>
-            <circle cx="12" cy="17" r="1" fill="currentColor"/>
-        </svg>
-        <span>Sīkdatnes</span>
-    </button>
-    
-    <style>
-        .cookie-settings-btn {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 253, 250, 0.9);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #1B4332;
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(27, 67, 50, 0.15);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.02em;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            z-index: 9999;
-            transition: all 0.2s ease;
-            opacity: 0.85;
-        }
-        
-        .cookie-settings-btn:hover {
-            opacity: 1;
-            background: rgba(255, 253, 250, 0.98);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: rgba(27, 67, 50, 0.25);
-        }
-        
-        .cookie-settings-btn span {
-            text-transform: uppercase;
-        }
-        
-        @media (max-width: 480px) {
-            .cookie-settings-btn span {
-                display: none;
-            }
-            .cookie-settings-btn {
-                width: 44px !important;
-                height: 44px !important;
-                padding: 0 !important;
-                border-radius: 50% !important;
-                justify-content: center;
-                min-width: 44px;
-                min-height: 44px;
-            }
-            .cookie-settings-btn svg {
-                margin: 0;
-            }
-        }
-    </style>
-    
-    <!-- GDPR Cookie Consent (TypeScript) -->
-    <script>
-      import '../components/CookieConsent';
-    </script>
+      // Close on overlay click
+      menu.addEventListener(
+        'click',
+        function (e) {
+          if (e.target === menu) close();
+        },
+        false
+      );
+    })();
+  </script>
 </Layout>
+
+<!-- Hero Section -->
+<section
+  id="hero"
+  class="relative py-8 md:py-12 lg:py-16 flex items-center overflow-hidden bg-bg-light"
+>
+  <!-- Clean, professional background - subtle gradient accent -->
+  <div
+    class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary/[0.03] to-transparent -z-10"
+  >
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 md:px-8 w-full">
+    <!-- Integrated hero card -->
+    <div
+      class="bg-white/95 rounded-3xl shadow-[0_20px_50px_rgba(17,24,39,0.12)] border border-white/70 overflow-hidden"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-5">
+        <!-- Photo - takes 2 columns -->
+        <div class="lg:col-span-2 relative" style="transform: none !important;">
+          <img
+            src="/assets/img/photo in medical gown.png"
+            alt="Sofija Ivanova - Sertificēta uztura speciāliste Rīgā"
+            class="w-full h-64 md:h-80 lg:h-full lg:min-h-full object-cover object-[68%_top] lg:absolute lg:inset-0"
+            style="transform: none !important;"
+          />
+          <!-- Gradient overlay on mobile -->
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent lg:hidden"
+          >
+          </div>
+        </div>
+
+        <!-- Text Content - takes 3 columns -->
+        <div class="lg:col-span-3 p-6 md:p-10 lg:p-12">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 bg-cream px-4 py-2 rounded-full mb-6">
+            <i class="ph ph-seal-check text-secondary text-lg"></i>
+            <span class="text-sm md:text-base text-primary font-medium" data-i18n="hero_badge"
+              >Reģistrēta ārstniecības persona Nr. 75650061277</span
+            >
+          </div>
+
+          <!-- Heading -->
+          <h1
+            class="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary leading-tight mb-4 md:mb-6"
+            data-i18n="hero_title"
+          >
+            14 dienās no cukura svārstībām līdz stabilam glikozes līmenim
+          </h1>
+
+          <!-- Subtitle -->
+          <p
+            class="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed mb-6 md:mb-8"
+            data-i18n="hero_subtitle"
+          >
+            PhD pētniece un reģistrēta uztura speciāliste, kas palīdz cilvēkiem ar prediabētu un
+            insulīna rezistenci stabilizēt cukura līmeni, izmantojot CGM datus.
+          </p>
+
+          <!-- Benefits - horizontal on desktop, vertical on mobile -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 md:mb-8">
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_1"
+                >14 dienu CGM monitorēšana</span
+              >
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_2"
+                >Datu analīze saprotamā valodā</span
+              >
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_3"
+                >Personalizēts uztura plāns</span
+              >
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="ph ph-check-circle text-accent text-xl shrink-0"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="hero_benefit_4"
+                >Fokuss uz prediabētu</span
+              >
+            </div>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="#program"
+              class="btn-cta btn-solid text-base md:text-lg"
+              data-i18n="hero_cta_primary"
+            >
+              Pieteikties 14 dienu programmai
+            </a>
+            <a
+              href="#contact"
+              class="btn-cta btn-outline text-base md:text-lg"
+              data-i18n="hero_cta_secondary"
+            >
+              Bezmaksas 15 min konsultācija
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-16 md:py-24 bg-white/95">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-12 md:mb-16">
+      <h2
+        class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3"
+        data-i18n="how_title"
+      >
+        Kā tas strādā?
+      </h2>
+      <p class="text-gray-700 text-base md:text-lg max-w-2xl mx-auto" data-i18n="how_subtitle">
+        Vienkāršs process, ko varēsiet iekļaut savā ikdienā
+      </p>
+    </div>
+
+    <!-- Process Steps -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      <!-- Step 1 -->
+      <div
+        class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+      >
+        <div
+          class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4"
+        >
+          <i class="ph ph-syringe text-primary text-2xl"></i>
+        </div>
+        <h4
+          class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums"
+          data-i18n="step_1_title"
+        >
+          1. Uzliekam CGM sensoru
+        </h4>
+        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_1_desc">
+          Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div
+        class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+      >
+        <div
+          class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4"
+        >
+          <i class="ph ph-calendar-check text-primary text-2xl"></i>
+        </div>
+        <h4
+          class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums"
+          data-i18n="step_2_title"
+        >
+          2. Dzīvojiet savu ierasto dzīvi
+        </h4>
+        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_2_desc">
+          Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div
+        class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+      >
+        <div
+          class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4"
+        >
+          <i class="ph ph-chart-line text-primary text-2xl"></i>
+        </div>
+        <h4
+          class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums"
+          data-i18n="step_3_title"
+        >
+          3. Analizējam datus kopā
+        </h4>
+        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_3_desc">
+          Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.
+        </p>
+      </div>
+
+      <!-- Step 4 -->
+      <div
+        class="flex flex-col items-center text-center bg-white/90 border border-[#E6E0D6] rounded-2xl p-6 md:p-7 shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+      >
+        <div
+          class="w-16 h-16 bg-white border border-[#E6E0D6] rounded-full flex items-center justify-center mb-4"
+        >
+          <i class="ph ph-list-checks text-primary text-2xl"></i>
+        </div>
+        <h4
+          class="font-sans font-bold text-primary text-xl md:text-2xl mb-4 min-h-[3.5rem] flex items-center justify-center tabular-nums"
+          data-i18n="step_4_title"
+        >
+          4. Saņemat personalizētu plānu
+        </h4>
+        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="step_4_desc">
+          Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Program Section -->
+<section id="program" class="py-16 md:py-24 bg-linear-to-br from-cream to-bg-light">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <!-- Hero image for program -->
+    <div class="relative rounded-2xl overflow-hidden shadow-xl mb-12">
+      <img
+        src="/assets/img/healthy-food-cgm.png"
+        alt="Vesela uzturs un CGM datu analīze"
+        class="w-full aspect-[21/9] object-cover"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex items-center"
+      >
+        <div class="p-8 md:p-12 max-w-lg">
+          <span
+            class="inline-block bg-secondary text-white text-sm font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4"
+            data-i18n="program_badge">Galvenais pakalpojums</span
+          >
+          <h2
+            class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3"
+            data-i18n="program_title"
+          >
+            14 dienu CGM programma
+          </h2>
+          <p class="text-white/90 text-base" data-i18n="program_subtitle">
+            Pilna diagnostika un personalizēts rīcības plāns
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+      <!-- Program Info -->
+      <div class="lg:col-span-3">
+        <!-- What's Included -->
+        <div class="mb-8">
+          <h4
+            class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4"
+            data-i18n="program_includes_title"
+          >
+            Kas iekļauts:
+          </h4>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+              <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_1"
+                >CGM sensora uzlikšana uz 14 dienām</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_2"
+                >Glikozes datu analīze un detalizēta atskaite</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_3"
+                >60 min konsultācija (online vai klātienē)</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_4"
+                >Personalizēts uztura plāns uz 4 nedēļām</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-check text-accent text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_item_5"
+                >Follow-up zvans pēc 2–3 nedēļām</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Who Is It For -->
+        <div>
+          <h4
+            class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4"
+            data-i18n="program_for_title"
+          >
+            Kam paredzēts:
+          </h4>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+              <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_1"
+                >Cilvēkiem ar prediabētu vai insulīna rezistenci</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_2"
+                >Cilvēkiem ar 2. tipa diabēta risku</span
+              >
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="ph ph-user text-secondary text-lg shrink-0 mt-0.5"></i>
+              <span class="text-sm md:text-base text-gray-700" data-i18n="program_for_3"
+                >Cilvēkiem ar svara svārstībām un hronisko nogurumu</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Price Card -->
+      <div class="lg:col-span-2">
+        <div
+          class="bg-white/95 p-6 md:p-8 rounded-2xl shadow-lg border border-[#E6E0D6] sticky top-24"
+        >
+          <!-- Price -->
+          <div class="text-center pb-6 border-b border-gray-100 mb-6">
+            <span
+              class="text-sm uppercase tracking-wider text-gray-500 block mb-2"
+              data-i18n="price_label">Programmas cena</span
+            >
+            <span
+              class="font-serif text-4xl md:text-5xl font-bold text-primary block"
+              data-i18n="price_value">no 249 €</span
+            >
+            <span class="text-sm text-gray-500 mt-1 block" data-i18n="price_note"
+              >CGM sensors iekļauts cenā</span
+            >
+          </div>
+
+          <!-- Results -->
+          <div class="mb-6">
+            <h4
+              class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-4"
+              data-i18n="result_title"
+            >
+              Rezultāts:
+            </h4>
+            <div class="space-y-3">
+              <p class="flex items-start gap-2 text-base text-gray-700">
+                <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
+                <span data-i18n="result_1"
+                  >Sapratīsiet, kuri ēdieni tieši Jums izraisa straujus cukura lēcienus</span
+                >
+              </p>
+              <p class="flex items-start gap-2 text-base text-gray-700">
+                <i class="ph ph-arrow-right text-primary shrink-0 mt-0.5"></i>
+                <span data-i18n="result_2"
+                  >Saņemsiet konkrētu rīcības plānu, kā stabilizēt glikozes līmeni ikdienā</span
+                >
+              </p>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <a
+            href="#contact"
+            class="btn-cta btn-solid w-full text-base md:text-lg"
+            data-i18n="program_cta">Pieteikties programmai</a
+          >
+
+          <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-6">
+            <i class="ph ph-shield-check text-accent"></i>
+            <span data-i18n="program_guarantee">Pirmā konsultācija bezmaksas</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Approach Section -->
+<section id="approach" class="py-16 md:py-24 bg-white">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h2
+        class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary"
+        data-i18n="approach_title"
+      >
+        Kāpēc vispārīgas diētas nestrādā?
+      </h2>
+    </div>
+
+    <!-- Two-row layout -->
+    <div class="space-y-8">
+      <!-- Row 1: Text + Chart -->
+      <div class="bg-cream rounded-2xl p-6 md:p-10 lg:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3
+              class="font-serif text-xl md:text-2xl font-bold text-primary mb-4"
+              data-i18n="cgm_unique_title"
+            >
+              Jūsu organisms reaģē atšķirīgi
+            </h3>
+            <p class="text-gray-700 leading-relaxed" data-i18n="cgm_unique_desc">
+              Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM
+              sensors 14 dienas fiksē katru reakciju.
+            </p>
+          </div>
+
+          <!-- Chart -->
+          <div class="bg-white/95 rounded-xl p-4 md:p-6 shadow-sm border border-gray-100/70">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
+              <span class="text-sm font-medium text-gray-700" data-i18n="chart_glucose_response"
+                >Glikozes reakcija</span
+              >
+              <div class="flex gap-4 text-sm">
+                <span class="flex items-center gap-1"
+                  ><span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
+                  <span data-i18n="chart_after">Pēc programmas</span></span
+                >
+                <span class="flex items-center gap-1"
+                  ><span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+                  <span data-i18n="chart_before">Pirms</span></span
+                >
+              </div>
+            </div>
+            <svg
+              viewBox="0 0 400 150"
+              class="w-full h-auto"
+              role="img"
+              aria-label="Glikozes līmeņa grafiks"
+            >
+              <line x1="0" y1="30" x2="400" y2="30" stroke="#eee"></line>
+              <line x1="0" y1="75" x2="400" y2="75" stroke="#eee"></line>
+              <line x1="0" y1="120" x2="400" y2="120" stroke="#eee"></line>
+              <path
+                d="M0,100 C50,100 60,40 90,40 S120,110 150,110 S180,20 210,20 S240,100 270,100 S300,50 330,50 S360,110 400,110"
+                fill="none"
+                stroke="#e63946"
+                stroke-width="2"
+                stroke-dasharray="5,5"></path>
+              <path
+                d="M0,80 C50,80 80,70 120,75 S180,65 220,70 S280,75 320,72 S360,78 400,75"
+                fill="none"
+                stroke="#2D6A4F"
+                stroke-width="3"></path>
+              <circle cx="90" cy="40" r="4" fill="#e63946"></circle>
+              <circle cx="210" cy="20" r="4" fill="#e63946"></circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Photo + Benefits -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Photo of doctor analyzing data -->
+        <div class="relative rounded-2xl overflow-hidden shadow-xl">
+          <img
+            src="/assets/img/doctor-analyzing-cgm.png"
+            alt="Uztura speciāliste analizē CGM datus"
+            class="w-full aspect-[4/3] object-cover"
+          />
+        </div>
+
+        <!-- Benefits -->
+        <div class="bg-primary/5 rounded-2xl p-6 md:p-8">
+          <h3
+            class="font-serif text-xl md:text-2xl font-bold text-primary mb-6"
+            data-i18n="cgm_how_helps"
+          >
+            Kā CGM palīdz?
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
+                <i class="ph ph-chart-line-up text-white text-lg"></i>
+              </div>
+              <div>
+                <strong class="text-primary block mb-1" data-i18n="cgm_benefit_1_title"
+                  >Reāllaika monitorings</strong
+                >
+                <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_1_desc"
+                  >Redzat, kā organisms reaģē uz katru maltīti</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
+                <i class="ph ph-database text-white text-lg"></i>
+              </div>
+              <div>
+                <strong class="text-primary block mb-1" data-i18n="cgm_benefit_2_title"
+                  >20 000+ mērījumu</strong
+                >
+                <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_2_desc"
+                  >Pilnīgs priekšstats par 14 dienām</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shrink-0">
+                <i class="ph ph-target text-white text-lg"></i>
+              </div>
+              <div>
+                <strong class="text-primary block mb-1" data-i18n="cgm_benefit_3_title"
+                  >Precīzas rekomendācijas</strong
+                >
+                <span class="text-gray-700 text-sm" data-i18n="cgm_benefit_3_desc"
+                  >Zinām, ko mainīt tieši Jums</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Proof Stat -->
+<section class="py-12 md:py-16 bg-linear-to-r from-primary to-accent text-white text-center">
+  <div class="max-w-4xl mx-auto px-4">
+    <span class="font-serif text-5xl md:text-7xl font-bold text-secondary block mb-2">58%</span>
+    <p class="text-lg md:text-xl text-white/90 mb-2" data-i18n="proof_stat">
+      diabēta gadījumu var novērst ar personalizētu uzturu
+    </p>
+    <cite class="text-sm text-white/60">Diabetes Prevention Program, NIH</cite>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-16 md:py-20 lg:py-24 bg-cream">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-10 md:mb-14">
+      <span
+        class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
+        data-i18n="testimonials_sectionTitle">Atsauksmes</span
+      >
+      <h2
+        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold"
+        data-i18n="testimonials_title"
+      >
+        Ko saka klienti
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <!-- Testimonial 1 -->
+      <div
+        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
+      >
+        <div class="p-6 md:p-8 flex-1">
+          <div class="flex gap-1 mb-4 text-secondary">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_1">
+            Vienmēr domāju, ka ēdu veselīgi — brokastīs biezpiens ar medu, pusdienās salāti. Bet
+            sensors parādīja, ka mans cukurs lēkā kā amerikāņu kalniņos. Pēc Sofijas ieteikumiem —
+            stabils līmenis un 4 kg mazāk bez badošanās.
+          </p>
+        </div>
+        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
+            >
+              M
+            </div>
+            <div>
+              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_1_author"
+                >Maija, 47 gadi</strong
+              >
+              <p class="text-sm text-gray-500" data-i18n="testimonial_1_condition">
+                Prediabēts, vielmaiņas sindroms
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div
+        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
+      >
+        <div class="p-6 md:p-8 flex-1">
+          <div class="flex gap-1 mb-4 text-secondary">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_2">
+            Kā IT speciālists visu dzīvi sēdēju pie datora un ēdu nesaregulēti. Kad ārsts teica par
+            insulīna rezistenci, nobijos. Sofijas pieeja ar CGM bija kā hakeris manam ķermenim —
+            beidzot sapratu, kas īsti notiek.
+          </p>
+        </div>
+        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
+            >
+              R
+            </div>
+            <div>
+              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_2_author"
+                >Rihards, 35 gadi</strong
+              >
+              <p class="text-sm text-gray-500" data-i18n="testimonial_2_condition">
+                Insulīna rezistence
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div
+        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
+      >
+        <div class="p-6 md:p-8 flex-1">
+          <div class="flex gap-1 mb-4 text-secondary">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_3">
+            Pēc grūtniecības diabēta ārsti teica — uzmanies, citādi būs īstais diabēts. Bet neviens
+            neteica KĀ. Sofija ne tikai izskaidroja, bet arī parādīja ar datiem, kāpēc tieši manam
+            organismam vajag citādu pieeju.
+          </p>
+        </div>
+        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
+            >
+              K
+            </div>
+            <div>
+              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_3_author"
+                >Kristīne, 34 gadi</strong
+              >
+              <p class="text-sm text-gray-500" data-i18n="testimonial_3_condition">
+                Pēc gestācijas diabēta
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white to-cream">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <!-- Two-column layout with photo -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+      <!-- Photo Column -->
+      <div class="relative">
+        <div
+          class="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(17,24,39,0.18)] border border-white/60"
+        >
+          <img
+            src="/assets/img/aboutme.png"
+            alt="Sofija Ivanova konsultācijā ar pacientu"
+            class="w-full aspect-[4/3] object-cover"
+          />
+          <!-- Decorative frame -->
+          <div class="absolute inset-0 border-2 border-white/20 rounded-2xl"></div>
+        </div>
+        <!-- Floating credential badge -->
+        <div
+          class="absolute -bottom-6 -right-6 bg-white/95 rounded-xl shadow-lg p-4 hidden md:block border border-gray-100/70"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+              <i class="ph ph-seal-check text-white text-xl"></i>
+            </div>
+            <div>
+              <span class="text-sm text-gray-500 block" data-i18n="reg_number_label"
+                >Reģistrācijas Nr.</span
+              >
+              <span class="text-primary font-semibold">75650061277</span>
+            </div>
+          </div>
+        </div>
+        <!-- Decorative element -->
+        <div class="absolute -top-4 -left-4 w-24 h-24 bg-secondary/20 rounded-full blur-2xl -z-10">
+        </div>
+      </div>
+
+      <!-- Text Column -->
+      <div>
+        <span
+          class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
+          data-i18n="about_tag">Par mani</span
+        >
+        <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold mb-6">
+          Dr. Sofija Ivanova
+        </h2>
+        <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
+          Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Strādāju ar
+          cilvēkiem, kuriem ir prediabēts vai insulīna rezistence.
+        </p>
+        <p class="text-base text-gray-600 leading-relaxed mb-8" data-i18n="about_text">
+          Mana pieeja balstās uz zinātni un individuāliem datiem. CGM sensors 14 dienas fiksē Jūsu
+          organisma reakciju uz ēdienu — tas ļauj izveidot uztura plānu, kas strādā tieši Jums.
+        </p>
+
+        <!-- Credentials inline -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
+            >
+              <i class="ph ph-graduation-cap text-primary text-lg"></i>
+            </div>
+            <div>
+              <strong class="text-primary font-semibold" data-i18n="cred_2_title"
+                >PhD pētniece</strong
+              >
+              <span class="text-gray-500 text-sm block" data-i18n="cred_2_loc"
+                >Latvijas Universitāte</span
+              >
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
+            >
+              <i class="ph ph-certificate text-primary text-lg"></i>
+            </div>
+            <div>
+              <strong class="text-primary font-semibold" data-i18n="cred_3_title"
+                >MSc Uzturzinātnē</strong
+              >
+              <span class="text-gray-500 text-sm block" data-i18n="cred_3_loc"
+                >Rīgas Stradiņa universitāte</span
+              >
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
+            >
+              <i class="ph ph-heart-half text-primary text-lg"></i>
+            </div>
+            <div>
+              <strong class="text-primary font-semibold" data-i18n="clients_count"
+                >500+ klienti</strong
+              >
+              <span class="text-gray-500 text-sm block" data-i18n="clients_improved"
+                >ar uzlabotiem rādītājiem</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Science & Conference Gallery -->
+    <div>
+      <div class="text-center mb-10">
+        <h3
+          class="font-serif text-2xl md:text-3xl text-primary font-bold mb-3"
+          data-i18n="science_title"
+        >
+          Zinātniskā darbība
+        </h3>
+        <p class="text-gray-700 max-w-2xl mx-auto" data-i18n="science_subtitle">
+          Aktīvi piedalos starptautiskās konferencēs un zinātnes popularizēšanas pasākumos
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Featured Card -->
+        <div
+          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
+        >
+          <div class="aspect-[4/3] overflow-hidden">
+            <img
+              src="/assets/img/zinatnieku_nakts.png"
+              alt="Zinātnieku nakts Latvijā"
+              loading="lazy"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-5">
+            <div
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-secondary bg-secondary/10 rounded-full px-3 py-1 mb-3"
+            >
+              <i class="ph ph-lightbulb"></i>
+              <span data-i18n="gallery_2_tag">Izglītība</span>
+            </div>
+            <h4
+              class="font-serif text-lg text-primary font-semibold mb-2"
+              data-i18n="gallery_2_title"
+            >
+              Zinātnieku nakts
+            </h4>
+            <p class="text-sm text-gray-600" data-i18n="gallery_2_desc">
+              Ikgadējais zinātnes popularizēšanas pasākums Latvijā
+            </p>
+          </div>
+        </div>
+
+        <!-- EASD Card -->
+        <div
+          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
+        >
+          <div class="aspect-[4/3] overflow-hidden relative">
+            <img
+              src="/assets/img/conference_EASD2025_Vienna.jpg"
+              alt="EASD 2025 konference Vīnē"
+              loading="lazy"
+              class="w-full h-full object-cover"
+            />
+            <div
+              class="absolute top-3 right-3 bg-accent text-white text-sm font-bold px-2.5 py-1 rounded-full"
+            >
+              2025
+            </div>
+          </div>
+          <div class="p-5">
+            <div
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full px-3 py-1 mb-3"
+            >
+              <i class="ph ph-globe"></i>
+              <span data-i18n="gallery_1_tag">Starptautisks</span>
+            </div>
+            <h4
+              class="font-serif text-lg text-primary font-semibold mb-2"
+              data-i18n="gallery_1_title"
+            >
+              EASD 2025, Vīne
+            </h4>
+            <p class="text-sm text-gray-600" data-i18n="gallery_1_desc">
+              Eiropas Diabēta pētījumu asociācijas kongress
+            </p>
+          </div>
+        </div>
+
+        <!-- Hospital Card -->
+        <div
+          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
+        >
+          <div class="aspect-[4/3] overflow-hidden">
+            <img
+              src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg"
+              alt="Veselībpratības diena Stradiņa slimnīcā"
+              loading="lazy"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-5">
+            <div
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 mb-3"
+            >
+              <i class="ph ph-hospital"></i>
+              <span data-i18n="gallery_3_tag">Klīniskais</span>
+            </div>
+            <h4
+              class="font-serif text-lg text-primary font-semibold mb-2"
+              data-i18n="gallery_3_title"
+            >
+              Veselībpratības diena
+            </h4>
+            <p class="text-sm text-gray-600" data-i18n="gallery_3_desc">
+              Paula Stradiņa Klīniskā universitātes slimnīca
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lead Magnet -->
+<section class="lead-magnet py-16 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div
+      class="bg-primary rounded-2xl p-6 md:p-10 lg:p-12 shadow-[0_16px_40px_rgba(27,67,50,0.25)]"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Text -->
+        <div class="text-white">
+          <span
+            class="inline-block bg-secondary text-white text-sm font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4"
+            data-i18n="lead_badge">Bezmaksas PDF</span
+          >
+          <h3
+            class="font-serif text-xl md:text-2xl lg:text-3xl font-bold mb-3"
+            data-i18n="lead_title"
+          >
+            7 ikdienas paradumi, kas paaugstina cukuru
+          </h3>
+          <p class="text-white/80 mb-6" data-i18n="lead_desc">
+            Uzziniet, kādi paradumi latviešu vidū palielina diabēta risku, un kā tos mainīt.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-start gap-2">
+              <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
+              <span class="text-sm text-white/90" data-i18n="lead_item_1"
+                >Kāpēc brokastu izlaišana paaugstina cukuru</span
+              >
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
+              <span class="text-sm text-white/90" data-i18n="lead_item_2"
+                >Vai augļi ir veselīgi? Atkarīgs no tā...</span
+              >
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="ph ph-check text-secondary shrink-0 mt-1"></i>
+              <span class="text-sm text-white/90" data-i18n="lead_item_3"
+                >3 vienkārši soļi, ko sākt jau šodien</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white rounded-xl p-6 md:p-8">
+          <form id="leadForm" class="space-y-4">
+            <input
+              type="email"
+              placeholder="Jūsu e-pasts"
+              data-i18n="lead_placeholder"
+              required
+              class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all min-h-[52px]"
+            />
+            <button
+              type="submit"
+              class="btn-cta btn-solid w-full text-base md:text-lg"
+              data-i18n="lead_btn">Saņemt PDF</button
+            >
+          </form>
+          <p class="flex items-center justify-center gap-2 text-sm text-gray-500 mt-4">
+            <i class="ph ph-lock"></i>
+            <span data-i18n="lead_note">Nekāda spama. Jebkurā brīdī varat atteikties.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 md:py-20 bg-linear-to-r from-primary to-accent text-white text-center">
+  <div class="max-w-4xl mx-auto px-4 md:px-8 relative z-10">
+    <h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4" data-i18n="cta_title">
+      Vēlaties uzzināt, kā Jūsu organisms reaģē uz ēdienu?
+    </h2>
+    <p class="text-lg text-white/80 mb-8" data-i18n="cta_desc">
+      Sāciet ar bezmaksas 15 min konsultāciju
+    </p>
+    <a
+      href="#contact"
+      class="btn-cta btn-light text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+      data-i18n="cta_btn"
+    >
+      Pieteikties konsultācijai
+    </a>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-16 md:py-24 bg-cream">
+  <div class="max-w-5xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-10">
+      <h2
+        class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-primary"
+        data-i18n="booking_title"
+      >
+        Rezervējiet konsultāciju
+      </h2>
+    </div>
+
+    <!-- Booking Calendar -->
+    <div id="bookingCalendar" class="bg-cream rounded-2xl p-6 md:p-8"></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-primary text-white py-12">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+      <!-- Brand -->
+      <div class="text-center md:text-left">
+        <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
+        <p class="text-white/70 text-sm" data-i18n="footer_subtitle">
+          Uztura speciāliste · PhD · Reģ. Nr. 75650061277
+        </p>
+      </div>
+
+      <!-- Contact Links -->
+      <div class="flex items-center gap-4 text-sm">
+        <a
+          href="mailto:info@sofijaivanova.lv"
+          class="text-white/80 hover:text-white transition-colors">info@sofijaivanova.lv</a
+        >
+        <span class="text-white/40">·</span>
+        <a href="https://wa.me/37120000000" class="text-white/80 hover:text-white transition-colors"
+          >WhatsApp</a
+        >
+      </div>
+    </div>
+
+    <div class="border-t border-white/20 pt-6 text-center">
+      <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Cookie Settings Button (fixed bottom-right) - Minimal Premium Design -->
+<button
+  onclick="window.showCookieSettings()"
+  class="cookie-settings-btn"
+  aria-label="Sīkdatņu iestatījumi"
+>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <circle cx="8" cy="9" r="1.5" fill="currentColor"></circle>
+    <circle cx="15" cy="8" r="1" fill="currentColor"></circle>
+    <circle cx="10" cy="14" r="1" fill="currentColor"></circle>
+    <circle cx="16" cy="13" r="1.5" fill="currentColor"></circle>
+    <circle cx="12" cy="17" r="1" fill="currentColor"></circle>
+  </svg>
+  <span>Sīkdatnes</span>
+</button>
+
+<style>
+  .cookie-settings-btn {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 253, 250, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #1b4332;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(27, 67, 50, 0.15);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    z-index: 9999;
+    transition: all 0.2s ease;
+    opacity: 0.85;
+  }
+
+  .cookie-settings-btn:hover {
+    opacity: 1;
+    background: rgba(255, 253, 250, 0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: rgba(27, 67, 50, 0.25);
+  }
+
+  .cookie-settings-btn span {
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 480px) {
+    .cookie-settings-btn span {
+      display: none;
+    }
+    .cookie-settings-btn {
+      width: 44px !important;
+      height: 44px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .cookie-settings-btn svg {
+      margin: 0;
+    }
+  }
+</style>
+
+<!-- GDPR Cookie Consent (TypeScript) -->
+<script>
+  import '../components/CookieConsent';
+</script>
