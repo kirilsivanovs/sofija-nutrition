@@ -422,9 +422,11 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
       const btns = document.querySelectorAll('.mobile-menu-btn');
 
       btns.forEach(function (btn) {
+        if (btn.dataset.burgerBound === 'true') return;
         const menuId = btn.getAttribute('aria-controls');
         const menu = document.getElementById(menuId);
         if (!menu) return;
+        btn.dataset.burgerBound = 'true';
 
         function toggle(e) {
           e.preventDefault();
@@ -450,6 +452,14 @@ const logoutUrl = `/.auth/logout?post_logout_redirect_uri=${encodeURIComponent(l
 
         // Add click handler to button
         btn.addEventListener('click', toggle, false);
+        btn.addEventListener(
+          'touchstart',
+          function (e) {
+            e.preventDefault();
+            toggle(e);
+          },
+          { passive: false }
+        );
 
         // Close on link/button click inside menu
         const links = menu.querySelectorAll('a, button[data-tab]');
