@@ -100,9 +100,59 @@
   .meals-layout {
     grid-template-columns: 1fr;
   }
+  .meals-sidebar {
+    max-height: 400px;
+    overflow-y: auto;
+  }
 }
 
-/* Meals Calendar Styles */
+/* Mobile optimization for meals tab */
+@media (max-width: 768px) {
+  .meals-layout {
+    gap: 16px;
+  }
+  .meals-sidebar {
+    order: 2;
+    max-height: none;
+    padding: 12px;
+  }
+  .meals-calendar {
+    order: 1;
+  }
+  .meals-calendar-grid {
+    gap: 4px;
+    overflow-x: auto;
+    min-width: 560px;
+  }
+  .meals-calendar-day {
+    min-height: 80px;
+    padding: 6px;
+  }
+  .meals-day-number {
+    font-size: 12px;
+  }
+  .meals-day-kcal {
+    font-size: 12px;
+  }
+  .meals-day-macros {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meals-sidebar {
+    padding: 8px;
+  }
+  .meals-list {
+    gap: 12px;
+  }
+  .meal-card {
+    padding: 12px;
+  }
+  .meals-calendar-grid {
+    min-width: 500px;
+  }
+}
 .meals-calendar-header {
   display: flex;
   justify-content: space-between;
@@ -239,25 +289,6 @@
   gap: 6px;
   font-size: 10px;
   color: var(--color-muted);
-}
-
-@media (max-width: 768px) {
-  .meals-calendar-grid {
-    gap: 4px;
-  }
-  .meals-calendar-day {
-    min-height: 80px;
-    padding: 6px;
-  }
-  .meals-day-number {
-    font-size: 12px;
-  }
-  .meals-day-kcal {
-    font-size: 12px;
-  }
-  .meals-day-macros {
-    font-size: 9px;
-  }
 }
 
 /* Meals Modal Styles */

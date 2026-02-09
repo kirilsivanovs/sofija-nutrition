@@ -8,6 +8,13 @@
 <!-- Header -->
 <header class="admin-header">
     <div class="admin-header-inner">
+        <!-- Burger Menu Button (Mobile only) -->
+        <button type="button" class="burger-btn" id="burger-btn" aria-label="Atvērt izvēlni">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
         <a href="/" class="admin-logo">
             <img src="/assets/img/logo.svg" alt="SI Logo" class="admin-logo-img">
             <div class="admin-logo-text">
@@ -25,16 +32,38 @@
     </div>
 </header>
 
-<!-- Mobile Tab Selector -->
-<div class="mobile-tab-select">
-    <select id="mobile-tab-selector" class="mobile-tab-dropdown">
-        <option value="bookings">Ieraksti</option>
-        <option value="availability">Pieejamība</option>
-        <option value="settings">Iestatījumi</option>
-        <option value="meals">Uzturs</option>
-        <option value="data">Dati</option>
-    </select>
-</div>
+<!-- Mobile Sidebar Menu -->
+<div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
+<nav class="mobile-sidebar" id="mobile-sidebar">
+    <div class="mobile-sidebar-header">
+        <span class="mobile-sidebar-title">Izvēlne</span>
+        <button type="button" class="mobile-sidebar-close" id="mobile-sidebar-close" aria-label="Aizvērt izvēlni">
+            <i class="ph ph-x"></i>
+        </button>
+    </div>
+    <div class="mobile-sidebar-nav">
+        <button class="mobile-nav-item active" data-tab="bookings">
+            <i class="ph ph-calendar-check"></i>
+            <span>Ieraksti</span>
+        </button>
+        <button class="mobile-nav-item" data-tab="availability">
+            <i class="ph ph-clock"></i>
+            <span>Pieejamība</span>
+        </button>
+        <button class="mobile-nav-item" data-tab="settings">
+            <i class="ph ph-gear"></i>
+            <span>Iestatījumi</span>
+        </button>
+        <button class="mobile-nav-item" data-tab="meals">
+            <i class="ph ph-bowl-food"></i>
+            <span>Uzturs</span>
+        </button>
+        <button class="mobile-nav-item" data-tab="data">
+            <i class="ph ph-database"></i>
+            <span>Dati</span>
+        </button>
+    </div>
+</nav>
 
 <!-- Desktop Navigation Tabs -->
 <nav class="admin-nav">
@@ -63,19 +92,34 @@
 </nav>
 
 <script>
-    // Tab switching logic
+    // Tab switching and burger menu logic
     document.addEventListener('DOMContentLoaded', () => {
         const tabs = document.querySelectorAll('.admin-tab');
+        const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
         const contents = document.querySelectorAll('.admin-content');
-        const mobileSelector = document.getElementById('mobile-tab-selector') as HTMLSelectElement;
+        
+        // Burger menu
+        const burgerBtn = document.getElementById('burger-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+        const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
         function switchTab(tabId: string) {
-            // Update tabs
+            // Update desktop tabs
             tabs.forEach(tab => {
                 if (tab.getAttribute('data-tab') === tabId) {
                     tab.classList.add('active');
                 } else {
                     tab.classList.remove('active');
+                }
+            });
+
+            // Update mobile nav items
+            mobileNavItems.forEach(item => {
+                if (item.getAttribute('data-tab') === tabId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
                 }
             });
 
@@ -88,14 +132,21 @@
                 }
             });
 
-            // Update mobile selector
-            if (mobileSelector) {
-                mobileSelector.value = tabId;
-            }
-
             // Trigger load event for the tab
             const loadEvent = new CustomEvent('tabChanged', { detail: { tabId } });
             document.dispatchEvent(loadEvent);
+        }
+
+        function openMobileSidebar() {
+            mobileSidebar?.classList.add('open');
+            mobileSidebarOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileSidebar() {
+            mobileSidebar?.classList.remove('open');
+            mobileSidebarOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
         }
 
         // Desktop tabs
@@ -106,10 +157,27 @@
             });
         });
 
-        // Mobile selector
-        mobileSelector?.addEventListener('change', (e) => {
-            const tabId = (e.target as HTMLSelectElement).value;
-            switchTab(tabId);
+        // Mobile nav items
+        mobileNavItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const tabId = item.getAttribute('data-tab');
+                if (tabId) {
+                    switchTab(tabId);
+                    closeMobileSidebar();
+                }
+            });
+        });
+
+        // Burger menu controls
+        burgerBtn?.addEventListener('click', openMobileSidebar);
+        mobileSidebarClose?.addEventListener('click', closeMobileSidebar);
+        mobileSidebarOverlay?.addEventListener('click', closeMobileSidebar);
+
+        // Close sidebar on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileSidebar?.classList.contains('open')) {
+                closeMobileSidebar();
+            }
         });
     });
 </script>
