@@ -166,24 +166,31 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       var ticking = false;
       var threshold = 60; // px before hiding kicks in
 
-      window.addEventListener('scroll', function () {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(function () {
-            var y = window.pageYOffset;
-            var menuOpen = document.querySelector('.mobile-nav-menu.open');
-            if (menuOpen) { ticking = false; return; }
+      window.addEventListener(
+        'scroll',
+        function () {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(function () {
+              var y = window.pageYOffset;
+              var menuOpen = document.querySelector('.mobile-nav-menu.open');
+              if (menuOpen) {
+                ticking = false;
+                return;
+              }
 
-            if (y > threshold && y > lastY) {
-              header.style.transform = 'translateY(-100%)';
-            } else {
-              header.style.transform = 'translateY(0)';
-            }
-            lastY = y;
-            ticking = false;
-          });
-        }
-      }, { passive: true });
+              if (y > threshold && y > lastY) {
+                header.style.transform = 'translateY(-100%)';
+              } else {
+                header.style.transform = 'translateY(0)';
+              }
+              lastY = y;
+              ticking = false;
+            });
+          }
+        },
+        { passive: true }
+      );
     })();
   </script>
 

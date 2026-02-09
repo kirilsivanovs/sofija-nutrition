@@ -1295,7 +1295,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       // Prevent concurrent auth checks
       if (isCheckingAuth) return;
       isCheckingAuth = true;
-      
+
       try {
         // Force fresh auth check (Safari cache workaround)
         const res = await fetch('/.auth/me', {
@@ -1316,12 +1316,12 @@ import AppHeader from '../components/common/AppHeader.astro';
         $('#user-name').textContent = p.userDetails || p.userId;
         $('#auth-actions').classList.add('hidden');
         $('#auth-user').classList.remove('hidden');
-        
+
         // Update AppHeader auth state if available
         if (typeof window.updateHeaderAuth === 'function') {
           window.updateHeaderAuth(p);
         }
-        
+
         await loadAccess();
       } catch {
         showScreen('login');
@@ -2010,11 +2010,11 @@ import AppHeader from '../components/common/AppHeader.astro';
 
     // ---- Re-check auth with debounce (Safari logout sync) ----
     let authCheckTimeout = null;
-    
+
     function debouncedAuthCheck() {
       // Skip if already checking or user is already authenticated
       if (isCheckingAuth || userId) return;
-      
+
       clearTimeout(authCheckTimeout);
       authCheckTimeout = setTimeout(() => {
         loadAuth();
