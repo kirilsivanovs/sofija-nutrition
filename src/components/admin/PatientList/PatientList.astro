@@ -11,12 +11,37 @@ import './PatientList.css';
   <i class="ph ph-magnifying-glass search-icon"></i>
 </div>
 
+<div class="patients-controls">
+  <label class="patients-control">
+    <span>Kārtot</span>
+    <select id="patients-sort">
+      <option value="name-asc">A-Z (vārds/e-pasts)</option>
+      <option value="name-desc">Z-A (vārds/e-pasts)</option>
+      <option value="access-enabled">Atļauts vispirms</option>
+      <option value="access-date-desc">Piekļuve (jaunākie)</option>
+    </select>
+  </label>
+  <label class="patients-control">
+    <span>Rādīt</span>
+    <select id="patients-page-size">
+      <option value="10" selected>10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </label>
+</div>
+
 <div class="patients-add">
   <input type="text" id="patients-add-input" placeholder="Pacien ID (email)" />
   <button id="patients-add-btn">Pievienot</button>
 </div>
 
 <div id="patients-list" class="patients-list"></div>
+
+<div class="patients-load-more">
+  <button id="patients-load-more" class="btn-secondary btn-sm">Rādīt vēl</button>
+</div>
 
 <div id="patients-empty" class="patients-empty hidden">
   <i class="ph ph-users" style="font-size: 48px; opacity: 0.3;"></i>

@@ -294,6 +294,9 @@ import '../../styles/admin.css';
       addButton: document.getElementById('patients-add-btn') as HTMLButtonElement | null,
       listContainer: document.getElementById('patients-list'),
       emptyContainer: document.getElementById('patients-empty'),
+      sortSelect: document.getElementById('patients-sort') as HTMLSelectElement | null,
+      pageSizeSelect: document.getElementById('patients-page-size') as HTMLSelectElement | null,
+      loadMoreButton: document.getElementById('patients-load-more') as HTMLButtonElement | null,
       onPatientSelect: (patient) => {
         const displayName = patientService.getDisplayName(patient);
         mealsTabController.setSelectedPatientName(displayName);

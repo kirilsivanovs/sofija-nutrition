@@ -9,6 +9,10 @@ export class PatientListController {
   private patients: Patient[] = [];
   private filteredPatients: Patient[] = [];
   private selectedPatientId: string = '';
+  private pageSize = 10;
+  private currentLimit = 10;
+  private currentSort = 'name-asc';
+  private hasMore = true;
 
   // DOM elements
   private searchInput: HTMLInputElement | null = null;
@@ -16,6 +20,9 @@ export class PatientListController {
   private addButton: HTMLButtonElement | null = null;
   private listContainer: HTMLElement | null = null;
   private emptyContainer: HTMLElement | null = null;
+  private sortSelect: HTMLSelectElement | null = null;
+  private pageSizeSelect: HTMLSelectElement | null = null;
+  private loadMoreButton: HTMLButtonElement | null = null;
 
   // Callbacks
   private onPatientSelect?: (patient: Patient) => void;
@@ -36,6 +43,9 @@ export class PatientListController {
     addButton: HTMLButtonElement | null;
     listContainer: HTMLElement | null;
     emptyContainer: HTMLElement | null;
+    sortSelect?: HTMLSelectElement | null;
+    pageSizeSelect?: HTMLSelectElement | null;
+    loadMoreButton?: HTMLButtonElement | null;
     onPatientSelect?: (patient: Patient) => void;
     onAccessUpdate?: (userId: string, enabled: boolean) => void;
     onShowToast?: (message: string, type: 'success' | 'error' | 'info') => void;
@@ -46,6 +56,9 @@ export class PatientListController {
     this.addButton = config.addButton;
     this.listContainer = config.listContainer;
     this.emptyContainer = config.emptyContainer;
+    this.sortSelect = config.sortSelect || null;
+    this.pageSizeSelect = config.pageSizeSelect || null;
+    this.loadMoreButton = config.loadMoreButton || null;
     this.onPatientSelect = config.onPatientSelect;
     this.onAccessUpdate = config.onAccessUpdate;
     this.onShowToast = config.onShowToast;
@@ -59,7 +72,8 @@ export class PatientListController {
    */
   async loadPatients(): Promise<void> {
     try {
-      this.patients = await this.service.fetchPatients();
+      this.patients = await this.service.fetchPatients(this.currentLimit);
+      this.hasMore = this.patients.length >= this.currentLimit;
       this.applyFilter();
     } catch (error) {
       console.error('Error loading patients:', error);
@@ -72,8 +86,42 @@ export class PatientListController {
    */
   private applyFilter(): void {
     const query = this.searchInput?.value || '';
-    this.filteredPatients = this.service.filterPatients(this.patients, query);
+    const filtered = this.service.filterPatients(this.patients, query);
+    this.filteredPatients = this.sortPatients(filtered);
     this.render();
+  }
+
+  private sortPatients(patients: Patient[]): Patient[] {
+    const sorted = [...patients];
+    switch (this.currentSort) {
+      case 'name-desc':
+        return sorted.sort((a, b) =>
+          this.getSortableName(b).localeCompare(this.getSortableName(a))
+        );
+      case 'access-enabled':
+        return sorted.sort((a, b) => {
+          const aEnabled = a.accessEnabled ? 1 : 0;
+          const bEnabled = b.accessEnabled ? 1 : 0;
+          if (aEnabled !== bEnabled) return bEnabled - aEnabled;
+          return this.getSortableName(a).localeCompare(this.getSortableName(b));
+        });
+      case 'access-date-desc':
+        return sorted.sort((a, b) => {
+          const aTime = a.accessUpdatedAt ? new Date(a.accessUpdatedAt).getTime() : 0;
+          const bTime = b.accessUpdatedAt ? new Date(b.accessUpdatedAt).getTime() : 0;
+          if (aTime !== bTime) return bTime - aTime;
+          return this.getSortableName(a).localeCompare(this.getSortableName(b));
+        });
+      case 'name-asc':
+      default:
+        return sorted.sort((a, b) =>
+          this.getSortableName(a).localeCompare(this.getSortableName(b))
+        );
+    }
+  }
+
+  private getSortableName(patient: Patient): string {
+    return this.service.getDisplayName(patient).toLowerCase();
   }
 
   /**
@@ -94,6 +142,7 @@ export class PatientListController {
       .join('');
 
     this.attachItemListeners();
+    this.updateLoadMoreState();
   }
 
   /**
@@ -132,6 +181,32 @@ export class PatientListController {
   private attachEventListeners(): void {
     this.searchInput?.addEventListener('input', () => this.applyFilter());
     this.addButton?.addEventListener('click', () => this.handleAddPatient());
+    this.sortSelect?.addEventListener('change', (event) => {
+      const value = (event.target as HTMLSelectElement).value;
+      if (value) {
+        this.currentSort = value;
+        this.applyFilter();
+      }
+    });
+    this.pageSizeSelect?.addEventListener('change', (event) => {
+      const value = Number((event.target as HTMLSelectElement).value);
+      this.pageSize = Number.isFinite(value) && value > 0 ? value : 10;
+      this.currentLimit = this.pageSize;
+      this.loadPatients();
+    });
+    this.loadMoreButton?.addEventListener('click', () => this.handleLoadMore());
+  }
+
+  private handleLoadMore(): void {
+    this.currentLimit += this.pageSize;
+    this.loadPatients();
+  }
+
+  private updateLoadMoreState(): void {
+    if (!this.loadMoreButton) return;
+    const hasQuery = Boolean(this.searchInput?.value?.trim());
+    this.loadMoreButton.disabled = !this.hasMore || this.filteredPatients.length === 0;
+    this.loadMoreButton.classList.toggle('hidden', hasQuery);
   }
 
   /**

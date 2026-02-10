@@ -1687,8 +1687,8 @@
   }
   .meals-sidebar {
     order: -1;
-    max-height: 260px;
-    overflow-y: auto;
+    max-height: none;
+    overflow: visible;
   }
 }
 

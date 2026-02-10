@@ -38,6 +38,7 @@ export async function adminListPatients(
         email: access?.email,
         displayName: access?.displayName,
         accessEnabled: access?.enabled ?? false,
+        accessUpdatedAt: access?.updatedAt,
       };
     });
 

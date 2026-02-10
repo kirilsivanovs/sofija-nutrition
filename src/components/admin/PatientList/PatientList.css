@@ -26,6 +26,31 @@
   margin-top: 12px;
 }
 
+.patients-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.patients-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-text-light);
+}
+
+.patients-control select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
 .patients-add input {
   flex: 1;
   min-width: 0;
@@ -60,6 +85,17 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
+}
+
+.patients-load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.patients-load-more button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .patient-item {
@@ -201,6 +237,9 @@
 }
 
 @media (max-width: 480px) {
+  .patients-controls {
+    grid-template-columns: 1fr;
+  }
   .patients-search input {
     font-size: 12px;
     padding: 7px 28px 7px 10px;

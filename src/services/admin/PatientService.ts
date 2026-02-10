@@ -10,6 +10,7 @@ export interface Patient {
   mealsCount: number;
   lastMealAt?: string;
   accessEnabled?: boolean;
+  accessUpdatedAt?: string;
 }
 
 export class PatientService {
