@@ -38,9 +38,7 @@ export async function getFoodAccess(
   let repository: FoodAccessRepository;
 
   try {
-    repository = new FoodAccessRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    repository = new FoodAccessRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
   } catch (error) {
     context.error('Food access repository init failed:', error);
     return { status: 500, jsonBody: { error: 'Storage is not configured' } };
@@ -56,14 +54,14 @@ export async function getFoodAccess(
       if (emailAccess) {
         const migrated = await repository.setAccess(userId, emailAccess.enabled, {
           displayName: emailAccess.displayName || displayName,
-          email: emailAccess.email || email
+          email: emailAccess.email || email,
         });
         return {
           status: 200,
           jsonBody: {
             userId,
-            enabled: migrated.enabled
-          }
+            enabled: migrated.enabled,
+          },
         };
       }
     }
@@ -74,8 +72,8 @@ export async function getFoodAccess(
         status: 200,
         jsonBody: {
           userId,
-          enabled: created.enabled
-        }
+          enabled: created.enabled,
+        },
       };
     }
 
@@ -89,8 +87,8 @@ export async function getFoodAccess(
       status: 200,
       jsonBody: {
         userId,
-        enabled: access.enabled
-      }
+        enabled: access.enabled,
+      },
     };
   } catch (error) {
     context.error('Error getting food access:', error);
@@ -102,5 +100,5 @@ app.http('food-access', {
   methods: ['GET'],
   authLevel: 'anonymous',
   route: 'food/access',
-  handler: getFoodAccess
+  handler: getFoodAccess,
 });

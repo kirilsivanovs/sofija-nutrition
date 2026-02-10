@@ -19,9 +19,7 @@ export async function adminFoodAccess(
   let repository: FoodAccessRepository;
 
   try {
-    repository = new FoodAccessRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    repository = new FoodAccessRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
   } catch (error) {
     context.error('Food access repository init failed:', error);
     return { status: 500, jsonBody: { error: 'Storage is not configured' } };
@@ -37,14 +35,14 @@ export async function adminFoodAccess(
         }
         return {
           status: 200,
-          jsonBody: access || { userId, enabled: false }
+          jsonBody: access || { userId, enabled: false },
         };
       }
 
       const accessList = await repository.listAccess();
       return {
         status: 200,
-        jsonBody: accessList
+        jsonBody: accessList,
       };
     } catch (error) {
       context.error('Food access GET failed:', error);
@@ -68,13 +66,13 @@ export async function adminFoodAccess(
         if (linked) {
           await repository.setAccess(linked.userId, enabled, {
             displayName: linked.displayName,
-            email: linked.email || userId
+            email: linked.email || userId,
           });
         }
       }
       return {
         status: 200,
-        jsonBody: access
+        jsonBody: access,
       };
     } catch (error) {
       context.error('Food access PUT failed:', error);
@@ -89,5 +87,5 @@ app.http('admin-food-access', {
   methods: ['GET', 'PUT'],
   authLevel: 'anonymous',
   route: 'dashboard/food-access',
-  handler: adminFoodAccess
+  handler: adminFoodAccess,
 });

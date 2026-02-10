@@ -40,7 +40,7 @@ export class FoodAccessRepository {
       rowKey: record.userId,
       userId: record.userId,
       enabled: record.enabled,
-      updatedAt: record.updatedAt || new Date().toISOString()
+      updatedAt: record.updatedAt || new Date().toISOString(),
     };
 
     if (record.displayName) entity.displayName = record.displayName;
@@ -55,7 +55,7 @@ export class FoodAccessRepository {
       enabled: Boolean(entity.enabled ?? false),
       displayName: entity.displayName ? String(entity.displayName) : undefined,
       email: entity.email ? String(entity.email) : undefined,
-      updatedAt: entity.updatedAt ? String(entity.updatedAt) : undefined
+      updatedAt: entity.updatedAt ? String(entity.updatedAt) : undefined,
     };
   }
 
@@ -80,7 +80,7 @@ export class FoodAccessRepository {
       enabled,
       displayName: meta?.displayName,
       email: meta?.email,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     const entity = this.toEntity(record);
     await this.tableClient.upsertEntity(entity as any, 'Merge');
@@ -90,7 +90,7 @@ export class FoodAccessRepository {
   async listAccess(limit = 500): Promise<FoodAccessRecord[]> {
     await this.ensureTable();
     const entities = this.tableClient.listEntities({
-      queryOptions: { filter: "PartitionKey eq 'ACCESS'" }
+      queryOptions: { filter: "PartitionKey eq 'ACCESS'" },
     });
 
     const results: FoodAccessRecord[] = [];
@@ -102,10 +102,7 @@ export class FoodAccessRepository {
     return results;
   }
 
-  async findAccessByEmail(
-    email: string,
-    excludeUserId?: string
-  ): Promise<FoodAccessRecord | null> {
+  async findAccessByEmail(email: string, excludeUserId?: string): Promise<FoodAccessRecord | null> {
     const normalized = email.trim().toLowerCase();
     if (!normalized) return null;
 
