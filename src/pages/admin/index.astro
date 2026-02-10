@@ -350,7 +350,7 @@ import '../../styles/admin.css';
         const userEmail = authData.clientPrincipal.userDetails;
 
         // Verify admin access via backend (uses ADMIN_EMAILS env var)
-        const adminCheck = await fetch('/api/admin/me');
+        const adminCheck = await fetch('/api/dashboard/me');
 
         if (adminCheck.ok) {
           // Show admin content

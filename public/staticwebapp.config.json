@@ -18,7 +18,7 @@
             "allowedRoles": ["authenticated"]
         },
         {
-            "route": "/api/admin/*",
+            "route": "/api/dashboard/*",
             "allowedRoles": ["authenticated"]
         },
         {

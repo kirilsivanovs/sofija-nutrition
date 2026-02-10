@@ -10,7 +10,7 @@ import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddle
 app.http('admin-me', {
   methods: ['GET'],
   authLevel: 'anonymous',
-  route: 'admin/me',
+  route: 'dashboard/me',
   handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
     const auth = checkAuthorization(request, context);
 
