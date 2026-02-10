@@ -334,10 +334,10 @@ import '../../styles/admin.css';
 
   <!-- Admin Access Check -->
   <script>
-    // Check if user is authorized admin before showing admin panel
+    // Check if user is authorized admin via backend API
     async function checkAdminAccess() {
       try {
-        // Get user info from Azure Static Web Apps
+        // First check if user is authenticated at all
         const authResponse = await fetch('/.auth/me');
         const authData = await authResponse.json();
 
@@ -349,14 +349,10 @@ import '../../styles/admin.css';
 
         const userEmail = authData.clientPrincipal.userDetails;
 
-        // Admin email whitelist (synchronized with backend ADMIN_EMAILS env var)
-        const ADMIN_EMAILS = ['ivanovs.kirils95@gmail.com'];
+        // Verify admin access via backend (uses ADMIN_EMAILS env var)
+        const adminCheck = await fetch('/api/admin/me');
 
-        const isAdmin = ADMIN_EMAILS.some(
-          (email) => email.toLowerCase() === userEmail.toLowerCase()
-        );
-
-        if (isAdmin) {
+        if (adminCheck.ok) {
           // Show admin content
           const adminContent = document.getElementById('admin-content');
           if (adminContent) adminContent.style.display = 'block';
