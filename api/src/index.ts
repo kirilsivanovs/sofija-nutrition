@@ -21,6 +21,7 @@ import './functions/food/food-estimate.function';
 // ============================================
 // Admin Domain
 // ============================================
+import './functions/admin/me.function';
 import './functions/admin/bookings.function';
 import './functions/admin/settings.function';
 import './functions/admin/serviceSettings.function';

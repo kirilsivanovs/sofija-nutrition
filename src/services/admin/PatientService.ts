@@ -58,11 +58,14 @@ export class PatientService {
    * Update patient access status
    */
   async updateAccess(userId: string, enabled: boolean): Promise<void> {
-    const response = await fetch(`${this.apiBase}/dashboard/food-access?userId=${encodeURIComponent(userId)}`, {
-      method: 'PUT',
-      headers: this.getAuthHeaders(),
-      body: JSON.stringify({ enabled }),
-    });
+    const response = await fetch(
+      `${this.apiBase}/dashboard/food-access?userId=${encodeURIComponent(userId)}`,
+      {
+        method: 'PUT',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify({ enabled }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Failed to update access');

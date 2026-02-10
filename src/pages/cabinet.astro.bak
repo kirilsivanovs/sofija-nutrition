@@ -441,7 +441,7 @@ import Layout from '../layouts/Layout.astro';
             border: 1px solid #E6E0D6;
             cursor: pointer;
         }
-        .hidden { display: none !important; }
+        .hidden { display: none; }
         @media (max-width: 900px) {
             .portal-grid { grid-template-columns: 1fr; }
             .portal-header { flex-direction: column; align-items: flex-start; }

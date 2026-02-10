@@ -1,0 +1,132 @@
+---
+/**
+ * Scroll to Top Button
+ * Shows when user scrolls down, hides at the top
+ * Universal component for all pages
+ */
+---
+
+<button
+  id="scroll-to-top"
+  class="scroll-to-top"
+  aria-label="Atgriezties uz augšu"
+  title="Atgriezties uz augšu"
+>
+  <i class="ph ph-arrow-up"></i>
+</button>
+
+<style>
+  button.scroll-to-top {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 253, 250, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #1b4332;
+    border: 1px solid rgba(27, 67, 50, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+    z-index: 999;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overflow: hidden;
+  }
+
+  button.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  button.scroll-to-top:hover {
+    opacity: 1;
+    background: rgba(255, 253, 250, 0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border-color: rgba(27, 67, 50, 0.25);
+  }
+
+  button.scroll-to-top:active {
+    transform: scale(0.95);
+  }
+
+  button.scroll-to-top i {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    button.scroll-to-top {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+</style>
+
+<script is:inline>
+  // Scroll to top functionality - inline for compatibility
+  (function () {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+
+    const scrollRoot = document.scrollingElement || document.documentElement;
+    const SCROLL_THRESHOLD = 200;
+    let ticking = false;
+
+    function getScrollTop() {
+      return window.pageYOffset || scrollRoot.scrollTop || document.body.scrollTop || 0;
+    }
+
+    // Show/hide button based on scroll position
+    function toggleButton() {
+      if (getScrollTop() > SCROLL_THRESHOLD) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        toggleButton();
+        ticking = false;
+      });
+    }
+
+    // Smooth scroll to top
+    function scrollToTop(e) {
+      e.preventDefault();
+      if (scrollRoot && typeof scrollRoot.scrollTo === 'function') {
+        scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Event listeners
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
+    scrollBtn.addEventListener('click', scrollToTop);
+
+    // Check initial position
+    toggleButton();
+  })();
+</script>

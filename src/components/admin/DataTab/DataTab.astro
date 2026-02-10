@@ -1,0 +1,113 @@
+---
+import './DataTab.css';
+---
+
+<div class="content-header">
+  <h2 class="content-title">Azure Table Storage</h2>
+  <div class="data-controls">
+    <select id="table-select" class="input-field">
+      <option value="bookings">bookings (ieraksti)</option>
+    </select>
+    <button id="refresh-table" class="btn-secondary">
+      <i class="ph ph-arrows-clockwise"></i>
+    </button>
+    <button id="export-csv" class="btn-info">
+      <i class="ph ph-download-simple"></i>
+      <span>CSV</span>
+    </button>
+  </div>
+</div>
+
+<!-- Filters and Batch Actions -->
+<div id="table-filters" class="card hidden" style="margin-bottom: 20px; padding: 20px;">
+  <div class="filters-grid">
+    <div class="filter-field">
+      <label class="input-label">Meklēt</label>
+      <input
+        type="text"
+        id="table-search"
+        class="input-field"
+        placeholder="Meklēt visos laukos..."
+      />
+    </div>
+    <div class="filter-field-small">
+      <label class="input-label">Statuss</label>
+      <select id="filter-status" class="input-field">
+        <option value="">Visi</option>
+        <option value="confirmed">Apstiprināts</option>
+        <option value="pending">Gaida</option>
+        <option value="cancelled">Atcelts</option>
+      </select>
+    </div>
+    <div class="filter-field-small">
+      <label class="input-label">Sākuma datums</label>
+      <input
+        type="text"
+        id="filter-date-from"
+        class="input-field date-input"
+        placeholder="dd/mm/yyyy"
+      />
+    </div>
+    <div class="filter-field-small">
+      <label class="input-label">Beigu datums</label>
+      <input
+        type="text"
+        id="filter-date-to"
+        class="input-field date-input"
+        placeholder="dd/mm/yyyy"
+      />
+    </div>
+    <button id="clear-filters" class="btn-secondary">
+      <i class="ph ph-x"></i>
+      <span>Notīrīt</span>
+    </button>
+  </div>
+
+  <div id="batch-actions" class="batch-actions-container hidden">
+    <div class="batch-actions-row">
+      <span class="selected-count-text">
+        <span id="selected-count">0</span> izvēlēti
+      </span>
+      <button id="batch-delete" class="btn-danger btn-sm">
+        <i class="ph ph-trash"></i>
+        <span>Dzēst izvēlētos</span>
+      </button>
+      <button id="batch-export" class="btn-info btn-sm">
+        <i class="ph ph-download-simple"></i>
+        <span>Eksportēt izvēlētos</span>
+      </button>
+      <button id="deselect-all" class="btn-secondary btn-sm">
+        <i class="ph ph-x"></i>
+        <span>Atcelt izvēli</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="table-loading" class="loading-state">
+  <div class="loading-spinner"></div>
+  <span>Ielādē datus...</span>
+</div>
+
+<div id="table-container" class="hidden">
+  <div class="card table-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead id="table-header"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="table-footer">
+    <span id="table-count">0</span> ieraksti
+    <span
+      id="filtered-count"
+      class="hidden"
+      style="color: var(--color-primary); margin-left: 10px;"></span>
+  </div>
+</div>
+
+<div id="table-empty" class="hidden empty-state">
+  <i class="ph ph-tray empty-icon"></i>
+  <span>Tabula ir tukša</span>
+</div>

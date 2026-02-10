@@ -61,9 +61,13 @@ az-*.json
 # AI / debugging traces
 # ============================================
 ai-traces.txt
-.github/copilot-instructions.md
 
 # ============================================
 # Internal documentation (not for public)
 # ============================================
 docs/
+
+# ============================================
+# Local Copilot instructions override
+# ============================================
+.github/copilot-instructions.md

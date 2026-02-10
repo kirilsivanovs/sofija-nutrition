@@ -11,7 +11,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
     <title>Jauna rezervācija - BK-2026-001</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -105,7 +105,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
+
             
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -144,7 +144,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
     <title>Jauna rezervācija - BK-2026-003</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -244,7 +244,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
+
             
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -282,7 +282,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
     <title>Jauna rezervācija - BK-2026-002</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -382,7 +382,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
+
             
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -421,7 +421,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
     <title>Jauna rezervācija - BK-2026-001</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -521,7 +521,7 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
+
             
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
@@ -560,7 +560,7 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
     <title>Rezervācija atcelta - BK-2026-001</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -581,21 +581,21 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
             <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
             <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir atcelta.</p>
             <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Detaļas:</p>
-            
+
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Rezervācijas numurs</p>
                         <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">BK-2026-001</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
                             💻 Attālināti
                         </p>
-                        
+
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
@@ -611,11 +611,11 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
                     </td>
                 </tr>
             </table>
-            
+
             <p style="margin: 0 0 20px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                 Ja jums ir jautājumi, lūdzu sazinieties.
             </p>
-            
+
             <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                 Ar cieņu,<br>
                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -648,7 +648,7 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
     <title>Rezervācija atcelta - BK-2026-002</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -669,21 +669,21 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
             <p style="margin: 0 0 10px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
             <p style="margin: 0 0 25px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir atcelta.</p>
             <p style="margin: 0 0 15px 0; color: #666; font-size: 14px; text-align: center;">Detaļas:</p>
-            
+
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Rezervācijas numurs</p>
                         <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">BK-2026-002</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">Uztura konsultācija</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
                             📍 Klātienē
                         </p>
-                        
+
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
@@ -699,11 +699,11 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
                     </td>
                 </tr>
             </table>
-            
+
             <p style="margin: 0 0 20px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                 Ja jums ir jautājumi, lūdzu sazinieties.
             </p>
-            
+
             <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                 Ar cieņu,<br>
                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -736,7 +736,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should escape HTML in
     <title>Rezervācija BK-XSS-001 - Sofija Nutrition</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -759,7 +759,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should escape HTML in
                 <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
                 <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, &lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;!</p>
                 <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
-                
+
                 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
         <tr>
@@ -816,14 +816,14 @@ exports[`Email Templates Snapshots generateClientEmailHTML should escape HTML in
             </td>
         </tr>
     </table>
-                
+
                 <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     📎 Rēķins pievienots pielikumā
                 </p>
                 <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     Ja jums ir jautājumi, lūdzu sazinieties ar mums.
                 </p>
-                
+
                 <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                     Ar cieņu,<br>
                     <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -856,7 +856,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
     <title>Rezervācija BK-2026-003 - Sofija Nutrition</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -879,7 +879,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
                 <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
                 <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
                 <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
-                
+
                 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
         <tr>
@@ -936,14 +936,14 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
             </td>
         </tr>
     </table>
-                
+
                 <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     📎 Rēķins pievienots pielikumā
                 </p>
                 <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     Ja jums ir jautājumi, lūdzu sazinieties ar mums.
                 </p>
-                
+
                 <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                     Ar cieņu,<br>
                     <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -976,7 +976,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
     <title>Rezervācija BK-2026-002 - Sofija Nutrition</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -999,7 +999,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
                 <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
                 <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
                 <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
-                
+
                 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
         <tr>
@@ -1056,14 +1056,14 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
             </td>
         </tr>
     </table>
-                
+
                 <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     📎 Rēķins pievienots pielikumā
                 </p>
                 <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     Ja jums ir jautājumi, lūdzu sazinieties ar mums.
                 </p>
-                
+
                 <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                     Ar cieņu,<br>
                     <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -1096,7 +1096,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
     <title>Rezervācija BK-2026-001 - Sofija Nutrition</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -1119,7 +1119,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
                 <h2 style="margin: 0 0 15px 0; color: #2d5a4a; font-size: 22px; font-weight: 600; text-align: center;">Paldies par rezervāciju!</h2>
                 <p style="margin: 0 0 20px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Labdien, Jānis Bērziņš!</p>
                 <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5; text-align: center;">Jūsu rezervācija ir apstiprināta.</p>
-                
+
                 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 25px;">
         <tr>
@@ -1176,14 +1176,14 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
             </td>
         </tr>
     </table>
-                
+
                 <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     📎 Rēķins pievienots pielikumā
                 </p>
                 <p style="margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5; text-align: center;">
                     Ja jums ir jautājumi, lūdzu sazinieties ar mums.
                 </p>
-                
+
                 <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                     Ar cieņu,<br>
                     <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -1316,7 +1316,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     <title>Maksājums apstiprināts - BK-2026-002</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -1335,18 +1335,18 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     <tr>
         <td style="padding: 30px 20px;">
             <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Jūsu maksājums ir saņemts. Gaidīsim jūs konsultācijā!</p>
-            
+
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; margin-bottom: 25px;">
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
                         <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">Uztura konsultācija</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
                             📍 Klātienē
                         </p>
-                        
+
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
@@ -1362,7 +1362,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
                     </td>
                 </tr>
             </table>
-            
+
             <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                 Ar cieņu,<br>
                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
@@ -1395,7 +1395,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     <title>Maksājums apstiprināts - BK-2026-001</title>
     <!--[if mso]>
     <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+        body, table, td {font-family: Arial, Helvetica, sans-serif;}
     </style>
     <![endif]-->
 </head>
@@ -1414,18 +1414,18 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     <tr>
         <td style="padding: 30px 20px;">
             <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.5; text-align: center;">Jūsu maksājums ir saņemts. Gaidīsim jūs konsultācijā!</p>
-            
+
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; margin-bottom: 25px;">
                 <tr>
                     <td style="padding: 25px; text-align: center;">
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Pakalpojums</p>
                         <p style="margin: 0 0 20px 0; color: #2d5a4a; font-size: 18px; font-weight: 600;">Uztura konsultācija</p>
-                        
+
                         <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;">Formāts</p>
                         <p style="margin: 0 0 20px 0; color: #333; font-size: 15px; font-weight: 500;">
                             💻 Attālināti
                         </p>
-                        
+
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%" style="text-align: center; padding: 10px;">
@@ -1441,7 +1441,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
                     </td>
                 </tr>
             </table>
-            
+
             <p style="margin: 0; color: #444; font-size: 15px; line-height: 1.6; text-align: center;">
                 Ar cieņu,<br>
                 <strong style="color: #2d5a4a;">Sofija Ivanova</strong>
