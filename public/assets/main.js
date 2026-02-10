@@ -7,247 +7,106 @@
   const translations = {
     lv: {
       // Navigation
-      nav_program: 'Programma',
-      nav_how: 'Kā tas strādā',
+      nav_services: 'Pakalpojumi',
       nav_about: 'Par mani',
+      nav_testimonials: 'Atsauksmes',
       nav_contact: 'Pieteikties',
       nav_cabinet: 'Pacienta kabinets',
-      nav_services: 'Pakalpojumi',
-      nav_approach: 'Pieeja',
-      nav_badge: 'ES Licence',
 
-      hero_badge: 'Reģistrēta ārstniecības persona Nr. 75650061277',
-      hero_title: '14 dienās no cukura svārstībām līdz stabilam glikozes līmenim',
+      // Hero
+      hero_eyebrow: 'Uztura speciāliste · PhD · Rīga',
+      hero_title: 'Uzturs, kas veidots tieši Jums',
       hero_subtitle:
-        'PhD pētniece un reģistrēta uztura speciāliste, kas palīdz cilvēkiem ar prediabētu un insulīna rezistenci stabilizēt cukura līmeni, izmantojot CGM datus.',
-      hero_benefit_1: '14 dienu CGM monitorēšana',
-      hero_benefit_2: 'Datu analīze saprotamā valodā',
-      hero_benefit_3: 'Personalizēts uztura un dzīvesstila plāns',
-      hero_benefit_4: 'Fokuss uz prediabētu un insulīna rezistenci',
-      hero_cta_primary: 'Pieteikties 14 dienu programmai',
-      hero_cta_secondary: 'Bezmaksas 15 min konsultācija',
+        'Reģistrēta uztura speciāliste un PhD pētniece. Palīdzu sakārtot uzturu, uzlabot pašsajūtu un sasniegt veselības mērķus — ar individuālu, zinātniski pamatotu pieeju.',
+      hero_cta_primary: 'Pieteikties konsultācijai',
+      hero_cta_secondary: 'Apskatīt pakalpojumus',
+      hero_credential_label: 'Uztura zinātne',
 
-      meta_reg_title: 'Reģistrācija',
-      meta_reg_val: 'Ārstniecības persona',
-      meta_spec_title: 'Fokuss',
-      meta_spec_val: 'Diabēta profilakse un metabolā veselība',
-      meta_loc_title: 'Pieejamība',
-      meta_loc_val: 'Klātienē Rīgā • Tiešsaistē visā Latvijā',
+      // Trust Bar
+      trust_clients: '500+ klientu',
+      trust_clients_sub: 'ar uzlabotiem rādītājiem',
+      trust_phd: 'PhD pētniece',
+      trust_phd_sub: 'Latvijas Universitāte',
+      trust_exp: '7+ gadu pieredze',
+      trust_exp_sub: 'uzturzinātnē un pētniecībā',
+      trust_reg: 'Reģistrēta speciāliste',
+      trust_reg_sub: 'ārstniecības personu reģistrā',
 
-      overlay_reg: 'PhD pētniece',
-      overlay_uni: 'Latvijas Universitāte • Clinical & Personalized Medicine',
-
-      trust_reg: 'Ārstniecības personas reģistrs',
-      trust_phd: 'PhD Latvijas Universitātē',
-      trust_horizon: 'Horizon Europe pētījumi',
-      trust_ul: 'Clinical & Personalized Medicine',
-
+      // Services
       services_tag: 'Pakalpojumi',
-      services_title: 'Kompleksa pieeja metabolajai veselībai',
+      services_title: 'Kā es varu Jums palīdzēt',
       services_desc:
-        'Zinātniski pamatoti risinājumi diabēta profilaksei, dzīves kvalitātes uzlabošanai un hronisku slimību risku samazināšanai.',
-
-      srv_1_title: 'Diabēts un prediabēts',
+        'Katrs cilvēks ir unikāls — tāpēc mans darbs sākas ar Jūsu stāstu, nevis gatavu shēmu.',
+      srv_1_title: 'Individuāla konsultācija',
       srv_1_desc:
-        'Profilakses stratēģijas un atbalsts cukura diabēta gadījumā, balstoties uz klīniskiem pētījumiem un pacienta datiem.',
-      srv_2_title: 'Imunitāte un Mikrobioms',
+        '60 min konsultācija klātienē vai tiešsaistē. Analizējam uztura ieradumus, veselības stāvokli un kopīgi nosakām mērķus.',
+      srv_2_title: 'Personalizēts uztura plāns',
       srv_2_desc:
-        'Uztura optimizācija, balstīta uz zarnu trakta veselību un imūnsistēmas stiprināšanu.',
-      srv_3_title: 'Vielmaiņas Veselība',
+        'Uztura plāns, kas pielāgots Jūsu ķermeņa vajadzībām, dzīvesstilam un ēdiena preferencēm. Nav universālu diētu.',
+      srv_3_title: 'Metabolā veselība',
       srv_3_desc:
-        'Insulīna rezistences mazināšana un enerģijas līmeņa atjaunošana ar precīzu uzturu.',
-      srv_4_title: 'Personalizēts uzturs',
+        'Palīdzība ar insulīna rezistenci, prediabētu, svara kontroli un enerģijas līmeņa optimizāciju. Zinātniski pamatota pieeja.',
+      srv_4_tag: 'Unikāla iespēja',
+      srv_4_title: 'CGM diagnostika',
       srv_4_desc:
-        'Uztura plāns, pamatojoties uz biomarķieriem, dzīvesveidu un reāliem pacienta mērķiem.',
-      srv_5_title: 'Ilgtermiņa Rezultāti',
-      srv_5_desc: 'Praktiskas stratēģijas paradumu maiņai, kas neprasa nepārtrauktu gribasspēku.',
-      srv_6_title: 'PRAESIIDIUM',
+        '14 dienu glikozes monitorēšana ar sensoru. Precīzi dati par to, kā Jūsu organisms reaģē uz katru ēdienu. Pieejams kā papildus iespēja.',
+      srv_5_title: 'Zarnu veselība',
+      srv_5_desc:
+        'Uztura optimizācija, kas veicina zarnu trakta veselību un stiprina imūnsistēmu. Mikrobioma atbalsts ar uzturu.',
+      srv_6_title: 'Ilgtermiņa atbalsts',
       srv_6_desc:
-        'Darbs ar zinātniskajiem datiem un Horizon Europe AI modeļiem komplikāciju profilaksei.',
+        'Regulāras pārbaudes un plāna korekcijas. Pavadīšu Jūs ceļā uz jauniem, ilgtspējīgiem paradumiem.',
 
-      about_tag: 'Par mani',
-      about_title: 'Ne tikai uztura speciāliste. Pētniece.',
-      about_p1:
-        "Esmu reģistrēta uztura speciāliste ar maģistra grādu uzturzinātnē un veicu PhD pētījumus Latvijas Universitātē. Darbojos 'Clinical & Personalized Medicine' pētniecības grupā, kur pētu uztura lomu diabēta profilaksē.",
-      about_p2:
-        'Mans mērķis ir pieejamā veidā apvienot zinātni un praksi, lai palīdzētu cilvēkiem droši mainīt dzīvesveidu un samazināt hronisku saslimšanu riskus.',
-      about_p3:
-        '5 gadu pieredze pārtikas mikrobioloģijā sniedz dziļu izpratni par uztura drošību un tās lomu sabiedrības veselībā.',
+      // How I Work
+      process_tag: 'Process',
+      process_title: 'Kā norit sadarbība',
+      proc_1_title: 'Iepazīšanās',
+      proc_1_desc:
+        'Bezmaksas 15 min zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim, kāds formāts Jums der vislabāk.',
+      proc_2_title: 'Konsultācija un plāns',
+      proc_2_desc:
+        'Padziļināta 60 min konsultācija. Analizējam Jūsu uzturu, veselību un izstrādājam individuālu rīcības plānu.',
+      proc_3_title: 'Rezultāts un atbalsts',
+      proc_3_desc:
+        'Saņemat personalizētu uztura plānu un turpinu Jūs atbalstīt ar follow-up konsultācijām, lai nodrošinātu ilgtspējīgus rezultātus.',
 
-      qual_title: 'Izglītība un sertifikācija:',
-      qual_1: 'MSc Uzturzinātnē — Rīgas Stradiņa universitāte',
-      qual_2: 'PhD doktorante — Latvijas Universitāte',
-      qual_3: 'Clinical & Personalized Medicine pētniecības grupa',
-      qual_4: 'Reģistrēta uztura speciāliste: 75650061277 (VI.gov.lv)',
+      // Pricing
+      price_first: 'Iepazīšanās konsultācija',
+      price_first_val: 'Bezmaksas',
+      price_consult: 'Pilna konsultācija (60 min)',
+      price_consult_val: 'no 65 €',
+      price_cgm: 'CGM programma (14 dienas)',
+      price_cgm_val: 'no 249 €',
 
-      cred_1_title: 'Klīniskā bāze',
-      cred_1_desc: 'Diabēta profilakse un metabolā veselība',
-      cred_2_title: 'Starpdisciplinaritāte',
-      cred_2_desc: 'Uzturzinātne, mikrobioloģija, sabiedrības veselība',
-      cred_3_title: 'Drošība',
-      cred_3_desc: 'Pierādījumu bāze un klīniskie protokoli',
-      cred_4_title: 'Pieeja',
-      cred_4_desc: 'Ilgtspējīgi paradumi un ilgtermiņa rezultāti',
-
-      stats_res: 'Pētniecības gadi<br>mikrobioloģijā',
-      stats_phd: 'Latvijas Universitāte<br>Pētniecības grupa',
-      stats_msc: 'Uzturzinātne<br>Rīgas Stradiņa universitāte',
-      stats_reg: 'Reģistrēta uztura speciāliste<br>75650061277',
-
-      method_tag: 'Metodoloģija',
-      method_title: 'Kāpēc vispārīgas diētas nestrādā',
-      method_subtitle:
-        'Jūsu glikozes reakcija uz ābolu var būt pilnīgi atšķirīga no cita cilvēka. Mēs to pierādām ar datiem.',
-
-      cgm_title: 'Redzēt to, ko asins analīzes neparāda',
-      cgm_desc:
-        'Standarta HbA1c tests parāda vidējo ainu. Bet diabēta risks slēpjas pīķos — straujās glikozes svārstībās pēc ēšanas, ko var redzēt tikai ar nepārtrauktu monitorēšanu. CGM sensors 14 dienas fiksē katru reakciju, un mēs kopā analizējam, kas tieši Jūsu organismā izraisa stresu.',
-      cgm_point_1: '<strong>Slēptie pīķi:</strong> Produkti, kas šķiet "veselīgi", bet ceļ cukuru',
-      cgm_point_2: '<strong>Individuālā tolerance:</strong> Kā tieši Jūs reaģējat uz ogļhidrātiem',
-      cgm_point_3: '<strong>Optimizācija:</strong> Precīzas izmaiņas, nevis vispārīgi padomi',
-      chart_label: 'Glikozes reakcija pēc maltītes',
-      chart_sub:
-        'Sarkanā līnija — slēptie glikozes pīķi, kas paātrina novecošanos un palielina diabēta risku',
-      chart_legend_stable: 'Pēc optimizācijas',
-      chart_legend_unstable: 'Pirms konsultācijas',
-
-      mini_cta_text: 'Vai vēlaties redzēt savu glikozes profilu?',
-      mini_cta_btn: 'Pieteikties CGM diagnostikai',
-
-      proof_stat_text: 'diabēta gadījumu var novērst ar uztura un dzīvesveida izmaiņām',
-      proof_stat_source: 'Diabetes Prevention Program (DPP), NIH, n=3,234',
-      proof_title: 'Tas nav par svara zaudēšanu. Tas ir par slimības novēršanu.',
-      proof_text:
-        'Prediabēts bieži paliek nepamanīts gadiem ilgi. Bet organismā jau notiek izmaiņas — asinsvadu bojājumi, iekaisums, enerģijas kritumi. CGM monitorēšana un personalizēts uzturs ļauj iejaukties agrīni, kamēr process vēl ir atgriezenisks.',
-
-      stat_prediabetes_num: '1 no 3',
-      stat_prediabetes_text: 'pieaugušajiem ir prediabēts, bet 84% par to nezina',
-      stat_prediabetes_source: 'CDC National Diabetes Statistics, 2024',
-      stat_personalized_text:
-        'efektīvāks rezultāts ar personalizētu uzturu salīdzinājumā ar standarta diētām',
-      stat_personalized_source: 'Weizmann Institute, Cell 2015',
-      stat_cgm_text: 'dienas — pietiekams laiks, lai identificētu Jūsu glikozes modeļus',
-      stat_cgm_source: 'American Diabetes Association',
-
-      step_1_title: 'Diagnostika',
-      step_1_desc:
-        'Kompleksa analīze: CGM sensori (14-dienu novērošana), asins bioķīmija, mikrobioma novērtējums.',
-      step_2_title: 'Analīze',
-      step_2_desc: 'Rezultātu interpretācija no sistēmbioloģijas un metabolisma skatpunkta',
-      step_3_title: 'Stratēģija',
-      step_3_desc: 'Personalizēts uztura plāns, ņemot vērā dzīvesveidu un mērķus',
-      step_4_title: 'Monitorings',
-      step_4_desc: 'Regulāra rādītāju kontrole un programmas korekcija',
-
-      cta_title: 'Noskaidrojiet savu metabolo statusu',
-      cta_desc:
-        'Sāciet ar 14 dienu CGM monitorēšanu un personalizētu analīzi. Iegūstiet skaidrību par sava organisma darbību.',
-      cta_btn: 'Pieteikties diagnostikai',
-
-      faq_tag: 'Biežāk uzdotie jautājumi',
-      faq_title: 'Kas jāzina pirms pieteikšanās',
-      faq_q1: 'Kam ir domāta CGM diagnostika?',
-      faq_a1:
-        'CGM analīze ir ideāla cilvēkiem ar prediabētu, insulīna rezistenci, PCOS, nepaskaidrojamu nogurumu vai tiem, kas vēlas optimizēt veselību proaktīvi. Nav nepieciešama diagnoze — pietiek ar vēlmi saprast savu organismu.',
-      faq_q2: 'Kāda ir atšķirība no parasta dietologa?',
-      faq_a2:
-        'Es neizrakstu vispārīgas diētas. Katrs ieteikums balstās uz Jūsu individuālajiem CGM datiem, asins biomarķieriem un dzīvesveidu. Tā ir precīzijas medicīna uzturā.',
-      faq_q3: 'Vai konsultācijas ir iespējamas tiešsaistē?',
-      faq_a3:
-        'Jā. CGM sensoru var uzlikt pašrocīgi (nosūtu detalizētu instrukciju), un visas konsultācijas notiek video formātā. Strādāju ar klientiem visā Latvijā un ārpus tās.',
-      faq_q4: 'Cik ilgs ir sadarbības process?',
-      faq_a4:
-        'Minimālais cikls ir 14 dienu CGM monitorēšana + 2 konsultācijas (analīze un stratēģija). Ilgtermiņa atbalsts ir pieejams pēc individuālas vienošanās.',
-
-      contact_tag: 'Kontakti',
-      booking_title: 'Rezervējiet konsultāciju',
-      booking_subtitle:
-        'Izvēlieties sev ērtu datumu un laiku. Pieejamās vietas tiek atjauninātas reāllaikā.',
-      contact_alt_text: 'Vai vēlaties sazināties citādi?',
-
-      contact_title: 'Sāksim ar īsu konsultāciju',
-      contact_desc:
-        'Atstājiet pieprasījumu, un es sazināšos ar Jums, lai piemeklētu darba formātu un atbildētu uz jautājumiem',
-
-      contact_card_title: 'Kontaktinformācija',
-      contact_card_desc: 'Rakstiet e-pastā vai WhatsApp — atbildu personīgi.',
-      contact_loc: 'Rīga, Latvija • Klātienē un tiešsaistē',
-
-      form_title: 'Pieteikums konsultācijai',
-      lbl_name: 'Jūsu vārds',
-      plh_name: 'Anna',
-      lbl_email: 'E-pasts vai mesendžeris',
-      plh_email: '@telegram vai e-pasts',
-      lbl_msg: 'Īsi par pieprasījumu',
-      plh_msg: 'Mērķis, diagnoze, termiņi',
-      btn_submit: 'Nosūtīt pieteikumu',
-      btn_sent: 'Pieteikums nosūtīts',
-
-      // How it works
-      how_title: 'Kā tas strādā?',
-      how_subtitle: 'Vienkāršs process, ko varēsiet iekļaut savā ikdienā',
-      step_1_title: '1. Uzliekam CGM sensoru',
-      step_1_desc: 'Mazs, nemanāms sensors uz rokas. Pilnīgi nesāpīga procedūra.',
-      step_2_title: '2. Dzīvojiet savu ierasto dzīvi',
-      step_2_desc: 'Ēdat kā parasti 14 dienas. Sensors fiksē katras maltītes ietekmi.',
-      step_3_title: '3. Analizējam datus kopā',
-      step_3_desc: 'Redzam, kuri ēdieni Jūs stabilizē, kuri — izraisa cukura lēcienus.',
-      step_4_title: '4. Saņemat personalizētu plānu',
-      step_4_desc: 'Konkrētas rekomendācijas: ko mainīt, ko atstāt, ko pievienot.',
-
-      // Program
-      program_badge: 'Galvenais pakalpojums',
-      program_title: '14 dienu CGM programma',
-      program_subtitle: 'Pilna diagnostika un personalizēts rīcības plāns',
-      program_includes_title: 'Kas iekļauts:',
-      program_item_1: 'CGM sensora uzlikšana uz 14 dienām',
-      program_item_2: 'Glikozes datu analīze un detalizēta atskaite',
-      program_item_3: '60 min konsultācija (online vai klātienē)',
-      program_item_4: 'Personalizēts uztura plāns uz 4 nedēļām',
-      program_item_5: 'Follow-up zvans pēc 2–3 nedēļām',
-      program_for_title: 'Kam paredzēts:',
-      program_for_1: 'Cilvēkiem ar prediabētu vai insulīna rezistenci',
-      program_for_2: 'Cilvēkiem ar 2. tipa diabēta risku',
-      program_for_3: 'Cilvēkiem ar svara svārstībām un hronisko nogurumu',
-      price_label: 'Programmas cena',
-      price_value: 'no 249 €',
-      price_note: 'CGM sensors iekļauts cenā',
-      result_title: 'Rezultāts:',
-      result_1: 'Sapratīsiet, kuri ēdieni tieši Jums izraisa straujus cukura lēcienus',
-      result_2: 'Saņemsiet konkrētu rīcības plānu, kā stabilizēt glikozes līmeni ikdienā',
-      program_cta: 'Pieteikties programmai',
-      program_guarantee: 'Pirmā konsultācija bezmaksas',
-
-      // Approach
-      approach_title: 'Kāpēc vispārīgas diētas nestrādā?',
-
-      // Proof & Testimonials
-      proof_stat: 'diabēta gadījumu var novērst ar personalizētu uzturu',
+      // Testimonials
+      testimonials_sectionTitle: 'Atsauksmes',
       testimonials_title: 'Ko saka klienti',
       testimonial_1:
-        'Vienmēr domāju, ka ēdu veselīgi — brokastīs biezpiens ar medu, pusdienās salāti. Bet sensors parādīja, ka mans cukurs lēkā kā amerikāņu kalniņos. Pēc Sofijas ieteikumiem — stabils līmenis un 4 kg mazāk bez badošanās.',
+        'Gadiem mēģināju dažādas diētas — tās strādāja pāris mēnešus un beidzās. Sofijas pieeja bija pilnīgi citāda: nevis aizliegumi, bet sapratne, ko mans organisms tiešām vajag. Pēc 3 mēnešiem — 6 kg mazāk, un galvenais — saprotu, kāpēc.',
       testimonial_1_author: 'Maija, 47 gadi',
-      testimonial_1_condition: 'Prediabēts, vielmaiņas sindroms',
+      testimonial_1_condition: 'Svara kontrole, enerģijas trūkums',
       testimonial_2:
-        'Kā IT speciālists visu dzīvi sēdēju pie datora un ēdu nesaregulēti. Kad ārsts teica par insulīna rezistenci, nobijos. Sofijas pieeja ar CGM bija kā hakeris manam ķermenim — beidzot sapratu, kas īsti notiek.',
+        'Kā IT speciālists visu dzīvi ēdu haotiski un jutu hronisko nogurumu. Sofija palīdzēja saprast saistību starp uzturu un enerģiju. Tagad ir enerģija visai dienai bez kafijas maratoniem.',
       testimonial_2_author: 'Rihards, 35 gadi',
-      testimonial_2_condition: 'Insulīna rezistence',
+      testimonial_2_condition: 'Hronisks nogurums, haotisks uzturs',
       testimonial_3:
-        'Pēc grūtniecības diabēta ārsti teica — uzmanies, citādi būs īstais diabēts. Bet neviens neteica KĀ. Sofija ne tikai izskaidroja, bet arī parādīja ar datiem, kāpēc tieši manam organismam vajag citādu pieeju.',
+        'Pēc bērna piedzimšanas nekādi nevarēju atgriezties formā. Sofija izveidoja plānu, kas iekļāvās manā hektiskajā mammas dzīvē. Nav striktu ierobežojumu — tikai gudra pieeja ēdienreizēm un produktu izvēlei.',
       testimonial_3_author: 'Kristīne, 34 gadi',
-      testimonial_3_condition: 'Pēc gestācijas diabēta',
+      testimonial_3_condition: 'Pēcdzimdību atgūšanās',
 
       // About
       about_tag: 'Par mani',
       about_lead:
-        'Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Strādāju ar cilvēkiem, kuriem ir prediabēts vai insulīna rezistence, izmantojot CGM sensorus un zinātniski pamatotu pieeju.',
+        'Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni un individuālu pieeju.',
       about_text:
-        'Kāpēc CGM? Jo standarta asins analīzes parāda tikai vienu momentuzņēmumu. Bet diabēta risks slēpjas ikdienas cukura svārstībās — tās var saskatīt tikai ar nepārtrauktu monitorēšanu.',
-      cred_1_title: 'Reģistrēta ārstniecības persona',
+        'Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija balstās uz pierādījumiem — ne modes diētām vai vispārīgiem padomiem. Darbā izmantoju arī modernas tehnoloģijas, piemēram, CGM glikozes sensorus, kas ļauj precīzi izprast organisma reakcijas.',
       cred_2_title: 'PhD pētniece',
       cred_2_loc: 'Latvijas Universitāte',
       cred_3_title: 'MSc Uzturzinātnē',
       cred_3_loc: 'Rīgas Stradiņa universitāte',
+      clients_count: '500+ klienti',
+      clients_improved: 'ar uzlabotiem rādītājiem',
+      reg_number_label: 'Reģistrācijas Nr.',
 
       // Science Gallery
       science_title: 'Zinātniskā darbība',
@@ -263,286 +122,146 @@
       gallery_3_title: 'Veselībpratības diena',
       gallery_3_desc: 'Paula Stradiņa Klīniskā universitātes slimnīca',
 
-      // Lead Magnet
-      lead_badge: 'Bezmaksas PDF',
-      lead_title: '7 ikdienas paradumi, kas paaugstina cukuru',
-      lead_desc: 'Uzziniet, kādi paradumi latviešu vidū palielina diabēta risku, un kā tos mainīt.',
-      lead_item_1: 'Kāpēc brokastu izlaišana paaugstina cukuru',
-      lead_item_2: 'Vai augļi ir veselīgi? Atkarīgs no tā...',
-      lead_item_3: '3 vienkārši soļi, ko sākt jau šodien',
-      lead_placeholder: 'Jūsu e-pasts',
-      lead_btn: 'Saņemt PDF',
-      lead_note: 'Nekāda spama. Jebkurā brīdī varat atteikties.',
+      // FAQ
+      faq_tag: 'Biežāk uzdotie jautājumi',
+      faq_title: 'Kas jāzina pirms pieteikšanās',
+      faq_q1: 'Kam ir domātas konsultācijas?',
+      faq_a1:
+        'Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai mērķa. Strādāju ar svara kontroli, enerģijas problēmām, metabolo veselību, prediabētu, zarnu veselību un uztura optimizāciju.',
+      faq_q2: 'Kāda ir atšķirība no parasta dietologa?',
+      faq_a2:
+        'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku, kas ir unikāla iespēja Latvijā.',
+      faq_q3: 'Vai konsultācijas ir pieejamas tiešsaistē?',
+      faq_a3:
+        'Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat efektīvas un pieejamas klientiem visā Latvijā un ārpus tās.',
+      faq_q4: 'Cik maksā konsultācija?',
+      faq_a4:
+        'Pirmā iepazīšanās konsultācija (15 min) ir bezmaksas. Pilna 60 min konsultācija — no 65€. CGM programma (14 dienas) — no 249€. Konkrētu cenu noskaidrosim pirmajā sarunā.',
+      faq_q5: 'Kā norit pirmā konsultācija?',
+      faq_a5:
+        'Sākam ar bezmaksas 15 min iepazīšanos, kurā izprotu Jūsu situāciju un mērķus. Ja izlemsim turpināt, nākamais solis ir padziļināta 60 min konsultācija ar uztura analīzi un individuāla plāna izstrādi.',
 
-      // CTA
-      cta_title: 'Gatavs uzzināt, kā Jūsu organisms reaģē uz ēdienu?',
-      cta_desc: 'Sāciet ar bezmaksas 15 min konsultāciju',
-      cta_btn: 'Pieteikties konsultācijai',
+      // Booking
+      contact_tag: 'Kontakti',
+      booking_eyebrow: 'Individuāla konsultācija',
+      booking_badge: 'Personiska pieeja',
+      booking_title: 'Rezervējiet konsultāciju',
+      booking_subtitle:
+        'Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.',
+      booking_trust_compact_1: 'Konfidenciāli',
+      booking_trust_compact_2: 'Klātienē vai online',
+      booking_trust_compact_3: 'Atbilde 24h',
+      booking_note: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
 
+      // Footer
       footer_role: 'Sertificēta uztura speciāliste, PhD doktorante',
       footer_nav: 'Navigācija',
       footer_rights: '© 2026 Sofija Ivanova. Visas tiesības aizsargātas.',
-
-      // Missing translations
-      header_subtitle: 'Uztura speciāliste · PhD',
-      cgm_unique_title: 'Jūsu organisms reaģē atšķirīgi',
-      cgm_unique_desc:
-        'Tas pats produkts vienam cilvēkam var būt ideāls, citam — izraisīt cukura lēcienu. CGM sensors 14 dienas fiksē katru reakciju.',
-      chart_glucose_response: 'Glikozes reakcija',
-      chart_after: 'Pēc programmas',
-      chart_before: 'Pirms',
-      cgm_how_helps: 'Kā CGM palīdz?',
-      cgm_benefit_1_title: 'Reāllaika monitorings',
-      cgm_benefit_1_desc: 'Redzat, kā organisms reaģē uz katru maltīti',
-      cgm_benefit_2_title: '20 000+ mērījumu',
-      cgm_benefit_2_desc: 'Pilnīgs priekšstats par 14 dienām',
-      cgm_benefit_3_title: 'Precīzas rekomendācijas',
-      cgm_benefit_3_desc: 'Zinām, ko mainīt tieši Jums',
-      reg_number_label: 'Reģistrācijas Nr.',
-      clients_count: '500+ klienti',
-      clients_improved: 'ar uzlabotiem rādītājiem',
       footer_subtitle: 'Uztura speciāliste · PhD · Reģ. Nr. 75650061277',
+      header_subtitle: 'Uztura speciāliste · PhD',
     },
     ru: {
       // Navigation
-      nav_program: 'Программа',
-      nav_how: 'Как это работает',
+      nav_services: 'Услуги',
       nav_about: 'Обо мне',
+      nav_testimonials: 'Отзывы',
       nav_contact: 'Записаться',
       nav_cabinet: 'Кабинет пациента',
-      nav_services: 'Услуги',
-      nav_approach: 'Подход',
-      nav_badge: 'Лицензия ЕС',
 
-      hero_badge: 'Зарегистрированный медицинский специалист №75650061277',
-      hero_title: 'За 14 дней от скачков сахара к стабильному уровню глюкозы',
+      // Hero
+      hero_eyebrow: 'Специалист по питанию · PhD · Рига',
+      hero_title: 'Питание, созданное именно для Вас',
       hero_subtitle:
-        'PhD-исследователь и зарегистрированный специалист по питанию помогает людям с предиабетом и инсулинорезистентностью стабилизировать уровень сахара с помощью CGM-данных.',
-      hero_benefit_1: '14-дневный CGM-мониторинг',
-      hero_benefit_2: 'Анализ данных понятным языком',
-      hero_benefit_3: 'Персонализированный план питания и образа жизни',
-      hero_benefit_4: 'Фокус на предиабете и инсулинорезистентности',
-      hero_cta_primary: 'Записаться на 14-дневную программу',
-      hero_cta_secondary: 'Бесплатная 15 мин консультация',
+        'Зарегистрированный специалист по питанию и PhD-исследователь. Помогу наладить питание, улучшить самочувствие и достичь целей здоровья — с индивидуальным, научно обоснованным подходом.',
+      hero_cta_primary: 'Записаться на консультацию',
+      hero_cta_secondary: 'Посмотреть услуги',
+      hero_credential_label: 'Нутрициология',
 
-      meta_reg_title: 'Регистрация',
-      meta_reg_val: 'Медицинский специалист',
-      meta_spec_title: 'Фокус',
-      meta_spec_val: 'Профилактика диабета и метаболическое здоровье',
-      meta_loc_title: 'Доступность',
-      meta_loc_val: 'Очно в Риге • Онлайн по всей Латвии',
+      // Trust Bar
+      trust_clients: '500+ клиентов',
+      trust_clients_sub: 'с улучшенными показателями',
+      trust_phd: 'PhD-исследователь',
+      trust_phd_sub: 'Латвийский Университет',
+      trust_exp: '7+ лет опыта',
+      trust_exp_sub: 'в нутрициологии и исследованиях',
+      trust_reg: 'Зарегистрированный специалист',
+      trust_reg_sub: 'в реестре медицинских работников',
 
-      overlay_reg: 'PhD-исследователь',
-      overlay_uni: 'Латвийский Университет • Clinical & Personalized Medicine',
-
-      trust_reg: 'Реестр медицинских специалистов',
-      trust_phd: 'PhD в Латвийском Университете',
-      trust_horizon: 'Исследования Horizon Europe',
-      trust_ul: 'Clinical & Personalized Medicine',
-
+      // Services
       services_tag: 'Услуги',
-      services_title: 'Комплексный подход к метаболическому здоровью',
+      services_title: 'Как я могу Вам помочь',
       services_desc:
-        'Научно обоснованные решения для профилактики диабета, улучшения качества жизни и снижения рисков хронических заболеваний.',
-
-      srv_1_title: 'Диабет и предиабет',
+        'Каждый человек уникален — поэтому моя работа начинается с Вашей истории, а не с готовой схемы.',
+      srv_1_title: 'Индивидуальная консультация',
       srv_1_desc:
-        'Стратегии профилактики и поддержки при сахарном диабете на основе клинических исследований и данных пациента.',
-      srv_2_title: 'Иммунитет и Микробиом',
-      srv_2_desc: 'Оптимизация питания с учетом здоровья кишечника и укрепления иммунитета.',
-      srv_3_title: 'Метаболическое Здоровье',
+        '60 мин консультация очно или онлайн. Анализируем пищевые привычки, состояние здоровья и совместно определяем цели.',
+      srv_2_title: 'Персонализированный план питания',
+      srv_2_desc:
+        'План питания, адаптированный к потребностям Вашего тела, образу жизни и пищевым предпочтениям. Никаких универсальных диет.',
+      srv_3_title: 'Метаболическое здоровье',
       srv_3_desc:
-        'Снижение инсулинорезистентности и восстановление уровня энергии через точное питание.',
-      srv_4_title: 'Персонализированное питание',
-      srv_4_desc: 'План питания на основе биомаркеров, образа жизни и реальных целей пациента.',
-      srv_5_title: 'Долгосрочные Результаты',
-      srv_5_desc: 'Практические стратегии изменения привычек, не требующие постоянной силы воли.',
-      srv_6_title: 'PRAESIIDIUM',
+        'Помощь при инсулинорезистентности, предиабете, контроле веса и оптимизации уровня энергии. Научно обоснованный подход.',
+      srv_4_tag: 'Уникальная возможность',
+      srv_4_title: 'CGM-диагностика',
+      srv_4_desc:
+        '14-дневный мониторинг глюкозы с помощью сенсора. Точные данные о том, как Ваш организм реагирует на каждый продукт. Доступно как дополнительная опция.',
+      srv_5_title: 'Здоровье кишечника',
+      srv_5_desc:
+        'Оптимизация питания для здоровья желудочно-кишечного тракта и укрепления иммунитета. Поддержка микробиома через питание.',
+      srv_6_title: 'Долгосрочная поддержка',
       srv_6_desc:
-        'Работа с научными данными и AI-моделями Horizon Europe для профилактики осложнений.',
+        'Регулярные проверки и корректировки плана. Буду сопровождать Вас на пути к новым, устойчивым привычкам.',
 
-      about_tag: 'Обо мне',
-      about_title: 'Не просто диетолог. Исследователь.',
-      about_p1:
-        "Я — сертифицированный специалист по питанию с магистерской степенью в Nutrition Science, в настоящее время провожу PhD-исследования в Латвийском Университете. Вхожу в исследовательскую группу 'Clinical & Personalized Medicine'.",
-      about_p2:
-        'Моя цель — объединять научные доказательства и практические стратегии, чтобы помогать людям безопасно менять образ жизни, снижать риски хронических заболеваний и улучшать качество жизни.',
-      about_p3:
-        '5 лет опыта в пищевой микробиологии дают глубокое понимание безопасности питания и его роли в общественном здоровье.',
+      // How I Work
+      process_tag: 'Процесс',
+      process_title: 'Как проходит сотрудничество',
+      proc_1_title: 'Знакомство',
+      proc_1_desc:
+        'Бесплатный 15-минутный звонок, на котором узнаю Вашу ситуацию и цели. Вместе решим, какой формат подходит лучше всего.',
+      proc_2_title: 'Консультация и план',
+      proc_2_desc:
+        'Углублённая 60-минутная консультация. Анализируем Ваше питание, здоровье и разрабатываем индивидуальный план действий.',
+      proc_3_title: 'Результат и поддержка',
+      proc_3_desc:
+        'Получаете персонализированный план питания и продолжаю поддерживать Вас follow-up консультациями для устойчивых результатов.',
 
-      qual_title: 'Образование и сертификация:',
-      qual_1: 'MSc in Nutrition Science — Rīga Stradiņš University',
-      qual_2: 'PhD student — University of Latvia',
-      qual_3: 'Clinical & Personalized Medicine research group',
-      qual_4: 'Registered nutritionist: 75650061277 (VI.gov.lv)',
+      // Pricing
+      price_first: 'Ознакомительная консультация',
+      price_first_val: 'Бесплатно',
+      price_consult: 'Полная консультация (60 мин)',
+      price_consult_val: 'от 65 €',
+      price_cgm: 'CGM-программа (14 дней)',
+      price_cgm_val: 'от 249 €',
 
-      cred_1_title: 'Клиническая база',
-      cred_1_desc: 'Профилактика диабета и метаболическое здоровье',
-      cred_2_title: 'Междисциплинарность',
-      cred_2_desc: 'Нутрициология, микробиология, общественное здоровье',
-      cred_3_title: 'Безопасность',
-      cred_3_desc: 'Доказательная база и клинические протоколы',
-      cred_4_title: 'Подход',
-      cred_4_desc: 'Устойчивые привычки и долгосрочные результаты',
-
-      stats_res: 'Лет исследований<br>в микробиологии',
-      stats_phd: 'Латвийский Университет<br>Исследовательская группа',
-      stats_msc: 'Nutrition Science<br>Rīga Stradiņš University',
-      stats_reg: 'Registered nutritionist<br>75650061277',
-
-      method_tag: 'Методология',
-      method_title: 'Почему общие диеты не работают',
-      method_subtitle:
-        'Ваша реакция глюкозы на яблоко может кардинально отличаться от реакции другого человека. Мы доказываем это данными.',
-
-      cgm_title: 'Увидеть то, что не показывают анализы крови',
-      cgm_desc:
-        'Стандартный тест HbA1c показывает среднюю картину. Но риск диабета скрыт в пиках — резких скачках глюкозы после еды, которые видны только при непрерывном мониторинге. CGM-сенсор 14 дней фиксирует каждую реакцию, и мы вместе анализируем, что именно вызывает стресс в Вашем организме.',
-      cgm_point_1:
-        '<strong>Скрытые пики:</strong> Продукты, которые кажутся "здоровыми", но повышают сахар',
-      cgm_point_2:
-        '<strong>Индивидуальная толерантность:</strong> Как именно Вы реагируете на углеводы',
-      cgm_point_3: '<strong>Оптимизация:</strong> Точные изменения, а не общие советы',
-      chart_label: 'Реакция глюкозы после приёма пищи',
-      chart_sub:
-        'Красная линия — скрытые пики глюкозы, ускоряющие старение и повышающие риск диабета',
-      chart_legend_stable: 'После оптимизации',
-      chart_legend_unstable: 'До консультации',
-
-      mini_cta_text: 'Хотите увидеть свой профиль глюкозы?',
-      mini_cta_btn: 'Записаться на CGM-диагностику',
-
-      proof_stat_text: 'случаев диабета можно предотвратить изменением питания и образа жизни',
-      proof_stat_source: 'Diabetes Prevention Program (DPP), NIH, n=3,234',
-      proof_title: 'Это не о потере веса. Это о предотвращении болезни.',
-      proof_text:
-        'Предиабет часто остаётся незамеченным годами. Но в организме уже происходят изменения — повреждение сосудов, воспаление, упадок энергии. CGM-мониторинг и персонализированное питание позволяют вмешаться рано, пока процесс ещё обратим.',
-
-      stat_prediabetes_num: '1 из 3',
-      stat_prediabetes_text: 'взрослых имеет предиабет, но 84% об этом не знают',
-      stat_prediabetes_source: 'CDC National Diabetes Statistics, 2024',
-      stat_personalized_text:
-        'эффективнее результат с персонализированным питанием по сравнению со стандартными диетами',
-      stat_personalized_source: 'Weizmann Institute, Cell 2015',
-      stat_cgm_text: 'дней — достаточно для определения Ваших глюкозных паттернов',
-      stat_cgm_source: 'American Diabetes Association',
-
-      step_1_title: 'Диагностика',
-      step_1_desc: 'Комплексный анализ: CGM сенсоры (14 дней), биохимия крови, оценка микробиома.',
-      step_2_title: 'Анализ',
-      step_2_desc: 'Интерпретация результатов с позиции системной биологии и метаболизма.',
-      step_3_title: 'Стратегия',
-      step_3_desc: 'Персонализированный план питания с учетом образа жизни и целей.',
-      step_4_title: 'Мониторинг',
-      step_4_desc: 'Регулярный контроль показателей и корректировка программы.',
-
-      cta_title: 'Узнайте свой метаболический статус',
-      cta_desc:
-        'Начните с 14-дневного CGM-мониторинга и персонализированного анализа. Получите ясность о работе своего организма.',
-      cta_btn: 'Записаться на диагностику',
-
-      faq_tag: 'Часто задаваемые вопросы',
-      faq_title: 'Что нужно знать перед записью',
-      faq_q1: 'Для кого предназначена CGM-диагностика?',
-      faq_a1:
-        'CGM-анализ идеален для людей с предиабетом, инсулинорезистентностью, СПКЯ, необъяснимой усталостью или для тех, кто хочет проактивно оптимизировать здоровье. Диагноз не требуется — достаточно желания понять свой организм.',
-      faq_q2: 'Чем это отличается от обычного диетолога?',
-      faq_a2:
-        'Я не выписываю общие диеты. Каждая рекомендация основана на Ваших индивидуальных CGM-данных, биомаркерах крови и образе жизни. Это прецизионная медицина в питании.',
-      faq_q3: 'Возможны ли консультации онлайн?',
-      faq_a3:
-        'Да. CGM-сенсор можно установить самостоятельно (высылаю подробную инструкцию), и все консультации проходят в видео-формате. Работаю с клиентами по всей Латвии и за её пределами.',
-      faq_q4: 'Сколько длится процесс сотрудничества?',
-      faq_a4:
-        'Минимальный цикл — 14 дней CGM-мониторинга + 2 консультации (анализ и стратегия). Долгосрочная поддержка доступна по индивидуальной договорённости.',
-
-      contact_tag: 'Контакты',
-      booking_title: 'Запишитесь на консультацию',
-      booking_subtitle:
-        'Выберите удобную дату и время. Свободные места обновляются в реальном времени.',
-      contact_alt_text: 'Хотите связаться другим способом?',
-      contact_title: 'Давайте начнем с короткой консультации',
-      contact_desc:
-        'Оставьте запрос, и я свяжусь с Вами, чтобы подобрать формат работы и ответить на вопросы.',
-
-      contact_card_title: 'Контактные данные',
-      contact_card_desc: 'Пишите на email или в WhatsApp — отвечаю лично.',
-      contact_loc: 'Рига, Латвия • Очные и онлайн консультации',
-
-      form_title: 'Заявка на консультацию',
-      lbl_name: 'Ваше имя',
-      plh_name: 'Ирина',
-      lbl_email: 'Email или мессенджер',
-      plh_email: '@telegram или email',
-      lbl_msg: 'Кратко о запросе',
-      plh_msg: 'Цель, диагноз, сроки',
-      btn_submit: 'Отправить заявку',
-      btn_sent: 'Заявка отправлена',
-
-      // How it works
-      how_title: 'Как это работает?',
-      how_subtitle: 'Простой процесс, который легко вписать в повседневную жизнь',
-      step_1_title: '1. Устанавливаем CGM сенсор',
-      step_1_desc: 'Маленький, незаметный сенсор на руке. Совершенно безболезненная процедура.',
-      step_2_title: '2. Живите обычной жизнью',
-      step_2_desc: 'Питайтесь как обычно 14 дней. Сенсор фиксирует влияние каждого приёма пищи.',
-      step_3_title: '3. Анализируем данные вместе',
-      step_3_desc: 'Видим, какие продукты стабилизируют, какие — вызывают скачки сахара.',
-      step_4_title: '4. Получаете персонализированный план',
-      step_4_desc: 'Конкретные рекомендации: что изменить, что оставить, что добавить.',
-
-      // Program
-      program_badge: 'Основная услуга',
-      program_title: '14-дневная CGM программа',
-      program_subtitle: 'Полная диагностика и персонализированный план действий',
-      program_includes_title: 'Что включено:',
-      program_item_1: 'Установка CGM сенсора на 14 дней',
-      program_item_2: 'Анализ данных глюкозы и детальный отчёт',
-      program_item_3: '60 мин консультация (онлайн или очно)',
-      program_item_4: 'Персонализированный план питания на 4 недели',
-      program_item_5: 'Follow-up звонок через 2–3 недели',
-      program_for_title: 'Для кого:',
-      program_for_1: 'Людей с предиабетом или инсулинорезистентностью',
-      program_for_2: 'Людей с риском диабета 2 типа',
-      program_for_3: 'Людей с колебаниями веса и хронической усталостью',
-      price_label: 'Стоимость программы',
-      price_value: 'от 249 €',
-      price_note: 'CGM сенсор включён в стоимость',
-      result_title: 'Результат:',
-      result_1: 'Поймёте, какие продукты именно у Вас вызывают резкие скачки сахара',
-      result_2: 'Получите конкретный план действий для стабилизации уровня глюкозы',
-      program_cta: 'Записаться на программу',
-      program_guarantee: 'Первая консультация бесплатно',
-
-      // Approach
-      approach_title: 'Почему общие диеты не работают?',
-
-      // Proof & Testimonials
-      proof_stat: 'случаев диабета можно предотвратить персонализированным питанием',
+      // Testimonials
+      testimonials_sectionTitle: 'Отзывы',
       testimonials_title: 'Что говорят клиенты',
       testimonial_1:
-        '«Всегда думала, что питаюсь правильно — творог с мёдом на завтрак, салаты на обед. Но сенсор показал, что мой сахар скачет как на американских горках. После рекомендаций Софии — стабильный уровень и минус 4 кг без голодовок.»',
+        'Годами пробовала разные диеты — они работали пару месяцев и заканчивались. Подход Софии был совершенно другим: не запреты, а понимание того, что моему организму действительно нужно. Через 3 месяца — минус 6 кг, и главное — понимаю, почему.',
       testimonial_1_author: 'Майя, 47 лет',
-      testimonial_1_condition: 'Предиабет, метаболический синдром',
+      testimonial_1_condition: 'Контроль веса, нехватка энергии',
       testimonial_2:
-        '«Как IT-специалист всю жизнь сидел за компьютером и ел нерегулярно. Когда врач сказал про инсулинорезистентность — испугался. Подход Софии с CGM был как хакинг моего тела — наконец понял, что реально происходит.»',
+        'Как IT-специалист всю жизнь ел хаотично и чувствовал хроническую усталость. София помогла понять связь между питанием и энергией. Теперь энергии хватает на весь день без кофейных марафонов.',
       testimonial_2_author: 'Рихард, 35 лет',
-      testimonial_2_condition: 'Инсулинорезистентность',
+      testimonial_2_condition: 'Хроническая усталость, хаотичное питание',
       testimonial_3:
-        '«После гестационного диабета врачи сказали — следи за собой, иначе будет настоящий диабет. Но никто не объяснил КАК. София не только объяснила, но и показала на данных, почему именно моему организму нужен другой подход.»',
+        'После рождения ребёнка никак не могла вернуться в форму. София составила план, который вписался в мою суматошную жизнь мамы. Никаких строгих ограничений — только умный подход к приёмам пищи и выбору продуктов.',
       testimonial_3_author: 'Кристина, 34 года',
-      testimonial_3_condition: 'После гестационного диабета',
+      testimonial_3_condition: 'Послеродовое восстановление',
 
       // About
+      about_tag: 'Обо мне',
       about_lead:
-        'Я зарегистрированный специалист по питанию и PhD-исследователь в Латвийском Университете. Работаю с людьми с предиабетом и инсулинорезистентностью, используя CGM сенсоры и научно обоснованный подход.',
+        'Я зарегистрированный специалист по питанию и PhD-исследователь в Латвийском Университете. Помогаю людям наладить питание, опираясь на науку и индивидуальный подход.',
       about_text:
-        'Почему CGM? Потому что стандартные анализы крови показывают лишь один моментальный снимок. Но риск диабета скрыт в ежедневных колебаниях сахара — их можно увидеть только при непрерывном мониторинге.',
-      cred_1_title: 'Зарегистрированный медспециалист',
+        'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах — не модных диетах или общих советах. В работе использую также современные технологии, например, CGM-сенсоры глюкозы, позволяющие точно понять реакции организма.',
       cred_2_title: 'PhD-исследователь',
       cred_2_loc: 'Латвийский Университет',
       cred_3_title: 'MSc в нутрициологии',
       cred_3_loc: 'Рижский Университет Страдиня',
+      clients_count: '500+ клиентов',
+      clients_improved: 'с улучшенными показателями',
+      reg_number_label: 'Рег. номер',
 
       // Science Gallery
       science_title: 'Научная деятельность',
@@ -558,287 +277,146 @@
       gallery_3_title: 'День здоровой грамотности',
       gallery_3_desc: 'Клиническая университетская больница Паулса Страдиня',
 
-      // Lead Magnet
-      lead_badge: 'Бесплатный PDF',
-      lead_title: '7 ежедневных привычек, повышающих сахар',
-      lead_desc: 'Узнайте, какие привычки увеличивают риск диабета, и как их изменить.',
-      lead_item_1: 'Почему пропуск завтрака повышает сахар',
-      lead_item_2: 'Полезны ли фрукты? Зависит от того...',
-      lead_item_3: '3 простых шага, которые можно начать сегодня',
-      lead_placeholder: 'Ваш email',
-      lead_btn: 'Получить PDF',
-      lead_note: 'Никакого спама. Отписаться можно в любой момент.',
+      // FAQ
+      faq_tag: 'Часто задаваемые вопросы',
+      faq_title: 'Что нужно знать перед записью',
+      faq_q1: 'Для кого предназначены консультации?',
+      faq_a1:
+        'Для всех, кто хочет наладить питание научно обоснованным способом — независимо от возраста или цели. Работаю с контролем веса, нехваткой энергии, метаболическим здоровьем, предиабетом, здоровьем кишечника и оптимизацией питания.',
+      faq_q2: 'Чем это отличается от обычного диетолога?',
+      faq_a2:
+        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет — каждая рекомендация адаптирована к Вашей ситуации. Дополнительно предлагаю CGM-диагностику — уникальную возможность в Латвии.',
+      faq_q3: 'Доступны ли консультации онлайн?',
+      faq_a3:
+        'Да, работаю как очно в Риге, так и онлайн. Видео-консультации так же эффективны и доступны клиентам по всей Латвии и за её пределами.',
+      faq_q4: 'Сколько стоит консультация?',
+      faq_a4:
+        'Первая ознакомительная консультация (15 мин) — бесплатно. Полная 60-минутная консультация — от 65€. CGM-программа (14 дней) — от 249€. Точную стоимость обсудим на первом звонке.',
+      faq_q5: 'Как проходит первая консультация?',
+      faq_a5:
+        'Начинаем с бесплатного 15-минутного знакомства, на котором узнаю Вашу ситуацию и цели. Если решите продолжить, следующий шаг — углублённая 60-минутная консультация с анализом питания и разработкой индивидуального плана.',
 
-      // CTA
-      cta_title: 'Готовы узнать, как Ваш организм реагирует на еду?',
-      cta_desc: 'Начните с бесплатной 15-минутной консультации',
-      cta_btn: 'Записаться на консультацию',
+      // Booking
+      contact_tag: 'Контакты',
+      booking_eyebrow: 'Индивидуальная консультация',
+      booking_badge: 'Персональный подход',
+      booking_title: 'Запишитесь на консультацию',
+      booking_subtitle:
+        'Выберите удобную дату и время. Доступность обновляется в реальном времени.',
+      booking_trust_compact_1: 'Конфиденциально',
+      booking_trust_compact_2: 'Очно или онлайн',
+      booking_trust_compact_3: 'Ответ за 24ч',
+      booking_note: 'После записи вы получите подтверждение по email.',
 
+      // Footer
       footer_role: 'Сертифицированный специалист по питанию, PhD',
       footer_nav: 'Навигация',
       footer_rights: '© 2026 Sofija Ivanova. Все права защищены.',
-
-      // Missing translations
-      header_subtitle: 'Специалист по питанию · PhD',
-      cgm_unique_title: 'Ваш организм реагирует по-разному',
-      cgm_unique_desc:
-        'Один и тот же продукт для одного человека идеален, для другого — вызывает скачок сахара. CGM сенсор 14 дней фиксирует каждую реакцию.',
-      chart_glucose_response: 'Реакция глюкозы',
-      chart_after: 'После программы',
-      chart_before: 'До',
-      cgm_how_helps: 'Как помогает CGM?',
-      cgm_benefit_1_title: 'Мониторинг в реальном времени',
-      cgm_benefit_1_desc: 'Видите, как организм реагирует на каждый приём пищи',
-      cgm_benefit_2_title: '20 000+ измерений',
-      cgm_benefit_2_desc: 'Полная картина за 14 дней',
-      cgm_benefit_3_title: 'Точные рекомендации',
-      cgm_benefit_3_desc: 'Знаем, что изменить именно для Вас',
-      reg_number_label: 'Рег. номер',
-      clients_count: '500+ клиентов',
-      clients_improved: 'с улучшенными показателями',
       footer_subtitle: 'Специалист по питанию · PhD · Рег. № 75650061277',
+      header_subtitle: 'Специалист по питанию · PhD',
     },
     en: {
       // Navigation
-      nav_program: 'Program',
-      nav_how: 'How it works',
+      nav_services: 'Services',
       nav_about: 'About',
+      nav_testimonials: 'Testimonials',
       nav_contact: 'Contact',
       nav_cabinet: 'Patient Cabinet',
-      nav_services: 'Services',
-      nav_approach: 'Approach',
-      nav_badge: 'EU License',
 
-      hero_badge: 'Registered Medical Practitioner No. 75650061277',
-      hero_title: 'In 14 days, from glucose spikes to stable blood sugar levels',
+      // Hero
+      hero_eyebrow: 'Nutrition Specialist · PhD · Riga',
+      hero_title: 'Nutrition designed just for You',
       hero_subtitle:
-        'PhD researcher and registered nutritionist helping people with prediabetes and insulin resistance stabilize blood sugar using CGM data.',
-      hero_benefit_1: '14-day CGM monitoring',
-      hero_benefit_2: 'Data analysis in plain language',
-      hero_benefit_3: 'Personalized nutrition and lifestyle plan',
-      hero_benefit_4: 'Focus on prediabetes and insulin resistance',
-      hero_cta_primary: 'Apply for 14-day program',
-      hero_cta_secondary: 'Free 15 min consultation',
+        'Registered nutrition specialist and PhD researcher. I help you improve your diet, well-being, and health goals — with an individual, science-based approach.',
+      hero_cta_primary: 'Book a consultation',
+      hero_cta_secondary: 'View services',
+      hero_credential_label: 'Nutrition Science',
 
-      meta_reg_title: 'Registration',
-      meta_reg_val: 'Medical Practitioner',
-      meta_spec_title: 'Focus',
-      meta_spec_val: 'Diabetes prevention and metabolic health',
-      meta_loc_title: 'Availability',
-      meta_loc_val: 'In-person in Riga • Online across Latvia',
+      // Trust Bar
+      trust_clients: '500+ clients',
+      trust_clients_sub: 'with improved results',
+      trust_phd: 'PhD Researcher',
+      trust_phd_sub: 'University of Latvia',
+      trust_exp: '7+ years of experience',
+      trust_exp_sub: 'in nutrition science and research',
+      trust_reg: 'Registered specialist',
+      trust_reg_sub: 'in the medical practitioners registry',
 
-      overlay_reg: 'PhD Researcher',
-      overlay_uni: 'University of Latvia • Clinical & Personalized Medicine',
-
-      trust_reg: 'Medical Practitioners Registry',
-      trust_phd: 'PhD at University of Latvia',
-      trust_horizon: 'Horizon Europe Research',
-      trust_ul: 'Clinical & Personalized Medicine',
-
+      // Services
       services_tag: 'Services',
-      services_title: 'Comprehensive Approach to Metabolic Health',
+      services_title: 'How I can help You',
       services_desc:
-        'Science-based solutions for diabetes prevention, quality of life improvement, and chronic disease risk reduction.',
-
-      srv_1_title: 'Diabetes & Prediabetes',
+        'Every person is unique — that\'s why my work begins with your story, not a ready-made template.',
+      srv_1_title: 'Individual consultation',
       srv_1_desc:
-        'Prevention strategies and support for diabetes based on clinical studies and patient data.',
-      srv_2_title: 'Immunity & Microbiome',
-      srv_2_desc: 'Nutrition optimization based on gut health and immune system strengthening.',
-      srv_3_title: 'Metabolic Health',
+        '60 min consultation in-person or online. We analyze your dietary habits, health status, and set goals together.',
+      srv_2_title: 'Personalized meal plan',
+      srv_2_desc:
+        'A nutrition plan tailored to your body\'s needs, lifestyle, and food preferences. No universal diets.',
+      srv_3_title: 'Metabolic health',
       srv_3_desc:
-        'Reducing insulin resistance and restoring energy levels through precise nutrition.',
-      srv_4_title: 'Personalized Nutrition',
-      srv_4_desc: 'Nutrition plan based on biomarkers, lifestyle, and real patient goals.',
-      srv_5_title: 'Long-term Results',
-      srv_5_desc: "Practical strategies for habit change that don't require constant willpower.",
-      srv_6_title: 'PRAESIIDIUM',
+        'Help with insulin resistance, prediabetes, weight management, and energy optimization. Science-based approach.',
+      srv_4_tag: 'Unique opportunity',
+      srv_4_title: 'CGM diagnostics',
+      srv_4_desc:
+        '14-day glucose monitoring with a sensor. Precise data on how your body responds to each food. Available as an add-on option.',
+      srv_5_title: 'Gut health',
+      srv_5_desc:
+        'Nutrition optimization for gut health and immune system support. Microbiome support through diet.',
+      srv_6_title: 'Long-term support',
       srv_6_desc:
-        'Working with scientific data and Horizon Europe AI models for complication prevention.',
+        'Regular check-ups and plan adjustments. I\'ll support you on the path to new, sustainable habits.',
 
-      about_tag: 'About Me',
-      about_title: 'Not just a nutritionist. A researcher.',
-      about_p1:
-        "I am a registered nutritionist with a Master's degree in Nutrition Science and currently conducting PhD research at the University of Latvia. I am part of the 'Clinical & Personalized Medicine' research group, studying the role of nutrition in diabetes prevention and treatment.",
-      about_p2:
-        'My goal is to combine scientific evidence and practical strategies to help people safely change their lifestyle, reduce chronic disease risks, and improve quality of life.',
-      about_p3:
-        '5 years of experience in food microbiology provide a deep understanding of food safety and its role in public health.',
+      // How I Work
+      process_tag: 'Process',
+      process_title: 'How the collaboration works',
+      proc_1_title: 'Getting acquainted',
+      proc_1_desc:
+        'Free 15 min call where I learn about your situation and goals. Together we\'ll decide which format works best for you.',
+      proc_2_title: 'Consultation & plan',
+      proc_2_desc:
+        'In-depth 60 min consultation. We analyze your nutrition, health, and develop a personalized action plan.',
+      proc_3_title: 'Results & support',
+      proc_3_desc:
+        'You receive a personalized nutrition plan and I continue supporting you with follow-up consultations for lasting results.',
 
-      qual_title: 'Education and Certification:',
-      qual_1: 'MSc in Nutrition Science — Rīga Stradiņš University',
-      qual_2: 'PhD Student — University of Latvia',
-      qual_3: 'Clinical & Personalized Medicine Research Group',
-      qual_4: 'Registered Nutritionist: 75650061277 (VI.gov.lv)',
+      // Pricing
+      price_first: 'Introductory consultation',
+      price_first_val: 'Free',
+      price_consult: 'Full consultation (60 min)',
+      price_consult_val: 'from €65',
+      price_cgm: 'CGM program (14 days)',
+      price_cgm_val: 'from €249',
 
-      cred_1_title: 'Clinical Basis',
-      cred_1_desc: 'Diabetes Prevention & Metabolic Health',
-      cred_2_title: 'Interdisciplinary',
-      cred_2_desc: 'Nutrition Science, Microbiology, Public Health',
-      cred_3_title: 'Safety',
-      cred_3_desc: 'Evidence Base & Clinical Protocols',
-      cred_4_title: 'Approach',
-      cred_4_desc: 'Sustainable Habits & Long-term Results',
-
-      stats_res: 'Years of Research<br>in Microbiology',
-      stats_phd: 'University of Latvia<br>Research Group',
-      stats_msc: 'Nutrition Science<br>Rīga Stradiņš University',
-      stats_reg: 'Registered Nutritionist<br>75650061277',
-
-      method_tag: 'Methodology',
-      method_title: "Why generic diets don't work",
-      method_subtitle:
-        "Your glucose response to an apple can be completely different from another person's. We prove this with data.",
-
-      cgm_title: "See what blood tests don't show",
-      cgm_desc:
-        'Standard HbA1c tests show the average picture. But diabetes risk hides in spikes — rapid glucose swings after eating that are only visible with continuous monitoring. A CGM sensor records every reaction for 14 days, and together we analyze what exactly causes stress in your body.',
-      cgm_point_1:
-        '<strong>Hidden spikes:</strong> Foods that seem "healthy" but raise blood sugar',
-      cgm_point_2:
-        '<strong>Individual tolerance:</strong> How you specifically react to carbohydrates',
-      cgm_point_3: '<strong>Optimization:</strong> Precise changes, not generic advice',
-      chart_label: 'Glucose response after a meal',
-      chart_sub:
-        'Red line — hidden glucose spikes that accelerate aging and increase diabetes risk',
-      chart_legend_stable: 'After optimization',
-      chart_legend_unstable: 'Before consultation',
-
-      mini_cta_text: 'Want to see your glucose profile?',
-      mini_cta_btn: 'Book CGM Diagnostic',
-
-      proof_stat_text: 'of diabetes cases can be prevented through diet and lifestyle changes',
-      proof_stat_source: 'Diabetes Prevention Program (DPP), NIH, n=3,234',
-      proof_title: "This isn't about weight loss. It's about disease prevention.",
-      proof_text:
-        'Prediabetes often goes unnoticed for years. But changes are already happening in your body — vascular damage, inflammation, energy crashes. CGM monitoring and personalized nutrition allow early intervention, while the process is still reversible.',
-
-      stat_prediabetes_num: '1 in 3',
-      stat_prediabetes_text: "adults have prediabetes, but 84% don't know it",
-      stat_prediabetes_source: 'CDC National Diabetes Statistics, 2024',
-      stat_personalized_text:
-        'more effective results with personalized nutrition compared to standard diets',
-      stat_personalized_source: 'Weizmann Institute, Cell 2015',
-      stat_cgm_text: 'days — enough to identify your glucose patterns',
-      stat_cgm_source: 'American Diabetes Association',
-
-      step_1_title: 'Diagnostics',
-      step_1_desc:
-        'Comprehensive analysis: CGM sensors (14-day monitoring), blood biochemistry, microbiome assessment.',
-      step_2_title: 'Analysis',
-      step_2_desc: 'Interpretation of results from a systems biology and metabolism perspective.',
-      step_3_title: 'Strategy',
-      step_3_desc: 'Personalized nutrition plan considering lifestyle and goals.',
-      step_4_title: 'Monitoring',
-      step_4_desc: 'Regular monitoring of indicators and program adjustment.',
-
-      cta_title: 'Discover your metabolic status',
-      cta_desc:
-        'Start with 14-day CGM monitoring and personalized analysis. Gain clarity about how your body works.',
-      cta_btn: 'Book Diagnostic Session',
-
-      faq_tag: 'Frequently Asked Questions',
-      faq_title: 'What to know before booking',
-      faq_q1: 'Who is CGM diagnostics for?',
-      faq_a1:
-        'CGM analysis is ideal for people with prediabetes, insulin resistance, PCOS, unexplained fatigue, or those who want to proactively optimize their health. No diagnosis required — just a desire to understand your body.',
-      faq_q2: 'How is this different from a regular dietitian?',
-      faq_a2:
-        "I don't prescribe generic diets. Every recommendation is based on your individual CGM data, blood biomarkers, and lifestyle. This is precision medicine in nutrition.",
-      faq_q3: 'Are online consultations available?',
-      faq_a3:
-        'Yes. The CGM sensor can be self-applied (I send detailed instructions), and all consultations happen via video. I work with clients across Latvia and beyond.',
-      faq_q4: 'How long is the collaboration process?',
-      faq_a4:
-        'The minimum cycle is 14 days of CGM monitoring + 2 consultations (analysis and strategy). Long-term support is available by individual arrangement.',
-
-      contact_tag: 'Contact',
-      booking_title: 'Book a Consultation',
-      booking_subtitle:
-        'Choose a convenient date and time. Available slots are updated in real-time.',
-      contact_alt_text: 'Prefer to reach out another way?',
-      contact_title: "Let's start with a short consultation",
-      contact_desc:
-        'Leave a request, and I will contact you to discuss the best format for cooperation.',
-
-      contact_card_title: 'Contact Details',
-      contact_card_desc: 'Contact me via email or WhatsApp — I answer personally.',
-      contact_loc: 'Riga, Latvia • In-person and Online',
-
-      form_title: 'Consultation Request',
-      lbl_name: 'Your Name',
-      plh_name: 'Anna',
-      lbl_email: 'Email or Messenger',
-      plh_email: '@telegram or email',
-      lbl_msg: 'Briefly about request',
-      plh_msg: 'Goal, diagnosis, timeframe',
-      btn_submit: 'Send Request',
-      btn_sent: 'Request Sent',
-
-      // How it works
-      how_title: 'How does it work?',
-      how_subtitle: 'A simple process you can fit into your daily life',
-      step_1_title: '1. We apply the CGM sensor',
-      step_1_desc: 'A small, unnoticeable sensor on your arm. Completely painless procedure.',
-      step_2_title: '2. Live your normal life',
-      step_2_desc: 'Eat as usual for 14 days. The sensor records the impact of each meal.',
-      step_3_title: '3. We analyze the data together',
-      step_3_desc: 'We see which foods stabilize you, which ones cause sugar spikes.',
-      step_4_title: '4. You receive a personalized plan',
-      step_4_desc: 'Specific recommendations: what to change, keep, or add.',
-
-      // Program
-      program_badge: 'Main Service',
-      program_title: '14-Day CGM Program',
-      program_subtitle: 'Complete diagnostics and personalized action plan',
-      program_includes_title: "What's included:",
-      program_item_1: 'CGM sensor application for 14 days',
-      program_item_2: 'Glucose data analysis and detailed report',
-      program_item_3: '60 min consultation (online or in-person)',
-      program_item_4: 'Personalized nutrition plan for 4 weeks',
-      program_item_5: 'Follow-up call after 2–3 weeks',
-      program_for_title: "Who it's for:",
-      program_for_1: 'People with prediabetes or insulin resistance',
-      program_for_2: 'People at risk of type 2 diabetes',
-      program_for_3: 'People with weight fluctuations and chronic fatigue',
-      price_label: 'Program price',
-      price_value: 'from €249',
-      price_note: 'CGM sensor included',
-      result_title: 'Result:',
-      result_1: "You'll understand which foods cause sharp sugar spikes for YOU specifically",
-      result_2: "You'll receive a concrete action plan to stabilize glucose levels daily",
-      program_cta: 'Apply for the program',
-      program_guarantee: 'First consultation free',
-
-      // Approach
-      approach_title: "Why don't generic diets work?",
-
-      // Proof & Testimonials
-      proof_stat: 'of diabetes cases can be prevented with personalized nutrition',
+      // Testimonials
+      testimonials_sectionTitle: 'Testimonials',
       testimonials_title: 'What clients say',
       testimonial_1:
-        '"I always thought I ate healthy — cottage cheese with honey for breakfast, salads for lunch. But the sensor showed my sugar was on a roller coaster. After Sofija\'s recommendations — stable levels and 4 kg down without starving."',
+        'For years I tried different diets — they worked for a couple of months and then stopped. Sofija\'s approach was completely different: not restrictions, but understanding what my body truly needs. After 3 months — 6 kg less, and most importantly — I understand why.',
       testimonial_1_author: 'Maija, 47 years',
-      testimonial_1_condition: 'Prediabetes, metabolic syndrome',
+      testimonial_1_condition: 'Weight management, lack of energy',
       testimonial_2:
-        '"As an IT specialist, I spent my life at a computer eating irregularly. When the doctor mentioned insulin resistance — I got scared. Sofija\'s CGM approach was like hacking my own body — finally understood what was really happening."',
+        'As an IT specialist, I ate chaotically my whole life and felt chronic fatigue. Sofija helped me understand the connection between nutrition and energy. Now I have energy for the whole day without coffee marathons.',
       testimonial_2_author: 'Rihards, 35 years',
-      testimonial_2_condition: 'Insulin resistance',
+      testimonial_2_condition: 'Chronic fatigue, chaotic eating',
       testimonial_3:
-        '"After gestational diabetes, doctors said — watch yourself or you\'ll get real diabetes. But no one explained HOW. Sofija not only explained but showed me with data why my body specifically needs a different approach."',
+        'After having a baby, I couldn\'t get back in shape. Sofija created a plan that fit into my hectic mom life. No strict restrictions — just a smart approach to meals and food choices.',
       testimonial_3_author: 'Kristīne, 34 years',
-      testimonial_3_condition: 'Post-gestational diabetes',
+      testimonial_3_condition: 'Postpartum recovery',
 
       // About
+      about_tag: 'About Me',
       about_lead:
-        "I'm a registered nutritionist and PhD researcher at the University of Latvia. I work with people with prediabetes and insulin resistance, using CGM sensors and a science-based approach.",
+        'I am a registered nutrition specialist and PhD researcher at the University of Latvia. I help people improve their diet based on science and an individual approach.',
       about_text:
-        'Why CGM? Because standard blood tests show only one snapshot. But diabetes risk hides in daily sugar fluctuations — they can only be seen with continuous monitoring.',
-      cred_1_title: 'Registered Medical Practitioner',
+        'My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. I also use modern technologies, such as CGM glucose sensors, which allow precise understanding of the body\'s responses.',
       cred_2_title: 'PhD Researcher',
       cred_2_loc: 'University of Latvia',
       cred_3_title: 'MSc in Nutrition Science',
       cred_3_loc: 'Rīga Stradiņš University',
+      clients_count: '500+ clients',
+      clients_improved: 'with improved results',
+      reg_number_label: 'Registration No.',
 
       // Science Gallery
       science_title: 'Scientific Activity',
@@ -848,51 +426,49 @@
       gallery_1_title: 'EASD 2025, Vienna',
       gallery_1_desc: 'European Association for the Study of Diabetes Congress',
       gallery_2_tag: 'Education',
-      gallery_2_title: "Researchers' Night",
+      gallery_2_title: 'Researchers\' Night',
       gallery_2_desc: 'Annual science outreach event in Latvia',
       gallery_3_tag: 'Clinical',
       gallery_3_title: 'Health Literacy Day',
       gallery_3_desc: 'Pauls Stradiņš Clinical University Hospital',
 
-      // Lead Magnet
-      lead_badge: 'Free PDF',
-      lead_title: '7 daily habits that raise your blood sugar',
-      lead_desc: 'Learn which habits increase diabetes risk and how to change them.',
-      lead_item_1: 'Why skipping breakfast raises blood sugar',
-      lead_item_2: 'Are fruits healthy? It depends on...',
-      lead_item_3: '3 simple steps to start today',
-      lead_placeholder: 'Your email',
-      lead_btn: 'Get PDF',
-      lead_note: 'No spam. Unsubscribe anytime.',
+      // FAQ
+      faq_tag: 'Frequently Asked Questions',
+      faq_title: 'What to know before booking',
+      faq_q1: 'Who are the consultations for?',
+      faq_a1:
+        'For anyone who wants to improve their nutrition in a science-based way — regardless of age or goal. I work with weight management, energy issues, metabolic health, prediabetes, gut health, and nutrition optimization.',
+      faq_q2: 'How is this different from a regular dietitian?',
+      faq_a2:
+        'My approach is based on research and individual data. I don\'t prescribe generic diets — every recommendation is tailored to your situation. Additionally, I offer CGM diagnostics — a unique opportunity in Latvia.',
+      faq_q3: 'Are online consultations available?',
+      faq_a3:
+        'Yes, I work both in-person in Riga and online. Video consultations are equally effective and available to clients across Latvia and beyond.',
+      faq_q4: 'How much does a consultation cost?',
+      faq_a4:
+        'The first introductory consultation (15 min) is free. A full 60 min consultation — from €65. CGM program (14 days) — from €249. We\'ll discuss the exact price during the first call.',
+      faq_q5: 'How does the first consultation go?',
+      faq_a5:
+        'We start with a free 15-minute introduction where I learn about your situation and goals. If you decide to continue, the next step is an in-depth 60-minute consultation with nutrition analysis and individual plan development.',
 
-      // CTA
-      cta_title: 'Ready to learn how your body responds to food?',
-      cta_desc: 'Start with a free 15-minute consultation',
-      cta_btn: 'Book a consultation',
+      // Booking
+      contact_tag: 'Contact',
+      booking_eyebrow: 'Personal Consultation',
+      booking_badge: 'Personalized Care',
+      booking_title: 'Book a Consultation',
+      booking_subtitle:
+        'Choose a convenient date and time. Availability is updated in real time.',
+      booking_trust_compact_1: 'Confidential',
+      booking_trust_compact_2: 'In-person or online',
+      booking_trust_compact_3: 'Reply within 24h',
+      booking_note: 'You will receive an email confirmation after booking.',
 
+      // Footer
       footer_role: 'Certified Nutritionist, PhD Student',
       footer_nav: 'Navigation',
       footer_rights: '© 2026 Sofija Ivanova. All rights reserved.',
-
-      // Missing translations
-      header_subtitle: 'Nutrition Specialist · PhD',
-      cgm_unique_title: 'Your body responds differently',
-      cgm_unique_desc:
-        'The same product can be ideal for one person, but cause a sugar spike for another. A CGM sensor records every reaction for 14 days.',
-      chart_glucose_response: 'Glucose response',
-      chart_after: 'After program',
-      chart_before: 'Before',
-      cgm_how_helps: 'How does CGM help?',
-      cgm_benefit_1_title: 'Real-time monitoring',
-      cgm_benefit_1_desc: 'See how your body responds to each meal',
-      cgm_benefit_2_title: '20,000+ measurements',
-      cgm_benefit_2_desc: 'Complete picture over 14 days',
-      cgm_benefit_3_title: 'Precise recommendations',
-      cgm_benefit_3_desc: 'We know what to change specifically for you',
-      reg_number_label: 'Registration No.',
-      clients_count: '500+ clients',
-      clients_improved: 'with improved results',
       footer_subtitle: 'Nutrition Specialist · PhD · Reg. No. 75650061277',
+      header_subtitle: 'Nutrition Specialist · PhD',
     },
   };
 
