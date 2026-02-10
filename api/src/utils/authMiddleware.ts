@@ -24,7 +24,7 @@ import {
  * Получает список разрешенных admin email'ов
  */
 export function getAllowedAdminEmails(): string[] {
-  const adminEmailsEnv = process.env.ADMIN_EMAILS || 'ivanovs.kirils95@gmail.com';
+  const adminEmailsEnv = process.env.ADMIN_EMAILS || 'ivanovs.kirils95@gmail.com,sofija.ivanova.lv@gmail.com';
   return adminEmailsEnv
     .split(',')
     .map(email => email.trim().toLowerCase())

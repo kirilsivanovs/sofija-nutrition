@@ -293,7 +293,8 @@ describe('Auth Middleware', () => {
             const emails = getAllowedAdminEmails();
             
             expect(emails).toContain('ivanovs.kirils95@gmail.com');
-            expect(emails.length).toBe(1);
+            expect(emails).toContain('sofija.ivanova.lv@gmail.com');
+            expect(emails.length).toBe(2);
         });
     });
 });

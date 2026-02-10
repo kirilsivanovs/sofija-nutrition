@@ -34,6 +34,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare API shared files
+        run: cp shared/translations.js api/shared-translations.js
+
       - name: Deploy to Azure Static Web Apps
         id: deploy
         uses: Azure/static-web-apps-deploy@v1
@@ -45,7 +48,7 @@ jobs:
           app_location: /
           output_location: dist
           app_build_command: npm run build
-          # Managed API — deploys Functions alongside frontend
+          # Managed API — deploys Functions alongside frontend (free tier)
           api_location: api
           api_build_command: npm run build
         env:
