@@ -39,7 +39,6 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <!-- Mobile Menu Button -->
         <button
           type="button"
-          onclick="this.classList.toggle('active');document.getElementById('mobile-nav-menu').classList.toggle('open');document.body.style.overflow=document.getElementById('mobile-nav-menu').classList.contains('open')?'hidden':'';"
           class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer"
           style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
           aria-label="Menu"
@@ -58,28 +57,24 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <div class="max-w-6xl mx-auto px-4 md:px-8">
         <div class="flex gap-1">
           <a href="#program" class="nav-tab">
-            <i class="ph ph-flower-lotus"></i>
             <span data-i18n="nav_program">Programma</span>
           </a>
           <a href="#how-it-works" class="nav-tab">
-            <i class="ph ph-steps"></i>
             <span data-i18n="nav_how">Kā tas strādā</span>
           </a>
           <a href="#about" class="nav-tab">
-            <i class="ph ph-user-circle"></i>
             <span data-i18n="nav_about">Par mani</span>
           </a>
           <a href="#contact" class="nav-tab">
-            <i class="ph ph-calendar-check"></i>
             <span data-i18n="nav_contact">Pieteikties</span>
           </a>
           <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab">
-            <i class="ph ph-user"></i>
             <span data-i18n="nav_cabinet">Pacienta kabinets</span>
           </a>
         </div>
       </div>
     </nav>
+  </header>
 
     <!-- Mobile Nav -->
     <div id="mobile-nav-menu" class="mobile-nav-menu">
@@ -98,7 +93,6 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
       </div>
     </div>
-  </header>
 
   <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
   <script is:inline>
@@ -129,16 +123,8 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         document.body.style.top = '';
       }
 
-      // Multiple event types for iOS Safari
+      // iOS Safari compatible click
       btn.addEventListener('click', toggle, false);
-      btn.addEventListener(
-        'touchstart',
-        function (e) {
-          e.preventDefault();
-          toggle(e);
-        },
-        { passive: false }
-      );
 
       // Close on link click
       var links = menu.querySelectorAll('a');
