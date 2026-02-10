@@ -90,6 +90,7 @@ export class MealsTabController {
     this.initDOMElements();
     this.setupEventListeners();
     this.exposeGlobalFunctions();
+    this.renderCalendar();
   }
 
   /**
