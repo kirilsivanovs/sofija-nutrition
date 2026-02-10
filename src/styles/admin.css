@@ -1677,7 +1677,7 @@
   }
   .meals-sidebar {
     order: -1;
-    max-height: 220px;
+    max-height: 260px;
     overflow-y: auto;
   }
 }
@@ -1822,6 +1822,22 @@
 }
 
 @media (max-width: 768px) {
+  .meals-calendar-header-card {
+    margin-bottom: 12px;
+    padding: 14px;
+  }
+  .meals-calendar-header {
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .meals-patient-title {
+    font-size: 17px;
+  }
+  .meals-month-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
   .meals-calendar-grid {
     gap: 3px;
   }
@@ -1830,7 +1846,7 @@
     font-size: 11px;
   }
   .meals-calendar-day {
-    min-height: 70px;
+    min-height: 64px;
     padding: 4px;
   }
   .meals-day-number {
@@ -1841,6 +1857,9 @@
   }
   .meals-day-macros {
     font-size: 8px;
+  }
+  .card {
+    padding: 16px;
   }
 }
 

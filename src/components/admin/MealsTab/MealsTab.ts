@@ -490,6 +490,7 @@ export class MealsTabController {
   private showLoading(): void {
     this.elements.loading?.classList.remove('hidden');
     this.elements.calendarContainer?.classList.add('hidden');
+    this.elements.empty?.classList.add('hidden');
   }
 
   /**
@@ -497,6 +498,10 @@ export class MealsTabController {
    */
   private hideLoading(): void {
     this.elements.loading?.classList.add('hidden');
+    // Show calendar if a patient is selected, otherwise show empty state
+    const hasPatient = !!this.patientController.getSelectedPatientId();
+    this.elements.calendarContainer?.classList.toggle('hidden', !hasPatient);
+    this.elements.empty?.classList.toggle('hidden', hasPatient);
   }
 
   /**
