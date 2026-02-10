@@ -1675,6 +1675,11 @@
   .meals-layout {
     grid-template-columns: 1fr;
   }
+  .meals-sidebar {
+    order: -1;
+    max-height: 220px;
+    overflow-y: auto;
+  }
 }
 
 /* Meals Calendar Styles */
@@ -1818,20 +1823,24 @@
 
 @media (max-width: 768px) {
   .meals-calendar-grid {
-    gap: 4px;
+    gap: 3px;
+  }
+  .meals-calendar-weekdays {
+    gap: 3px;
+    font-size: 11px;
   }
   .meals-calendar-day {
-    min-height: 80px;
-    padding: 6px;
+    min-height: 70px;
+    padding: 4px;
   }
   .meals-day-number {
-    font-size: 12px;
+    font-size: 11px;
   }
   .meals-day-kcal {
-    font-size: 12px;
+    font-size: 11px;
   }
   .meals-day-macros {
-    font-size: 9px;
+    font-size: 8px;
   }
 }
 

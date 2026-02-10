@@ -955,33 +955,14 @@
     btn.classList.toggle('active', btn.dataset.lang === 'lv');
   });
 
-  // Mobile Menu Functionality - iOS Safari Compatible
-  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  // Mobile menu is handled by inline script in index.astro
+  // Only add close-on-link-click and close-on-overlay here (safe to double-attach)
   const mobileNavMenu = document.querySelector('.mobile-nav-menu');
   const mobileNavAnchors = document.querySelectorAll('.mobile-nav-menu a');
-
-  function toggleMobileMenu(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    const isOpen = mobileNavMenu.classList.toggle('open');
-    mobileMenuBtn.classList.toggle('active', isOpen);
-    mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-
-    // iOS Safari fix - prevent body scrolling
-    if (isOpen) {
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
-  }
+  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 
   function closeMobileMenu() {
+    if (!mobileMenuBtn || !mobileNavMenu) return;
     mobileMenuBtn.classList.remove('active');
     mobileNavMenu.classList.remove('open');
     mobileMenuBtn.setAttribute('aria-expanded', 'false');
@@ -990,10 +971,7 @@
     document.body.style.width = '';
   }
 
-  if (mobileMenuBtn && mobileNavMenu) {
-    // Use both click and touchend for better iOS support
-    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-
+  if (mobileNavMenu) {
     // Close menu when clicking a link
     mobileNavAnchors.forEach((link) => {
       link.addEventListener('click', closeMobileMenu);

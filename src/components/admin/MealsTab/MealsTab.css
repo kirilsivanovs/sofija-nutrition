@@ -109,39 +109,46 @@
 /* Mobile optimization for meals tab */
 @media (max-width: 768px) {
   .meals-layout {
-    gap: 16px;
+    gap: 12px;
   }
   .meals-sidebar {
-    order: 2;
-    max-height: none;
+    order: -1;
+    max-height: 220px;
+    overflow-y: auto;
     padding: 12px;
   }
   .meals-main {
-    order: 1;
+    order: 2;
   }
   .meals-calendar-grid {
-    gap: 4px;
-    overflow-x: auto;
-    min-width: 560px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .meals-calendar-weekdays {
+    gap: 3px;
+    font-size: 11px;
   }
   .meals-calendar-day {
-    min-height: 80px;
-    padding: 6px;
+    min-height: 70px;
+    padding: 4px;
   }
   .meals-day-number {
-    font-size: 12px;
+    font-size: 11px;
+    margin-bottom: 4px;
   }
   .meals-day-kcal {
-    font-size: 12px;
+    font-size: 11px;
   }
   .meals-day-macros {
-    font-size: 9px;
+    font-size: 8px;
+    gap: 3px;
   }
 }
 
 @media (max-width: 480px) {
   .meals-sidebar {
     padding: 8px;
+    max-height: 180px;
   }
   .meals-sidebar-header h3 {
     font-size: 14px;
@@ -153,10 +160,30 @@
     padding: 12px;
   }
   .meals-calendar-grid {
-    min-width: 500px;
+    gap: 2px;
+  }
+  .meals-calendar-weekdays {
+    gap: 2px;
+    font-size: 10px;
+  }
+  .meals-calendar-day {
+    min-height: 56px;
+    padding: 3px;
+  }
+  .meals-day-number {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+  .meals-day-kcal {
+    font-size: 10px;
+  }
+  .meals-day-macros {
+    display: none;
   }
   .meals-calendar-header {
-    gap: 12px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
   }
   .meals-patient-title {
     font-size: 16px;
