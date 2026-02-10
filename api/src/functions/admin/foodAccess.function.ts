@@ -31,7 +31,10 @@ export async function adminFoodAccess(
     const userId = request.query.get('userId');
     try {
       if (userId) {
-        const access = await repository.getAccess(userId);
+        let access = await repository.getAccess(userId);
+        if (!access && userId.includes('@')) {
+          access = await repository.findAccessByEmail(userId);
+        }
         return {
           status: 200,
           jsonBody: access || { userId, enabled: false }
@@ -59,6 +62,16 @@ export async function adminFoodAccess(
       const body = (await request.json().catch(() => ({}))) as { enabled?: boolean };
       const enabled = Boolean(body?.enabled);
       const access = await repository.setAccess(userId, enabled);
+
+      if (userId.includes('@')) {
+        const linked = await repository.findAccessByEmail(userId, userId);
+        if (linked) {
+          await repository.setAccess(linked.userId, enabled, {
+            displayName: linked.displayName,
+            email: linked.email || userId
+          });
+        }
+      }
       return {
         status: 200,
         jsonBody: access

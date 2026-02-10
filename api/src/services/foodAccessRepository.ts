@@ -8,6 +8,8 @@ export interface FoodAccessRecord {
   updatedAt?: string;
 }
 
+const ACCESS_EMAIL_SCAN_LIMIT = 2000;
+
 export class FoodAccessRepository {
   private tableClient: TableClient;
   private tableReady: Promise<void> | null = null;
@@ -98,5 +100,23 @@ export class FoodAccessRepository {
     }
 
     return results;
+  }
+
+  async findAccessByEmail(
+    email: string,
+    excludeUserId?: string
+  ): Promise<FoodAccessRecord | null> {
+    const normalized = email.trim().toLowerCase();
+    if (!normalized) return null;
+
+    const accessList = await this.listAccess(ACCESS_EMAIL_SCAN_LIMIT);
+    for (const record of accessList) {
+      const recordEmail = record.email?.trim().toLowerCase() || '';
+      if (recordEmail !== normalized) continue;
+      if (excludeUserId && record.userId === excludeUserId) continue;
+      return record;
+    }
+
+    return null;
   }
 }

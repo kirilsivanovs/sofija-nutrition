@@ -47,9 +47,26 @@ export async function getFoodAccess(
   }
 
   try {
-    const access = await repository.getAccess(userId);
+    let access = await repository.getAccess(userId);
     const displayName = principal?.userDetails || undefined;
     const email = principal?.userDetails || undefined;
+
+    if (!access && email) {
+      const emailAccess = await repository.findAccessByEmail(email, userId);
+      if (emailAccess) {
+        const migrated = await repository.setAccess(userId, emailAccess.enabled, {
+          displayName: emailAccess.displayName || displayName,
+          email: emailAccess.email || email
+        });
+        return {
+          status: 200,
+          jsonBody: {
+            userId,
+            enabled: migrated.enabled
+          }
+        };
+      }
+    }
 
     if (!access) {
       const created = await repository.setAccess(userId, false, { displayName, email });
