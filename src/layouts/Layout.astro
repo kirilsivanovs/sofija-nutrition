@@ -6,9 +6,9 @@ interface Props {
     description?: string;
 }
 
-const { 
-    title, 
-    description = "Sertificēta uztura speciāliste Rīgā. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uzturs. PhD pētniece Latvijas Universitātē." 
+const {
+    title,
+    description = "Sertificēta uztura speciāliste Rīgā. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uzturs. PhD pētniece Latvijas Universitātē."
 } = Astro.props;
 ---
 
@@ -19,18 +19,18 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no, email=no, address=no">
     <title>{title}</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/logo-192.svg">
-    
+
     <!-- SEO Meta Tags -->
     <meta name="description" content={description}>
     <meta name="keywords" content="uztura speciāliste Rīga, dietologs Latvija, diabēta profilakse, CGM sensors, glikozes monitorēšana, personalizēts uzturs, insulīna rezistence, prediabēts, metabolā veselība, uzturzinātne">
     <meta name="author" content="Sofija Ivanova">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://sofijaivanova.lv/">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sofijaivanova.lv/">
@@ -38,13 +38,13 @@ const {
     <meta property="og:description" content="Zinātniski pamatota pieeja diabēta profilaksei. CGM sensoru analīze, personalizēts uzturs, PhD pētniece.">
     <meta property="og:image" content="https://sofijaivanova.lv/assets/image.png">
     <meta property="og:locale" content="lv_LV">
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Sofija Ivanova | Uztura Speciāliste Rīgā">
     <meta name="twitter:description" content="Diabēta profilakse ar CGM sensoriem. PhD pētniece, reģistrēta ārstniecības persona.">
     <meta name="twitter:image" content="https://sofijaivanova.lv/assets/image.png">
-    
+
     <!-- Structured Data - Medical Business -->
     <script type="application/ld+json">
     {
@@ -64,23 +64,23 @@ const {
         "openingHours": "Mo-Fr 09:00-18:00"
     }
     </script>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <!-- Booking Calendar Styles -->
     <link rel="stylesheet" href="/assets/booking.css">
-    
+
     <!-- Animations Styles -->
     <link rel="stylesheet" href="/assets/animations.css">
 </head>
 <body class="font-sans text-gray-800 bg-bg-light antialiased">
     <slot />
-    
+
     <!-- Shared translations (loaded before booking.js) -->
     <script is:inline src="/assets/shared-translations.js"></script>
     <script is:inline src="/assets/booking.js"></script>

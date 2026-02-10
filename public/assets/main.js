@@ -346,13 +346,13 @@
       services_tag: 'Services',
       services_title: 'How I can help You',
       services_desc:
-        'Every person is unique — that\'s why my work begins with your story, not a ready-made template.',
+        "Every person is unique — that's why my work begins with your story, not a ready-made template.",
       srv_1_title: 'Individual consultation',
       srv_1_desc:
         '60 min consultation in-person or online. We analyze your dietary habits, health status, and set goals together.',
       srv_2_title: 'Personalized meal plan',
       srv_2_desc:
-        'A nutrition plan tailored to your body\'s needs, lifestyle, and food preferences. No universal diets.',
+        "A nutrition plan tailored to your body's needs, lifestyle, and food preferences. No universal diets.",
       srv_3_title: 'Metabolic health',
       srv_3_desc:
         'Help with insulin resistance, prediabetes, weight management, and energy optimization. Science-based approach.',
@@ -365,14 +365,14 @@
         'Nutrition optimization for gut health and immune system support. Microbiome support through diet.',
       srv_6_title: 'Long-term support',
       srv_6_desc:
-        'Regular check-ups and plan adjustments. I\'ll support you on the path to new, sustainable habits.',
+        "Regular check-ups and plan adjustments. I'll support you on the path to new, sustainable habits.",
 
       // How I Work
       process_tag: 'Process',
       process_title: 'How the collaboration works',
       proc_1_title: 'Getting acquainted',
       proc_1_desc:
-        'Free 15 min call where I learn about your situation and goals. Together we\'ll decide which format works best for you.',
+        "Free 15 min call where I learn about your situation and goals. Together we'll decide which format works best for you.",
       proc_2_title: 'Consultation & plan',
       proc_2_desc:
         'In-depth 60 min consultation. We analyze your nutrition, health, and develop a personalized action plan.',
@@ -392,7 +392,7 @@
       testimonials_sectionTitle: 'Testimonials',
       testimonials_title: 'What clients say',
       testimonial_1:
-        'For years I tried different diets — they worked for a couple of months and then stopped. Sofija\'s approach was completely different: not restrictions, but understanding what my body truly needs. After 3 months — 6 kg less, and most importantly — I understand why.',
+        "For years I tried different diets — they worked for a couple of months and then stopped. Sofija's approach was completely different: not restrictions, but understanding what my body truly needs. After 3 months — 6 kg less, and most importantly — I understand why.",
       testimonial_1_author: 'Maija, 47 years',
       testimonial_1_condition: 'Weight management, lack of energy',
       testimonial_2:
@@ -400,7 +400,7 @@
       testimonial_2_author: 'Rihards, 35 years',
       testimonial_2_condition: 'Chronic fatigue, chaotic eating',
       testimonial_3:
-        'After having a baby, I couldn\'t get back in shape. Sofija created a plan that fit into my hectic mom life. No strict restrictions — just a smart approach to meals and food choices.',
+        "After having a baby, I couldn't get back in shape. Sofija created a plan that fit into my hectic mom life. No strict restrictions — just a smart approach to meals and food choices.",
       testimonial_3_author: 'Kristīne, 34 years',
       testimonial_3_condition: 'Postpartum recovery',
 
@@ -409,7 +409,7 @@
       about_lead:
         'I am a registered nutrition specialist and PhD researcher at the University of Latvia. I help people improve their diet based on science and an individual approach.',
       about_text:
-        'My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. I also use modern technologies, such as CGM glucose sensors, which allow precise understanding of the body\'s responses.',
+        "My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. I also use modern technologies, such as CGM glucose sensors, which allow precise understanding of the body's responses.",
       cred_2_title: 'PhD Researcher',
       cred_2_loc: 'University of Latvia',
       cred_3_title: 'MSc in Nutrition Science',
@@ -426,7 +426,7 @@
       gallery_1_title: 'EASD 2025, Vienna',
       gallery_1_desc: 'European Association for the Study of Diabetes Congress',
       gallery_2_tag: 'Education',
-      gallery_2_title: 'Researchers\' Night',
+      gallery_2_title: "Researchers' Night",
       gallery_2_desc: 'Annual science outreach event in Latvia',
       gallery_3_tag: 'Clinical',
       gallery_3_title: 'Health Literacy Day',
@@ -440,13 +440,13 @@
         'For anyone who wants to improve their nutrition in a science-based way — regardless of age or goal. I work with weight management, energy issues, metabolic health, prediabetes, gut health, and nutrition optimization.',
       faq_q2: 'How is this different from a regular dietitian?',
       faq_a2:
-        'My approach is based on research and individual data. I don\'t prescribe generic diets — every recommendation is tailored to your situation. Additionally, I offer CGM diagnostics — a unique opportunity in Latvia.',
+        "My approach is based on research and individual data. I don't prescribe generic diets — every recommendation is tailored to your situation. Additionally, I offer CGM diagnostics — a unique opportunity in Latvia.",
       faq_q3: 'Are online consultations available?',
       faq_a3:
         'Yes, I work both in-person in Riga and online. Video consultations are equally effective and available to clients across Latvia and beyond.',
       faq_q4: 'How much does a consultation cost?',
       faq_a4:
-        'The first introductory consultation (15 min) is free. A full 60 min consultation — from €65. CGM program (14 days) — from €249. We\'ll discuss the exact price during the first call.',
+        "The first introductory consultation (15 min) is free. A full 60 min consultation — from €65. CGM program (14 days) — from €249. We'll discuss the exact price during the first call.",
       faq_q5: 'How does the first consultation go?',
       faq_a5:
         'We start with a free 15-minute introduction where I learn about your situation and goals. If you decide to continue, the next step is an in-depth 60-minute consultation with nutrition analysis and individual plan development.',
@@ -456,8 +456,7 @@
       booking_eyebrow: 'Personal Consultation',
       booking_badge: 'Personalized Care',
       booking_title: 'Book a Consultation',
-      booking_subtitle:
-        'Choose a convenient date and time. Availability is updated in real time.',
+      booking_subtitle: 'Choose a convenient date and time. Availability is updated in real time.',
       booking_trust_compact_1: 'Confidential',
       booking_trust_compact_2: 'In-person or online',
       booking_trust_compact_3: 'Reply within 24h',
