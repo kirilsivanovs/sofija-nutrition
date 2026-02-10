@@ -1,6 +1,6 @@
 .patients-search {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .patients-search input {
@@ -22,31 +22,32 @@
 
 .patients-add {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .patients-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .patients-control {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 11px;
+  gap: 4px;
+  font-size: 10px;
   color: var(--color-text-light);
 }
 
 .patients-control select {
   width: 100%;
-  padding: 8px 10px;
+  padding: 7px 8px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   background: var(--color-white);
   color: var(--color-text);
 }
@@ -61,16 +62,16 @@
 }
 
 .patients-add button {
-  padding: 10px 16px;
+  padding: 9px 14px;
   background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   transition: all 0.2s;
   box-shadow: var(--shadow-sm);
 }
@@ -83,14 +84,14 @@
 .patients-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .patients-load-more {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .patients-load-more button[disabled] {
@@ -103,7 +104,7 @@
   justify-content: space-between;
   gap: 12px;
   align-items: center;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-white);
@@ -210,6 +211,18 @@
 
 /* Mobile optimization for patient list */
 @media (max-width: 768px) {
+  .patients-search input {
+    font-size: 12px;
+    padding: 7px 28px 7px 10px;
+  }
+  .patients-add input {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+  .patients-add button {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
   .patient-item {
     padding: 10px;
     gap: 10px;
@@ -237,21 +250,6 @@
 }
 
 @media (max-width: 480px) {
-  .patients-controls {
-    grid-template-columns: 1fr;
-  }
-  .patients-search input {
-    font-size: 12px;
-    padding: 7px 28px 7px 10px;
-  }
-  .patients-add input {
-    font-size: 12px;
-    padding: 7px 10px;
-  }
-  .patients-add button {
-    font-size: 12px;
-    padding: 8px 12px;
-  }
   .patient-item {
     padding: 8px;
     gap: 8px;
@@ -278,5 +276,14 @@
     width: 20px;
     height: 20px;
     font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .patients-controls {
+    grid-template-columns: 1fr;
+  }
+  .patient-meta {
+    display: none;
   }
 }

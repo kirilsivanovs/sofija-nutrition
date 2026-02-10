@@ -1371,6 +1371,10 @@
   color: var(--color-text-light);
 }
 
+.empty-state.hidden {
+  display: none;
+}
+
 .empty-icon {
   font-size: 48px;
   color: var(--color-muted);

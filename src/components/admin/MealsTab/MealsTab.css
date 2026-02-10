@@ -30,6 +30,15 @@
   color: var(--color-text);
 }
 
+@media (max-width: 768px) {
+  .meals-sidebar {
+    padding: 12px;
+  }
+  .meals-sidebar-header {
+    margin-bottom: 8px;
+  }
+}
+
 .meals-list {
   display: grid;
   gap: 16px;
