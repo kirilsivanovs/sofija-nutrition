@@ -76,23 +76,23 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     </nav>
   </header>
 
-    <!-- Mobile Nav -->
-    <div id="mobile-nav-menu" class="mobile-nav-menu">
-      <a href="#program" data-i18n="nav_program" class="mobile-nav-item">Programma</a>
-      <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">Kā tas strādā</a>
-      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
-      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
-      <a
-        href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
-        data-i18n="nav_cabinet"
-        class="mobile-nav-item">Pacienta kabinets</a
-      >
-      <div class="flex gap-4 pt-6 border-t border-gray-200">
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
-      </div>
+  <!-- Mobile Nav -->
+  <div id="mobile-nav-menu" class="mobile-nav-menu">
+    <a href="#program" data-i18n="nav_program" class="mobile-nav-item">Programma</a>
+    <a href="#how-it-works" data-i18n="nav_how" class="mobile-nav-item">Kā tas strādā</a>
+    <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
+    <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
+    <a
+      href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
+      data-i18n="nav_cabinet"
+      class="mobile-nav-item">Pacienta kabinets</a
+    >
+    <div class="flex gap-4 pt-6 border-t border-gray-200">
+      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
+      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
+      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
     </div>
+  </div>
 
   <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
   <script is:inline>
