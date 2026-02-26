@@ -9,28 +9,27 @@
       // Navigation
       nav_services: 'Pakalpojumi',
       nav_about: 'Par mani',
-      nav_testimonials: 'Atsauksmes',
+      nav_faq: 'BUJ',
       nav_contact: 'Pieteikties',
       nav_cabinet: 'Pacienta kabinets',
 
       // Hero
-      hero_eyebrow: 'Uztura speciāliste · PhD · Rīga',
-      hero_title: 'Uzturs, kas veidots tieši Jums',
+      hero_eyebrow: 'Rīga · Individuālas konsultācijas',
+      hero_title: 'Veselība sākas ar uzturu',
       hero_subtitle:
-        'Reģistrēta uztura speciāliste un PhD pētniece. Palīdzu sakārtot uzturu, uzlabot pašsajūtu un sasniegt veselības mērķus — ar individuālu, zinātniski pamatotu pieeju.',
-      hero_cta_primary: 'Pieteikties konsultācijai',
-      hero_cta_secondary: 'Apskatīt pakalpojumus',
-      hero_credential_label: 'Uztura zinātne',
+        'Palīdzu sakārtot uzturu, balstoties uz zinātni — individuāli, bez vispārīgām diētām.',
+      hero_cta_primary: 'Rezervēt konsultāciju',
+      hero_cta_secondary: 'Pakalpojumi',
+      hero_credential_degree: 'Klātienē un tiešsaistē',
+      hero_credential_label: 'Rīga',
 
       // Trust Bar
-      trust_clients: '500+ klientu',
-      trust_clients_sub: 'ar uzlabotiem rādītājiem',
-      trust_phd: 'PhD pētniece',
-      trust_phd_sub: 'Latvijas Universitāte',
-      trust_exp: '7+ gadu pieredze',
-      trust_exp_sub: 'uzturzinātnē un pētniecībā',
+      trust_msc: 'MSc Dietoloģijā',
+      trust_msc_sub: 'Rīgas Stradiņa universitāte (RSU)',
+      trust_phd: 'Doktorante',
+      trust_phd_sub: 'Latvijas Universitāte (LU)',
       trust_reg: 'Reģistrēta speciāliste',
-      trust_reg_sub: 'ārstniecības personu reģistrā',
+      trust_reg_sub: 'ārstniecības personu reģistrs',
 
       // Services
       services_tag: 'Pakalpojumi',
@@ -62,7 +61,7 @@
       process_title: 'Kā norit sadarbība',
       proc_1_title: 'Iepazīšanās',
       proc_1_desc:
-        'Bezmaksas 15 min zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim, kāds formāts Jums der vislabāk.',
+        'Īss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim, kāds formāts Jums der vislabāk.',
       proc_2_title: 'Konsultācija un plāns',
       proc_2_desc:
         'Padziļināta 60 min konsultācija. Analizējam Jūsu uzturu, veselību un izstrādājam individuālu rīcības plānu.',
@@ -71,41 +70,25 @@
         'Saņemat personalizētu uztura plānu un turpinu Jūs atbalstīt ar follow-up konsultācijām, lai nodrošinātu ilgtspējīgus rezultātus.',
 
       // Pricing
-      price_first: 'Iepazīšanās konsultācija',
-      price_first_val: 'Bezmaksas',
-      price_consult: 'Pilna konsultācija (60 min)',
+      price_consult: 'Konsultācija (60 min)',
       price_consult_val: 'no 65 €',
       price_cgm: 'CGM programma (14 dienas)',
       price_cgm_val: 'no 249 €',
 
-      // Testimonials
-      testimonials_sectionTitle: 'Atsauksmes',
-      testimonials_title: 'Ko saka klienti',
-      testimonial_1:
-        'Gadiem mēģināju dažādas diētas — tās strādāja pāris mēnešus un beidzās. Sofijas pieeja bija pilnīgi citāda: nevis aizliegumi, bet sapratne, ko mans organisms tiešām vajag. Pēc 3 mēnešiem — 6 kg mazāk, un galvenais — saprotu, kāpēc.',
-      testimonial_1_author: 'Maija, 47 gadi',
-      testimonial_1_condition: 'Svara kontrole, enerģijas trūkums',
-      testimonial_2:
-        'Kā IT speciālists visu dzīvi ēdu haotiski un jutu hronisko nogurumu. Sofija palīdzēja saprast saistību starp uzturu un enerģiju. Tagad ir enerģija visai dienai bez kafijas maratoniem.',
-      testimonial_2_author: 'Rihards, 35 gadi',
-      testimonial_2_condition: 'Hronisks nogurums, haotisks uzturs',
-      testimonial_3:
-        'Pēc bērna piedzimšanas nekādi nevarēju atgriezties formā. Sofija izveidoja plānu, kas iekļāvās manā hektiskajā mammas dzīvē. Nav striktu ierobežojumu — tikai gudra pieeja ēdienreizēm un produktu izvēlei.',
-      testimonial_3_author: 'Kristīne, 34 gadi',
-      testimonial_3_condition: 'Pēcdzimdību atgūšanās',
-
       // About
       about_tag: 'Par mani',
       about_lead:
-        'Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni un individuālu pieeju.',
+        'Palīdzu cilvēkiem sakārtot uzturu, balstoties uz zinātni un personalizētu pieeju. Aktīvi piedalos pētniecības projektos un praksē izmantoju pierādījumos balstītas metodes.',
       about_text:
         'Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija balstās uz pierādījumiem — ne modes diētām vai vispārīgiem padomiem. Darbā izmantoju arī modernas tehnoloģijas, piemēram, CGM glikozes sensorus, kas ļauj precīzi izprast organisma reakcijas.',
-      cred_2_title: 'PhD pētniece',
+      cred_2_title: 'Doktorante',
       cred_2_loc: 'Latvijas Universitāte',
-      cred_3_title: 'MSc Uzturzinātnē',
+      cred_3_title: 'MSc Dietoloģijā',
       cred_3_loc: 'Rīgas Stradiņa universitāte',
-      clients_count: '500+ klienti',
-      clients_improved: 'ar uzlabotiem rādītājiem',
+      clients_count: 'EASD 2025, Vīne',
+      clients_improved: 'starptautiska konference',
+      about_conf_title: 'EASD 2025, Vīne',
+      about_conf_sub: 'starptautiska konference',
       reg_number_label: 'Reģistrācijas Nr.',
 
       // Science Gallery
@@ -127,20 +110,32 @@
       faq_title: 'Kas jāzina pirms pieteikšanās',
       faq_q1: 'Kam ir domātas konsultācijas?',
       faq_a1:
-        'Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai mērķa. Strādāju ar svara kontroli, enerģijas problēmām, metabolo veselību, prediabētu, zarnu veselību un uztura optimizāciju.',
+        'Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai mērķa. Strādāju ar svara kontroli, enerģijas līmeni, metabolo veselību, prediabētu un zarnu veselību.',
       faq_q2: 'Kāda ir atšķirība no parasta dietologa?',
       faq_a2:
-        'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku, kas ir unikāla iespēja Latvijā.',
+        'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku.',
       faq_q3: 'Vai konsultācijas ir pieejamas tiešsaistē?',
       faq_a3:
-        'Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat efektīvas un pieejamas klientiem visā Latvijā un ārpus tās.',
-      faq_q4: 'Cik maksā konsultācija?',
+        'Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat efektīvas un pieejamas klientiem Latvijā un ārpus tās.',
+      faq_q4: 'Cik ātri var sagaidīt rezultātus?',
       faq_a4:
-        'Pirmā iepazīšanās konsultācija (15 min) ir bezmaksas. Pilna 60 min konsultācija — no 65€. CGM programma (14 dienas) — no 249€. Konkrētu cenu noskaidrosim pirmajā sarunā.',
-      faq_q5: 'Kā norit pirmā konsultācija?',
+        'Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas 2–3 nedēļu laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos. Follow-up konsultācijas palīdz noturēt progresu ilgtermiņā.',
+      faq_q5: 'Kas ir CGM sensors un kam tas noderēs?',
       faq_a5:
-        'Sākam ar bezmaksas 15 min iepazīšanos, kurā izprotu Jūsu situāciju un mērķus. Ja izlemsim turpināt, nākamais solis ir padziļināta 60 min konsultācija ar uztura analīzi un individuāla plāna izstrādi.',
+        'CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14 dienas mēra cukura līmeni reāllaikā. Tas parāda, kā Jūsu organisms reaģē uz ēdienu, stresu un miegu. Uztura konsultāciju ietvaros tā ir iespēja iegūt precīzus, personalizētus datus.',
 
+      // Why Choose Me
+      why_tag: 'Kāpēc izvēlēties mani',
+      why_title: 'Zinātne, nevis modes diētas',
+      why_desc: 'Mana pieeja balstās pētniecībā un individuālos datos.',
+
+      // Booking extra
+      booking_flexibility: 'Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.',
+
+      // Footer extra
+      footer_contact_title: 'Kontakti',
+      footer_follow_title: 'Sekojiet',
+      footer_privacy: 'Privātuma politika',
       // Booking
       contact_tag: 'Kontakti',
       booking_eyebrow: 'Individuāla konsultācija',
@@ -154,38 +149,37 @@
       booking_note: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
 
       // Footer
-      footer_role: 'Sertificēta uztura speciāliste, PhD doktorante',
+      footer_role: 'Uztura konsultācijas ar zinātnisku pieeju',
       footer_nav: 'Navigācija',
       footer_rights: '© 2026 Sofija Ivanova. Visas tiesības aizsargātas.',
-      footer_subtitle: 'Uztura speciāliste · PhD · Reģ. Nr. 75650061277',
-      header_subtitle: 'Uztura speciāliste · PhD',
+      footer_subtitle: 'Rīga · Reģ. Nr. 75650061277',
+      header_subtitle: 'Rīga · Zinātniska pieeja',
     },
     ru: {
       // Navigation
       nav_services: 'Услуги',
       nav_about: 'Обо мне',
-      nav_testimonials: 'Отзывы',
+      nav_faq: 'ЧЗВ',
       nav_contact: 'Записаться',
       nav_cabinet: 'Кабинет пациента',
 
       // Hero
-      hero_eyebrow: 'Специалист по питанию · PhD · Рига',
-      hero_title: 'Питание, созданное именно для Вас',
+      hero_eyebrow: 'Рига · Индивидуальные консультации',
+      hero_title: 'Здоровье начинается с питания',
       hero_subtitle:
-        'Зарегистрированный специалист по питанию и PhD-исследователь. Помогу наладить питание, улучшить самочувствие и достичь целей здоровья — с индивидуальным, научно обоснованным подходом.',
-      hero_cta_primary: 'Записаться на консультацию',
-      hero_cta_secondary: 'Посмотреть услуги',
-      hero_credential_label: 'Нутрициология',
+        'Помогу наладить питание, опираясь на науку — индивидуально, без общих диет.',
+      hero_cta_primary: 'Записаться',
+      hero_cta_secondary: 'Услуги',
+      hero_credential_degree: 'Очно и онлайн',
+      hero_credential_label: 'Рига',
 
       // Trust Bar
-      trust_clients: '500+ клиентов',
-      trust_clients_sub: 'с улучшенными показателями',
-      trust_phd: 'PhD-исследователь',
-      trust_phd_sub: 'Латвийский Университет',
-      trust_exp: '7+ лет опыта',
-      trust_exp_sub: 'в нутрициологии и исследованиях',
+      trust_msc: 'MSc Диетология',
+      trust_msc_sub: 'Рижский университет Страдиня (RSU)',
+      trust_phd: 'Докторант',
+      trust_phd_sub: 'Латвийский университет (LU)',
       trust_reg: 'Зарегистрированный специалист',
-      trust_reg_sub: 'в реестре медицинских работников',
+      trust_reg_sub: 'реестр медработников',
 
       // Services
       services_tag: 'Услуги',
@@ -217,7 +211,7 @@
       process_title: 'Как проходит сотрудничество',
       proc_1_title: 'Знакомство',
       proc_1_desc:
-        'Бесплатный 15-минутный звонок, на котором узнаю Вашу ситуацию и цели. Вместе решим, какой формат подходит лучше всего.',
+        'Короткий предварительный звонок, на котором узнаю Вашу ситуацию и цели. Вместе решим, какой формат подходит лучше всего.',
       proc_2_title: 'Консультация и план',
       proc_2_desc:
         'Углублённая 60-минутная консультация. Анализируем Ваше питание, здоровье и разрабатываем индивидуальный план действий.',
@@ -226,41 +220,25 @@
         'Получаете персонализированный план питания и продолжаю поддерживать Вас follow-up консультациями для устойчивых результатов.',
 
       // Pricing
-      price_first: 'Ознакомительная консультация',
-      price_first_val: 'Бесплатно',
-      price_consult: 'Полная консультация (60 мин)',
+      price_consult: 'Консультация (60 мин)',
       price_consult_val: 'от 65 €',
       price_cgm: 'CGM-программа (14 дней)',
       price_cgm_val: 'от 249 €',
 
-      // Testimonials
-      testimonials_sectionTitle: 'Отзывы',
-      testimonials_title: 'Что говорят клиенты',
-      testimonial_1:
-        'Годами пробовала разные диеты — они работали пару месяцев и заканчивались. Подход Софии был совершенно другим: не запреты, а понимание того, что моему организму действительно нужно. Через 3 месяца — минус 6 кг, и главное — понимаю, почему.',
-      testimonial_1_author: 'Майя, 47 лет',
-      testimonial_1_condition: 'Контроль веса, нехватка энергии',
-      testimonial_2:
-        'Как IT-специалист всю жизнь ел хаотично и чувствовал хроническую усталость. София помогла понять связь между питанием и энергией. Теперь энергии хватает на весь день без кофейных марафонов.',
-      testimonial_2_author: 'Рихард, 35 лет',
-      testimonial_2_condition: 'Хроническая усталость, хаотичное питание',
-      testimonial_3:
-        'После рождения ребёнка никак не могла вернуться в форму. София составила план, который вписался в мою суматошную жизнь мамы. Никаких строгих ограничений — только умный подход к приёмам пищи и выбору продуктов.',
-      testimonial_3_author: 'Кристина, 34 года',
-      testimonial_3_condition: 'Послеродовое восстановление',
-
       // About
       about_tag: 'Обо мне',
       about_lead:
-        'Я зарегистрированный специалист по питанию и PhD-исследователь в Латвийском Университете. Помогаю людям наладить питание, опираясь на науку и индивидуальный подход.',
+        'Помогаю людям наладить питание на основе науки и персонализированного подхода. Активно участвую в исследовательских проектах и применяю доказательные методы в практике.',
       about_text:
         'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах — не модных диетах или общих советах. В работе использую также современные технологии, например, CGM-сенсоры глюкозы, позволяющие точно понять реакции организма.',
-      cred_2_title: 'PhD-исследователь',
+      cred_2_title: 'Докторант',
       cred_2_loc: 'Латвийский Университет',
-      cred_3_title: 'MSc в нутрициологии',
+      cred_3_title: 'MSc в диетологии',
       cred_3_loc: 'Рижский Университет Страдиня',
-      clients_count: '500+ клиентов',
-      clients_improved: 'с улучшенными показателями',
+      clients_count: 'EASD 2025, Вена',
+      clients_improved: 'международная конференция',
+      about_conf_title: 'EASD 2025, Вена',
+      about_conf_sub: 'международная конференция',
       reg_number_label: 'Рег. номер',
 
       // Science Gallery
@@ -282,20 +260,27 @@
       faq_title: 'Что нужно знать перед записью',
       faq_q1: 'Для кого предназначены консультации?',
       faq_a1:
-        'Для всех, кто хочет наладить питание научно обоснованным способом — независимо от возраста или цели. Работаю с контролем веса, нехваткой энергии, метаболическим здоровьем, предиабетом, здоровьем кишечника и оптимизацией питания.',
+        'Для всех, кто хочет наладить питание научно обоснованным способом — независимо от возраста или цели. Работаю с контролем веса, уровнем энергии, метаболическим здоровьем, предиабетом и здоровьем кишечника.',
       faq_q2: 'Чем это отличается от обычного диетолога?',
       faq_a2:
-        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет — каждая рекомендация адаптирована к Вашей ситуации. Дополнительно предлагаю CGM-диагностику — уникальную возможность в Латвии.',
+        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет — каждая рекомендация адаптирована к Вашей ситуации. Дополнительно предлагаю CGM-диагностику.',
       faq_q3: 'Доступны ли консультации онлайн?',
       faq_a3:
-        'Да, работаю как очно в Риге, так и онлайн. Видео-консультации так же эффективны и доступны клиентам по всей Латвии и за её пределами.',
-      faq_q4: 'Сколько стоит консультация?',
+        'Да, работаю как очно в Риге, так и онлайн. Видео-консультации так же эффективны и доступны клиентам в Латвии и за её пределами.',
+      faq_q4: 'Как быстро можно ожидать результатов?',
       faq_a4:
-        'Первая ознакомительная консультация (15 мин) — бесплатно. Полная 60-минутная консультация — от 65€. CGM-программа (14 дней) — от 249€. Точную стоимость обсудим на первом звонке.',
-      faq_q5: 'Как проходит первая консультация?',
+        'Первые положительные изменения (энергия, сон, самочувствие) обычно ощущаются через 2–3 недели. Устойчивые результаты по весу и здоровью — через 2–4 месяца. Follow-up консультации помогают закрепить прогресс надолго.',
+      faq_q5: 'Что такое CGM-сенсор и кому он полезен?',
       faq_a5:
-        'Начинаем с бесплатного 15-минутного знакомства, на котором узнаю Вашу ситуацию и цели. Если решите продолжить, следующий шаг — углублённая 60-минутная консультация с анализом питания и разработкой индивидуального плана.',
+        'CGM (непрерывный мониторинг глюкозы) — небольшое устройство на коже, которое 14 дней измеряет уровень сахара в реальном времени. Оно показывает, как Ваш организм реагирует на еду, стресс и сон. В рамках консультации это даёт точные персонализированные данные.',
 
+      // Booking extra
+      booking_flexibility: 'Запись возможна и вне рабочего времени. Консультации доступны очно в Риге и онлайн.',
+
+      // Footer extra
+      footer_contact_title: 'Контакты',
+      footer_follow_title: 'Подписывайтесь',
+      footer_privacy: 'Политика конфиденциальности',
       // Booking
       contact_tag: 'Контакты',
       booking_eyebrow: 'Индивидуальная консультация',
@@ -309,38 +294,37 @@
       booking_note: 'После записи вы получите подтверждение по email.',
 
       // Footer
-      footer_role: 'Сертифицированный специалист по питанию, PhD',
+      footer_role: 'Консультации по питанию с научным подходом',
       footer_nav: 'Навигация',
       footer_rights: '© 2026 Sofija Ivanova. Все права защищены.',
-      footer_subtitle: 'Специалист по питанию · PhD · Рег. № 75650061277',
-      header_subtitle: 'Специалист по питанию · PhD',
+      footer_subtitle: 'Рига · Рег. № 75650061277',
+      header_subtitle: 'Рига · Научный подход',
     },
     en: {
       // Navigation
       nav_services: 'Services',
       nav_about: 'About',
-      nav_testimonials: 'Testimonials',
+      nav_faq: 'FAQ',
       nav_contact: 'Contact',
       nav_cabinet: 'Patient Cabinet',
 
       // Hero
-      hero_eyebrow: 'Nutrition Specialist · PhD · Riga',
-      hero_title: 'Nutrition designed just for You',
+      hero_eyebrow: 'Riga · Individual consultations',
+      hero_title: 'Health starts with nutrition',
       hero_subtitle:
-        'Registered nutrition specialist and PhD researcher. I help you improve your diet, well-being, and health goals — with an individual, science-based approach.',
-      hero_cta_primary: 'Book a consultation',
-      hero_cta_secondary: 'View services',
-      hero_credential_label: 'Nutrition Science',
+        'I help improve your diet based on science — individually, without generic diets.',
+      hero_cta_primary: 'Book consultation',
+      hero_cta_secondary: 'Services',
+      hero_credential_degree: 'In-person & online',
+      hero_credential_label: 'Riga',
 
       // Trust Bar
-      trust_clients: '500+ clients',
-      trust_clients_sub: 'with improved results',
-      trust_phd: 'PhD Researcher',
-      trust_phd_sub: 'University of Latvia',
-      trust_exp: '7+ years of experience',
-      trust_exp_sub: 'in nutrition science and research',
+      trust_msc: 'MSc Dietetics',
+      trust_msc_sub: 'Rīga Stradiņš University (RSU)',
+      trust_phd: 'Doctoral Student',
+      trust_phd_sub: 'University of Latvia (UL)',
       trust_reg: 'Registered specialist',
-      trust_reg_sub: 'in the medical practitioners registry',
+      trust_reg_sub: 'medical practitioners registry',
 
       // Services
       services_tag: 'Services',
@@ -372,7 +356,7 @@
       process_title: 'How the collaboration works',
       proc_1_title: 'Getting acquainted',
       proc_1_desc:
-        "Free 15 min call where I learn about your situation and goals. Together we'll decide which format works best for you.",
+        'A brief introductory call where I learn about your situation and goals. Together we\'ll decide which format works best for you.',
       proc_2_title: 'Consultation & plan',
       proc_2_desc:
         'In-depth 60 min consultation. We analyze your nutrition, health, and develop a personalized action plan.',
@@ -381,41 +365,25 @@
         'You receive a personalized nutrition plan and I continue supporting you with follow-up consultations for lasting results.',
 
       // Pricing
-      price_first: 'Introductory consultation',
-      price_first_val: 'Free',
-      price_consult: 'Full consultation (60 min)',
+      price_consult: 'Consultation (60 min)',
       price_consult_val: 'from €65',
       price_cgm: 'CGM program (14 days)',
       price_cgm_val: 'from €249',
 
-      // Testimonials
-      testimonials_sectionTitle: 'Testimonials',
-      testimonials_title: 'What clients say',
-      testimonial_1:
-        "For years I tried different diets — they worked for a couple of months and then stopped. Sofija's approach was completely different: not restrictions, but understanding what my body truly needs. After 3 months — 6 kg less, and most importantly — I understand why.",
-      testimonial_1_author: 'Maija, 47 years',
-      testimonial_1_condition: 'Weight management, lack of energy',
-      testimonial_2:
-        'As an IT specialist, I ate chaotically my whole life and felt chronic fatigue. Sofija helped me understand the connection between nutrition and energy. Now I have energy for the whole day without coffee marathons.',
-      testimonial_2_author: 'Rihards, 35 years',
-      testimonial_2_condition: 'Chronic fatigue, chaotic eating',
-      testimonial_3:
-        "After having a baby, I couldn't get back in shape. Sofija created a plan that fit into my hectic mom life. No strict restrictions — just a smart approach to meals and food choices.",
-      testimonial_3_author: 'Kristīne, 34 years',
-      testimonial_3_condition: 'Postpartum recovery',
-
       // About
       about_tag: 'About Me',
       about_lead:
-        'I am a registered nutrition specialist and PhD researcher at the University of Latvia. I help people improve their diet based on science and an individual approach.',
+        'I help people improve nutrition through a science-based and personalized approach. I actively participate in research projects and apply evidence-based methods in practice.',
       about_text:
         "My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. I also use modern technologies, such as CGM glucose sensors, which allow precise understanding of the body's responses.",
-      cred_2_title: 'PhD Researcher',
+      cred_2_title: 'Doctoral Student',
       cred_2_loc: 'University of Latvia',
-      cred_3_title: 'MSc in Nutrition Science',
+      cred_3_title: 'MSc in Dietetics',
       cred_3_loc: 'Rīga Stradiņš University',
-      clients_count: '500+ clients',
-      clients_improved: 'with improved results',
+      clients_count: 'EASD 2025, Vienna',
+      clients_improved: 'international conference',
+      about_conf_title: 'EASD 2025, Vienna',
+      about_conf_sub: 'international conference',
       reg_number_label: 'Registration No.',
 
       // Science Gallery
@@ -437,20 +405,27 @@
       faq_title: 'What to know before booking',
       faq_q1: 'Who are the consultations for?',
       faq_a1:
-        'For anyone who wants to improve their nutrition in a science-based way — regardless of age or goal. I work with weight management, energy issues, metabolic health, prediabetes, gut health, and nutrition optimization.',
+        'For anyone who wants to improve nutrition in a science-based way — regardless of age or goal. I work with weight management, energy levels, metabolic health, prediabetes, and gut health.',
       faq_q2: 'How is this different from a regular dietitian?',
       faq_a2:
-        "My approach is based on research and individual data. I don't prescribe generic diets — every recommendation is tailored to your situation. Additionally, I offer CGM diagnostics — a unique opportunity in Latvia.",
+        "My approach is based on research and individual data. I don't prescribe generic diets — every recommendation is tailored to your situation. I also offer CGM diagnostics.",
       faq_q3: 'Are online consultations available?',
       faq_a3:
-        'Yes, I work both in-person in Riga and online. Video consultations are equally effective and available to clients across Latvia and beyond.',
-      faq_q4: 'How much does a consultation cost?',
+        'Yes, I work both in-person in Riga and online. Video consultations are equally effective and available in Latvia and abroad.',
+      faq_q4: 'How quickly can I expect results?',
       faq_a4:
-        "The first introductory consultation (15 min) is free. A full 60 min consultation — from €65. CGM program (14 days) — from €249. We'll discuss the exact price during the first call.",
-      faq_q5: 'How does the first consultation go?',
+        'First positive changes (energy, sleep, well-being) are usually felt within 2–3 weeks. Sustainable weight and health results — in 2–4 months. Follow-up consultations help maintain long-term progress.',
+      faq_q5: 'What is a CGM sensor and who is it useful for?',
       faq_a5:
-        'We start with a free 15-minute introduction where I learn about your situation and goals. If you decide to continue, the next step is an in-depth 60-minute consultation with nutrition analysis and individual plan development.',
+        'CGM (continuous glucose monitoring) is a small skin-worn device that measures blood sugar in real time for 14 days. It shows how your body responds to food, stress, and sleep. Within consultations, it provides precise personalized data.',
 
+      // Booking extra
+      booking_flexibility: 'Booking available outside working hours as well. Consultations available in-person in Riga and online.',
+
+      // Footer extra
+      footer_contact_title: 'Contact',
+      footer_follow_title: 'Follow',
+      footer_privacy: 'Privacy Policy',
       // Booking
       contact_tag: 'Contact',
       booking_eyebrow: 'Personal Consultation',
@@ -463,11 +438,11 @@
       booking_note: 'You will receive an email confirmation after booking.',
 
       // Footer
-      footer_role: 'Certified Nutritionist, PhD Student',
+      footer_role: 'Evidence-based nutrition consultations',
       footer_nav: 'Navigation',
       footer_rights: '© 2026 Sofija Ivanova. All rights reserved.',
-      footer_subtitle: 'Nutrition Specialist · PhD · Reg. No. 75650061277',
-      header_subtitle: 'Nutrition Specialist · PhD',
+      footer_subtitle: 'Riga · Reg. No. 75650061277',
+      header_subtitle: 'Riga · Evidence-based approach',
     },
   };
 

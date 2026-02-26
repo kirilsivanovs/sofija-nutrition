@@ -3,8 +3,8 @@
 /* Custom Tailwind Theme */
 @theme {
   --color-primary: #1b4332;
-  --color-secondary: #c9a36a;
-  --color-accent: #295d45;
+  --color-secondary: #c4a06e;
+  --color-accent: #2d6a4f;
   --color-cream: #faf6ef;
   --color-bg-light: #fffdfa;
 
@@ -27,6 +27,7 @@ body {
   line-height: 1.6; /* Better readability */
   font-family: var(--font-sans);
   color: #1f2937;
+  text-rendering: optimizeSpeed; /* fast for body text */
 }
 
 h1,
@@ -36,6 +37,9 @@ h4,
 h5,
 h6 {
   font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
 }
 
 /* Force lining numerals (no descenders on 3, 4, etc.) */
@@ -198,20 +202,23 @@ input[type='radio'] {
 /* Typography - responsive and readable */
 h1 {
   font-size: clamp(2rem, 5vw, 3.5rem); /* 32px - 56px */
-  line-height: 1.2;
-  font-weight: 700;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: clamp(1.75rem, 4vw, 2.5rem); /* 28px - 40px */
-  line-height: 1.3;
+  line-height: 1.2;
   font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 h3 {
   font-size: clamp(1.5rem, 3vw, 2rem); /* 24px - 32px */
-  line-height: 1.4;
+  line-height: 1.3;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -219,19 +226,7 @@ p {
   line-height: 1.7;
 }
 
-/* Hero section - NO animations, NO transforms */
-#hero,
-#hero *,
-#hero img,
-#hero .grid,
-#hero .lg\:col-span-2,
-#hero .lg\:col-span-3 {
-  animation: none;
-  transform: none;
-  opacity: 1;
-  transition: none;
-}
-
+/* Hero section - disable scroll-triggered animations only */
 #hero .animate-on-scroll,
 #hero .fade-up,
 #hero .scale-up,
@@ -621,4 +616,49 @@ nav .flex.gap-1::-webkit-scrollbar {
   .mobile-menu-btn {
     display: none;
   }
+}
+
+/* ── Booking Urgency ── */
+.booking-urgency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 12px 20px;
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.booking-urgency i {
+  color: var(--color-secondary);
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* ── Footer Social Links ── */
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }

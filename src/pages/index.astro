@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
-<Layout title="Sofija Ivanova | Uztura Speciāliste Rīgā | Personalizētas Uztura Konsultācijas">
+<Layout title="Uztura Speciāliste Rīgā — Sofija Ivanova | Personalizētas Konsultācijas, CGM Diagnostika" description="Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uztura plāns. Doktorante LU." canonicalPath="/">
   <!-- Header -->
   <header
     class="bg-white/95 backdrop-blur-sm sticky top-0 z-[1000] shadow-sm border-b border-gray-100/50 transition-transform duration-300"
@@ -15,7 +15,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <!-- Logo -->
         <a href="#" class="no-underline cursor-pointer group">
           <div class="flex items-center gap-3">
-            <img src="/assets/img/logo.svg" alt="SI Logo" class="h-8 md:h-10 w-auto" />
+            <img src="/assets/img/logo.svg" alt="Sofija Ivanova uztura speciāliste logo" class="h-8 md:h-10 w-auto" />
             <div class="flex flex-col">
               <span
                 class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors"
@@ -23,7 +23,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
               >
               <span
                 class="text-xs md:text-sm text-gray-500 uppercase tracking-widest"
-                data-i18n="header_subtitle">Uztura speciāliste · PhD</span
+                data-i18n="header_subtitle">Rīga · Zinātniska pieeja</span
               >
             </div>
           </div>
@@ -62,8 +62,8 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           <a href="#about" class="nav-tab">
             <span data-i18n="nav_about">Par mani</span>
           </a>
-          <a href="#testimonials" class="nav-tab">
-            <span data-i18n="nav_testimonials">Atsauksmes</span>
+          <a href="#faq" class="nav-tab">
+            <span data-i18n="nav_faq">BUJ</span>
           </a>
           <a href="#contact" class="nav-tab">
             <span data-i18n="nav_contact">Pieteikties</span>
@@ -80,7 +80,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
   <div id="mobile-nav-menu" class="mobile-nav-menu">
     <a href="#services" data-i18n="nav_services" class="mobile-nav-item">Pakalpojumi</a>
     <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
-    <a href="#testimonials" data-i18n="nav_testimonials" class="mobile-nav-item">Atsauksmes</a>
+    <a href="#faq" data-i18n="nav_faq" class="mobile-nav-item">BUJ</a>
     <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
     <a
       href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
@@ -184,57 +184,56 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
   <ScrollToTop />
 </Layout>
 
-<!-- Hero Section — Premium Design -->
-<section id="hero" class="hero-premium" aria-labelledby="hero-title">
-  <div class="hero-inner">
-    <!-- Text Column -->
-    <div class="hero-text">
-      <span class="hero-eyebrow" data-i18n="hero_eyebrow">Uztura speciāliste · PhD · Rīga</span>
-      <h1 id="hero-title" class="hero-headline" data-i18n="hero_title">
-        Uzturs, kas veidots<br />tieši Jums
+<!-- Hero Section -->
+<section id="hero" class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    
+    <!-- Header -->
+    <div class="hero__header">
+      <div class="hero__eyebrow">
+        <span class="hero__eyebrow-line" aria-hidden="true"></span>
+        <span data-i18n="hero_eyebrow">Rīga · Individuālas konsultācijas</span>
+      </div>
+      <h1 id="hero-title" class="hero__title" data-i18n="hero_title">
+        Veselība sākas<br/>ar uzturu
       </h1>
-      <p class="hero-desc" data-i18n="hero_subtitle">
-        Reģistrēta uztura speciāliste un PhD pētniece. Palīdzu sakārtot uzturu, uzlabot pašsajūtu un
-        sasniegt veselības mērķus — ar individuālu, zinātniski pamatotu pieeju.
+    </div>
+
+    <!-- Image -->
+    <div class="hero__image-column">
+      <picture class="hero__picture">
+        <img
+          src="/assets/img/hero-doctor-cutout.png"
+          alt="Uztura speciāliste Sofija Ivanova — individuālas konsultācijas Rīgā un tiešsaistē"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          width="2200"
+          height="1691"
+        />
+      </picture>
+      <div class="hero__credential">
+        <span class="hero__credential-title" data-i18n="hero_credential_degree">Klātienē un tiešsaistē</span>
+        <span class="hero__credential-dot" aria-hidden="true"></span>
+        <span class="hero__credential-location" data-i18n="hero_credential_label">Rīga</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="hero__body">
+      <p class="hero__subtitle" data-i18n="hero_subtitle">
+        Palīdzu sakārtot uzturu, balstoties uz zinātni — individuāli, bez vispārīgām diētām.
       </p>
-      <div class="hero-ctas" role="group" aria-label="Darbības">
-        <a href="#contact" class="hero-btn hero-btn--primary" data-i18n="hero_cta_primary">
-          <span>Pieteikties konsultācijai</span>
-          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      <div class="hero__actions">
+        <a href="#contact" class="hero__btn hero__btn--primary" data-i18n="hero_cta_primary">
+          Rezervēt konsultāciju
         </a>
-        <a href="#services" class="hero-btn hero-btn--secondary" data-i18n="hero_cta_secondary">
-          Apskatīt pakalpojumus
+        <a href="#services" class="hero__btn hero__btn--outline" data-i18n="hero_cta_secondary">
+          Pakalpojumi
         </a>
       </div>
     </div>
 
-    <!-- Visual Column — Cutout photo with decorative elements -->
-    <div class="hero-visual" aria-hidden="true">
-      <div class="hero-backdrop"></div>
-      <div class="hero-ring"></div>
-      <div class="hero-blob hero-blob--lg"></div>
-      <div class="hero-blob hero-blob--sm"></div>
-      <img
-        src="/assets/img/photo in medical gown.png"
-        alt="Sofija Ivanova — uztura speciāliste Rīgā"
-        class="hero-photo-cutout"
-        loading="eager"
-        decoding="async"
-        fetchpriority="high"
-        width="720"
-        height="900"
-      />
-      <!-- Credential strip under photo -->
-      <div class="hero-credential-strip" aria-hidden="false">
-        <span class="hero-credential-strip__degree">PhD</span>
-        <span class="hero-credential-strip__sep" aria-hidden="true"></span>
-        <span class="hero-credential-strip__degree">MSc</span>
-        <span class="hero-credential-strip__sep" aria-hidden="true"></span>
-        <span class="hero-credential-strip__label" data-i18n="hero_credential_label"
-          >Uztura zinātne</span
-        >
-      </div>
-    </div>
   </div>
 </section>
 
@@ -242,26 +241,17 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 <section class="trust-bar">
   <div class="trust-metrics">
     <div class="trust-metric">
-      <div class="trust-metric-icon"><i class="ph ph-users"></i></div>
+      <div class="trust-metric-icon"><i class="ph ph-certificate"></i></div>
       <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_clients">500+ klientu</span>
-        <span class="trust-metric-label" data-i18n="trust_clients_sub"
-          >ar uzlabotiem rādītājiem</span
-        >
+        <span class="trust-metric-value" data-i18n="trust_msc">MSc Dietoloģijā</span>
+        <span class="trust-metric-label" data-i18n="trust_msc_sub">Rīgas Stradiņa universitāte</span>
       </div>
     </div>
     <div class="trust-metric">
       <div class="trust-metric-icon"><i class="ph ph-graduation-cap"></i></div>
       <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_phd">PhD pētniece</span>
+        <span class="trust-metric-value" data-i18n="trust_phd">Doktorante</span>
         <span class="trust-metric-label" data-i18n="trust_phd_sub">Latvijas Universitāte</span>
-      </div>
-    </div>
-    <div class="trust-metric">
-      <div class="trust-metric-icon"><i class="ph ph-clock"></i></div>
-      <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_exp">7+ gadu pieredze</span>
-        <span class="trust-metric-label" data-i18n="trust_exp_sub">uzturzinātnē un pētniecībā</span>
       </div>
     </div>
     <div class="trust-metric">
@@ -277,7 +267,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 </section>
 
 <!-- Services Section -->
-<section id="services" class="py-16 md:py-24 bg-cream">
+<section id="services" class="py-20 md:py-24 lg:py-28 bg-cream">
   <div class="max-w-6xl mx-auto px-4 md:px-8">
     <!-- Section Header -->
     <div class="text-center mb-12 md:mb-16">
@@ -286,7 +276,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         data-i18n="services_tag">Pakalpojumi</span
       >
       <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold mb-4"
+        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-4"
         data-i18n="services_title"
       >
         Kā es varu Jums palīdzēt
@@ -378,7 +368,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 </section>
 
 <!-- How I Work Section -->
-<section class="py-16 md:py-24 bg-white">
+<section class="py-20 md:py-24 lg:py-28 bg-white">
   <div class="max-w-6xl mx-auto px-4 md:px-8">
     <div class="text-center mb-12 md:mb-16">
       <span
@@ -386,7 +376,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         data-i18n="process_tag">Process</span
       >
       <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold"
+        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight"
         data-i18n="process_title"
       >
         Kā norit sadarbība
@@ -408,7 +398,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           Iepazīšanās
         </h3>
         <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="proc_1_desc">
-          Bezmaksas 15 min zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim,
+          Ĭss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim,
           kāds formāts Jums der vislabāk.
         </p>
       </div>
@@ -460,17 +450,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <div class="text-center sm:text-left">
           <span
             class="text-sm uppercase tracking-wider text-gray-500 block mb-1"
-            data-i18n="price_first">Iepazīšanās konsultācija</span
-          >
-          <span class="font-serif text-2xl font-bold text-accent" data-i18n="price_first_val"
-            >Bezmaksas</span
-          >
-        </div>
-        <div class="hidden sm:block w-px h-10 bg-gray-200"></div>
-        <div class="text-center sm:text-left">
-          <span
-            class="text-sm uppercase tracking-wider text-gray-500 block mb-1"
-            data-i18n="price_consult">Pilna konsultācija (60 min)</span
+            data-i18n="price_consult">Konsultācija (60 min)</span
           >
           <span class="font-serif text-2xl font-bold text-primary" data-i18n="price_consult_val"
             >no 65 €</span
@@ -491,173 +471,21 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
   </div>
 </section>
 
-<!-- Testimonials -->
-<section id="testimonials" class="py-16 md:py-20 lg:py-24 bg-cream">
-  <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <div class="text-center mb-10 md:mb-14">
-      <span
-        class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
-        data-i18n="testimonials_sectionTitle">Atsauksmes</span
-      >
-      <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold"
-        data-i18n="testimonials_title"
-      >
-        Ko saka klienti
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      <!-- Testimonial 1 -->
-      <div
-        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
-      >
-        <div class="p-6 md:p-8 flex-1">
-          <div class="flex gap-1 mb-4 text-secondary">
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-          </div>
-          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_1">
-            Gadiem mēģināju dažādas diētas — tās strādāja pāris mēnešus un beidzās. Sofijas pieeja
-            bija pilnīgi citāda: nevis aizliegumi, bet sapratne, ko mans organisms tiešām vajag. Pēc
-            3 mēnešiem — 6 kg mazāk, un galvenais — saprotu, kāpēc.
-          </p>
-        </div>
-        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
-            >
-              M
-            </div>
-            <div>
-              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_1_author"
-                >Maija, 47 gadi</strong
-              >
-              <p class="text-sm text-gray-500" data-i18n="testimonial_1_condition">
-                Svara kontrole, enerģijas trūkums
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 2 -->
-      <div
-        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
-      >
-        <div class="p-6 md:p-8 flex-1">
-          <div class="flex gap-1 mb-4 text-secondary">
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-          </div>
-          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_2">
-            Kā IT speciālists visu dzīvi ēdu haotiski un jutu hronisko nogurumu. Sofija palīdzēja
-            saprast saistību starp uzturu un enerģiju. Tagad ir enerģija visai dienai bez kafijas
-            maratoniem.
-          </p>
-        </div>
-        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
-            >
-              R
-            </div>
-            <div>
-              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_2_author"
-                >Rihards, 35 gadi</strong
-              >
-              <p class="text-sm text-gray-500" data-i18n="testimonial_2_condition">
-                Hronisks nogurums, haotisks uzturs
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 3 -->
-      <div
-        class="bg-white/95 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col border border-gray-100/70"
-      >
-        <div class="p-6 md:p-8 flex-1">
-          <div class="flex gap-1 mb-4 text-secondary">
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-            <i class="ph-fill ph-star"></i>
-          </div>
-          <p class="text-gray-700 leading-relaxed" data-i18n="testimonial_3">
-            Pēc bērna piedzimšanas nekādi nevarēju atgriezties formā. Sofija izveidoja plānu, kas
-            iekļāvās manā hektiskajā mammas dzīvē. Nav striktu ierobežojumu — tikai gudra pieeja
-            ēdienreizēm un produktu izvēlei.
-          </p>
-        </div>
-        <div class="px-6 md:px-8 py-4 bg-gray-50 rounded-b-2xl">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold"
-            >
-              K
-            </div>
-            <div>
-              <strong class="text-primary font-semibold text-base" data-i18n="testimonial_3_author"
-                >Kristīne, 34 gadi</strong
-              >
-              <p class="text-sm text-gray-500" data-i18n="testimonial_3_condition">
-                Pēcdzimdību atgūšanās
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- About Section -->
-<section id="about" class="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white to-cream">
+<section id="about" class="py-20 md:py-24 lg:py-28 bg-cream">
   <div class="max-w-6xl mx-auto px-4 md:px-8">
     <!-- Two-column layout with photo -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16 md:mb-20">
       <!-- Photo Column -->
       <div class="relative">
         <div
-          class="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(17,24,39,0.18)] border border-white/60"
+          class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50"
         >
           <img
             src="/assets/img/aboutme.png"
-            alt="Sofija Ivanova konsultācijā ar pacientu"
+            alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
             class="w-full aspect-[4/3] object-cover"
           />
-          <!-- Decorative frame -->
-          <div class="absolute inset-0 border-2 border-white/20 rounded-2xl"></div>
-        </div>
-        <!-- Floating credential badge -->
-        <div
-          class="absolute -bottom-6 -right-6 bg-white/95 rounded-xl shadow-lg p-4 hidden md:block border border-gray-100/70"
-        >
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-              <i class="ph ph-seal-check text-white text-xl"></i>
-            </div>
-            <div>
-              <span class="text-sm text-gray-500 block" data-i18n="reg_number_label"
-                >Reģistrācijas Nr.</span
-              >
-              <span class="text-primary font-semibold">75650061277</span>
-            </div>
-          </div>
-        </div>
-        <!-- Decorative element -->
-        <div class="absolute -top-4 -left-4 w-24 h-24 bg-secondary/20 rounded-full blur-2xl -z-10">
         </div>
       </div>
 
@@ -667,68 +495,18 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
           data-i18n="about_tag">Par mani</span
         >
-        <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold mb-6">
-          Dr. Sofija Ivanova
+        <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-6">
+          Sofija Ivanova
         </h2>
         <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
-          Esmu reģistrēta uztura speciāliste un PhD pētniece Latvijas Universitātē. Palīdzu
-          cilvēkiem sakārtot uzturu, pamatojoties uz zinātni un individuālu pieeju.
+          Esmu reģistrēta uztura speciāliste un doktorante Latvijas Universitātē. Aktīvi piedalos pētniecības projektos un palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni.
         </p>
-        <p class="text-base text-gray-600 leading-relaxed mb-8" data-i18n="about_text">
+        <p class="text-base text-gray-600 leading-relaxed" data-i18n="about_text">
           Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija
           balstās uz pierādījumiem — ne modes diētām vai vispārīgiem padomiem. Darbā izmantoju arī
           modernas tehnoloģijas, piemēram, CGM glikozes sensorus, kas ļauj precīzi izprast organisma
           reakcijas.
         </p>
-
-        <!-- Credentials inline -->
-        <div class="space-y-4">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
-            >
-              <i class="ph ph-graduation-cap text-primary text-lg"></i>
-            </div>
-            <div>
-              <strong class="text-primary font-semibold" data-i18n="cred_2_title"
-                >PhD pētniece</strong
-              >
-              <span class="text-gray-500 text-sm block" data-i18n="cred_2_loc"
-                >Latvijas Universitāte</span
-              >
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
-            >
-              <i class="ph ph-certificate text-primary text-lg"></i>
-            </div>
-            <div>
-              <strong class="text-primary font-semibold" data-i18n="cred_3_title"
-                >MSc Uzturzinātnē</strong
-              >
-              <span class="text-gray-500 text-sm block" data-i18n="cred_3_loc"
-                >Rīgas Stradiņa universitāte</span
-              >
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0"
-            >
-              <i class="ph ph-heart-half text-primary text-lg"></i>
-            </div>
-            <div>
-              <strong class="text-primary font-semibold" data-i18n="clients_count"
-                >500+ klienti</strong
-              >
-              <span class="text-gray-500 text-sm block" data-i18n="clients_improved"
-                >ar uzlabotiem rādītājiem</span
-              >
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -754,7 +532,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           <div class="aspect-[4/3] overflow-hidden">
             <img
               src="/assets/img/zinatnieku_nakts.png"
-              alt="Zinātnieku nakts Latvijā"
+              alt="Sofija Ivanova — uztura zinātnes popularizēšana Zinātnieku naktī Latvijā"
               loading="lazy"
               class="w-full h-full object-cover"
             />
@@ -785,7 +563,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           <div class="aspect-[4/3] overflow-hidden relative">
             <img
               src="/assets/img/conference_EASD2025_Vienna.jpg"
-              alt="EASD 2025 konference Vīnē"
+              alt="Sofija Ivanova EASD 2025 Eiropas diabēta pētījumu kongresā Vīnē"
               loading="lazy"
               class="w-full h-full object-cover"
             />
@@ -821,7 +599,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           <div class="aspect-[4/3] overflow-hidden">
             <img
               src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg"
-              alt="Veselībpratības diena Stradiņa slimnīcā"
+              alt="Veselībpratības diena Paula Stradiņa klīniskajā universitātes slimnīcā — uztura izglītība"
               loading="lazy"
               class="w-full h-full object-cover"
             />
@@ -850,7 +628,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 </section>
 
 <!-- FAQ Section -->
-<section id="faq" class="py-16 md:py-24 bg-white">
+<section id="faq" class="py-20 md:py-24 lg:py-28 bg-white">
   <div class="max-w-3xl mx-auto px-4 md:px-8">
     <div class="text-center mb-12 md:mb-16">
       <span
@@ -858,7 +636,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         data-i18n="faq_tag">Biežāk uzdotie jautājumi</span
       >
       <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-bold"
+        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight"
         data-i18n="faq_title"
       >
         Kas jāzina pirms pieteikšanās
@@ -937,7 +715,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <!-- FAQ 4 -->
       <div class="faq-item">
         <button class="faq-question" type="button">
-          <span data-i18n="faq_q4">Cik maksā konsultācija?</span>
+          <span data-i18n="faq_q4">Cik ātri var sagaidīt rezultātus?</span>
           <svg
             class="faq-icon"
             viewBox="0 0 24 24"
@@ -950,8 +728,9 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         </button>
         <div class="faq-answer">
           <p class="faq-answer-inner" data-i18n="faq_a4">
-            Pirmā iepazīšanās konsultācija (15 min) ir bezmaksas. Pilna 60 min konsultācija — no
-            65€. CGM programma (14 dienas) — no 249€. Konkrētu cenu noskaidrosim pirmajā sarunā.
+            Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas jau 2–3 nedēļu
+            laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos. Regulāras follow-up
+            konsultācijas nodrošina, ka progress turpinās ilgtermiņā.
           </p>
         </div>
       </div>
@@ -959,7 +738,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <!-- FAQ 5 -->
       <div class="faq-item">
         <button class="faq-question" type="button">
-          <span data-i18n="faq_q5">Kā norit pirmā konsultācija?</span>
+          <span data-i18n="faq_q5">Kas ir CGM sensors un kam tas noderēs?</span>
           <svg
             class="faq-icon"
             viewBox="0 0 24 24"
@@ -972,9 +751,10 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         </button>
         <div class="faq-answer">
           <p class="faq-answer-inner" data-i18n="faq_a5">
-            Sākam ar bezmaksas 15 min iepazīšanos, kurā izprotu Jūsu situāciju un mērķus. Ja
-            izlemsim turpināt, nākamais solis ir padziļināta 60 min konsultācija ar uztura analīzi
-            un individuāla plāna izstrādi.
+            CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14
+            dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz
+            katru ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros
+            piedāvāju tikai es — tā ir unikāla iespēja saņemt precīzus, personalizētus datus.
           </p>
         </div>
       </div>
@@ -1039,35 +819,62 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       </p>
     </div>
   </div>
+
+  <!-- Flexibility note -->
+  <div class="booking-urgency">
+    <i class="ph ph-info"></i>
+    <span data-i18n="booking_flexibility">Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.</span>
+  </div>
 </section>
 
 <!-- Footer -->
 <footer class="bg-primary text-white py-12">
   <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
       <!-- Brand -->
       <div class="text-center md:text-left">
         <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
         <p class="text-white/70 text-sm" data-i18n="footer_subtitle">
-          Uztura speciāliste · PhD · Reģ. Nr. 75650061277
+          Rīga · Reģ. Nr. 75650061277
         </p>
       </div>
 
       <!-- Contact Links -->
-      <div class="flex items-center gap-4 text-sm">
-        <a
-          href="mailto:info@sofijaivanova.lv"
-          class="text-white/80 hover:text-white transition-colors">info@sofijaivanova.lv</a
-        >
-        <span class="text-white/40">·</span>
-        <a href="https://wa.me/37120000000" class="text-white/80 hover:text-white transition-colors"
-          >WhatsApp</a
-        >
+      <div class="text-center">
+        <h4 class="text-sm uppercase tracking-wider text-white/50 mb-3" data-i18n="footer_contact_title">Kontakti</h4>
+        <div class="flex flex-col items-center gap-2 text-sm">
+          <a
+            href="mailto:info@sofijaivanova.lv"
+            class="text-white/80 hover:text-white transition-colors"
+          >
+            <i class="ph ph-envelope-simple" aria-hidden="true"></i> info@sofijaivanova.lv
+          </a>
+          <a href="https://wa.me/37120000000" class="text-white/80 hover:text-white transition-colors" target="_blank" rel="noopener">
+            <i class="ph ph-whatsapp-logo" aria-hidden="true"></i> WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Social & Links -->
+      <div class="text-center md:text-right">
+        <h4 class="text-sm uppercase tracking-wider text-white/50 mb-3" data-i18n="footer_follow_title">Sekojiet</h4>
+        <div class="flex justify-center md:justify-end gap-3">
+          <a href="https://www.instagram.com/sofija.nutrition" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+            <i class="ph ph-instagram-logo"></i>
+          </a>
+          <a href="https://www.facebook.com/sofijaivanova.nutrition" target="_blank" rel="noopener" class="footer-social-link" aria-label="Facebook">
+            <i class="ph ph-facebook-logo"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/sofijaivanova" target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+            <i class="ph ph-linkedin-logo"></i>
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="border-t border-white/20 pt-6 text-center">
+    <div class="border-t border-white/20 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
       <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
+      <a href="/privacy-policy" class="text-white/50 text-sm hover:text-white/80 transition-colors" data-i18n="footer_privacy">Privātuma politika</a>
     </div>
   </div>
 </footer>

@@ -1,0 +1,12 @@
+# Robots.txt for sofijaivanova.lv
+User-agent: *
+Allow: /
+
+# Block admin and auth paths
+Disallow: /admin/
+Disallow: /cabinet/
+Disallow: /.auth/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://sofijaivanova.lv/sitemap-index.xml

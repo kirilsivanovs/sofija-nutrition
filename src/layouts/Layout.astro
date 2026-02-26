@@ -4,12 +4,22 @@ import '../styles/global.css';
 interface Props {
     title: string;
     description?: string;
+    canonicalPath?: string;
+    ogTitle?: string;
+    ogDescription?: string;
 }
+
+const SITE_URL = 'https://sofijaivanova.lv';
 
 const {
     title,
-    description = "Sertificēta uztura speciāliste Rīgā. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uzturs. PhD pētniece Latvijas Universitātē."
+    description = "Sertificēta uztura speciāliste Rīgā — personalizētas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana. Doktorante LU, reģistrēta ārstniecības persona.",
+    canonicalPath = '/',
+    ogTitle = title,
+    ogDescription = description,
 } = Astro.props;
+
+const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 ---
 
 <!DOCTYPE html>
@@ -26,48 +36,253 @@ const {
 
     <!-- SEO Meta Tags -->
     <meta name="description" content={description}>
-    <meta name="keywords" content="uztura speciāliste Rīga, dietologs Latvija, diabēta profilakse, CGM sensors, glikozes monitorēšana, personalizēts uzturs, insulīna rezistence, prediabēts, metabolā veselība, uzturzinātne">
+    <meta name="keywords" content="uztura speciāliste Rīga, диетолог Рига, nutritionist Riga, dietologs Latvija, uztura konsultācija, personalizēts uzturs, diabēta profilakse, CGM sensors, glikozes monitorēšana, insulīna rezistence, prediabēts, metabolā veselība, svara kontrole, zarnu veselība, uztura plāns, konsultācija tiešsaistē, uzturzinātne, nutricioniste, специалист по питанию Латвия, консультация диетолога">
     <meta name="author" content="Sofija Ivanova">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://sofijaivanova.lv/">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href={canonicalUrl}>
+
+    <!-- Hreflang — single-URL multilingual page (LV primary, content in RU/EN via JS i18n) -->
+    <link rel="alternate" hreflang="lv" href={canonicalUrl}>
+    <link rel="alternate" hreflang="ru" href={canonicalUrl}>
+    <link rel="alternate" hreflang="en" href={canonicalUrl}>
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl}>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sofijaivanova.lv/">
-    <meta property="og:title" content="Sofija Ivanova | Uztura Speciāliste | Diabēta Profilakse">
-    <meta property="og:description" content="Zinātniski pamatota pieeja diabēta profilaksei. CGM sensoru analīze, personalizēts uzturs, PhD pētniece.">
-    <meta property="og:image" content="https://sofijaivanova.lv/assets/image.png">
+    <meta property="og:url" content={canonicalUrl}>
+    <meta property="og:title" content={ogTitle}>
+    <meta property="og:description" content={ogDescription}>
+    <meta property="og:image" content={`${SITE_URL}/assets/img/hero-doctor-cutout.png`}>
+    <meta property="og:image:width" content="2200">
+    <meta property="og:image:height" content="1691">
+    <meta property="og:image:alt" content="Sofija Ivanova — uztura speciāliste Rīgā">
     <meta property="og:locale" content="lv_LV">
+    <meta property="og:locale:alternate" content="ru_LV">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:site_name" content="Sofija Ivanova — Uztura Speciāliste">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sofija Ivanova | Uztura Speciāliste Rīgā">
-    <meta name="twitter:description" content="Diabēta profilakse ar CGM sensoriem. PhD pētniece, reģistrēta ārstniecības persona.">
-    <meta name="twitter:image" content="https://sofijaivanova.lv/assets/image.png">
+    <meta name="twitter:title" content={ogTitle}>
+    <meta name="twitter:description" content={ogDescription}>
+    <meta name="twitter:image" content={`${SITE_URL}/assets/img/hero-doctor-cutout.png`}>
 
-    <!-- Structured Data - Medical Business -->
+    <!-- Geo targeting — Latvia / Riga -->
+    <meta name="geo.region" content="LV-RIX">
+    <meta name="geo.placename" content="Rīga">
+    <meta name="geo.position" content="56.9496;24.1052">
+    <meta name="ICBM" content="56.9496, 24.1052">
+
+    <!-- Structured Data — MedicalBusiness + Person (combined graph) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "MedicalBusiness",
-        "name": "Sofija Ivanova - Uztura Speciāliste",
-        "description": "Sertificēta uztura speciāliste ar specializāciju diabēta profilaksē. CGM glikozes monitorēšana, personalizēts uzturs, zinātniski pamatota pieeja.",
-        "url": "https://sofijaivanova.lv",
-        "image": "https://sofijaivanova.lv/assets/image.png",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Rīga",
-            "addressCountry": "LV"
-        },
-        "medicalSpecialty": "Dietetics",
-        "priceRange": "€€",
-        "openingHours": "Mo-Fr 09:00-18:00"
+        "@graph": [
+            {
+                "@type": "MedicalBusiness",
+                "@id": "https://sofijaivanova.lv/#business",
+                "name": "Sofija Ivanova — Uztura Speciāliste",
+                "alternateName": ["Sofija Ivanova — Диетолог, Рига", "Sofija Ivanova — Nutritionist, Riga"],
+                "description": "Sertificēta uztura speciāliste Rīgā. Personalizētas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana. Doktorante Latvijas Universitātē.",
+                "url": "https://sofijaivanova.lv",
+                "image": "https://sofijaivanova.lv/assets/img/hero-doctor-cutout.png",
+                "logo": "https://sofijaivanova.lv/assets/img/logo.svg",
+                "telephone": "+37120000000",
+                "email": "info@sofijaivanova.lv",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Rīga",
+                    "addressRegion": "Rīga",
+                    "addressCountry": "LV"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 56.9496,
+                    "longitude": 24.1052
+                },
+                "areaServed": [
+                    {"@type": "City", "name": "Rīga"},
+                    {"@type": "Country", "name": "Latvija"}
+                ],
+                "medicalSpecialty": "Dietetics",
+                "priceRange": "€€",
+                "currenciesAccepted": "EUR",
+                "paymentAccepted": "Cash, Bank Transfer",
+                "openingHoursSpecification": {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                    "opens": "09:00",
+                    "closes": "18:00"
+                },
+                "sameAs": [
+                    "https://www.instagram.com/sofija.nutrition",
+                    "https://www.facebook.com/sofijaivanova.nutrition",
+                    "https://www.linkedin.com/in/sofijaivanova"
+                ],
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Uztura konsultāciju pakalpojumi",
+                    "itemListElement": [
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "MedicalTherapy",
+                                "name": "Individuāla uztura konsultācija",
+                                "alternateName": "Индивидуальная консультация диетолога",
+                                "description": "60 min personalizēta uztura konsultācija klātienē vai tiešsaistē"
+                            },
+                            "price": "65",
+                            "priceCurrency": "EUR",
+                            "priceSpecification": {
+                                "@type": "PriceSpecification",
+                                "price": "65",
+                                "priceCurrency": "EUR",
+                                "unitText": "60 min"
+                            },
+                            "availability": "https://schema.org/InStock"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "MedicalTherapy",
+                                "name": "CGM glikozes monitorēšanas programma",
+                                "alternateName": "Программа мониторинга глюкозы CGM",
+                                "description": "14 dienu nepārtrauktā glikozes monitorēšana ar sensoru un personalizēta analīze"
+                            },
+                            "price": "249",
+                            "priceCurrency": "EUR",
+                            "priceSpecification": {
+                                "@type": "PriceSpecification",
+                                "price": "249",
+                                "priceCurrency": "EUR",
+                                "unitText": "14 dienas"
+                            },
+                            "availability": "https://schema.org/InStock"
+                        }
+                    ]
+                }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://sofijaivanova.lv/#person",
+                "name": "Sofija Ivanova",
+                "jobTitle": "Uztura speciāliste, doktorante",
+                "description": "Reģistrēta uztura speciāliste (MSc Dietoloģijā, RSU), doktorante Latvijas Universitātē. Specializācija — diabēta profilakse, metabolā veselība, CGM diagnostika.",
+                "url": "https://sofijaivanova.lv",
+                "image": "https://sofijaivanova.lv/assets/img/hero-doctor-cutout.png",
+                "alumniOf": [
+                    {
+                        "@type": "EducationalOrganization",
+                        "name": "Rīgas Stradiņa universitāte",
+                        "alternateName": "RSU"
+                    },
+                    {
+                        "@type": "EducationalOrganization",
+                        "name": "Latvijas Universitāte",
+                        "alternateName": "LU"
+                    }
+                ],
+                "hasCredential": [
+                    {
+                        "@type": "EducationalOccupationalCredential",
+                        "credentialCategory": "degree",
+                        "name": "MSc Dietoloģijā"
+                    }
+                ],
+                "knowsAbout": ["Dietetics", "Diabetes Prevention", "CGM Monitoring", "Metabolic Health", "Gut Health", "Nutritional Science"],
+                "sameAs": [
+                    "https://www.instagram.com/sofija.nutrition",
+                    "https://www.facebook.com/sofijaivanova.nutrition",
+                    "https://www.linkedin.com/in/sofijaivanova"
+                ],
+                "worksFor": {"@id": "https://sofijaivanova.lv/#business"}
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://sofijaivanova.lv/#website",
+                "url": "https://sofijaivanova.lv",
+                "name": "Sofija Ivanova — Uztura Speciāliste Rīgā",
+                "description": "Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Diabēta profilakse, CGM diagnostika, metabolā veselība.",
+                "publisher": {"@id": "https://sofijaivanova.lv/#person"},
+                "inLanguage": ["lv", "ru", "en"]
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://sofijaivanova.lv/#webpage",
+                "url": "https://sofijaivanova.lv",
+                "name": "Sofija Ivanova | Uztura Speciāliste Rīgā | Personalizētas Uztura Konsultācijas",
+                "isPartOf": {"@id": "https://sofijaivanova.lv/#website"},
+                "about": {"@id": "https://sofijaivanova.lv/#person"},
+                "description": "Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana.",
+                "inLanguage": ["lv", "ru", "en"],
+                "breadcrumb": {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [{
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Sākums",
+                        "item": "https://sofijaivanova.lv/"
+                    }]
+                }
+            }
+        ]
+    }
+    </script>
+
+    <!-- Structured Data — FAQPage (Google rich results) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Kam ir domātas uztura konsultācijas?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai mērķa. Strādāju ar svara kontroli, enerģijas problēmām, metabolo veselību, prediabētu, zarnu veselību un uztura optimizāciju."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Kāda ir atšķirība no parasta dietologa?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku, kas ir unikāla iespēja Latvijā."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Vai uztura konsultācijas ir pieejamas tiešsaistē?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat efektīvas un pieejamas klientiem visā Latvijā un ārpus tās."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Cik ātri var sagaidīt rezultātus no uztura konsultācijām?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas jau 2–3 nedēļu laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Kas ir CGM sensors un kam tas noderēs?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14 dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz katru ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros piedāvā tikai Sofija Ivanova."
+                }
+            }
+        ]
     }
     </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
