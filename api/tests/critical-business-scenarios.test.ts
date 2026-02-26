@@ -17,6 +17,11 @@ const path = require('path');
 // Mock содержит seed data для тестирования
 const USE_MOCK = true;
 
+// Dynamic future date — always 1 year ahead to prevent "Cannot book in the past" failures
+const _fd = new Date();
+_fd.setFullYear(_fd.getFullYear() + 1);
+const FUTURE_DATE = _fd.toISOString().split('T')[0];
+
 describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
     let servicesClient;
     let bookingsClient;
@@ -148,7 +153,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
                 name: 'Jānis Bērziņš',
                 email: 'janis@example.com',
                 phone: '+371 20000000',
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00',
                 serviceId: 'initial-consultation',
                 format: 'online'
@@ -162,7 +167,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
             const booking = {
                 email: 'test@example.com',
                 phone: '+371 20000000',
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00',
                 serviceId: 'initial-consultation'
             };
@@ -177,7 +182,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
                 name: 'Test',
                 email: 'invalid-email',
                 phone: '+371 20000000',
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00',
                 serviceId: 'test'
             };
@@ -209,7 +214,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
                 name: 'Test',
                 email: 'test@example.com',
                 phone: '+371 20000000',
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '25:99', // невалидное время
                 serviceId: 'test'
             };
@@ -222,11 +227,11 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
     describe('4️⃣ КРИТИЧНО: Система предотвращает двойное бронирование', () => {
         test('Проверка занятости слота перед бронированием', () => {
             const existingBookings = [
-                { date: '2026-02-15', time: '14:00', status: 'confirmed' }
+                { date: FUTURE_DATE, time: '14:00', status: 'confirmed' }
             ];
 
             const newBooking = {
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00'
             };
 
@@ -236,11 +241,11 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
 
         test('Разрешает бронирование в другое время', () => {
             const existingBookings = [
-                { date: '2026-02-15', time: '14:00', status: 'confirmed' }
+                { date: FUTURE_DATE, time: '14:00', status: 'confirmed' }
             ];
 
             const newBooking = {
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '15:00' // другое время
             };
 
@@ -250,11 +255,11 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
 
         test('Разрешает бронирование на место отмененного', () => {
             const existingBookings = [
-                { date: '2026-02-15', time: '14:00', status: 'cancelled' }
+                { date: FUTURE_DATE, time: '14:00', status: 'cancelled' }
             ];
 
             const newBooking = {
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00'
             };
 
@@ -269,7 +274,7 @@ describe('🚨 CRITICAL BUSINESS SCENARIOS', () => {
                 id: 'SN-TEST123',
                 name: 'Jānis Bērziņš',
                 email: 'janis@example.com',
-                date: '2026-02-15',
+                date: FUTURE_DATE,
                 time: '14:00',
                 serviceName: 'Первичная консультация',
                 price: 50,
