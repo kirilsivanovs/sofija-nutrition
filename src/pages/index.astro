@@ -3,7 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
-<Layout title="Uztura Speciāliste Rīgā — Sofija Ivanova | Personalizētas Konsultācijas, CGM Diagnostika" description="Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uztura plāns. Doktorante LU." canonicalPath="/">
+<Layout
+  title="Uztura Speciāliste Rīgā — Sofija Ivanova | Personalizētas Konsultācijas, CGM Diagnostika"
+  description="Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uztura plāns. Doktorante LU."
+  canonicalPath="/"
+>
   <!-- Header -->
   <header
     class="bg-white/95 backdrop-blur-sm sticky top-0 z-[1000] shadow-sm border-b border-gray-100/50 transition-transform duration-300"
@@ -15,7 +19,11 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <!-- Logo -->
         <a href="#" class="no-underline cursor-pointer group">
           <div class="flex items-center gap-3">
-            <img src="/assets/img/logo.svg" alt="Sofija Ivanova uztura speciāliste logo" class="h-8 md:h-10 w-auto" />
+            <img
+              src="/assets/img/logo.svg"
+              alt="Sofija Ivanova uztura speciāliste logo"
+              class="h-8 md:h-10 w-auto"
+            />
             <div class="flex flex-col">
               <span
                 class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors"
@@ -187,7 +195,6 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 <!-- Hero Section -->
 <section id="hero" class="hero" aria-labelledby="hero-title">
   <div class="hero__inner">
-    
     <!-- Header -->
     <div class="hero__header">
       <div class="hero__eyebrow">
@@ -195,7 +202,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <span data-i18n="hero_eyebrow">Rīga · Individuālas konsultācijas</span>
       </div>
       <h1 id="hero-title" class="hero__title" data-i18n="hero_title">
-        Veselība sākas<br/>ar uzturu
+        Veselība sākas<br />ar uzturu
       </h1>
     </div>
 
@@ -213,7 +220,9 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         />
       </picture>
       <div class="hero__credential">
-        <span class="hero__credential-title" data-i18n="hero_credential_degree">Klātienē un tiešsaistē</span>
+        <span class="hero__credential-title" data-i18n="hero_credential_degree"
+          >Klātienē un tiešsaistē</span
+        >
         <span class="hero__credential-dot" aria-hidden="true"></span>
         <span class="hero__credential-location" data-i18n="hero_credential_label">Rīga</span>
       </div>
@@ -233,7 +242,6 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         </a>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -244,7 +252,8 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <div class="trust-metric-icon"><i class="ph ph-certificate"></i></div>
       <div class="trust-metric-text">
         <span class="trust-metric-value" data-i18n="trust_msc">MSc Dietoloģijā</span>
-        <span class="trust-metric-label" data-i18n="trust_msc_sub">Rīgas Stradiņa universitāte</span>
+        <span class="trust-metric-label" data-i18n="trust_msc_sub">Rīgas Stradiņa universitāte</span
+        >
       </div>
     </div>
     <div class="trust-metric">
@@ -398,8 +407,8 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           Iepazīšanās
         </h3>
         <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="proc_1_desc">
-          Ĭss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim,
-          kāds formāts Jums der vislabāk.
+          Ĭss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi
+          izlemsim, kāds formāts Jums der vislabāk.
         </p>
       </div>
 
@@ -478,9 +487,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16 md:mb-20">
       <!-- Photo Column -->
       <div class="relative">
-        <div
-          class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50"
-        >
+        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50">
           <img
             src="/assets/img/aboutme.png"
             alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
@@ -495,11 +502,14 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
           data-i18n="about_tag">Par mani</span
         >
-        <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-6">
+        <h2
+          class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-6"
+        >
           Sofija Ivanova
         </h2>
         <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
-          Esmu reģistrēta uztura speciāliste un doktorante Latvijas Universitātē. Aktīvi piedalos pētniecības projektos un palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni.
+          Esmu reģistrēta uztura speciāliste un doktorante Latvijas Universitātē. Aktīvi piedalos
+          pētniecības projektos un palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni.
         </p>
         <p class="text-base text-gray-600 leading-relaxed" data-i18n="about_text">
           Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija
@@ -752,9 +762,9 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <div class="faq-answer">
           <p class="faq-answer-inner" data-i18n="faq_a5">
             CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14
-            dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz
-            katru ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros
-            piedāvāju tikai es — tā ir unikāla iespēja saņemt precīzus, personalizētus datus.
+            dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz katru
+            ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros piedāvāju
+            tikai es — tā ir unikāla iespēja saņemt precīzus, personalizētus datus.
           </p>
         </div>
       </div>
@@ -823,7 +833,10 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
   <!-- Flexibility note -->
   <div class="booking-urgency">
     <i class="ph ph-info"></i>
-    <span data-i18n="booking_flexibility">Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.</span>
+    <span data-i18n="booking_flexibility"
+      >Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un
+      tiešsaistē.</span
+    >
   </div>
 </section>
 
@@ -834,14 +847,17 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <!-- Brand -->
       <div class="text-center md:text-left">
         <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
-        <p class="text-white/70 text-sm" data-i18n="footer_subtitle">
-          Rīga · Reģ. Nr. 75650061277
-        </p>
+        <p class="text-white/70 text-sm" data-i18n="footer_subtitle">Rīga · Reģ. Nr. 75650061277</p>
       </div>
 
       <!-- Contact Links -->
       <div class="text-center">
-        <h4 class="text-sm uppercase tracking-wider text-white/50 mb-3" data-i18n="footer_contact_title">Kontakti</h4>
+        <h4
+          class="text-sm uppercase tracking-wider text-white/50 mb-3"
+          data-i18n="footer_contact_title"
+        >
+          Kontakti
+        </h4>
         <div class="flex flex-col items-center gap-2 text-sm">
           <a
             href="mailto:info@sofijaivanova.lv"
@@ -849,7 +865,12 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           >
             <i class="ph ph-envelope-simple" aria-hidden="true"></i> info@sofijaivanova.lv
           </a>
-          <a href="https://wa.me/37120000000" class="text-white/80 hover:text-white transition-colors" target="_blank" rel="noopener">
+          <a
+            href="https://wa.me/37120000000"
+            class="text-white/80 hover:text-white transition-colors"
+            target="_blank"
+            rel="noopener"
+          >
             <i class="ph ph-whatsapp-logo" aria-hidden="true"></i> WhatsApp
           </a>
         </div>
@@ -857,24 +878,53 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 
       <!-- Social & Links -->
       <div class="text-center md:text-right">
-        <h4 class="text-sm uppercase tracking-wider text-white/50 mb-3" data-i18n="footer_follow_title">Sekojiet</h4>
+        <h4
+          class="text-sm uppercase tracking-wider text-white/50 mb-3"
+          data-i18n="footer_follow_title"
+        >
+          Sekojiet
+        </h4>
         <div class="flex justify-center md:justify-end gap-3">
-          <a href="https://www.instagram.com/sofija.nutrition" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+          <a
+            href="https://www.instagram.com/sofija.nutrition"
+            target="_blank"
+            rel="noopener"
+            class="footer-social-link"
+            aria-label="Instagram"
+          >
             <i class="ph ph-instagram-logo"></i>
           </a>
-          <a href="https://www.facebook.com/sofijaivanova.nutrition" target="_blank" rel="noopener" class="footer-social-link" aria-label="Facebook">
+          <a
+            href="https://www.facebook.com/sofijaivanova.nutrition"
+            target="_blank"
+            rel="noopener"
+            class="footer-social-link"
+            aria-label="Facebook"
+          >
             <i class="ph ph-facebook-logo"></i>
           </a>
-          <a href="https://www.linkedin.com/in/sofijaivanova" target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+          <a
+            href="https://www.linkedin.com/in/sofijaivanova"
+            target="_blank"
+            rel="noopener"
+            class="footer-social-link"
+            aria-label="LinkedIn"
+          >
             <i class="ph ph-linkedin-logo"></i>
           </a>
         </div>
       </div>
     </div>
 
-    <div class="border-t border-white/20 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
+    <div
+      class="border-t border-white/20 pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
+    >
       <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
-      <a href="/privacy-policy" class="text-white/50 text-sm hover:text-white/80 transition-colors" data-i18n="footer_privacy">Privātuma politika</a>
+      <a
+        href="/privacy-policy"
+        class="text-white/50 text-sm hover:text-white/80 transition-colors"
+        data-i18n="footer_privacy">Privātuma politika</a
+      >
     </div>
   </div>
 </footer>

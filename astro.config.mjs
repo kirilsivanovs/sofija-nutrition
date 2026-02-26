@@ -9,9 +9,7 @@ export default defineConfig({
   site: 'https://sofijaivanova.lv',
   integrations: [
     sitemap({
-      filter: (page) =>
-        !page.includes('/admin') &&
-        !page.includes('/cabinet'),
+      filter: (page) => !page.includes('/admin') && !page.includes('/cabinet'),
       i18n: {
         defaultLocale: 'lv',
         locales: {
@@ -28,9 +26,9 @@ export default defineConfig({
       proxy: {
         '/api': {
           target: 'http://localhost:7071',
-          changeOrigin: true
-        }
-      }
-    }
-  }
+          changeOrigin: true,
+        },
+      },
+    },
+  },
 });

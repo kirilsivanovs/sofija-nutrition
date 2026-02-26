@@ -99,7 +99,10 @@
   max-width: 12ch;
   text-wrap: balance;
   font-optical-sizing: auto;
-  font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1,
+    'kern' 1;
   text-rendering: optimizeLegibility;
 }
 
@@ -118,7 +121,12 @@
   height: min(62%, 300px);
   transform: translateX(-50%);
   border-radius: 999px;
-  background: radial-gradient(ellipse at center, rgba(212, 165, 116, 0.24) 0%, rgba(212, 165, 116, 0.05) 56%, transparent 76%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 165, 116, 0.24) 0%,
+    rgba(212, 165, 116, 0.05) 56%,
+    transparent 76%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -493,7 +501,10 @@
   background: linear-gradient(180deg, #ffffff 0%, #fcfbf8 100%);
   border: 1px solid rgba(27, 67, 50, 0.09);
   box-shadow: 0 8px 26px rgba(17, 24, 39, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   overflow: hidden;
 }
 
@@ -564,7 +575,9 @@
   letter-spacing: -0.015em;
   line-height: 1.2;
   font-optical-sizing: auto;
-  font-feature-settings: 'liga' 1, 'calt' 1;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
   text-rendering: optimizeLegibility;
 }
 
@@ -791,7 +804,9 @@
   line-height: 1.05;
   letter-spacing: -0.02em;
   font-optical-sizing: auto;
-  font-feature-settings: 'liga' 1, 'calt' 1;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
   text-rendering: optimizeLegibility;
 }
 

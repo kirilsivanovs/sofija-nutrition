@@ -130,7 +130,8 @@
       why_desc: 'Mana pieeja balstās pētniecībā un individuālos datos.',
 
       // Booking extra
-      booking_flexibility: 'Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.',
+      booking_flexibility:
+        'Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.',
 
       // Footer extra
       footer_contact_title: 'Kontakti',
@@ -166,8 +167,7 @@
       // Hero
       hero_eyebrow: 'Рига · Индивидуальные консультации',
       hero_title: 'Здоровье начинается с питания',
-      hero_subtitle:
-        'Помогу наладить питание, опираясь на науку — индивидуально, без общих диет.',
+      hero_subtitle: 'Помогу наладить питание, опираясь на науку — индивидуально, без общих диет.',
       hero_cta_primary: 'Записаться',
       hero_cta_secondary: 'Услуги',
       hero_credential_degree: 'Очно и онлайн',
@@ -275,7 +275,8 @@
         'CGM (непрерывный мониторинг глюкозы) — небольшое устройство на коже, которое 14 дней измеряет уровень сахара в реальном времени. Оно показывает, как Ваш организм реагирует на еду, стресс и сон. В рамках консультации это даёт точные персонализированные данные.',
 
       // Booking extra
-      booking_flexibility: 'Запись возможна и вне рабочего времени. Консультации доступны очно в Риге и онлайн.',
+      booking_flexibility:
+        'Запись возможна и вне рабочего времени. Консультации доступны очно в Риге и онлайн.',
 
       // Footer extra
       footer_contact_title: 'Контакты',
@@ -356,7 +357,7 @@
       process_title: 'How the collaboration works',
       proc_1_title: 'Getting acquainted',
       proc_1_desc:
-        'A brief introductory call where I learn about your situation and goals. Together we\'ll decide which format works best for you.',
+        "A brief introductory call where I learn about your situation and goals. Together we'll decide which format works best for you.",
       proc_2_title: 'Consultation & plan',
       proc_2_desc:
         'In-depth 60 min consultation. We analyze your nutrition, health, and develop a personalized action plan.',
@@ -420,7 +421,8 @@
         'CGM (continuous glucose monitoring) is a small skin-worn device that measures blood sugar in real time for 14 days. It shows how your body responds to food, stress, and sleep. Within consultations, it provides precise personalized data.',
 
       // Booking extra
-      booking_flexibility: 'Booking available outside working hours as well. Consultations available in-person in Riga and online.',
+      booking_flexibility:
+        'Booking available outside working hours as well. Consultations available in-person in Riga and online.',
 
       // Footer extra
       footer_contact_title: 'Contact',
