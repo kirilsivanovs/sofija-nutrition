@@ -1156,23 +1156,38 @@ class BookingCalendar {
         // Day selection - using event delegation on container
         const calendarDays = this.container.querySelector('.calendar-days');
         if (calendarDays) {
-            calendarDays.addEventListener('click', (e) => {
+            const handleDaySelect = (e) => {
                 const dayEl = e.target.closest('.day');
                 if (dayEl) {
                     if (!dayEl.classList.contains('past') && !dayEl.classList.contains('empty') && !dayEl.classList.contains('unavailable')) {
                         this.selectDate(dayEl.dataset.date);
                     }
                 }
-            });
+            };
+            calendarDays.addEventListener('click', handleDaySelect);
+            // iOS Safari fix: touchend ensures tap registers on non-interactive elements
+            calendarDays.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleDaySelect(e);
+            }, { passive: false });
         }
 
         // Time slot selection
-        this.container.querySelector('.time-slots')?.addEventListener('click', (e) => {
-            const slotEl = e.target.closest('.time-slot');
-            if (slotEl) {
-                this.selectTime(slotEl.dataset.time);
-            }
-        });
+        const timeSlots = this.container.querySelector('.time-slots');
+        if (timeSlots) {
+            const handleTimeSelect = (e) => {
+                const slotEl = e.target.closest('.time-slot');
+                if (slotEl) {
+                    this.selectTime(slotEl.dataset.time);
+                }
+            };
+            timeSlots.addEventListener('click', handleTimeSelect);
+            // iOS Safari fix
+            timeSlots.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleTimeSelect(e);
+            }, { passive: false });
+        }
 
         // Form submission
         this.container.querySelector('#bookingForm')?.addEventListener('submit', (e) => {
