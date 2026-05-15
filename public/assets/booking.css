@@ -902,7 +902,7 @@
   }
 
   .booking-body {
-    grid-template-columns: 0.95fr 1.05fr;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   }
 }
 
@@ -1025,7 +1025,7 @@
 
 .booking-body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 /* When form is visible, collapse left side border */
@@ -1038,6 +1038,7 @@
   padding: 26px;
   border-right: 1px solid rgba(27, 67, 50, 0.12);
   background: linear-gradient(180deg, #ffffff 0%, #fbfaf7 100%);
+  min-width: 0;
 }
 
 .calendar-section {
@@ -1195,6 +1196,7 @@
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .time-section h4 {
@@ -1371,6 +1373,8 @@
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 36px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .booking-submit-btn {
