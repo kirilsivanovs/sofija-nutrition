@@ -12,7 +12,7 @@ module.exports = {
     '!src/index.ts',
     '!src/functions/**', // Exclude Azure Functions handlers (covered by E2E tests)
     '!src/services/aiService.ts', // AI functionality disabled
-    '!src/services/mealsRepository.ts', // Meals repository disabled
+    '!src/services/mealsRepository.ts', // Covered by dedicated test
     '!**/node_modules/**'
   ],
   
@@ -57,8 +57,7 @@ module.exports = {
   // Exclude AI service tests (functionality disabled)
   testPathIgnorePatterns: [
     '/node_modules/',
-    'aiService.test.ts',
-    'mealsRepository.test.ts'
+    'aiService.test.ts'
   ],
   
   // Расширения файлов для резолвинга модулей

@@ -250,29 +250,7 @@ import '../../styles/admin.css';
         .catch(() => {});
     }
 
-    const tabBtns = document.querySelectorAll('.admin-tab');
     const mobileSelect = document.getElementById('mobile-tab-selector') as HTMLSelectElement | null;
-
-    // Data loading triggered by AdminHeader's tabChanged event
-    function loadTabData(tabId: string) {
-      if (tabId === 'bookings') calendarController.loadCalendar();
-      if (tabId === 'availability') availabilityController.loadAvailability();
-      if (tabId === 'settings') settingsController.loadSettings();
-      if (tabId === 'meals') patientController.loadPatients();
-      if (tabId === 'data') dataTabController.loadTableData();
-    }
-
-    document.addEventListener('tabChanged', (e: Event) => {
-      const tabId = (e as CustomEvent).detail?.tabId;
-      if (tabId) loadTabData(tabId);
-    });
-
-    if (mobileSelect) {
-      mobileSelect.addEventListener('change', (e) => {
-        const target = e.target as HTMLSelectElement;
-        loadTabData(target.value);
-      });
-    }
 
     // Initialize Patient Service and Controller
     const patientService = new PatientService(API_BASE);
@@ -322,17 +300,45 @@ import '../../styles/admin.css';
     );
     dataTabController.init();
 
-    // Initialize Calendar View Controller
+    // Initialize Calendar View Controller (default tab — init eagerly)
     const calendarController = new CalendarViewController(API_BASE, showToast, showConfirm);
     calendarController.init();
 
-    // Initialize Availability Controller
-    const availabilityController = new AvailabilityController(API_BASE);
-    availabilityController.init();
+    // Lazy-init: defer non-default tab controllers until first activation
+    const initializedTabs = new Set<string>(['bookings']);
 
-    // Initialize Settings Controller
+    const availabilityController = new AvailabilityController(API_BASE);
     const settingsController = new SettingsController(API_BASE, showToast);
-    settingsController.init();
+
+    function initTabOnce(tabId: string) {
+      if (initializedTabs.has(tabId)) return;
+      initializedTabs.add(tabId);
+
+      if (tabId === 'availability') availabilityController.init();
+      if (tabId === 'settings') settingsController.init();
+    }
+
+    // Data loading triggered by AdminHeader's tabChanged event
+    function loadTabData(tabId: string) {
+      initTabOnce(tabId);
+      if (tabId === 'bookings') calendarController.loadCalendar();
+      if (tabId === 'availability') availabilityController.loadAvailability();
+      if (tabId === 'settings') settingsController.loadSettings();
+      if (tabId === 'meals') patientController.loadPatients();
+      if (tabId === 'data') dataTabController.loadTableData();
+    }
+
+    document.addEventListener('tabChanged', (e: Event) => {
+      const tabId = (e as CustomEvent).detail?.tabId;
+      if (tabId) loadTabData(tabId);
+    });
+
+    if (mobileSelect) {
+      mobileSelect.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        loadTabData(target.value);
+      });
+    }
   </script>
 
   <!-- Admin Access Check -->
