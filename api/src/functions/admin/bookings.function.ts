@@ -159,10 +159,10 @@ app.http('adminUpdateBooking', {
 
             // Update the booking
             const updatedBooking = {
-                partitionKey: existingBooking.partitionKey,
-                rowKey: existingBooking.rowKey,
                 ...existingBooking,
                 ...body,
+                partitionKey: existingBooking.partitionKey,
+                rowKey: existingBooking.rowKey,
                 updatedAt: new Date().toISOString()
             };
 

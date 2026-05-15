@@ -211,9 +211,9 @@ app.http('adminUpdateServiceSettings', {
             if (existingEntity) {
                 const historyTableClient = TableClient.fromConnectionString(connectionString, 'ServicesHistory');
                 const historyEntry = {
+                    ...entity,
                     partitionKey: serviceId!,
                     rowKey: `v${entity.version}_${Date.now()}`,
-                    ...entity,
                     modifiedBy: 'admin',
                     changeType: 'update'
                 };

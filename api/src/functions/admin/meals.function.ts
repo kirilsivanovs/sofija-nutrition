@@ -12,7 +12,7 @@ export async function adminGetMeals(
 ): Promise<HttpResponseInit> {
   context.log('Admin GET meals request');
 
-  const auth = checkAuthorizationWithLogging(request, context as any);
+  const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
     return unauthorizedResponse(auth.error || 'Unauthorized');
   }
@@ -64,7 +64,7 @@ export async function adminGetMealsRange(
 ): Promise<HttpResponseInit> {
   context.log('Admin GET meals range request');
 
-  const auth = checkAuthorizationWithLogging(request, context as any);
+  const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
     return unauthorizedResponse(auth.error || 'Unauthorized');
   }

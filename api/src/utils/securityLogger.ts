@@ -52,7 +52,7 @@ export interface SecurityEvent {
 
 export interface HttpRequest {
   headers?: {
-    get?(name: string): string | null;
+    get?(name: string): string | null | undefined;
   };
   method?: string;
   url?: string;

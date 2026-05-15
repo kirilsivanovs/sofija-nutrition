@@ -5,6 +5,9 @@
 
 import { Resend } from 'resend';
 import { branding } from '../config';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('EmailService');
 
 // ============================================
 // Types
@@ -12,7 +15,7 @@ import { branding } from '../config';
 
 export interface EmailAttachment {
   filename: string;
-  content: Buffer | string;
+  content: Buffer | Uint8Array | string;
   contentType?: string;
 }
 
@@ -66,11 +69,7 @@ export async function sendEmail({ to, subject, html, attachments = [] }: SendEma
   }
 
   try {
-    console.log('📧 Sending email...');
-    console.log('  From:', `${branding.name} <${branding.email}>`);
-    console.log('  To:', to);
-    console.log('  Subject:', subject);
-    console.log('  Attachments:', attachments.length);
+    logger.info('Sending email', { to, subject, attachments: attachments.length });
 
     const result = await client.emails.send({
       from: `${branding.name} <${branding.email}>`,
@@ -80,7 +79,7 @@ export async function sendEmail({ to, subject, html, attachments = [] }: SendEma
       attachments: attachments as any
     });
 
-    console.log('✅ Email sent successfully, ID:', result?.data?.id);
+    logger.info('Email sent successfully', { id: result?.data?.id });
     return { success: true, id: result?.data?.id };
   } catch (error: unknown) {
     const err = error as { message?: string };

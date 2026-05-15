@@ -4,6 +4,9 @@
  */
 import type { FoodAnalysisResult, MealItem } from '../types/food.js';
 import JSON5 from 'json5';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('AIService');
 
 export interface IAIService {
   analyzeFoodPhoto(photoBase64: string): Promise<FoodAnalysisResult>;
@@ -137,8 +140,7 @@ export class GeminiAIService implements IAIService {
 
   private async requestGemini(photoBase64: string, prompt: string, maxOutputTokens: number) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`;
-    console.log('🤖 Calling Gemini API:', { endpoint: url, model: this.model });
-    console.log('📤 Sending to Gemini:', { model: this.model, imageSize: photoBase64.length, maxOutputTokens });
+    logger.debug('Calling Gemini API', { model: this.model, imageSize: photoBase64.length, maxOutputTokens });
 
     const parts = [{ text: prompt } as { text: string } | { inline_data: { mime_type: string; data: string } }];
     if (photoBase64) {
@@ -176,7 +178,7 @@ export class GeminiAIService implements IAIService {
     }
 
     const data = await response.json() as GeminiResponse;
-    console.log('📥 Gemini response:', JSON.stringify(data, null, 2));
+    logger.debug('Gemini response received');
 
     const candidate = data?.candidates?.[0];
     const text = candidate?.content?.parts?.[0]?.text;

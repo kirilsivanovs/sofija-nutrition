@@ -104,7 +104,7 @@ export class MealsRepository implements IMealsRepository {
 
   async updateMeal(meal: Meal): Promise<Meal> {
     const entity = this.toEntity(meal);
-    await this.tableClient.updateEntity(entity as any, 'Merge');
+    await this.tableClient.updateEntity(entity, 'Merge');
     return {
       ...meal,
       createdAt: entity.createdAt,
@@ -149,10 +149,10 @@ export class MealsRepository implements IMealsRepository {
     const map = new Map<string, AdminPatientSummary>();
 
     for await (const entity of entities) {
-      const userId = String((entity as any).userId ?? '').trim();
+      const userId = String((entity as Record<string, unknown>).userId ?? '').trim();
       if (!userId) continue;
 
-      const createdAt = String((entity as any).createdAt ?? '').trim();
+      const createdAt = String((entity as Record<string, unknown>).createdAt ?? '').trim();
       const existing = map.get(userId);
 
       if (existing) {

@@ -13,7 +13,7 @@ export async function adminListPatients(
 ): Promise<HttpResponseInit> {
   context.log('Admin GET patients request');
 
-  const auth = checkAuthorizationWithLogging(request, context as any);
+  const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
     return unauthorizedResponse(auth.error || 'Unauthorized');
   }
@@ -72,7 +72,7 @@ export async function adminDeletePatient(
 ): Promise<HttpResponseInit> {
   context.log('Admin DELETE patient request');
 
-  const auth = checkAuthorizationWithLogging(request, context as any);
+  const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
     return unauthorizedResponse(auth.error || 'Unauthorized');
   }

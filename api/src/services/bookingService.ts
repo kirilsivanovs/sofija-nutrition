@@ -21,7 +21,7 @@ import {
   acquireSlotLock,
   releaseSlotLock
 } from './bookingRepository';
-import { sendClientConfirmation, sendAdminNotification, isConfigured } from './emailService';
+import { sendClientConfirmation, sendAdminNotification, isConfigured, type EmailAttachment } from './emailService';
 import { generateInvoicePDF } from './pdfService';
 import { generateClientEmailHTML, generateAdminEmailHTML, generateCancellationEmailHTML } from '../templates/emailTemplates';
 import { isLatvianHoliday } from './latvianHolidays';
@@ -68,6 +68,7 @@ export interface BookingData {
   paymentConfirmed: boolean;
   status: string;
   createdAt: string;
+  [key: string]: unknown;
 }
 
 export interface LoggingOptions {
@@ -274,14 +275,25 @@ export async function createBooking(
     };
 
     // Save to storage
-    await saveBooking(bookingData as any);
+    await saveBooking(bookingData);
     log(`Booking ${bookingId} saved`);
 
     // Generate PDF invoice
     let pdfBase64: Uint8Array | null = null;
     try {
-      const pdfData = { ...bookingData, t };
-      pdfBase64 = await generateInvoicePDF(pdfData as any);
+      const pdfData = {
+        bookingId: bookingData.bookingId,
+        name: bookingData.name,
+        email: bookingData.email,
+        phone: bookingData.phone,
+        date: bookingData.date,
+        time: bookingData.time,
+        serviceName: bookingData.serviceName,
+        formatLabel: bookingData.formatLabel,
+        price: bookingData.price,
+        t,
+      };
+      pdfBase64 = await generateInvoicePDF(pdfData);
       log('PDF invoice generated');
     } catch (pdfError: unknown) {
       const err = pdfError as { message?: string };
@@ -335,7 +347,7 @@ async function sendBookingEmails(
 
   // Send client confirmation email
   const clientEmailHtml = generateClientEmailHTML(t, displayData);
-  const attachments = pdfBase64 ? [{
+  const attachments: EmailAttachment[] = pdfBase64 ? [{
     filename: `invoice-${bookingId}.pdf`,
     content: pdfBase64
   }] : [];
@@ -345,7 +357,7 @@ async function sendBookingEmails(
       email,
       t.emailSubject(bookingId),
       clientEmailHtml,
-      attachments as any
+      attachments
     );
     if (clientResult.success) {
       log('Client email sent successfully, id:', clientResult.id);
@@ -359,7 +371,7 @@ async function sendBookingEmails(
 
   // Send admin notification
   try {
-    const adminEmailHtml = generateAdminEmailHTML(bookingData as any, confirmPaymentUrl);
+    const adminEmailHtml = generateAdminEmailHTML(bookingData, confirmPaymentUrl);
     const adminResult = await sendAdminNotification(
       `Jauna rezervācija - ${bookingId}`,
       adminEmailHtml
@@ -422,18 +434,18 @@ export async function confirmPayment(
   // Update booking
   await updateBooking({
     ...booking,
-    id: booking.rowKey || booking.id,
+    id: booking.rowKey || booking.id || '',
     date: booking.date,
     paymentConfirmed: true,
-    status: 'confirmed',
+    status: 'confirmed' as const,
     confirmedAt: new Date().toISOString()
-  } as any);
+  });
 
   log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);
 
   return {
     success: true,
-    bookingId: booking.rowKey || booking.id
+    bookingId: booking.rowKey || booking.id || ''
   };
 }
 
@@ -468,12 +480,12 @@ export async function cancelBooking(
   // Update booking status
   await updateBooking({
     ...booking,
-    id: booking.rowKey || booking.id,
+    id: booking.rowKey || booking.id || '',
     date: booking.date,
-    status: 'cancelled',
+    status: 'cancelled' as const,
     cancelledAt: new Date().toISOString(),
     cancelReason: reason
-  } as any);
+  });
 
   log(`Booking ${bookingId} cancelled: ${reason}`);
 

@@ -16,7 +16,7 @@ export interface CorsHeaders {
 
 export interface HttpRequest {
   headers: {
-    get(name: string): string | null;
+    get(name: string): string | null | undefined;
   };
 }
 

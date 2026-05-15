@@ -34,14 +34,17 @@ export interface RateLimitData {
 
 export interface HttpRequest {
   headers: {
-    get(name: string): string | null;
+    get(name: string): string | null | undefined;
   };
 }
 
 export interface FunctionContext {
-  log: (...args: unknown[]) => void;
-  warn?: (...args: unknown[]) => void;
-  error?: (...args: unknown[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  log: (...args: any[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  warn?: (...args: any[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: (...args: any[]) => void;
 }
 
 export interface RateLimitResponse {

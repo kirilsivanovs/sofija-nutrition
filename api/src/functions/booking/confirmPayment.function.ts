@@ -87,7 +87,7 @@ async function confirmPaymentHandler(
       date: booking.date,
       paymentConfirmed: true,
       paymentConfirmedAt: new Date().toISOString()
-    } as any);
+    });
     context.log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);
 
     // Get translation object

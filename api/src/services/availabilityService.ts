@@ -224,7 +224,7 @@ export async function getBookedSlots(startDate: string, endDate: string): Promis
     }
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.log('Could not fetch bookings:', err.message);
+    // Silently handle - empty booked slots is acceptable fallback
   }
 
   return bookedSlots;

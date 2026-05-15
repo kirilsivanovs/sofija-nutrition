@@ -23,7 +23,7 @@ async function createBookingHandler(
 
   try {
     // Rate limiting (HTTP concern)
-    const rateCheck = checkRateLimit(request as any, 'createBooking');
+    const rateCheck = checkRateLimit(request, 'createBooking');
     if (!rateCheck.allowed) {
       context.warn('Rate limit exceeded for createBooking');
       return rateLimitExceededResponse(rateCheck);
