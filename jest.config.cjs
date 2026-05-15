@@ -14,6 +14,23 @@ module.exports = {
       transform: {}
     },
     {
+      displayName: 'frontend-ts',
+      testEnvironment: 'jsdom',
+      testMatch: ['<rootDir>/tests/**/*.test.ts'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {
+          tsconfig: '<rootDir>/tsconfig.json',
+          isolatedModules: true,
+          diagnostics: false
+        }]
+      },
+      moduleNameMapper: {
+        '\\.\\./constants': '<rootDir>/tests/__mocks__/constants.ts',
+        '\\.\\./errors': '<rootDir>/tests/__mocks__/errors.ts'
+      },
+      moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
+    },
+    {
       displayName: 'api',
       testEnvironment: 'node',
       testMatch: ['<rootDir>/api/tests/**/*.test.js'],
