@@ -453,6 +453,7 @@
 
   function updateLanguage(lang) {
     currentLang = lang;
+    try { localStorage.setItem('preferredLang', lang); } catch (e) { /* private browsing */ }
 
     // Update Buttons
     langButtons.forEach((btn) => {
@@ -501,11 +502,17 @@
     });
   }
 
-  // Initialize language (without updating calendar - it initializes itself with 'lv')
-  currentLang = 'lv';
-  langButtons.forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.lang === 'lv');
-  });
+  // Initialize language from localStorage or default to 'lv'
+  const savedLang = (() => { try { return localStorage.getItem('preferredLang'); } catch (e) { return null; } })();
+  const initLang = ['lv', 'ru', 'en'].includes(savedLang) ? savedLang : 'lv';
+  if (initLang !== 'lv') {
+    updateLanguage(initLang);
+  } else {
+    currentLang = 'lv';
+    langButtons.forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.lang === 'lv');
+    });
+  }
 
   // Mobile menu is handled by inline script in index.astro
   // Only add close-on-link-click and close-on-overlay here (safe to double-attach)
@@ -523,6 +530,33 @@
     document.body.style.width = '';
   }
 
+  // Focus trap for mobile menu (accessibility)
+  function handleMenuKeydown(e) {
+    if (!mobileNavMenu?.classList.contains('open')) return;
+
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+      mobileMenuBtn?.focus();
+      return;
+    }
+
+    if (e.key !== 'Tab') return;
+
+    const focusable = mobileNavMenu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   if (mobileNavMenu) {
     // Close menu when clicking a link
     mobileNavAnchors.forEach((link) => {
@@ -535,5 +569,8 @@
         closeMobileMenu();
       }
     });
+
+    // Focus trap
+    document.addEventListener('keydown', handleMenuKeydown);
   }
 });

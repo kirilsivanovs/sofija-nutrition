@@ -1229,6 +1229,12 @@
   padding: 20px;
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   min-width: 0;
+  animation: formSlideIn 0.35s ease-out;
+}
+
+@keyframes formSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Only round bottom corners when form-section is direct child of calendar */
@@ -1905,4 +1911,29 @@ select.input-valid:focus {
     border-color 0.2s ease,
     background-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+/* Booking details summary in success modal */
+.booking-details-summary {
+  background: var(--color-cream, #faf6ef);
+  border: 1px solid rgba(27, 67, 50, 0.12);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.booking-details-summary .detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--color-text, #374151);
+  padding: 4px 0;
+}
+
+.booking-details-summary .detail-row i {
+  color: var(--color-primary, #1b4332);
+  font-size: 16px;
+  flex-shrink: 0;
 }

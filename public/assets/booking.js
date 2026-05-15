@@ -932,6 +932,8 @@ class BookingCalendar {
     // Create error message element
     const errorEl = document.createElement('div');
     errorEl.className = 'field-error-message';
+    errorEl.setAttribute('role', 'alert');
+    errorEl.setAttribute('aria-live', 'polite');
     errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${message}`;
 
     // Insert after input or its parent (for select wrappers)
@@ -1012,6 +1014,8 @@ class BookingCalendar {
         // Add error
         const errorEl = document.createElement('div');
         errorEl.className = 'field-error-message';
+        errorEl.setAttribute('role', 'alert');
+        errorEl.setAttribute('aria-live', 'polite');
         errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.formatRequired}`;
         formatGroup.appendChild(errorEl);
       }
@@ -1021,6 +1025,33 @@ class BookingCalendar {
     return isValid;
   }
   // ========== End Validation Methods ==========
+
+  /** Build booking details summary HTML for the success modal */
+  buildBookingDetailsHtml(booking) {
+    const date = booking.date ? this.formatDateDisplay(booking.date) : '';
+    const time = booking.time || '';
+    const format = booking.consultationFormat === 'in-person'
+      ? this.t('formatInPerson')
+      : this.t('formatOnline');
+
+    const dateLabel = this.currentLang === 'ru' ? 'Дата и время'
+      : this.currentLang === 'en' ? 'Date & time' : 'Datums un laiks';
+    const formatLbl = this.currentLang === 'ru' ? 'Формат'
+      : this.currentLang === 'en' ? 'Format' : 'Formāts';
+
+    return `
+      <div class="booking-details-summary">
+        <div class="detail-row">
+          <i class="ph ph-calendar"></i>
+          <span><strong>${dateLabel}:</strong> ${date}, ${time}</span>
+        </div>
+        <div class="detail-row">
+          <i class="ph ph-monitor"></i>
+          <span><strong>${formatLbl}:</strong> ${format}</span>
+        </div>
+      </div>
+    `;
+  }
 
   showSuccessWithInvoice(booking) {
     // Add to local booked array
@@ -1044,11 +1075,14 @@ class BookingCalendar {
             ? `<p class="invoice-info">Invoice <strong>${booking.id}</strong> has been sent to your email.<br>Amount: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
             : `<p class="invoice-info">Rēķins <strong>${booking.id}</strong> ir nosūtīts uz Jūsu e-pastu.<br>Summa: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`;
 
+      const detailsHtml = this.buildBookingDetailsHtml(booking);
+
       successContent.innerHTML = `
                 <div class="success-icon">
                     <i class="ph ph-check-circle"></i>
                 </div>
                 <h3>${this.t('successTitle')}</h3>
+                ${detailsHtml}
                 ${invoiceInfo}
                 <p>${this.t('successText')}</p>
                 <button class="close-success-btn">${this.t('closeBtn')}</button>
@@ -1101,20 +1135,26 @@ class BookingCalendar {
       });
     }
 
-    // Show success modal with proper close handler
+    // Show success modal with booking details
     const modal = this.container.querySelector('.booking-success-modal');
+    const successContent = modal?.querySelector('.success-content');
+    if (successContent) {
+      const detailsHtml = this.buildBookingDetailsHtml(bookingData);
+      successContent.innerHTML = `
+        <div class="success-icon"><i class="ph ph-check-circle"></i></div>
+        <h3>${this.t('successTitle')}</h3>
+        ${detailsHtml}
+        <p>${this.t('successText')}</p>
+        <button class="close-success-btn">${this.t('closeBtn')}</button>
+      `;
+      successContent.querySelector('.close-success-btn').onclick = () => {
+        modal.style.display = 'none';
+        this.render();
+        this.attachEventListeners();
+      };
+    }
     if (modal) {
       modal.style.display = 'flex';
-
-      // Re-attach close button event
-      const closeBtn = modal.querySelector('.close-success-btn');
-      if (closeBtn) {
-        closeBtn.onclick = () => {
-          modal.style.display = 'none';
-          this.render();
-          this.attachEventListeners();
-        };
-      }
     }
 
     // Reset form
