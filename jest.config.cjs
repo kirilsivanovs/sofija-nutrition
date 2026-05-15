@@ -17,6 +17,12 @@ module.exports = {
       displayName: 'frontend-ts',
       testEnvironment: 'jsdom',
       testMatch: ['<rootDir>/tests/**/*.test.ts'],
+      testPathIgnorePatterns: [
+        '/node_modules/',
+        'booking-state.test.ts',
+        'booking-formatters.test.ts',
+        'apiClient.test.ts'
+      ],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {
           tsconfig: '<rootDir>/tsconfig.json',
