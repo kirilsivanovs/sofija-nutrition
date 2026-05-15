@@ -592,7 +592,10 @@ class BookingCalendar {
 
     if (slots.length === 0) {
       timeSlotsEl.innerHTML = `<p class="no-slots">${this.t('noSlots')}</p>`;
-      if (formSection) formSection.style.display = 'none';
+      if (formSection) {
+        formSection.style.display = 'none';
+        this.container.querySelector('.booking-calendar')?.classList.remove('form-visible');
+      }
       return;
     }
 
@@ -626,7 +629,10 @@ class BookingCalendar {
 
     // Hide form if time not selected
     const formSection = this.container.querySelector('.booking-form-section');
-    if (formSection) formSection.style.display = 'none';
+    if (formSection) {
+      formSection.style.display = 'none';
+      this.container.querySelector('.booking-calendar')?.classList.remove('form-visible');
+    }
   }
 
   selectTime(time) {
@@ -641,6 +647,7 @@ class BookingCalendar {
     const formSection = this.container.querySelector('.booking-form-section');
     if (formSection) {
       formSection.style.display = 'block';
+      this.container.querySelector('.booking-calendar')?.classList.add('form-visible');
 
       // Update selected datetime display
       const datetimeEl = formSection.querySelector('.selected-datetime');

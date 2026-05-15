@@ -1017,6 +1017,11 @@
   grid-template-columns: 1fr 1fr;
 }
 
+/* When form is visible, collapse left side border */
+.booking-calendar.form-visible .booking-left {
+  border-bottom: 1px solid rgba(27, 67, 50, 0.12);
+}
+
 /* Left Side - Calendar */
 .booking-left {
   padding: 26px;
@@ -1242,6 +1247,7 @@
   border-top: 1px solid rgba(27, 67, 50, 0.14);
   padding: 24px 26px;
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
+  border-radius: 0 0 24px 24px;
 }
 
 .booking-form-grid {
