@@ -8,11 +8,15 @@ import { expect, test } from '@playwright/test';
 test.describe('Booking Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Dismiss cookie consent banner if present
-    const cookieBtn = page.locator('#cookie-consent-banner button, #cookie-consent-banner .cookie-consent-accept');
-    if (await cookieBtn.first().isVisible({ timeout: 3000 }).catch(() => false)) {
-      await cookieBtn.first().click();
-      await page.locator('#cookie-consent-banner').waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+    // Wait for cookie consent banner to appear and dismiss it
+    const banner = page.locator('#cookie-consent-banner');
+    const rejectBtn = page.locator('#consent-reject-all');
+    try {
+      await banner.waitFor({ state: 'visible', timeout: 5000 });
+      await rejectBtn.click();
+      await banner.waitFor({ state: 'detached', timeout: 5000 });
+    } catch {
+      // Banner may not appear if cookies already accepted
     }
   });
 
