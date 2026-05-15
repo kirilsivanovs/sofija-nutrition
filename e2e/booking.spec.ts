@@ -8,6 +8,12 @@ import { expect, test } from '@playwright/test';
 test.describe('Booking Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    // Dismiss cookie consent banner if present
+    const cookieBtn = page.locator('#cookie-consent-banner button, #cookie-consent-banner .cookie-consent-accept');
+    if (await cookieBtn.first().isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cookieBtn.first().click();
+      await page.locator('#cookie-consent-banner').waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+    }
   });
 
   test('booking section is visible and calendar renders', async ({ page }) => {
@@ -15,9 +21,7 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Calendar should have month navigation
-    await expect(
-      bookingSection.locator('.calendar-nav, .month-nav, [class*="calendar"]')
-    ).toBeVisible();
+    await expect(bookingSection.locator('.calendar-nav')).toBeVisible();
   });
 
   test('can navigate to next month in calendar', async ({ page }) => {
