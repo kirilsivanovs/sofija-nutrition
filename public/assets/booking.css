@@ -891,6 +891,12 @@
     gap: 44px;
   }
 
+  /* When form is visible, stack intro above card for full width */
+  .booking-shell:has(.form-visible) {
+    grid-template-columns: 1fr;
+    max-width: 900px;
+  }
+
   .booking-title {
     font-size: 42px;
   }
@@ -903,6 +909,11 @@
 @media (min-width: 1200px) {
   .booking-shell {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  }
+
+  .booking-shell:has(.form-visible) {
+    grid-template-columns: 1fr;
+    max-width: 960px;
   }
 
   .time-slots {
@@ -1015,6 +1026,11 @@
 .booking-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+/* When form is visible, collapse left side border */
+.booking-calendar.form-visible .booking-left {
+  border-bottom: 1px solid rgba(27, 67, 50, 0.12);
 }
 
 /* Left Side - Calendar */
@@ -1242,6 +1258,7 @@
   border-top: 1px solid rgba(27, 67, 50, 0.14);
   padding: 24px 26px;
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
+  border-radius: 0 0 24px 24px;
 }
 
 .booking-form-grid {
