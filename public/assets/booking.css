@@ -1179,8 +1179,6 @@
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   display: flex;
   flex-direction: column;
-  max-height: 600px;
-  overflow-y: auto;
 }
 
 .time-section h4 {
@@ -1242,8 +1240,18 @@
 /* Booking Form Section */
 .booking-form-section {
   border-top: 1px solid rgba(27, 67, 50, 0.14);
-  padding-top: 20px;
-  margin-top: auto;
+  padding: 24px 26px;
+  background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
+}
+
+.booking-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.booking-form-grid .form-group:last-child {
+  grid-column: 1 / -1;
 }
 
 .selected-datetime {
@@ -1559,9 +1567,8 @@
     border-bottom: 1px solid var(--color-border);
   }
 
-  .booking-right {
-    max-height: none;
-    overflow-y: visible;
+  .booking-form-grid {
+    grid-template-columns: 1fr;
   }
 
   .time-slots {

@@ -357,68 +357,70 @@ class BookingCalendar {
                                 <p class="no-date-selected">${this.t('selectDate')}</p>
                             </div>
                         </div>
-
-                        <div class="booking-form-section" style="display: none;">
-                            <form class="booking-form" id="bookingForm" novalidate>
-                                <div class="selected-datetime"></div>
-
-                                <div class="form-group">
-                                    <label>${this.t('serviceLabel')}</label>
-                                    <select name="serviceType" id="serviceTypeSelect">
-                                        ${this.renderServiceOptions()}
-                                    </select>
-                                </div>
-
-                                <div class="form-group" id="formatGroup">
-                                    <label>${this.t('formatLabel')}</label>
-                                    <div class="format-options">
-                                        <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="online" id="formatOnline">
-                                            <span class="format-label">
-                                                <i class="ph ph-video-camera"></i>
-                                                ${this.t('formatOnline')}
-                                            </span>
-                                        </label>
-                                        <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson">
-                                            <span class="format-label">
-                                                <i class="ph ph-map-pin"></i>
-                                                ${this.t('formatInPerson')}
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('nameLabel')}</label>
-                                    <input type="text" name="name" placeholder="Anna">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('emailLabel')}</label>
-                                    <input type="email" name="email" placeholder="anna@email.com">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('phoneLabel')}</label>
-                                    <div class="phone-input-wrapper">
-                                        <span class="phone-prefix">+371</span>
-                                        <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('messageLabel')}</label>
-                                    <textarea name="message" rows="2" placeholder="..."></textarea>
-                                </div>
-
-                                <button type="submit" class="booking-submit-btn">
-                                    <i class="ph ph-calendar-check"></i>
-                                    ${this.t('submitBtn')}
-                                </button>
-                            </form>
-                        </div>
                     </div>
+                </div>
+
+                <div class="booking-form-section" style="display: none;">
+                    <form class="booking-form" id="bookingForm" novalidate>
+                        <div class="selected-datetime"></div>
+
+                        <div class="booking-form-grid">
+                            <div class="form-group">
+                                <label>${this.t('serviceLabel')}</label>
+                                <select name="serviceType" id="serviceTypeSelect">
+                                    ${this.renderServiceOptions()}
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="formatGroup">
+                                <label>${this.t('formatLabel')}</label>
+                                <div class="format-options">
+                                    <label class="format-option">
+                                        <input type="radio" name="consultationFormat" value="online" id="formatOnline">
+                                        <span class="format-label">
+                                            <i class="ph ph-video-camera"></i>
+                                            ${this.t('formatOnline')}
+                                        </span>
+                                    </label>
+                                    <label class="format-option">
+                                        <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson">
+                                        <span class="format-label">
+                                            <i class="ph ph-map-pin"></i>
+                                            ${this.t('formatInPerson')}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('nameLabel')}</label>
+                                <input type="text" name="name" placeholder="Anna">
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('emailLabel')}</label>
+                                <input type="email" name="email" placeholder="anna@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('phoneLabel')}</label>
+                                <div class="phone-input-wrapper">
+                                    <span class="phone-prefix">+371</span>
+                                    <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('messageLabel')}</label>
+                                <textarea name="message" rows="2" placeholder="..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="booking-submit-btn">
+                            <i class="ph ph-calendar-check"></i>
+                            ${this.t('submitBtn')}
+                        </button>
+                    </form>
                 </div>
             </div>
 
