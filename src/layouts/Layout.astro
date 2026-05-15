@@ -300,27 +300,31 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" /></noscript>
 
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Preload LCP hero image -->
+    <link rel="preload" as="image" type="image/webp" href="/assets/img/hero-doctor-cutout-1024w.webp" media="(min-width: 769px)" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/img/hero-doctor-cutout-480w.webp" media="(max-width: 768px)" />
+
+    <!-- Phosphor Icons (non-blocking) -->
+    <link rel="preconnect" href="https://unpkg.com" />
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Booking Calendar Styles -->
     <link rel="stylesheet" href="/assets/booking.css" />
 
-    <!-- Animations Styles -->
-    <link rel="stylesheet" href="/assets/animations.css" />
+    <!-- Animations Styles (non-critical, load async) -->
+    <link rel="preload" as="style" href="/assets/animations.css" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/assets/animations.css" /></noscript>
   </head>
   <body class="font-sans text-gray-800 bg-bg-light antialiased">
     <slot />
 
     <!-- Shared translations (loaded before booking.js) -->
     <script is:inline src="/assets/shared-translations.js"></script>
-    <script is:inline src="/assets/booking.js"></script>
-    <script is:inline src="/assets/main.js"></script>
-    <script is:inline src="/assets/animations.js"></script>
+    <script defer is:inline src="/assets/booking.js"></script>
+    <script defer is:inline src="/assets/main.js"></script>
+    <script defer is:inline src="/assets/animations.js"></script>
   </body>
 </html>

@@ -95,6 +95,17 @@ button:active,
   transform: scale(0.98);
 }
 
+/* Keyboard focus ring (only visible for keyboard users) */
+:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* Premium button system */
 .btn-cta {
   display: inline-flex;
