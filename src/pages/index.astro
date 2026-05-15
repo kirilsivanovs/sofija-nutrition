@@ -209,14 +209,19 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     <!-- Image -->
     <div class="hero__image-column">
       <picture class="hero__picture">
+        <source
+          type="image/webp"
+          srcset="/assets/img/hero-doctor-cutout-480w.webp 480w, /assets/img/hero-doctor-cutout-768w.webp 768w, /assets/img/hero-doctor-cutout-1024w.webp 1024w, /assets/img/hero-doctor-cutout-1440w.webp 1440w"
+          sizes="(max-width: 768px) 480px, (max-width: 1024px) 768px, (max-width: 1440px) 1024px, 1440px"
+        />
         <img
-          src="/assets/img/hero-doctor-cutout.png"
+          src="/assets/img/hero-doctor-cutout-fallback.png"
           alt="Uztura speciāliste Sofija Ivanova — individuālas konsultācijas Rīgā un tiešsaistē"
           loading="eager"
           decoding="async"
           fetchpriority="high"
-          width="2200"
-          height="1691"
+          width="1024"
+          height="787"
         />
       </picture>
       <div class="hero__credential">
@@ -488,11 +493,22 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
       <!-- Photo Column -->
       <div class="relative">
         <div class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50">
-          <img
-            src="/assets/img/aboutme.png"
-            alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
-            class="w-full aspect-[4/3] object-cover"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset="/assets/img/aboutme-480w.webp 480w, /assets/img/aboutme-768w.webp 768w, /assets/img/aboutme-1024w.webp 1024w"
+              sizes="(max-width: 768px) 480px, (max-width: 1024px) 768px, 1024px"
+            />
+            <img
+              src="/assets/img/aboutme-fallback.png"
+              alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
+              class="w-full aspect-[4/3] object-cover"
+              loading="lazy"
+              decoding="async"
+              width="1024"
+              height="768"
+            />
+          </picture>
         </div>
       </div>
 
@@ -540,12 +556,22 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
         >
           <div class="aspect-[4/3] overflow-hidden">
-            <img
-              src="/assets/img/zinatnieku_nakts.png"
-              alt="Sofija Ivanova — uztura zinātnes popularizēšana Zinātnieku naktī Latvijā"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
+            <picture>
+              <source
+                type="image/webp"
+                srcset="/assets/img/zinatnieku_nakts-400w.webp 400w, /assets/img/zinatnieku_nakts-600w.webp 600w"
+                sizes="(max-width: 768px) 400px, 600px"
+              />
+              <img
+                src="/assets/img/zinatnieku_nakts-fallback.png"
+                alt="Sofija Ivanova — uztura zinātnes popularizēšana Zinātnieku naktī Latvijā"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+                width="600"
+                height="450"
+              />
+            </picture>
           </div>
           <div class="p-5">
             <div
@@ -571,12 +597,18 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
         >
           <div class="aspect-[4/3] overflow-hidden relative">
-            <img
-              src="/assets/img/conference_EASD2025_Vienna.jpg"
-              alt="Sofija Ivanova EASD 2025 Eiropas diabēta pētījumu kongresā Vīnē"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
+            <picture>
+              <source type="image/webp" srcset="/assets/img/conference_EASD2025_Vienna-600w.webp" />
+              <img
+                src="/assets/img/conference_EASD2025_Vienna.jpg"
+                alt="Sofija Ivanova EASD 2025 Eiropas diabēta pētījumu kongresā Vīnē"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+                width="600"
+                height="450"
+              />
+            </picture>
             <div
               class="absolute top-3 right-3 bg-accent text-white text-sm font-bold px-2.5 py-1 rounded-full"
             >
@@ -607,12 +639,18 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
           class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
         >
           <div class="aspect-[4/3] overflow-hidden">
-            <img
-              src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg"
-              alt="Veselībpratības diena Paula Stradiņa klīniskajā universitātes slimnīcā — uztura izglītība"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
+            <picture>
+              <source type="image/webp" srcset="/assets/img/health_literacy_day_stradins_hospital_hq-600w.webp" />
+              <img
+                src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg"
+                alt="Veselībpratības diena Paula Stradiņa klīniskajā universitātes slimnīcā — uztura izglītība"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+                width="600"
+                height="450"
+              />
+            </picture>
           </div>
           <div class="p-5">
             <div
