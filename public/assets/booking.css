@@ -1390,6 +1390,7 @@
   display: block;
   cursor: pointer;
   min-width: 0;
+  flex: 1;
 }
 
 .format-option input[type='radio'] { display: none; }
