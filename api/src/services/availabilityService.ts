@@ -1,6 +1,6 @@
 /**
  * AvailabilityService (TypeScript)
- * 
+ *
  * Handles schedule settings, blocked dates, vacation periods, and slot availability calculations.
  */
 
@@ -11,7 +11,7 @@ import {
   tables,
   cache,
   schedule as scheduleConfig,
-  defaultServices as DEFAULT_SERVICES
+  defaultServices as DEFAULT_SERVICES,
 } from '../config';
 import type { DaySchedule, TimeSlot, ServiceInfo, Vacation } from '../types';
 
@@ -75,7 +75,15 @@ let servicesCacheTime: number | null = null;
 const CACHE_TTL_MS = cache.servicesTtlMs;
 
 // Day name to index mapping (0 = Sunday, 1 = Monday, etc.)
-export const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+export const dayNames = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+];
 
 /**
  * Default schedule configuration from centralized config
@@ -93,7 +101,7 @@ export const DEFAULT_SCHEDULE = scheduleConfig.defaultWorkingHours;
  */
 export async function getServiceSettings(): Promise<ServiceType[]> {
   const now = Date.now();
-  if (servicesCache && servicesCacheTime && (now - servicesCacheTime < CACHE_TTL_MS)) {
+  if (servicesCache && servicesCacheTime && now - servicesCacheTime < CACHE_TTL_MS) {
     return servicesCache;
   }
 
@@ -109,8 +117,8 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
           name: {
             lv: entity.serviceName_LV as string,
             ru: entity.serviceName_RU as string,
-            en: entity.serviceName_EN as string
-          }
+            en: entity.serviceName_EN as string,
+          },
         });
       }
     }
@@ -191,7 +199,7 @@ export async function getVacationPeriods(): Promise<VacationPeriod[]> {
  * Check if date is within any vacation period
  */
 export function isDateInVacation(dateStr: string, vacationPeriods: VacationPeriod[]): boolean {
-  return vacationPeriods.some(v => dateStr >= v.startDate && dateStr <= v.endDate);
+  return vacationPeriods.some((v) => dateStr >= v.startDate && dateStr <= v.endDate);
 }
 
 // ============================================
@@ -201,7 +209,10 @@ export function isDateInVacation(dateStr: string, vacationPeriods: VacationPerio
 /**
  * Fetch booked slots from bookings table (only active bookings)
  */
-export async function getBookedSlots(startDate: string, endDate: string): Promise<Record<string, string[]>> {
+export async function getBookedSlots(
+  startDate: string,
+  endDate: string
+): Promise<Record<string, string[]>> {
   const bookedSlots: Record<string, string[]> = {};
 
   try {
@@ -237,7 +248,9 @@ export async function getBookedSlots(startDate: string, endDate: string): Promis
 /**
  * Get availability for a date range
  */
-export async function getAvailability(options: AvailabilityOptions = {}): Promise<AvailabilityResult> {
+export async function getAvailability(
+  options: AvailabilityOptions = {}
+): Promise<AvailabilityResult> {
   const { specificDate, daysAhead = 90 } = options;
 
   const today = new Date();
@@ -251,15 +264,17 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
   const endDateStr = endDate.toISOString().split('T')[0];
 
   // Fetch all necessary data in parallel
-  const [schedule, blockedDatesArr, vacationPeriods, bookedSlots, serviceTypes] = await Promise.all([
-    getScheduleSettings(),
-    getBlockedDates(),
-    getVacationPeriods(),
-    getBookedSlots(todayStr, endDateStr),
-    getServiceSettings()
-  ]);
+  const [schedule, blockedDatesArr, vacationPeriods, bookedSlots, serviceTypes] = await Promise.all(
+    [
+      getScheduleSettings(),
+      getBlockedDates(),
+      getVacationPeriods(),
+      getBookedSlots(todayStr, endDateStr),
+      getServiceSettings(),
+    ]
+  );
 
-  const blockedDates = new Set(blockedDatesArr.map(d => d.date));
+  const blockedDates = new Set(blockedDatesArr.map((d) => d.date));
 
   /**
    * Filter slots for today (remove past times with 30 min buffer)
@@ -269,9 +284,9 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
       return slots;
     }
     const currentTotalMinutes = currentHour * 60 + currentMinute + 30;
-    return slots.filter(time => {
+    return slots.filter((time) => {
       const [slotHour, slotMinute] = time.split(':').map(Number);
-      return (slotHour * 60 + slotMinute) > currentTotalMinutes;
+      return slotHour * 60 + slotMinute > currentTotalMinutes;
     });
   };
 
@@ -309,7 +324,7 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
 
     // Remove booked slots
     const booked = bookedSlots[dateStr] || [];
-    availableSlots = availableSlots.filter(slot => !booked.includes(slot));
+    availableSlots = availableSlots.filter((slot) => !booked.includes(slot));
 
     // Filter today's past times
     availableSlots = filterTodaySlots(availableSlots, dateStr);
@@ -317,7 +332,7 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
     return {
       available: availableSlots.length > 0,
       slots: availableSlots,
-      reason: null
+      reason: null,
     };
   };
 
@@ -329,7 +344,7 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
       slots: { [specificDate]: result.slots },
       booked: [],
       serviceTypes,
-      reason: result.reason
+      reason: result.reason,
     };
   }
 
@@ -351,7 +366,7 @@ export async function getAvailability(options: AvailabilityOptions = {}): Promis
   return {
     slots,
     booked: [],
-    serviceTypes
+    serviceTypes,
   };
 }
 
@@ -389,5 +404,5 @@ module.exports = {
   isDateInVacation,
   DEFAULT_SCHEDULE,
   DEFAULT_SERVICES,
-  dayNames
+  dayNames,
 };

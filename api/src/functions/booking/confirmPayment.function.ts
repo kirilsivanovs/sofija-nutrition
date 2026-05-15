@@ -8,7 +8,10 @@ import { branding, colors } from '../../config';
 import translations from '../../translations';
 import { getBooking, updateBooking, verifyPaymentToken } from '../../services/bookingRepository';
 import { sendPaymentConfirmation, isConfigured } from '../../services/emailService';
-import { generatePaymentConfirmedEmailHTML, generateConfirmationPageHTML } from '../../templates/emailTemplates';
+import {
+  generatePaymentConfirmedEmailHTML,
+  generateConfirmationPageHTML,
+} from '../../templates/emailTemplates';
 import type { Language, TranslationObject } from '../../types';
 
 // ============================================
@@ -47,7 +50,7 @@ async function confirmPaymentHandler(
       return {
         status: 400,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
-        body: generateErrorPage('Token is required')
+        body: generateErrorPage('Token is required'),
       };
     }
 
@@ -57,17 +60,17 @@ async function confirmPaymentHandler(
       return {
         status: 400,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
-        body: generateErrorPage('Invalid or expired token')
+        body: generateErrorPage('Invalid or expired token'),
       };
     }
 
     // Get booking from storage
-    const booking = await getBooking(bookingId) as BookingEntity | null;
+    const booking = (await getBooking(bookingId)) as BookingEntity | null;
     if (!booking) {
       return {
         status: 404,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
-        body: generateErrorPage('Booking not found')
+        body: generateErrorPage('Booking not found'),
       };
     }
 
@@ -76,7 +79,7 @@ async function confirmPaymentHandler(
       return {
         status: 200,
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
-        body: generateConfirmationPageHTML('already', 'Maksājums jau ir apstiprināts')
+        body: generateConfirmationPageHTML('already', 'Maksājums jau ir apstiprināts'),
       };
     }
 
@@ -86,12 +89,14 @@ async function confirmPaymentHandler(
       id: booking.rowKey || booking.id || '',
       date: booking.date,
       paymentConfirmed: true,
-      paymentConfirmedAt: new Date().toISOString()
+      paymentConfirmedAt: new Date().toISOString(),
     });
     context.log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);
 
     // Get translation object
-    const t = translations.getTranslation((booking.language as Language) || 'lv') as TranslationObject;
+    const t = translations.getTranslation(
+      (booking.language as Language) || 'lv'
+    ) as TranslationObject;
 
     // Send confirmation email to client
     let emailSent = false;
@@ -104,7 +109,7 @@ async function confirmPaymentHandler(
         time: booking.time,
         service: booking.service,
         serviceName: booking.serviceName || t.services[booking.service] || booking.service,
-        consultationFormat: booking.consultationFormat || 'online'
+        consultationFormat: booking.consultationFormat || 'online',
       };
       const emailHtml = generatePaymentConfirmedEmailHTML(t, bookingData);
       await sendPaymentConfirmation(
@@ -119,16 +124,15 @@ async function confirmPaymentHandler(
     return {
       status: 200,
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
-      body: generateConfirmationPageHTML('success', 'Maksājums veiksmīgi apstiprināts!', emailSent)
+      body: generateConfirmationPageHTML('success', 'Maksājums veiksmīgi apstiprināts!', emailSent),
     };
-
   } catch (error: unknown) {
     const err = error as { message?: string };
     context.error('Payment confirmation error:', err);
     return {
       status: 500,
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
-      body: generateErrorPage('An error occurred while confirming payment')
+      body: generateErrorPage('An error occurred while confirming payment'),
     };
   }
 }
@@ -200,7 +204,7 @@ app.http('confirmPayment', {
   methods: ['GET'],
   authLevel: 'anonymous',
   route: 'confirm-payment',
-  handler: confirmPaymentHandler
+  handler: confirmPaymentHandler,
 });
 
 // ============================================

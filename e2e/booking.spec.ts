@@ -15,7 +15,9 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Calendar should have month navigation
-    await expect(bookingSection.locator('.calendar-nav, .month-nav, [class*="calendar"]')).toBeVisible();
+    await expect(
+      bookingSection.locator('.calendar-nav, .month-nav, [class*="calendar"]')
+    ).toBeVisible();
   });
 
   test('can navigate to next month in calendar', async ({ page }) => {
@@ -23,7 +25,9 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Find and click next month button
-    const nextBtn = bookingSection.locator('button:has(i.ph-caret-right), .calendar-next-btn, [aria-label*="next"]').first();
+    const nextBtn = bookingSection
+      .locator('button:has(i.ph-caret-right), .calendar-next-btn, [aria-label*="next"]')
+      .first();
     if (await nextBtn.isVisible()) {
       await nextBtn.click();
       // Calendar should still be visible after navigation
@@ -45,13 +49,15 @@ test.describe('Booking Flow', () => {
             '2026-05-18': ['09:00', '10:00', '11:00', '14:00', '15:00'],
             '2026-05-19': ['09:00', '10:00', '11:00'],
             '2026-05-20': ['09:00', '14:00', '15:00', '16:00'],
-          }
-        })
+          },
+        }),
       });
     });
 
     // Click on an available date (weekday)
-    const availableDay = bookingSection.locator('.calendar-day:not(.disabled):not(.weekend)').first();
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
     if (await availableDay.isVisible()) {
       await availableDay.click();
 
@@ -75,8 +81,8 @@ test.describe('Booking Flow', () => {
             '2026-05-18': ['09:00', '10:00', '11:00', '14:00'],
             '2026-05-19': ['09:00', '10:00'],
             '2026-05-20': ['14:00', '15:00'],
-          }
-        })
+          },
+        }),
       });
     });
 
@@ -106,13 +112,15 @@ test.describe('Booking Flow', () => {
             service: body.service || 'consultation',
             serviceName: 'Konsultācija',
             price: 65,
-          }
-        })
+          },
+        }),
       });
     });
 
     // Step 1: Select a date
-    const availableDay = bookingSection.locator('.calendar-day:not(.disabled):not(.weekend)').first();
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
       return;
@@ -140,7 +148,9 @@ test.describe('Booking Flow', () => {
     await submitBtn.click();
 
     // Step 5: Verify success state
-    const successMessage = page.locator('[class*="success"], [class*="modal"]').filter({ hasText: /TEST-12345|veiksmīga|success/i });
+    const successMessage = page
+      .locator('[class*="success"], [class*="modal"]')
+      .filter({ hasText: /TEST-12345|veiksmīga|success/i });
     await expect(successMessage).toBeVisible({ timeout: 10000 });
   });
 
@@ -156,8 +166,8 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           availableDates: {
             '2026-05-18': ['09:00', '10:00'],
-          }
-        })
+          },
+        }),
       });
     });
 
@@ -168,13 +178,15 @@ test.describe('Booking Flow', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           error: 'Time slot already booked',
-          code: 'SLOT_ALREADY_BOOKED'
-        })
+          code: 'SLOT_ALREADY_BOOKED',
+        }),
       });
     });
 
     // Select date and time
-    const availableDay = bookingSection.locator('.calendar-day:not(.disabled):not(.weekend)').first();
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
       return;
@@ -196,7 +208,9 @@ test.describe('Booking Flow', () => {
     await submitBtn.click();
 
     // Should show error about slot being taken
-    const errorMessage = page.locator('[class*="error"], [class*="modal"]').filter({ hasText: /aizņemts|taken|занят/i });
+    const errorMessage = page
+      .locator('[class*="error"], [class*="modal"]')
+      .filter({ hasText: /aizņemts|taken|занят/i });
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
@@ -210,8 +224,8 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00'] }
-        })
+          availableDates: { '2026-05-18': ['09:00'] },
+        }),
       });
     });
 
@@ -220,12 +234,14 @@ test.describe('Booking Flow', () => {
       await route.fulfill({
         status: 429,
         contentType: 'application/json',
-        body: JSON.stringify({ error: 'Too many requests' })
+        body: JSON.stringify({ error: 'Too many requests' }),
       });
     });
 
     // Select date and time
-    const availableDay = bookingSection.locator('.calendar-day:not(.disabled):not(.weekend)').first();
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
       return;
@@ -261,13 +277,15 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00', '10:00'] }
-        })
+          availableDates: { '2026-05-18': ['09:00', '10:00'] },
+        }),
       });
     });
 
     // Select date and time
-    const availableDay = bookingSection.locator('.calendar-day:not(.disabled):not(.weekend)').first();
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
       return;

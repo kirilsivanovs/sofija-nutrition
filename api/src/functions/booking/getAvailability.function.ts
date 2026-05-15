@@ -1,6 +1,6 @@
 /**
  * getAvailability HTTP Handler (TypeScript)
- * 
+ *
  * Thin HTTP layer that handles request/response.
  * Business logic is delegated to AvailabilityService.
  */
@@ -24,21 +24,23 @@ async function getAvailabilityHandler(
     // Delegate to service layer
     const result = await getAvailability({
       specificDate: date || null,
-      daysAhead: 90
+      daysAhead: 90,
     });
 
     return {
       status: 200,
-      jsonBody: result
+      jsonBody: result,
     };
-
   } catch (error: unknown) {
     const err = error as { message?: string };
     context.error('Error getting availability:', err);
-    return addCorsHeaders({
-      status: 500,
-      jsonBody: { error: 'Internal server error', details: err.message }
-    }, request);
+    return addCorsHeaders(
+      {
+        status: 500,
+        jsonBody: { error: 'Internal server error', details: err.message },
+      },
+      request
+    );
   }
 }
 
@@ -50,7 +52,7 @@ app.http('getAvailability', {
   methods: ['GET'],
   authLevel: 'anonymous',
   route: 'availability/{date?}',
-  handler: getAvailabilityHandler
+  handler: getAvailabilityHandler,
 });
 
 // ============================================

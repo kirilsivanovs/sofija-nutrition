@@ -6,7 +6,11 @@
 import { TableClient } from '@azure/data-tables';
 import type { Booking, BookingStatus } from '../types';
 import { env, tables, booking as bookingConfig } from '../config';
-import { sanitizeODataValue, validateDateFormat, validateTimeFormat } from '../utils/odataSanitizer';
+import {
+  sanitizeODataValue,
+  validateDateFormat,
+  validateTimeFormat,
+} from '../utils/odataSanitizer';
 import { createLogger } from '../utils/logger';
 
 const logger = createLogger('BookingRepository');
@@ -111,7 +115,7 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
         rowKey: lockKey,
         lockId,
         createdAt: new Date().toISOString(),
-        expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+        expiresAt: new Date(now + LOCK_TTL_MS).toISOString(),
       };
 
       await client.createEntity(lockEntity);
@@ -132,7 +136,7 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
               rowKey: lockKey,
               lockId,
               createdAt: new Date().toISOString(),
-              expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+              expiresAt: new Date(now + LOCK_TTL_MS).toISOString(),
             };
             await client.updateEntity(newLock, 'Replace', { etag: existingLock.etag });
             logger.debug(`Expired lock replaced for ${lockKey}`);
@@ -164,7 +168,7 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
 
     inMemoryLocks.set(lockKey, {
       lockId,
-      expiresAt: now + LOCK_TTL_MS
+      expiresAt: now + LOCK_TTL_MS,
     });
     logger.debug(`In-memory lock acquired for ${lockKey}`);
     return { success: true, lockId };
@@ -210,7 +214,11 @@ export async function releaseSlotLock(date: string, time: string, lockId: string
 /**
  * Save or update a booking
  */
-export async function saveBooking(booking: { id: string; date: string; [key: string]: unknown }): Promise<boolean> {
+export async function saveBooking(booking: {
+  id: string;
+  date: string;
+  [key: string]: unknown;
+}): Promise<boolean> {
   const client = await getTableClient();
 
   if (client) {
@@ -218,7 +226,7 @@ export async function saveBooking(booking: { id: string; date: string; [key: str
       partitionKey: booking.date,
       rowKey: booking.id,
       ...booking,
-      createdAt: booking.createdAt || new Date().toISOString()
+      createdAt: booking.createdAt || new Date().toISOString(),
     };
     await client.upsertEntity(entity);
     logger.info('Booking saved to Azure Storage', booking.id);
@@ -226,9 +234,12 @@ export async function saveBooking(booking: { id: string; date: string; [key: str
   } else {
     inMemoryBookings.set(booking.id, {
       ...booking,
-      createdAt: booking.createdAt || new Date().toISOString()
+      createdAt: booking.createdAt || new Date().toISOString(),
     } as Booking);
-    logger.warn('Booking saved to IN-MEMORY storage (not persistent!)', { id: booking.id, total: inMemoryBookings.size });
+    logger.warn('Booking saved to IN-MEMORY storage (not persistent!)', {
+      id: booking.id,
+      total: inMemoryBookings.size,
+    });
     return false;
   }
 }
@@ -248,7 +259,7 @@ export async function getBooking(bookingId: string): Promise<Booking | null> {
 
   if (client) {
     const entities = client.listEntities({
-      queryOptions: { filter: `RowKey eq '${sanitizedId}'` }
+      queryOptions: { filter: `RowKey eq '${sanitizedId}'` },
     });
     for await (const entity of entities) {
       return entity as unknown as Booking;
@@ -262,7 +273,11 @@ export async function getBooking(bookingId: string): Promise<Booking | null> {
 /**
  * Update an existing booking
  */
-export async function updateBooking(booking: { id: string; date: string; [key: string]: unknown }): Promise<boolean> {
+export async function updateBooking(booking: {
+  id: string;
+  date: string;
+  [key: string]: unknown;
+}): Promise<boolean> {
   return saveBooking(booking);
 }
 
@@ -313,7 +328,7 @@ export async function isSlotBooked(date: string, time: string): Promise<boolean>
   if (client) {
     // Query all bookings for this date using sanitized value
     const entities = client.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${sanitizedDate}'` }
+      queryOptions: { filter: `PartitionKey eq '${sanitizedDate}'` },
     });
 
     for await (const entity of entities) {
@@ -357,5 +372,5 @@ module.exports = {
   getAllInMemoryBookings,
   acquireSlotLock,
   releaseSlotLock,
-  LOCK_TTL_MS
+  LOCK_TTL_MS,
 };

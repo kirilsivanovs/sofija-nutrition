@@ -35,7 +35,7 @@ const allowedOrigins: string[] = [
   'http://localhost:4321',
   'http://localhost:3000',
   'https://www.sofija-nutrition.lv',
-  'https://sofija-nutrition.lv'
+  'https://sofija-nutrition.lv',
 ];
 
 // ============================================
@@ -55,7 +55,7 @@ export function getCorsHeaders(request: HttpRequest): CorsHeaders {
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Max-Age': '86400'
+    'Access-Control-Max-Age': '86400',
   };
 }
 
@@ -69,8 +69,8 @@ export function addCorsHeaders<T extends HttpResponse>(response: T, request: Htt
     ...response,
     headers: {
       ...corsHeaders,
-      ...(response.headers || {})
-    }
+      ...(response.headers || {}),
+    },
   };
 }
 
@@ -80,5 +80,5 @@ export function addCorsHeaders<T extends HttpResponse>(response: T, request: Htt
 
 module.exports = {
   getCorsHeaders,
-  addCorsHeaders
+  addCorsHeaders,
 };

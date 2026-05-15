@@ -88,7 +88,7 @@ Use standard nutritional databases (USDA) for calculations.`;
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'api-key': this.apiKey
+            'api-key': this.apiKey,
           },
           body: JSON.stringify({
             messages: [
@@ -99,14 +99,14 @@ Use standard nutritional databases (USDA) for calculations.`;
                   { type: 'text', text: 'Analyze this meal:' },
                   {
                     type: 'image_url',
-                    image_url: { url: `data:image/jpeg;base64,${photoBase64}` }
-                  }
-                ]
-              }
+                    image_url: { url: `data:image/jpeg;base64,${photoBase64}` },
+                  },
+                ],
+              },
             ],
             max_tokens: 1000,
-            temperature: 0.3
-          })
+            temperature: 0.3,
+          }),
         }
       );
 
@@ -114,9 +114,9 @@ Use standard nutritional databases (USDA) for calculations.`;
         throw new Error(`OpenAI API error: ${response.statusText}`);
       }
 
-      const data = await response.json() as OpenAIResponse;
+      const data = (await response.json()) as OpenAIResponse;
       const content = data.choices[0].message.content;
-      
+
       return JSON.parse(content) as FoodAnalysisResult;
     } catch (error) {
       console.error('AI Analysis error:', error);
@@ -140,35 +140,41 @@ export class GeminiAIService implements IAIService {
 
   private async requestGemini(photoBase64: string, prompt: string, maxOutputTokens: number) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`;
-    logger.debug('Calling Gemini API', { model: this.model, imageSize: photoBase64.length, maxOutputTokens });
+    logger.debug('Calling Gemini API', {
+      model: this.model,
+      imageSize: photoBase64.length,
+      maxOutputTokens,
+    });
 
-    const parts = [{ text: prompt } as { text: string } | { inline_data: { mime_type: string; data: string } }];
+    const parts = [
+      { text: prompt } as { text: string } | { inline_data: { mime_type: string; data: string } },
+    ];
     if (photoBase64) {
       parts.push({
         inline_data: {
           mime_type: 'image/jpeg',
-          data: photoBase64
-        }
+          data: photoBase64,
+        },
       });
     }
 
     const response = await fetch(`${url}?key=${this.apiKey}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         contents: [
           {
-            parts
-          }
+            parts,
+          },
         ],
         generationConfig: {
           temperature: 0.3,
           maxOutputTokens,
-          responseMimeType: 'application/json'
-        }
-      })
+          responseMimeType: 'application/json',
+        },
+      }),
     });
 
     if (!response.ok) {
@@ -177,7 +183,7 @@ export class GeminiAIService implements IAIService {
       throw new Error(`Gemini API error: ${response.statusText}`);
     }
 
-    const data = await response.json() as GeminiResponse;
+    const data = (await response.json()) as GeminiResponse;
     logger.debug('Gemini response received');
 
     const candidate = data?.candidates?.[0];
@@ -188,7 +194,7 @@ export class GeminiAIService implements IAIService {
 
     return {
       text,
-      finishReason: candidate?.finishReason as string | undefined
+      finishReason: candidate?.finishReason as string | undefined,
     };
   }
 
@@ -244,7 +250,7 @@ If unsure, keep the provided name and set low confidence (0.2-0.5). Do not chang
         fat: Number(parsed.fat || 0),
         carbs: Number(parsed.carbs || 0),
         confidence: Number(parsed.confidence || 0),
-        userAdjusted: false
+        userAdjusted: false,
       };
     } catch (error) {
       console.error('Gemini estimate error:', error);
@@ -257,7 +263,10 @@ If unsure, keep the provided name and set low confidence (0.2-0.5). Do not chang
   }
 
   private parseJson(text: string): unknown {
-    let cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleaned = text
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim();
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
     const jsonText = jsonMatch ? jsonMatch[0] : cleaned;
 
@@ -294,7 +303,8 @@ If unsure, keep the provided name and set low confidence (0.2-0.5). Do not chang
       existing.fat = (existing.fat ?? 0) + (item.fat ?? 0);
       existing.carbs = (existing.carbs ?? 0) + (item.carbs ?? 0);
       existing.confidence =
-        ((existing.confidence ?? 0) * existingWeight + (item.confidence ?? 0) * itemWeight) / weightSum;
+        ((existing.confidence ?? 0) * existingWeight + (item.confidence ?? 0) * itemWeight) /
+        weightSum;
     }
 
     const items = Array.from(map.values());
@@ -315,7 +325,7 @@ If unsure, keep the provided name and set low confidence (0.2-0.5). Do not chang
       totalCalories: totals.totalCalories,
       totalProtein: totals.totalProtein,
       totalFat: totals.totalFat,
-      totalCarbs: totals.totalCarbs
+      totalCarbs: totals.totalCarbs,
     };
   }
 }
@@ -327,7 +337,7 @@ If unsure, keep the provided name and set low confidence (0.2-0.5). Do not chang
 export class MockAIService implements IAIService {
   async analyzeFoodPhoto(photoBase64: string): Promise<FoodAnalysisResult> {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Mock response
     return {
@@ -341,7 +351,7 @@ export class MockAIService implements IAIService {
           fat: 13,
           carbs: 0,
           confidence: 0.85,
-          userAdjusted: false
+          userAdjusted: false,
         },
         {
           name: 'Рис',
@@ -352,7 +362,7 @@ export class MockAIService implements IAIService {
           fat: 0,
           carbs: 34,
           confidence: 0.92,
-          userAdjusted: false
+          userAdjusted: false,
         },
         {
           name: 'Брокколи',
@@ -363,14 +373,14 @@ export class MockAIService implements IAIService {
           fat: 0,
           carbs: 7,
           confidence: 0.88,
-          userAdjusted: false
-        }
+          userAdjusted: false,
+        },
       ],
       totalCalories: 438,
       totalProtein: 37,
       totalFat: 13,
       totalCarbs: 41,
-      mealType: 'lunch'
+      mealType: 'lunch',
     };
   }
 }

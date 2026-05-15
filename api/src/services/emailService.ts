@@ -60,7 +60,12 @@ function getResendClient(): Resend | null {
 /**
  * Send email with optional attachments
  */
-export async function sendEmail({ to, subject, html, attachments = [] }: SendEmailOptions): Promise<EmailResult> {
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  attachments = [],
+}: SendEmailOptions): Promise<EmailResult> {
   const client = getResendClient();
 
   if (!client) {
@@ -76,7 +81,7 @@ export async function sendEmail({ to, subject, html, attachments = [] }: SendEma
       to,
       subject,
       html,
-      attachments: attachments as any
+      attachments: attachments as any,
     });
 
     logger.info('Email sent successfully', { id: result?.data?.id });
@@ -104,7 +109,7 @@ export async function sendClientConfirmation(
     to,
     subject,
     html,
-    attachments
+    attachments,
   });
 }
 
@@ -116,29 +121,37 @@ export async function sendAdminNotification(subject: string, html: string): Prom
   return sendEmail({
     to: adminEmail,
     subject,
-    html
+    html,
   });
 }
 
 /**
  * Send payment confirmation to client
  */
-export async function sendPaymentConfirmation(to: string, subject: string, html: string): Promise<EmailResult> {
+export async function sendPaymentConfirmation(
+  to: string,
+  subject: string,
+  html: string
+): Promise<EmailResult> {
   return sendEmail({
     to,
     subject,
-    html
+    html,
   });
 }
 
 /**
  * Send cancellation notification to client
  */
-export async function sendCancellationNotification(to: string, subject: string, html: string): Promise<EmailResult> {
+export async function sendCancellationNotification(
+  to: string,
+  subject: string,
+  html: string
+): Promise<EmailResult> {
   return sendEmail({
     to,
     subject,
-    html
+    html,
   });
 }
 
@@ -159,5 +172,5 @@ module.exports = {
   sendAdminNotification,
   sendPaymentConfirmation,
   sendCancellationNotification,
-  isConfigured
+  isConfigured,
 };

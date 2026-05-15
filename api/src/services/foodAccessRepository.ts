@@ -34,7 +34,11 @@ export class FoodAccessRepository {
     return this.tableReady;
   }
 
-  private toEntity(record: FoodAccessRecord): { partitionKey: string; rowKey: string; [key: string]: unknown } {
+  private toEntity(record: FoodAccessRecord): {
+    partitionKey: string;
+    rowKey: string;
+    [key: string]: unknown;
+  } {
     const entity: { partitionKey: string; rowKey: string; [key: string]: unknown } = {
       partitionKey: 'ACCESS',
       rowKey: record.userId,

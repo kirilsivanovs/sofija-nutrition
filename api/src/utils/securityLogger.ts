@@ -1,7 +1,7 @@
 /**
  * Security Logger (TypeScript)
  * Logs security-related events for monitoring and alerting
- * 
+ *
  * Categories of security events:
  * - AUTH_FAILURE: Failed authentication attempts
  * - AUTH_SUCCESS: Successful logins (for audit trail)
@@ -81,7 +81,7 @@ export enum SecurityEventType {
   ADMIN_ACCESS_DENIED = 'ADMIN_ACCESS_DENIED',
   ADMIN_ACCESS_GRANTED = 'ADMIN_ACCESS_GRANTED',
   INVALID_INPUT = 'INVALID_INPUT',
-  POTENTIAL_INJECTION = 'POTENTIAL_INJECTION'
+  POTENTIAL_INJECTION = 'POTENTIAL_INJECTION',
 }
 
 /**
@@ -91,7 +91,7 @@ export enum Severity {
   LOW = 'LOW',
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL'
+  CRITICAL = 'CRITICAL',
 }
 
 // ============================================
@@ -105,9 +105,7 @@ export function extractClientInfo(request: HttpRequest): ClientInfo {
   const forwardedFor = request.headers?.get?.('x-forwarded-for');
   const ip = forwardedFor
     ? forwardedFor.split(',')[0].trim()
-    : request.headers?.get?.('x-client-ip') ||
-      request.headers?.get?.('x-real-ip') ||
-      'unknown';
+    : request.headers?.get?.('x-client-ip') || request.headers?.get?.('x-real-ip') || 'unknown';
 
   return {
     ip,
@@ -115,7 +113,7 @@ export function extractClientInfo(request: HttpRequest): ClientInfo {
     origin: request.headers?.get?.('origin') || 'unknown',
     referer: request.headers?.get?.('referer') || 'unknown',
     method: request.method || 'unknown',
-    url: request.url || 'unknown'
+    url: request.url || 'unknown',
   };
 }
 
@@ -125,7 +123,7 @@ export function extractClientInfo(request: HttpRequest): ClientInfo {
 function formatSecurityEvent(event: Omit<SecurityEvent, 'timestamp' | 'type'>): SecurityEvent {
   return Object.assign({}, event, {
     timestamp: new Date().toISOString(),
-    type: 'SECURITY_EVENT' as const
+    type: 'SECURITY_EVENT' as const,
   }) as SecurityEvent;
 }
 
@@ -141,7 +139,7 @@ function getSeverity(eventType: SecurityEventType): Severity {
     [SecurityEventType.ADMIN_ACCESS_DENIED]: Severity.HIGH,
     [SecurityEventType.ADMIN_ACCESS_GRANTED]: Severity.LOW,
     [SecurityEventType.INVALID_INPUT]: Severity.LOW,
-    [SecurityEventType.POTENTIAL_INJECTION]: Severity.CRITICAL
+    [SecurityEventType.POTENTIAL_INJECTION]: Severity.CRITICAL,
   };
   return severityMap[eventType] || Severity.MEDIUM;
 }
@@ -163,7 +161,7 @@ export function logSecurityEvent(
     eventType,
     severity: getSeverity(eventType),
     ...details,
-    ...(request && { clientInfo: extractClientInfo(request) })
+    ...(request && { clientInfo: extractClientInfo(request) }),
   });
 
   // Use appropriate log level based on severity
@@ -190,10 +188,15 @@ export function logAuthFailure(
   request: HttpRequest,
   reason: string
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.AUTH_FAILURE, {
-    reason,
-    endpoint: request.url
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.AUTH_FAILURE,
+    {
+      reason,
+      endpoint: request.url,
+    },
+    request
+  );
 }
 
 /**
@@ -205,12 +208,17 @@ export function logAuthSuccess(
   user: User,
   method: string
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.AUTH_SUCCESS, {
-    userId: user.id,
-    userName: user.name,
-    authMethod: method,
-    endpoint: request.url
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.AUTH_SUCCESS,
+    {
+      userId: user.id,
+      userName: user.name,
+      authMethod: method,
+      endpoint: request.url,
+    },
+    request
+  );
 }
 
 /**
@@ -222,11 +230,16 @@ export function logRateLimitExceeded(
   endpoint: string,
   limit: number
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.RATE_LIMIT_EXCEEDED, {
-    endpoint,
-    limit,
-    message: `Rate limit exceeded for ${endpoint}`
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.RATE_LIMIT_EXCEEDED,
+    {
+      endpoint,
+      limit,
+      message: `Rate limit exceeded for ${endpoint}`,
+    },
+    request
+  );
 }
 
 /**
@@ -237,10 +250,15 @@ export function logAdminAccessDenied(
   request: HttpRequest,
   reason: string
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.ADMIN_ACCESS_DENIED, {
-    reason,
-    endpoint: request.url
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.ADMIN_ACCESS_DENIED,
+    {
+      reason,
+      endpoint: request.url,
+    },
+    request
+  );
 }
 
 /**
@@ -252,12 +270,17 @@ export function logAdminAccessGranted(
   user: User,
   method: string
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.ADMIN_ACCESS_GRANTED, {
-    userId: user.id,
-    userName: user.name,
-    authMethod: method,
-    endpoint: request.url
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.ADMIN_ACCESS_GRANTED,
+    {
+      userId: user.id,
+      userName: user.name,
+      authMethod: method,
+      endpoint: request.url,
+    },
+    request
+  );
 }
 
 /**
@@ -269,10 +292,15 @@ export function logSuspiciousRequest(
   reason: string,
   details: Record<string, unknown> = {}
 ): SecurityEvent {
-  return logSecurityEvent(context, SecurityEventType.SUSPICIOUS_REQUEST, {
-    reason,
-    ...details
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.SUSPICIOUS_REQUEST,
+    {
+      reason,
+      ...details,
+    },
+    request
+  );
 }
 
 /**
@@ -287,11 +315,16 @@ export function logPotentialInjection(
   // Truncate suspicious value for logging
   const truncatedValue = String(value).substring(0, 100);
 
-  return logSecurityEvent(context, SecurityEventType.POTENTIAL_INJECTION, {
-    field,
-    suspiciousValue: truncatedValue,
-    message: `Potential injection attempt detected in field: ${field}`
-  }, request);
+  return logSecurityEvent(
+    context,
+    SecurityEventType.POTENTIAL_INJECTION,
+    {
+      field,
+      suspiciousValue: truncatedValue,
+      message: `Potential injection attempt detected in field: ${field}`,
+    },
+    request
+  );
 }
 
 // ============================================
@@ -319,7 +352,7 @@ export function isSuspiciousInput(value: unknown): boolean {
     /[;&|`$]|\$\(/,
   ];
 
-  return suspiciousPatterns.some(pattern => pattern.test(value));
+  return suspiciousPatterns.some((pattern) => pattern.test(value));
 }
 
 /**
@@ -341,14 +374,13 @@ export function validateAndLogSuspiciousInput(
 /**
  * Create a security-aware request logger middleware
  */
-export function createSecurityMiddleware(options: {
-  logAllRequests?: boolean;
-  detectInjection?: boolean;
-} = {}): (request: HttpRequest, context: FunctionContext, next: NextFunction) => unknown {
-  const {
-    logAllRequests = false,
-    detectInjection = true
-  } = options;
+export function createSecurityMiddleware(
+  options: {
+    logAllRequests?: boolean;
+    detectInjection?: boolean;
+  } = {}
+): (request: HttpRequest, context: FunctionContext, next: NextFunction) => unknown {
+  const { logAllRequests = false, detectInjection = true } = options;
 
   return (request: HttpRequest, context: FunctionContext, next: NextFunction) => {
     // Log all requests if enabled (for debugging)
@@ -356,7 +388,7 @@ export function createSecurityMiddleware(options: {
       context.log('[REQUEST]', {
         method: request.method,
         url: request.url,
-        clientInfo: extractClientInfo(request)
+        clientInfo: extractClientInfo(request),
       });
     }
 
@@ -382,5 +414,5 @@ module.exports = {
   isSuspiciousInput,
   validateAndLogSuspiciousInput,
   extractClientInfo,
-  createSecurityMiddleware
+  createSecurityMiddleware,
 };

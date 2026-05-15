@@ -1,6 +1,6 @@
 /**
  * BookingService (TypeScript)
- * 
+ *
  * Business logic for booking operations.
  * Separates business logic from HTTP handlers for better testability and maintainability.
  */
@@ -19,11 +19,20 @@ import {
   generatePaymentToken,
   isSlotBooked,
   acquireSlotLock,
-  releaseSlotLock
+  releaseSlotLock,
 } from './bookingRepository';
-import { sendClientConfirmation, sendAdminNotification, isConfigured, type EmailAttachment } from './emailService';
+import {
+  sendClientConfirmation,
+  sendAdminNotification,
+  isConfigured,
+  type EmailAttachment,
+} from './emailService';
 import { generateInvoicePDF } from './pdfService';
-import { generateClientEmailHTML, generateAdminEmailHTML, generateCancellationEmailHTML } from '../templates/emailTemplates';
+import {
+  generateClientEmailHTML,
+  generateAdminEmailHTML,
+  generateCancellationEmailHTML,
+} from '../templates/emailTemplates';
 import { isLatvianHoliday } from './latvianHolidays';
 import type { Booking, Language } from '../types';
 
@@ -103,10 +112,10 @@ export const BookingErrorCodes = {
   BOOKING_NOT_FOUND: 'BOOKING_NOT_FOUND',
   ALREADY_CANCELLED: 'ALREADY_CANCELLED',
   ALREADY_CONFIRMED: 'ALREADY_CONFIRMED',
-  INVALID_TOKEN: 'INVALID_TOKEN'
+  INVALID_TOKEN: 'INVALID_TOKEN',
 } as const;
 
-export type BookingErrorCode = typeof BookingErrorCodes[keyof typeof BookingErrorCodes];
+export type BookingErrorCode = (typeof BookingErrorCodes)[keyof typeof BookingErrorCodes];
 
 /**
  * Custom error class for booking-related errors
@@ -135,8 +144,8 @@ export class BookingError extends Error {
       jsonBody: {
         error: this.message,
         code: this.code,
-        ...this.details
-      }
+        ...this.details,
+      },
     };
   }
 }
@@ -160,7 +169,7 @@ function validateNotWeekend(date: string): void {
       {
         errorLv: 'Brīvdienās pieraksts nav iespējams',
         errorRu: 'Запись в выходные дни недоступна',
-        errorEn: 'Booking on weekends is not available'
+        errorEn: 'Booking on weekends is not available',
       }
     );
   }
@@ -181,7 +190,7 @@ function validateNotHoliday(date: string): void {
         holiday: holidayCheck.name,
         errorLv: `Svētku dienā pieraksts nav iespējams: ${holidayCheck.name}`,
         errorRu: `Запись в праздничный день недоступна: ${holidayCheck.name}`,
-        errorEn: `Booking on holidays is not available: ${holidayCheck.name}`
+        errorEn: `Booking on holidays is not available: ${holidayCheck.name}`,
       }
     );
   }
@@ -202,7 +211,8 @@ export async function createBooking(
   const warn = options.onWarn || console.warn;
   const logError = options.onError || console.error;
 
-  const { name, email, phone, date, time, serviceId, consultationFormat, notes, language } = bookingInput;
+  const { name, email, phone, date, time, serviceId, consultationFormat, notes, language } =
+    bookingInput;
 
   // Validate date constraints
   validateNotWeekend(date);
@@ -211,16 +221,11 @@ export async function createBooking(
   // Acquire slot lock to prevent race conditions
   const lock = await acquireSlotLock(date, time);
   if (!lock.success) {
-    throw new BookingError(
-      'Time slot is being booked',
-      BookingErrorCodes.SLOT_BEING_BOOKED,
-      409,
-      {
-        errorLv: 'Šis laiks tiek rezervēts. Lūdzu, mēģiniet vēlreiz vai izvēlieties citu laiku.',
-        errorRu: 'Это время бронируется. Пожалуйста, попробуйте снова или выберите другое время.',
-        errorEn: 'This time slot is being booked. Please try again or choose another time.'
-      }
-    );
+    throw new BookingError('Time slot is being booked', BookingErrorCodes.SLOT_BEING_BOOKED, 409, {
+      errorLv: 'Šis laiks tiek rezervēts. Lūdzu, mēģiniet vēlreiz vai izvēlieties citu laiku.',
+      errorRu: 'Это время бронируется. Пожалуйста, попробуйте снова или выберите другое время.',
+      errorEn: 'This time slot is being booked. Please try again or choose another time.',
+    });
   }
 
   try {
@@ -234,13 +239,13 @@ export async function createBooking(
         {
           errorLv: 'Šis laiks jau ir aizņemts. Lūdzu, izvēlieties citu laiku.',
           errorRu: 'Это время уже занято. Пожалуйста, выберите другое время.',
-          errorEn: 'This time slot is already booked. Please choose another time.'
+          errorEn: 'This time slot is already booked. Please choose another time.',
         }
       );
     }
 
     // Get translation object
-    const t = translations.getTranslation(language as Language || 'lv');
+    const t = translations.getTranslation((language as Language) || 'lv');
     const langCode = ['lv', 'en', 'ru'].includes(language || '') ? language : 'lv';
 
     // Generate booking data
@@ -271,7 +276,7 @@ export async function createBooking(
       paymentToken,
       paymentConfirmed: false,
       status: 'pending',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     // Save to storage
@@ -311,9 +316,8 @@ export async function createBooking(
       success: true,
       bookingId,
       message: t.emailThankYou,
-      booking: bookingData
+      booking: bookingData,
     };
-
   } finally {
     // Always release the lock
     if (lock.lockId) {
@@ -331,7 +335,8 @@ async function sendBookingEmails(
   pdfBase64: Uint8Array | null,
   { log, logError }: { log: (...args: unknown[]) => void; logError: (...args: unknown[]) => void }
 ): Promise<void> {
-  const { name, email, bookingId, serviceName, formatLabel, date, time, price, paymentToken } = bookingData;
+  const { name, email, bookingId, serviceName, formatLabel, date, time, price, paymentToken } =
+    bookingData;
 
   const confirmPaymentUrl = `${API_BASE_URL}/api/confirm-payment?token=${paymentToken}`;
 
@@ -342,15 +347,19 @@ async function sendBookingEmails(
     formatLabel,
     date,
     time,
-    price
+    price,
   };
 
   // Send client confirmation email
   const clientEmailHtml = generateClientEmailHTML(t, displayData);
-  const attachments: EmailAttachment[] = pdfBase64 ? [{
-    filename: `invoice-${bookingId}.pdf`,
-    content: pdfBase64
-  }] : [];
+  const attachments: EmailAttachment[] = pdfBase64
+    ? [
+        {
+          filename: `invoice-${bookingId}.pdf`,
+          content: pdfBase64,
+        },
+      ]
+    : [];
 
   try {
     const clientResult = await sendClientConfirmation(
@@ -397,38 +406,22 @@ export async function confirmPayment(
   const log = options.onLog || console.log;
 
   if (!token) {
-    throw new BookingError(
-      'Token is required',
-      BookingErrorCodes.INVALID_TOKEN,
-      400
-    );
+    throw new BookingError('Token is required', BookingErrorCodes.INVALID_TOKEN, 400);
   }
 
   // Find booking by token
   const booking = await getBooking(token);
 
   if (!booking) {
-    throw new BookingError(
-      'Booking not found',
-      BookingErrorCodes.BOOKING_NOT_FOUND,
-      404
-    );
+    throw new BookingError('Booking not found', BookingErrorCodes.BOOKING_NOT_FOUND, 404);
   }
 
   if (booking.paymentConfirmed) {
-    throw new BookingError(
-      'Payment already confirmed',
-      BookingErrorCodes.ALREADY_CONFIRMED,
-      400
-    );
+    throw new BookingError('Payment already confirmed', BookingErrorCodes.ALREADY_CONFIRMED, 400);
   }
 
   if (booking.status === 'cancelled') {
-    throw new BookingError(
-      'Booking is cancelled',
-      BookingErrorCodes.ALREADY_CANCELLED,
-      400
-    );
+    throw new BookingError('Booking is cancelled', BookingErrorCodes.ALREADY_CANCELLED, 400);
   }
 
   // Update booking
@@ -438,14 +431,14 @@ export async function confirmPayment(
     date: booking.date,
     paymentConfirmed: true,
     status: 'confirmed' as const,
-    confirmedAt: new Date().toISOString()
+    confirmedAt: new Date().toISOString(),
   });
 
   log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);
 
   return {
     success: true,
-    bookingId: booking.rowKey || booking.id || ''
+    bookingId: booking.rowKey || booking.id || '',
   };
 }
 
@@ -462,19 +455,11 @@ export async function cancelBooking(
   const booking = await getBooking(bookingId);
 
   if (!booking) {
-    throw new BookingError(
-      'Booking not found',
-      BookingErrorCodes.BOOKING_NOT_FOUND,
-      404
-    );
+    throw new BookingError('Booking not found', BookingErrorCodes.BOOKING_NOT_FOUND, 404);
   }
 
   if (booking.status === 'cancelled') {
-    throw new BookingError(
-      'Booking already cancelled',
-      BookingErrorCodes.ALREADY_CANCELLED,
-      400
-    );
+    throw new BookingError('Booking already cancelled', BookingErrorCodes.ALREADY_CANCELLED, 400);
   }
 
   // Update booking status
@@ -484,7 +469,7 @@ export async function cancelBooking(
     date: booking.date,
     status: 'cancelled' as const,
     cancelledAt: new Date().toISOString(),
-    cancelReason: reason
+    cancelReason: reason,
   });
 
   log(`Booking ${bookingId} cancelled: ${reason}`);
@@ -501,12 +486,14 @@ export async function cancelBooking(
         service: booking.service,
         date: booking.date,
         time: booking.time,
-        consultationFormat: booking.consultationFormat || 'online'
+        consultationFormat: booking.consultationFormat || 'online',
       });
 
       await sendClientConfirmation(
         booking.email,
-        t.cancellationSubject ? t.cancellationSubject(bookingId) : `Rezervācija atcelta - ${bookingId}`,
+        t.cancellationSubject
+          ? t.cancellationSubject(bookingId)
+          : `Rezervācija atcelta - ${bookingId}`,
         emailHtml
       );
       log(`Cancellation email sent to ${booking.email}`);
@@ -518,7 +505,7 @@ export async function cancelBooking(
 
   return {
     success: true,
-    bookingId
+    bookingId,
   };
 }
 
@@ -532,5 +519,5 @@ module.exports = {
   cancelBooking,
   sendBookingEmails,
   BookingError,
-  BookingErrorCodes
+  BookingErrorCodes,
 };
