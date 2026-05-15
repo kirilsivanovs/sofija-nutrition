@@ -980,7 +980,6 @@
   background: var(--color-white);
   border-radius: 24px;
   box-shadow: var(--booking-shadow-soft);
-  overflow: hidden;
   border: 1px solid rgba(27, 67, 50, 0.12);
   font-family: var(--font-booking);
 }
@@ -991,6 +990,7 @@
   color: white;
   padding: 24px 30px;
   overflow: hidden;
+  border-radius: 24px 24px 0 0;
 }
 
 .booking-header::after {
@@ -1015,7 +1015,6 @@
 .booking-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 420px;
 }
 
 /* Left Side - Calendar */
