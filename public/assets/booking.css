@@ -1029,8 +1029,13 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
-/* When form is visible, collapse left side border */
+/* When form is visible, stack calendar above time slots for full width */
+.booking-calendar.form-visible .booking-body {
+  grid-template-columns: 1fr;
+}
+
 .booking-calendar.form-visible .booking-left {
+  border-right: none;
   border-bottom: 1px solid rgba(27, 67, 50, 0.12);
 }
 
@@ -1198,6 +1203,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
 }
 
 .time-section h4 {
@@ -1211,7 +1217,7 @@
 /* Time Slots */
 .time-slots {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -1262,12 +1268,15 @@
   padding: 24px 26px;
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   border-radius: 0 0 24px 24px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .booking-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px 20px;
+  min-width: 0;
 }
 
 .booking-form-grid .form-group:last-child {
@@ -1396,6 +1405,9 @@
   transition: all 0.3s ease;
   font-family: var(--font-booking);
   min-height: 48px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* Format Options (Online/In-Person) - Admin Tab Style */
@@ -1435,7 +1447,7 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-light);
-  white-space: nowrap;
+  white-space: normal;
   min-width: 0;
 }
 
