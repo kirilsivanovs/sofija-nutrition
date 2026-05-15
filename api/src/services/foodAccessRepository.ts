@@ -34,8 +34,12 @@ export class FoodAccessRepository {
     return this.tableReady;
   }
 
-  private toEntity(record: FoodAccessRecord) {
-    const entity: Record<string, unknown> = {
+  private toEntity(record: FoodAccessRecord): {
+    partitionKey: string;
+    rowKey: string;
+    [key: string]: unknown;
+  } {
+    const entity: { partitionKey: string; rowKey: string; [key: string]: unknown } = {
       partitionKey: 'ACCESS',
       rowKey: record.userId,
       userId: record.userId,
@@ -83,7 +87,7 @@ export class FoodAccessRepository {
       updatedAt: new Date().toISOString(),
     };
     const entity = this.toEntity(record);
-    await this.tableClient.upsertEntity(entity as any, 'Merge');
+    await this.tableClient.upsertEntity(entity, 'Merge');
     return record;
   }
 

@@ -1,6 +1,6 @@
 /**
  * createBooking HTTP Handler (TypeScript)
- * 
+ *
  * Thin HTTP layer that handles request/response, validation, and rate limiting.
  * Business logic is delegated to BookingService.
  */
@@ -23,18 +23,18 @@ async function createBookingHandler(
 
   try {
     // Rate limiting (HTTP concern)
-    const rateCheck = checkRateLimit(request as any, 'createBooking');
+    const rateCheck = checkRateLimit(request, 'createBooking');
     if (!rateCheck.allowed) {
       context.warn('Rate limit exceeded for createBooking');
       return rateLimitExceededResponse(rateCheck);
     }
 
-    const body = await request.json() as Record<string, unknown>;
+    const body = (await request.json()) as Record<string, unknown>;
 
     // Input validation & sanitization (HTTP concern)
     const validation = validateBookingInput({
       ...body,
-      serviceId: body.service as string // map service -> serviceId
+      serviceId: body.service as string, // map service -> serviceId
     });
 
     if (!validation.valid) {
@@ -46,7 +46,7 @@ async function createBookingHandler(
     const result = await createBooking(validation.data, {
       onLog: (msg: unknown, ...args: unknown[]) => context.log(String(msg), ...args),
       onWarn: (msg: unknown, ...args: unknown[]) => context.warn(String(msg), ...args),
-      onError: (msg: unknown, ...args: unknown[]) => context.error(String(msg), ...args)
+      onError: (msg: unknown, ...args: unknown[]) => context.error(String(msg), ...args),
     });
 
     return {
@@ -54,10 +54,9 @@ async function createBookingHandler(
       jsonBody: {
         success: result.success,
         message: result.message,
-        bookingId: result.bookingId
-      }
+        bookingId: result.bookingId,
+      },
     };
-
   } catch (error: unknown) {
     // Handle known booking errors
     if (error instanceof BookingError) {
@@ -72,8 +71,8 @@ async function createBookingHandler(
       status: 500,
       jsonBody: {
         error: 'Failed to process booking',
-        details: err.message
-      }
+        details: err.message,
+      },
     };
   }
 }
@@ -86,7 +85,7 @@ app.http('createBooking', {
   methods: ['POST'],
   authLevel: 'anonymous',
   route: 'bookings',
-  handler: createBookingHandler
+  handler: createBookingHandler,
 });
 
 // ============================================

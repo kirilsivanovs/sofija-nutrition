@@ -6,7 +6,14 @@
 import { TableClient } from '@azure/data-tables';
 import type { Booking, BookingStatus } from '../types';
 import { env, tables, booking as bookingConfig } from '../config';
-import { sanitizeODataValue, validateDateFormat, validateTimeFormat } from '../utils/odataSanitizer';
+import {
+  sanitizeODataValue,
+  validateDateFormat,
+  validateTimeFormat,
+} from '../utils/odataSanitizer';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('BookingRepository');
 
 // ============================================
 // Types
@@ -40,8 +47,7 @@ const inMemoryLocks = new Map<string, SlotLock>();
 // Lock configuration from centralized config
 const LOCK_TTL_MS = bookingConfig.lockTtlMs;
 
-console.log('📦 BookingRepository initialized');
-console.log('   Azure Storage:', connectionString ? '✅ Configured' : '⚠️ Not configured (using in-memory)');
+logger.info('Initialized', { azureStorage: !!connectionString });
 
 // ============================================
 // Table Client Management
@@ -109,11 +115,11 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
         rowKey: lockKey,
         lockId,
         createdAt: new Date().toISOString(),
-        expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+        expiresAt: new Date(now + LOCK_TTL_MS).toISOString(),
       };
 
       await client.createEntity(lockEntity);
-      console.log(`🔒 Lock acquired for ${lockKey}`);
+      logger.debug(`Lock acquired for ${lockKey}`);
       return { success: true, lockId };
     } catch (error: unknown) {
       const err = error as { statusCode?: number };
@@ -130,18 +136,18 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
               rowKey: lockKey,
               lockId,
               createdAt: new Date().toISOString(),
-              expiresAt: new Date(now + LOCK_TTL_MS).toISOString()
+              expiresAt: new Date(now + LOCK_TTL_MS).toISOString(),
             };
             await client.updateEntity(newLock, 'Replace', { etag: existingLock.etag });
-            console.log(`🔒 Expired lock replaced for ${lockKey}`);
+            logger.debug(`Expired lock replaced for ${lockKey}`);
             return { success: true, lockId };
           }
         } catch {
           // Another request beat us to it
-          console.log(`⚠️ Could not replace expired lock for ${lockKey}`);
+          logger.warn(`Could not replace expired lock for ${lockKey}`);
         }
 
-        console.log(`🔒 Lock already held for ${lockKey}`);
+        logger.debug(`Lock already held for ${lockKey}`);
         return { success: false, lockId: null };
       }
       throw error;
@@ -155,16 +161,16 @@ export async function acquireSlotLock(date: string, time: string): Promise<Acqui
       if (now > existingLock.expiresAt) {
         inMemoryLocks.delete(lockKey);
       } else {
-        console.log(`🔒 In-memory lock already held for ${lockKey}`);
+        logger.debug(`In-memory lock already held for ${lockKey}`);
         return { success: false, lockId: null };
       }
     }
 
     inMemoryLocks.set(lockKey, {
       lockId,
-      expiresAt: now + LOCK_TTL_MS
+      expiresAt: now + LOCK_TTL_MS,
     });
-    console.log(`🔒 In-memory lock acquired for ${lockKey}`);
+    logger.debug(`In-memory lock acquired for ${lockKey}`);
     return { success: true, lockId };
   }
 }
@@ -184,19 +190,19 @@ export async function releaseSlotLock(date: string, time: string, lockId: string
       // Only release if we own the lock
       if (existingLock.lockId === lockId) {
         await client.deleteEntity('LOCK', lockKey, { etag: existingLock.etag });
-        console.log(`🔓 Lock released for ${lockKey}`);
+        logger.debug(`Lock released for ${lockKey}`);
       }
     } catch (error: unknown) {
       const err = error as { message?: string };
       // Lock might have expired or been replaced
-      console.log(`⚠️ Could not release lock for ${lockKey}:`, err.message);
+      logger.warn(`Could not release lock for ${lockKey}`, err.message);
     }
   } else {
     // In-memory lock release
     const existingLock = inMemoryLocks.get(lockKey);
     if (existingLock && existingLock.lockId === lockId) {
       inMemoryLocks.delete(lockKey);
-      console.log(`🔓 In-memory lock released for ${lockKey}`);
+      logger.debug(`In-memory lock released for ${lockKey}`);
     }
   }
 }
@@ -208,7 +214,11 @@ export async function releaseSlotLock(date: string, time: string, lockId: string
 /**
  * Save or update a booking
  */
-export async function saveBooking(booking: Partial<Booking> & { id: string; date: string }): Promise<boolean> {
+export async function saveBooking(booking: {
+  id: string;
+  date: string;
+  [key: string]: unknown;
+}): Promise<boolean> {
   const client = await getTableClient();
 
   if (client) {
@@ -216,18 +226,20 @@ export async function saveBooking(booking: Partial<Booking> & { id: string; date
       partitionKey: booking.date,
       rowKey: booking.id,
       ...booking,
-      createdAt: booking.createdAt || new Date().toISOString()
+      createdAt: booking.createdAt || new Date().toISOString(),
     };
     await client.upsertEntity(entity);
-    console.log('✅ Booking saved to Azure Storage:', booking.id);
+    logger.info('Booking saved to Azure Storage', booking.id);
     return true;
   } else {
     inMemoryBookings.set(booking.id, {
       ...booking,
-      createdAt: booking.createdAt || new Date().toISOString()
+      createdAt: booking.createdAt || new Date().toISOString(),
     } as Booking);
-    console.log('⚠️ Booking saved to IN-MEMORY storage (not persistent!):', booking.id);
-    console.log('Total bookings in memory:', inMemoryBookings.size);
+    logger.warn('Booking saved to IN-MEMORY storage (not persistent!)', {
+      id: booking.id,
+      total: inMemoryBookings.size,
+    });
     return false;
   }
 }
@@ -247,7 +259,7 @@ export async function getBooking(bookingId: string): Promise<Booking | null> {
 
   if (client) {
     const entities = client.listEntities({
-      queryOptions: { filter: `RowKey eq '${sanitizedId}'` }
+      queryOptions: { filter: `RowKey eq '${sanitizedId}'` },
     });
     for await (const entity of entities) {
       return entity as unknown as Booking;
@@ -261,7 +273,11 @@ export async function getBooking(bookingId: string): Promise<Booking | null> {
 /**
  * Update an existing booking
  */
-export async function updateBooking(booking: Partial<Booking> & { id: string; date: string }): Promise<boolean> {
+export async function updateBooking(booking: {
+  id: string;
+  date: string;
+  [key: string]: unknown;
+}): Promise<boolean> {
   return saveBooking(booking);
 }
 
@@ -312,7 +328,7 @@ export async function isSlotBooked(date: string, time: string): Promise<boolean>
   if (client) {
     // Query all bookings for this date using sanitized value
     const entities = client.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${sanitizedDate}'` }
+      queryOptions: { filter: `PartitionKey eq '${sanitizedDate}'` },
     });
 
     for await (const entity of entities) {
@@ -356,5 +372,5 @@ module.exports = {
   getAllInMemoryBookings,
   acquireSlotLock,
   releaseSlotLock,
-  LOCK_TTL_MS
+  LOCK_TTL_MS,
 };

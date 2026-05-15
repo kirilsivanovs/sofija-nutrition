@@ -5,6 +5,9 @@
 
 import { Resend } from 'resend';
 import { branding } from '../config';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('EmailService');
 
 // ============================================
 // Types
@@ -12,7 +15,7 @@ import { branding } from '../config';
 
 export interface EmailAttachment {
   filename: string;
-  content: Buffer | string;
+  content: Buffer | Uint8Array | string;
   contentType?: string;
 }
 
@@ -57,7 +60,12 @@ function getResendClient(): Resend | null {
 /**
  * Send email with optional attachments
  */
-export async function sendEmail({ to, subject, html, attachments = [] }: SendEmailOptions): Promise<EmailResult> {
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  attachments = [],
+}: SendEmailOptions): Promise<EmailResult> {
   const client = getResendClient();
 
   if (!client) {
@@ -66,21 +74,17 @@ export async function sendEmail({ to, subject, html, attachments = [] }: SendEma
   }
 
   try {
-    console.log('📧 Sending email...');
-    console.log('  From:', `${branding.name} <${branding.email}>`);
-    console.log('  To:', to);
-    console.log('  Subject:', subject);
-    console.log('  Attachments:', attachments.length);
+    logger.info('Sending email', { to, subject, attachments: attachments.length });
 
     const result = await client.emails.send({
       from: `${branding.name} <${branding.email}>`,
       to,
       subject,
       html,
-      attachments: attachments as any
+      attachments: attachments as any,
     });
 
-    console.log('✅ Email sent successfully, ID:', result?.data?.id);
+    logger.info('Email sent successfully', { id: result?.data?.id });
     return { success: true, id: result?.data?.id };
   } catch (error: unknown) {
     const err = error as { message?: string };
@@ -105,7 +109,7 @@ export async function sendClientConfirmation(
     to,
     subject,
     html,
-    attachments
+    attachments,
   });
 }
 
@@ -117,29 +121,37 @@ export async function sendAdminNotification(subject: string, html: string): Prom
   return sendEmail({
     to: adminEmail,
     subject,
-    html
+    html,
   });
 }
 
 /**
  * Send payment confirmation to client
  */
-export async function sendPaymentConfirmation(to: string, subject: string, html: string): Promise<EmailResult> {
+export async function sendPaymentConfirmation(
+  to: string,
+  subject: string,
+  html: string
+): Promise<EmailResult> {
   return sendEmail({
     to,
     subject,
-    html
+    html,
   });
 }
 
 /**
  * Send cancellation notification to client
  */
-export async function sendCancellationNotification(to: string, subject: string, html: string): Promise<EmailResult> {
+export async function sendCancellationNotification(
+  to: string,
+  subject: string,
+  html: string
+): Promise<EmailResult> {
   return sendEmail({
     to,
     subject,
-    html
+    html,
   });
 }
 
@@ -160,5 +172,5 @@ module.exports = {
   sendAdminNotification,
   sendPaymentConfirmation,
   sendCancellationNotification,
-  isConfigured
+  isConfigured,
 };

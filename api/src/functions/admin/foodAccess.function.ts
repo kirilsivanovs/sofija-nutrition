@@ -11,7 +11,7 @@ export async function adminFoodAccess(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  const auth = checkAuthorizationWithLogging(request, context as any);
+  const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
     return unauthorizedResponse(auth.error || 'Unauthorized');
   }

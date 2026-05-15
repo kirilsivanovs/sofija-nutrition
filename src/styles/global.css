@@ -421,7 +421,7 @@ nav a:not(.nav-tab):hover,
 /* Hamburger animation */
 .mobile-menu-btn.active span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 6px);
-  background: var(--color-primary) !important;
+  background: var(--color-primary);
 }
 
 .mobile-menu-btn.active span:nth-child(2) {
@@ -430,7 +430,7 @@ nav a:not(.nav-tab):hover,
 
 .mobile-menu-btn.active span:nth-child(3) {
   transform: rotate(-45deg) translate(5px, -6px);
-  background: var(--color-primary) !important;
+  background: var(--color-primary);
 }
 
 .mobile-menu-btn span {

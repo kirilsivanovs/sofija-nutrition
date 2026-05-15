@@ -1,7 +1,7 @@
 /**
  * Rate Limiter для Azure Functions (TypeScript)
  * Защита от DDoS и спама бронирований
- * 
+ *
  * Использует in-memory storage (достаточно для single-instance Azure Functions)
  * Для multi-instance deployment нужен Redis или Azure Cache
  */
@@ -34,14 +34,17 @@ export interface RateLimitData {
 
 export interface HttpRequest {
   headers: {
-    get(name: string): string | null;
+    get(name: string): string | null | undefined;
   };
 }
 
 export interface FunctionContext {
-  log: (...args: unknown[]) => void;
-  warn?: (...args: unknown[]) => void;
-  error?: (...args: unknown[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  log: (...args: any[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  warn?: (...args: any[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: (...args: any[]) => void;
 }
 
 export interface RateLimitResponse {
@@ -86,9 +89,7 @@ export function getClientIP(request: HttpRequest): string {
   }
 
   // Fallback
-  return request.headers.get('x-client-ip') ||
-    request.headers.get('x-real-ip') ||
-    'unknown';
+  return request.headers.get('x-client-ip') || request.headers.get('x-real-ip') || 'unknown';
 }
 
 /**
@@ -128,14 +129,14 @@ export function checkRateLimit(request: HttpRequest, endpoint: string): RateLimi
     data = {
       count: 1,
       windowStart: now,
-      windowMs: config.windowMs
+      windowMs: config.windowMs,
     };
     requestCounts.set(key, data);
 
     return {
       allowed: true,
       remaining: config.maxRequests - 1,
-      resetTime: now + config.windowMs
+      resetTime: now + config.windowMs,
     };
   }
 
@@ -151,14 +152,14 @@ export function checkRateLimit(request: HttpRequest, endpoint: string): RateLimi
       allowed: false,
       remaining: 0,
       resetTime,
-      message: config.message
+      message: config.message,
     };
   }
 
   return {
     allowed: true,
     remaining,
-    resetTime
+    resetTime,
   };
 }
 
@@ -173,7 +174,8 @@ export function rateLimitExceededResponse(
 ): RateLimitResponse {
   // Log security event if context provided
   if (context && request && endpoint) {
-    const config = (RATE_LIMITS as Record<string, RateLimitConfig>)[endpoint] || RATE_LIMITS.default;
+    const config =
+      (RATE_LIMITS as Record<string, RateLimitConfig>)[endpoint] || RATE_LIMITS.default;
     logRateLimitExceeded(context, request, endpoint, config.maxRequests);
   }
 
@@ -182,19 +184,19 @@ export function rateLimitExceededResponse(
     headers: {
       'Retry-After': Math.ceil((result.resetTime - Date.now()) / 1000).toString(),
       'X-RateLimit-Remaining': '0',
-      'X-RateLimit-Reset': result.resetTime.toString()
+      'X-RateLimit-Reset': result.resetTime.toString(),
     },
     jsonBody: {
       success: false,
       error: {
         code: 'RATE_LIMIT_EXCEEDED',
-        message: result.message || 'Too many requests'
+        message: result.message || 'Too many requests',
       },
       meta: {
         timestamp: new Date().toISOString(),
-        retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000)
-      }
-    }
+        retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000),
+      },
+    },
   };
 }
 
@@ -210,8 +212,8 @@ export function addRateLimitHeaders<T extends { headers?: Record<string, string>
     headers: {
       ...(response.headers || {}),
       'X-RateLimit-Remaining': result.remaining.toString(),
-      'X-RateLimit-Reset': result.resetTime.toString()
-    }
+      'X-RateLimit-Reset': result.resetTime.toString(),
+    },
   };
 }
 
@@ -224,5 +226,5 @@ module.exports = {
   rateLimitExceededResponse,
   addRateLimitHeaders,
   getClientIP,
-  RATE_LIMITS
+  RATE_LIMITS,
 };
