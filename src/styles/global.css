@@ -20,6 +20,15 @@ html {
   -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
 }
 
+/* Defer rendering of below-fold sections for faster initial paint */
+#services,
+#about,
+#faq,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
 body {
   overflow-x: hidden;
   background-color: var(--color-bg-light);
@@ -674,4 +683,198 @@ nav .flex.gap-1::-webkit-scrollbar {
 .footer-social-link:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
+}
+
+/* ============================================
+   Print Stylesheet
+   ============================================ */
+@media print {
+  /* Hide non-essential UI */
+  header,
+  .mobile-nav-menu,
+  .scroll-to-top,
+  #contact,
+  .cookie-consent,
+  .footer-social-link,
+  .btn-cta,
+  .btn-primary {
+    display: none !important;
+  }
+
+  /* Reset backgrounds and colors for print */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  section {
+    background: white !important;
+    padding: 1rem 0 !important;
+    content-visibility: visible !important;
+  }
+
+  /* Ensure images print well */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Show link URLs */
+  a[href^="http"]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Prevent page breaks inside key elements */
+  .faq-item,
+  .service-card {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   Dark Mode (System Preference)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-light: #1a1a2e;
+    --color-cream: #16213e;
+  }
+
+  body {
+    background-color: #1a1a2e;
+    color: #e2e8f0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #f1f5f9;
+  }
+
+  /* Navigation */
+  header,
+  nav {
+    background-color: #0f172a !important;
+    border-color: #334155;
+  }
+
+  .nav-tab {
+    color: #e2e8f0;
+  }
+
+  .nav-tab:hover {
+    color: var(--color-secondary);
+  }
+
+  /* Sections */
+  section {
+    background-color: #1a1a2e;
+  }
+
+  section:nth-child(even) {
+    background-color: #16213e;
+  }
+
+  /* Cards */
+  .service-card,
+  .faq-item {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+  }
+
+  .service-card:hover {
+    background-color: #253449;
+  }
+
+  /* FAQ */
+  .faq-item summary,
+  .faq-item button {
+    color: #f1f5f9;
+  }
+
+  /* Buttons */
+  .btn-outline {
+    color: #e2e8f0;
+    border-color: #e2e8f0;
+  }
+
+  .btn-outline:hover {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .btn-light {
+    background: rgba(30, 41, 59, 0.95);
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+
+  .btn-chip {
+    color: #e2e8f0;
+  }
+
+  .btn-chip:hover {
+    background-color: rgba(196, 160, 110, 0.15);
+  }
+
+  /* Form elements */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='date'],
+  input[type='time'],
+  textarea,
+  select {
+    background-color: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(196, 160, 110, 0.2);
+  }
+
+  /* Links */
+  a:not(.btn-cta):not(.btn-solid):not(.btn-outline) {
+    color: var(--color-secondary);
+  }
+
+  /* Footer */
+  footer {
+    background-color: #0f172a !important;
+  }
+
+  /* Borders and dividers */
+  .section-divider::before {
+    background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+  }
+
+  hr,
+  .border-gray-200 {
+    border-color: #334155;
+  }
+
+  /* Images - slight brightness adjustment */
+  img {
+    opacity: 0.92;
+  }
+
+  img:hover {
+    opacity: 1;
+  }
+
+  /* Mobile menu */
+  .mobile-nav-menu {
+    background-color: #0f172a !important;
+  }
+
+  .mobile-nav-menu a {
+    color: #e2e8f0;
+  }
 }
