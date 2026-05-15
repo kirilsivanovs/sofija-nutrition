@@ -993,6 +993,7 @@
   box-shadow: var(--booking-shadow-soft);
   border: 1px solid rgba(27, 67, 50, 0.12);
   font-family: var(--font-booking);
+  container-type: inline-size;
 }
 
 .booking-header {
@@ -1283,6 +1284,7 @@
   font-size: 14px;
   color: var(--color-primary);
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .selected-datetime i {
@@ -1408,11 +1410,13 @@
   background: rgba(255, 255, 255, 0.6);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-width: 0;
 }
 
 .format-option {
   display: block;
   cursor: pointer;
+  min-width: 0;
 }
 
 .format-option input[type='radio'] {
@@ -1432,6 +1436,39 @@
   font-weight: 500;
   color: var(--color-text-light);
   white-space: nowrap;
+  min-width: 0;
+}
+
+@container (max-width: 760px) {
+  .booking-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .format-options {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+
+  .format-option {
+    width: 100%;
+  }
+
+  .format-option .format-label {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+  }
+}
+
+@container (max-width: 620px) {
+  .booking-body {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-left {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
 .format-option .format-label i {
