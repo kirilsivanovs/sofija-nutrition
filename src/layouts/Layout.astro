@@ -278,12 +278,34 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" /></noscript>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      /></noscript
+    >
 
     <!-- Preload LCP hero image -->
-    <link rel="preload" as="image" type="image/webp" href="/assets/img/hero-doctor-cutout-1024w.webp" media="(min-width: 769px)" />
-    <link rel="preload" as="image" type="image/webp" href="/assets/img/hero-doctor-cutout-480w.webp" media="(max-width: 768px)" />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/assets/img/hero-doctor-cutout-1024w.webp"
+      media="(min-width: 769px)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/assets/img/hero-doctor-cutout-480w.webp"
+      media="(max-width: 768px)"
+    />
 
     <!-- Phosphor Icons (non-blocking) -->
     <link rel="preconnect" href="https://unpkg.com" />
@@ -293,14 +315,25 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <link rel="stylesheet" href="/assets/booking.css" />
 
     <!-- Animations Styles (non-critical, load async) -->
-    <link rel="preload" as="style" href="/assets/animations.css" onload="this.onload=null;this.rel='stylesheet'" />
+    <link
+      rel="preload"
+      as="style"
+      href="/assets/animations.css"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
     <noscript><link rel="stylesheet" href="/assets/animations.css" /></noscript>
   </head>
   <body class="font-sans text-gray-800 bg-bg-light antialiased">
     <noscript>
-      <div style="background:#1b4332;color:#fff;padding:1rem;text-align:center;font-family:sans-serif;">
+      <div
+        style="background:#1b4332;color:#fff;padding:1rem;text-align:center;font-family:sans-serif;"
+      >
         <p><strong>Sofija Ivanova</strong> — Uztura speciāliste</p>
-        <p>Tālrunis: <a href="tel:+37120223399" style="color:#c4a06e">+371 2022 3399</a> | E-pasts: <a href="mailto:info@sofija-nutrition.lv" style="color:#c4a06e">info@sofija-nutrition.lv</a></p>
+        <p>
+          Tālrunis: <a href="tel:+37120223399" style="color:#c4a06e">+371 2022 3399</a> | E-pasts: <a
+            href="mailto:info@sofija-nutrition.lv"
+            style="color:#c4a06e">info@sofija-nutrition.lv</a>
+        </p>
       </div>
     </noscript>
 

@@ -179,7 +179,8 @@
       // Hero
       hero_eyebrow: 'Сертифицированный диетолог · Рига',
       hero_title: 'Питание, которое работает именно для Вас',
-      hero_subtitle: 'Диеты не помогают? Не хватает энергии? Хотите наладить вес или уровень сахара? Помогу с индивидуальным, научно обоснованным подходом — без готовых схем.',
+      hero_subtitle:
+        'Диеты не помогают? Не хватает энергии? Хотите наладить вес или уровень сахара? Помогу с индивидуальным, научно обоснованным подходом — без готовых схем.',
       hero_cta_primary: 'Записаться',
       hero_cta_secondary: 'Услуги',
       hero_credential_degree: 'Очно и онлайн',
@@ -337,7 +338,7 @@
       hero_eyebrow: 'Certified Dietitian · Riga',
       hero_title: 'Nutrition that works for You',
       hero_subtitle:
-        'Diets not working? Lacking energy? Want to manage weight or blood sugar? I\'ll help with an individual, science-based approach — no ready-made templates.',
+        "Diets not working? Lacking energy? Want to manage weight or blood sugar? I'll help with an individual, science-based approach — no ready-made templates.",
       hero_cta_primary: 'Book consultation',
       hero_cta_secondary: 'Services',
       hero_credential_degree: 'In-person & online',
@@ -353,12 +354,12 @@
 
       // For Whom
       whom_title: 'A consultation is right for You if',
-      whom_1: 'You\'ve tried several diets but nothing worked long-term',
+      whom_1: "You've tried several diets but nothing worked long-term",
       whom_2: 'You want to manage weight without strict restrictions',
       whom_3: 'You feel chronic fatigue and lack of energy',
       whom_4: 'You have prediabetes, insulin resistance, or high blood sugar',
       whom_5: 'You want to improve digestion and gut health',
-      whom_6: 'You\'re looking for a specialist who relies on science, not trends',
+      whom_6: "You're looking for a specialist who relies on science, not trends",
       whom_cta: 'Book a consultation',
 
       // Services
@@ -368,10 +369,10 @@
         "Every person is unique — that's why my work begins with your story, not a ready-made template.",
       srv_1_title: 'Individual consultation',
       srv_1_desc:
-        'Understand exactly what in your nutrition isn\'t working and what to change to feel the difference within weeks. In-person or online, 60 min.',
+        "Understand exactly what in your nutrition isn't working and what to change to feel the difference within weeks. In-person or online, 60 min.",
       srv_2_title: 'Personalized meal plan',
       srv_2_desc:
-        'Get a concrete meal plan that\'s delicious, realistically fits your life, and takes health goals into account. Not a diet — a new way of eating.',
+        "Get a concrete meal plan that's delicious, realistically fits your life, and takes health goals into account. Not a diet — a new way of eating.",
       srv_3_title: 'Metabolic health',
       srv_3_desc:
         'Stabilize blood sugar, boost energy, and take control of weight without extreme restrictions. Especially relevant for prediabetes or insulin resistance.',
@@ -380,11 +381,11 @@
         'Say goodbye to bloating, discomfort, and unstable digestion. A nutrition strategy that restores balance in the GI tract.',
       srv_6_title: 'Long-term support',
       srv_6_desc:
-        'Results last because you\'re not alone. Follow-up visits, plan adjustments, and support until new habits become the norm.',
+        "Results last because you're not alone. Follow-up visits, plan adjustments, and support until new habits become the norm.",
 
       // What You'll Get (Outcomes)
       outcomes_tag: 'Results',
-      outcomes_title: 'What You\'ll get',
+      outcomes_title: "What You'll get",
       out_1_title: 'Individual nutrition plan',
       out_1_desc:
         'Not a generic template, but a personalized plan that considers your health, taste preferences, and lifestyle.',
@@ -404,7 +405,7 @@
       about_lead:
         'I help people improve nutrition through a science-based and personalized approach. I actively participate in research projects and apply evidence-based methods in practice.',
       about_text:
-        "My approach combines academic knowledge and practical experience. Every consultation is evidence-based \u2014 not trendy diets or generic advice. My research focuses on the role of nutrition in diabetes treatment and prevention.",
+        'My approach combines academic knowledge and practical experience. Every consultation is evidence-based \u2014 not trendy diets or generic advice. My research focuses on the role of nutrition in diabetes treatment and prevention.',
       cred_2_title: 'Doctoral Student',
       cred_2_loc: 'University of Latvia',
       cred_3_title: 'MSc in Dietetics',
@@ -449,7 +450,7 @@
         'Individual consultation (60 min) — from €65. The price includes full nutrition analysis, personalized plan, and recommendations. Follow-up visits and long-term packages available at better rates.',
       faq_q6: 'How to prepare for the first consultation?',
       faq_a6:
-        'No special preparation needed. If you have recent lab results (blood biochemistry, sugar, lipids) — bring them along. If not — we\'ll start with what\'s available and plan the rest together.',
+        "No special preparation needed. If you have recent lab results (blood biochemistry, sugar, lipids) — bring them along. If not — we'll start with what's available and plan the rest together.",
 
       // Booking extra
       booking_flexibility:
@@ -457,7 +458,7 @@
 
       // Final CTA
       final_cta_title: 'Ready to start your journey to better health?',
-      final_cta_text: 'The first step is simple — choose a time, and I\'ll take care of the rest.',
+      final_cta_text: "The first step is simple — choose a time, and I'll take care of the rest.",
       final_cta_btn: 'Book a consultation',
 
       // Footer extra
@@ -489,7 +490,11 @@
 
   function updateLanguage(lang) {
     currentLang = lang;
-    try { localStorage.setItem('preferredLang', lang); } catch (e) { /* private browsing */ }
+    try {
+      localStorage.setItem('preferredLang', lang);
+    } catch (e) {
+      /* private browsing */
+    }
 
     // Update Buttons
     langButtons.forEach((btn) => {
@@ -539,7 +544,13 @@
   }
 
   // Initialize language from localStorage or default to 'lv'
-  const savedLang = (() => { try { return localStorage.getItem('preferredLang'); } catch (e) { return null; } })();
+  const savedLang = (() => {
+    try {
+      return localStorage.getItem('preferredLang');
+    } catch (e) {
+      return null;
+    }
+  })();
   const initLang = ['lv', 'ru', 'en'].includes(savedLang) ? savedLang : 'lv';
   if (initLang !== 'lv') {
     updateLanguage(initLang);

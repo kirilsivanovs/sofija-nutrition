@@ -1,7 +1,7 @@
 /**
  * Centralized Configuration
  * Single source of truth for all API configuration values
- * 
+ *
  * @module config
  */
 
@@ -17,7 +17,7 @@ import type {
   ServicePrices,
   ColorsConfig,
   DefaultService,
-  DaySchedule
+  DaySchedule,
 } from '../types';
 
 // ============================================
@@ -31,7 +31,7 @@ export const env: EnvConfig = {
   isTest: process.env.NODE_ENV === 'test',
   azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING || '',
   resendApiKey: process.env.RESEND_API_KEY || '',
-  apiBaseUrl: process.env.API_BASE_URL || ''
+  apiBaseUrl: process.env.API_BASE_URL || '',
 };
 
 // ============================================
@@ -43,7 +43,7 @@ export const tables: TableNames = {
   settings: 'adminSettings',
   services: 'Services',
   servicesHistory: 'ServicesHistory',
-  locks: 'slotLocks'
+  locks: 'slotLocks',
 };
 
 // ============================================
@@ -53,9 +53,9 @@ export const tables: TableNames = {
 export const cache: CacheConfig = {
   // Service settings cache TTL (5 minutes)
   servicesTtlMs: 5 * 60 * 1000,
-  
+
   // Schedule cache TTL (5 minutes)
-  scheduleTtlMs: 5 * 60 * 1000
+  scheduleTtlMs: 5 * 60 * 1000,
 };
 
 // ============================================
@@ -66,21 +66,21 @@ export const booking: BookingConfig = {
   // Slot lock TTL (30 seconds) - prevents double booking during payment
   slotLockDurationMs: 30000,
   lockTtlMs: 30000,
-  
+
   // Default slot duration in minutes
   defaultSlotDuration: 60,
-  
+
   // Confirmation code length
   confirmationCodeLength: 6,
-  
+
   // Maximum bookings per day per service
   maxBookingsPerDay: 10,
-  
+
   // Minimum advance booking (hours)
   minBookingAdvanceHours: 2,
-  
+
   // Maximum advance booking (days)
-  maxBookingAdvanceDays: 90
+  maxBookingAdvanceDays: 90,
 };
 
 // ============================================
@@ -98,8 +98,8 @@ export const schedule: ScheduleConfig = {
     thursday: { enabled: true, start: '09:00', end: '18:00' },
     friday: { enabled: true, start: '09:00', end: '18:00' },
     saturday: { enabled: false, start: '09:00', end: '14:00' },
-    sunday: { enabled: false, start: '09:00', end: '14:00' }
-  }
+    sunday: { enabled: false, start: '09:00', end: '14:00' },
+  },
 };
 
 // ============================================
@@ -109,38 +109,38 @@ export const schedule: ScheduleConfig = {
 export const rateLimits: RateLimitsConfig = {
   // Booking creation - strict limits
   createBooking: {
-    windowMs: 60000,      // 1 minute
-    maxRequests: 5,       // 5 bookings per minute per IP
-    message: 'Too many booking attempts. Please try again in a minute.'
+    windowMs: 60000, // 1 minute
+    maxRequests: 5, // 5 bookings per minute per IP
+    message: 'Too many booking attempts. Please try again in a minute.',
   },
-  
+
   // Payment confirmation
   confirmPayment: {
     windowMs: 60000,
     maxRequests: 10,
-    message: 'Too many confirmation attempts.'
+    message: 'Too many confirmation attempts.',
   },
-  
+
   // Availability check - higher limit for calendar updates
   getAvailability: {
     windowMs: 60000,
-    maxRequests: 60,      // 60 requests per minute
-    message: 'Too many requests. Please slow down.'
+    maxRequests: 60, // 60 requests per minute
+    message: 'Too many requests. Please slow down.',
   },
-  
+
   // Admin endpoints (protected by auth)
   admin: {
     windowMs: 60000,
     maxRequests: 100,
-    message: 'Rate limit exceeded for admin operations.'
+    message: 'Rate limit exceeded for admin operations.',
   },
-  
+
   // Default fallback
   default: {
     windowMs: 60000,
     maxRequests: 100,
-    message: 'Too many requests.'
-  }
+    message: 'Too many requests.',
+  },
 };
 
 // ============================================
@@ -155,7 +155,7 @@ export const branding: BrandingConfig = {
   emailDomain: 'resend.dev',
   phone: '+371 20000000',
   address: 'Rīga, Latvija',
-  registrationNumber: '75650061277'
+  registrationNumber: '75650061277',
 };
 
 // ============================================
@@ -168,7 +168,7 @@ export const payment: PaymentConfig = {
   iban: 'LV00HABA0000000000000', // Replace with real IBAN
   swift: 'HABALV22',
   recipientName: 'Sofija Ivanova',
-  currency: 'EUR'
+  currency: 'EUR',
 };
 
 // ============================================
@@ -176,11 +176,11 @@ export const payment: PaymentConfig = {
 // ============================================
 
 export const servicePrices: ServicePrices = {
-  'initial': 65,
-  'followup': 45,
-  'package3': 150,
-  'package5': 220,
-  'consultation': 80
+  initial: 65,
+  followup: 45,
+  package3: 150,
+  package5: 220,
+  consultation: 80,
 };
 
 // ============================================
@@ -195,7 +195,7 @@ export const colors: ColorsConfig = {
   accentRgb: { r: 0.831, g: 0.647, b: 0.455 },
   success: '#4CAF50',
   error: '#c62828',
-  warning: '#ef6c00'
+  warning: '#ef6c00',
 };
 
 // ============================================
@@ -209,8 +209,8 @@ export const defaultServices: DefaultService[] = [
     name: {
       lv: 'Uztura konsultācija (60 min)',
       ru: 'Консультация по питанию (60 мин)',
-      en: 'Nutrition Consultation (60 min)'
-    }
+      en: 'Nutrition Consultation (60 min)',
+    },
   },
   {
     id: 'followup',
@@ -218,9 +218,9 @@ export const defaultServices: DefaultService[] = [
     name: {
       lv: 'Atkārtota vizīte (30 min)',
       ru: 'Повторный визит (30 мин)',
-      en: 'Follow-up (30 min)'
-    }
-  }
+      en: 'Follow-up (30 min)',
+    },
+  },
 ];
 
 // ============================================
@@ -229,10 +229,10 @@ export const defaultServices: DefaultService[] = [
 
 export const validServiceIds: readonly string[] = [
   'initial',
-  'followup', 
+  'followup',
   'package3',
   'package5',
-  'consultation'
+  'consultation',
 ] as const;
 
 // ============================================
@@ -253,10 +253,10 @@ const config = {
   colors,
   defaultServices,
   validServiceIds,
-  
+
   // Legacy compatibility
   API_BASE_URL: env.apiBaseUrl,
-  
+
   // Helper to get full config object
   getConfig() {
     return {
@@ -271,9 +271,9 @@ const config = {
       servicePrices,
       colors,
       defaultServices,
-      validServiceIds
+      validServiceIds,
     };
-  }
+  },
 };
 
 // Default export for ES modules
