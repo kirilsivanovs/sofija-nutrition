@@ -205,7 +205,7 @@ describe('Input Validation', () => {
 
     describe('sanitizeServiceId', () => {
         test('should accept valid service', () => {
-            const result = sanitizeServiceId('free-consultation');
+            const result = sanitizeServiceId('consultation');
             expect(result.valid).toBe(true);
         });
 
@@ -247,7 +247,7 @@ describe('Input Validation', () => {
                 return d.toISOString().split('T')[0];
             })(),
             time: '14:00',
-            service: 'free-consultation',
+            service: 'consultation',
             consultationFormat: 'online',
             language: 'lv'
         };

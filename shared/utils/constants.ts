@@ -66,7 +66,6 @@ export type BookingStatus = typeof BOOKING_STATUS[keyof typeof BOOKING_STATUS];
  * Service type constants
  */
 export const SERVICE_TYPES = {
-    CGM_DIAGNOSTIC: 'cgm-diagnostic',
     CONSULTATION: 'consultation',
     FOLLOW_UP: 'follow-up',
 } as const;

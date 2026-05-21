@@ -159,7 +159,7 @@ describe('API Endpoints', () => {
                     email: 'test@test.com',
                     date: '2026-02-01',
                     time: '10:00',
-                    service: 'free-consultation'
+                    service: 'consultation'
                 }),
                 headers: {
                     get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.1' : null)
@@ -181,7 +181,7 @@ describe('API Endpoints', () => {
                     name: 'Test User',
                     date: '2026-02-01',
                     time: '10:00',
-                    service: 'free-consultation'
+                    service: 'consultation'
                 }),
                 headers: {
                     get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.2' : null)
@@ -203,7 +203,7 @@ describe('API Endpoints', () => {
                     name: 'Test User',
                     email: 'test@test.com',
                     time: '10:00',
-                    service: 'free-consultation'
+                    service: 'consultation'
                 }),
                 headers: {
                     get: jest.fn((name) => name === 'x-forwarded-for' ? '127.0.0.3' : null)
@@ -248,8 +248,8 @@ describe('Booking Flow Simulation', () => {
         });
 
         it('should calculate correct price for each service', () => {
-            const services = ['initial', 'followup', 'package3', 'package5', 'cgm-diagnostic', 'consultation', 'free-consultation'];
-            const expectedPrices = [65, 45, 150, 220, 150, 80, 0];
+            const services = ['initial', 'followup', 'package3', 'package5', 'consultation'];
+            const expectedPrices = [65, 45, 150, 220, 80];
             
             services.forEach((service, i) => {
                 expect(config.servicePrices[service]).toBe(expectedPrices[i]);
@@ -284,7 +284,7 @@ describe('Booking Flow Simulation', () => {
 
             it(`should have all service names for ${lang}`, () => {
                 const t = translations.getTranslation(lang);
-                const services = ['initial', 'followup', 'package3', 'package5', 'cgm-diagnostic', 'consultation', 'free-consultation'];
+                const services = ['initial', 'followup', 'package3', 'package5', 'consultation'];
                 
                 services.forEach(service => {
                     expect(t.services[service]).toBeDefined();

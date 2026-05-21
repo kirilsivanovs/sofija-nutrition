@@ -150,15 +150,9 @@ describe('Centralized Configuration', () => {
             expect(Object.keys(config.servicePrices).length).toBeGreaterThan(0);
         });
 
-        it('should have free consultation at 0', () => {
-            expect(config.servicePrices['free-consultation']).toBe(0);
-        });
-
-        it('should have positive prices for paid services', () => {
+        it('should have positive prices for all services', () => {
             Object.entries(config.servicePrices).forEach(([service, price]) => {
-                if (service !== 'free-consultation') {
-                    expect(price).toBeGreaterThan(0);
-                }
+                expect(price).toBeGreaterThan(0);
             });
         });
     });
@@ -201,8 +195,8 @@ describe('Centralized Configuration', () => {
         it('should have valid service IDs list', () => {
             expect(config.validServiceIds).toBeDefined();
             expect(Array.isArray(config.validServiceIds)).toBe(true);
-            expect(config.validServiceIds).toContain('free-consultation');
             expect(config.validServiceIds).toContain('consultation');
+            expect(config.validServiceIds).toContain('initial');
         });
 
         it('should match service prices keys', () => {

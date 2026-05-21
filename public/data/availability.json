@@ -43,15 +43,6 @@
     ],
     "serviceTypes": [
         {
-            "id": "cgm-diagnostic",
-            "duration": 60,
-            "name": {
-                "lv": "CGM diagnostika (60 min)",
-                "ru": "CGM-диагностика (60 мин)",
-                "en": "CGM Diagnostic (60 min)"
-            }
-        },
-        {
             "id": "consultation",
             "duration": 45,
             "name": {

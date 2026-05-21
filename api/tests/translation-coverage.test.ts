@@ -64,7 +64,7 @@ describe('Translation Coverage', () => {
                     expect(t.services).toBeDefined();
                     const expectedServices = [
                         'initial', 'followup', 'package3', 'package5',
-                        'cgm-diagnostic', 'consultation', 'free-consultation'
+                        'consultation'
                     ];
                     expectedServices.forEach(serviceId => {
                         expect(t.services[serviceId]).toBeDefined();
@@ -194,7 +194,7 @@ describe('Translation Coverage', () => {
 
                 // Services
                 expect(t.services).toBeDefined();
-                expect(Object.keys(t.services).length).toBeGreaterThanOrEqual(7);
+                expect(Object.keys(t.services).length).toBeGreaterThanOrEqual(5);
             });
         });
     });

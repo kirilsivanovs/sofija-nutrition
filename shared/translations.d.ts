@@ -41,9 +41,7 @@ export namespace sharedTranslations {
             followup: string;
             package3: string;
             package5: string;
-            'cgm-diagnostic': string;
             consultation: string;
-            'free-consultation': string;
         };
         namespace email {
             export function subject(id: any): string;
@@ -182,9 +180,7 @@ export namespace sharedTranslations {
             followup: string;
             package3: string;
             package5: string;
-            'cgm-diagnostic': string;
             consultation: string;
-            'free-consultation': string;
         };
         export { services_1 as services };
         export namespace email_2 {
@@ -358,9 +354,7 @@ export namespace sharedTranslations {
             followup: string;
             package3: string;
             package5: string;
-            'cgm-diagnostic': string;
             consultation: string;
-            'free-consultation': string;
         };
         export { services_2 as services };
         export namespace email_4 {

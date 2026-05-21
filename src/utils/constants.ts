@@ -58,9 +58,7 @@ export const SERVICE_IDS = {
     FOLLOWUP: 'followup',
     PACKAGE_3: 'package3',
     PACKAGE_5: 'package5',
-    CGM_DIAGNOSTIC: 'cgm-diagnostic',
     CONSULTATION: 'consultation',
-    FREE_CONSULTATION: 'free-consultation',
 } as const;
 
 // ============================================

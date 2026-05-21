@@ -180,9 +180,7 @@ export const servicePrices: ServicePrices = {
   'followup': 45,
   'package3': 150,
   'package5': 220,
-  'cgm-diagnostic': 150,
-  'consultation': 80,
-  'free-consultation': 0
+  'consultation': 80
 };
 
 // ============================================
@@ -206,15 +204,6 @@ export const colors: ColorsConfig = {
 
 export const defaultServices: DefaultService[] = [
   {
-    id: 'cgm-diagnostic',
-    duration: 60,
-    name: {
-      lv: 'CGM diagnostika (60 min)',
-      ru: 'CGM-диагностика (60 мин)',
-      en: 'CGM Diagnostic (60 min)'
-    }
-  },
-  {
     id: 'consultation',
     duration: 60,
     name: {
@@ -224,12 +213,12 @@ export const defaultServices: DefaultService[] = [
     }
   },
   {
-    id: 'free-consultation',
-    duration: 15,
+    id: 'followup',
+    duration: 30,
     name: {
-      lv: 'Bezmaksas iepazīšanās saruna (15 min)',
-      ru: 'Бесплатная ознакомительная беседа (15 мин)',
-      en: 'Free Introduction Call (15 min)'
+      lv: 'Atkārtota vizīte (30 min)',
+      ru: 'Повторный визит (30 мин)',
+      en: 'Follow-up (30 min)'
     }
   }
 ];
@@ -243,9 +232,7 @@ export const validServiceIds: readonly string[] = [
   'followup', 
   'package3',
   'package5',
-  'cgm-diagnostic',
-  'consultation',
-  'free-consultation'
+  'consultation'
 ] as const;
 
 // ============================================

@@ -210,9 +210,7 @@ export const servicePrices: Record<string, number> = {
     'followup': 45,
     'package3': 150,
     'package5': 220,
-    'cgm-diagnostic': 150,
-    'consultation': 80,
-    'free-consultation': 0
+    'consultation': 80
 };
 
 // Latvian diacritical characters for validation

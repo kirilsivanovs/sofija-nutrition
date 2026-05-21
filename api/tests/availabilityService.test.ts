@@ -46,9 +46,8 @@ describe('AvailabilityService', () => {
     describe('DEFAULT_SERVICES', () => {
         it('should have all required services', () => {
             const ids = DEFAULT_SERVICES.map(s => s.id);
-            expect(ids).toContain('cgm-diagnostic');
             expect(ids).toContain('consultation');
-            expect(ids).toContain('free-consultation');
+            expect(ids).toContain('followup');
         });
         
         it('should have translations for all languages', () => {

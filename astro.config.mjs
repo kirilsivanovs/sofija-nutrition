@@ -7,6 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sofijaivanova.lv',
+  output: 'static',
+  compressHTML: true,
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/admin') && !page.includes('/cabinet'),

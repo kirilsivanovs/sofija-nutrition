@@ -1037,14 +1037,19 @@ class BookingCalendar {
   buildBookingDetailsHtml(booking) {
     const date = booking.date ? this.formatDateDisplay(booking.date) : '';
     const time = booking.time || '';
-    const format = booking.consultationFormat === 'in-person'
-      ? this.t('formatInPerson')
-      : this.t('formatOnline');
+    const format =
+      booking.consultationFormat === 'in-person'
+        ? this.t('formatInPerson')
+        : this.t('formatOnline');
 
-    const dateLabel = this.currentLang === 'ru' ? 'Дата и время'
-      : this.currentLang === 'en' ? 'Date & time' : 'Datums un laiks';
-    const formatLbl = this.currentLang === 'ru' ? 'Формат'
-      : this.currentLang === 'en' ? 'Format' : 'Formāts';
+    const dateLabel =
+      this.currentLang === 'ru'
+        ? 'Дата и время'
+        : this.currentLang === 'en'
+          ? 'Date & time'
+          : 'Datums un laiks';
+    const formatLbl =
+      this.currentLang === 'ru' ? 'Формат' : this.currentLang === 'en' ? 'Format' : 'Formāts';
 
     return `
       <div class="booking-details-summary">

@@ -190,13 +190,6 @@ describe('Full Booking Scenario', () => {
             expect(processed.price).toBe(220);
         });
 
-        test('should set price to 0 for free consultation', () => {
-            const booking = createMockBooking({ service: 'free-consultation' });
-            const processed = processBooking(booking);
-            
-            expect(processed.price).toBe(0);
-        });
-
         test('should set correct Latvian service name', () => {
             const booking = createMockBooking({ 
                 service: 'initial', 
@@ -357,15 +350,6 @@ describe('Full Booking Scenario', () => {
     });
 
     describe('Step 6: Payment Confirmation Flow', () => {
-        test('free consultation should be auto-confirmed', () => {
-            const booking = createMockBooking({ service: 'free-consultation' });
-            const processed = processBooking(booking);
-            
-            // Free consultations should have paymentConfirmed = true automatically
-            const shouldAutoConfirm = processed.price === 0;
-            expect(shouldAutoConfirm).toBe(true);
-        });
-
         test('paid consultation should require payment confirmation', () => {
             const booking = createMockBooking({ service: 'initial' });
             const processed = processBooking(booking);
@@ -587,13 +571,13 @@ describe('Complete Booking Flow Integration', () => {
         expect(subject).toContain('Подтверждение бронирования');
     });
 
-    test('should handle free consultation flow', () => {
+    test('should handle initial consultation flow', () => {
         const bookingData = {
             name: 'Anna Kalniņa',
             email: 'anna@example.lv',
             date: '2026-02-23',
             time: '09:00',
-            service: 'free-consultation',
+            service: 'initial',
             consultationFormat: 'online',
             language: 'lv'
         };
@@ -605,11 +589,11 @@ describe('Complete Booking Flow Integration', () => {
         const booking = { ...bookingData, id: bookingId };
         const processed = processBooking(booking);
 
-        expect(processed.price).toBe(0);
-        expect(processed.serviceName).toBe('Bezmaksas 15 min konsultācija');
+        expect(processed.price).toBe(65);
+        expect(processed.serviceName).toBe('Sākotnējā konsultācija');
 
-        // Free consultations don't need payment confirmation
+        // Paid consultations need payment confirmation
         const requiresPayment = processed.price > 0;
-        expect(requiresPayment).toBe(false);
+        expect(requiresPayment).toBe(true);
     });
 });

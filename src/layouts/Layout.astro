@@ -14,7 +14,7 @@ const SITE_URL = 'https://sofijaivanova.lv';
 
 const {
   title,
-  description = 'Sertificēta uztura speciāliste Rīgā — personalizētas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana. Doktorante LU, reģistrēta ārstniecības persona.',
+  description = 'Sertificēta dietoloģe Rīgā — personalizētas uztura konsultācijas, diabēta profilakse, metabolā veselība. Doktorante LU, reģistrēta ārstniecības persona Nr. 75650061277.',
   canonicalPath = '/',
   ogTitle = title,
   ogDescription = description,
@@ -39,7 +39,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <meta name="description" content={description} />
     <meta
       name="keywords"
-      content="uztura speciāliste Rīga, диетолог Рига, nutritionist Riga, dietologs Latvija, uztura konsultācija, personalizēts uzturs, diabēta profilakse, CGM sensors, glikozes monitorēšana, insulīna rezistence, prediabēts, metabolā veselība, svara kontrole, zarnu veselība, uztura plāns, konsultācija tiešsaistē, uzturzinātne, nutricioniste, специалист по питанию Латвия, консультация диетолога"
+      content="uztura speciāliste Rīga, диетолог Рига, nutritionist Riga, dietologs Latvija, uztura konsultācija, personalizēts uzturs, diabēta profilakse, insulīna rezistence, prediabēts, metabolā veselība, svara kontrole, zarnu veselība, uztura plāns, konsultācija tiešsaistē, uzturzinātne, nutricioniste, специалист по питанию Латвия, консультация диетолога"
     />
     <meta name="author" content="Sofija Ivanova" />
     <meta
@@ -47,6 +47,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Hreflang — single-URL multilingual page (LV primary, content in RU/EN via JS i18n) -->
     <link rel="alternate" hreflang="lv" href={canonicalUrl} />
@@ -93,7 +94,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
               "Sofija Ivanova — Диетолог, Рига",
               "Sofija Ivanova — Nutritionist, Riga"
             ],
-            "description": "Sertificēta uztura speciāliste Rīgā. Personalizētas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana. Doktorante Latvijas Universitātē.",
+            "description": "Sertificēta dietoloģe Rīgā. Personalizētas uztura konsultācijas, diabēta profilakse, metabolā veselība. Doktorante Latvijas Universitātē, pētniece.",
             "url": "https://sofijaivanova.lv",
             "image": "https://sofijaivanova.lv/assets/img/hero-doctor-cutout.png",
             "logo": "https://sofijaivanova.lv/assets/img/logo.svg",
@@ -150,24 +151,6 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
                     "unitText": "60 min"
                   },
                   "availability": "https://schema.org/InStock"
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "MedicalTherapy",
-                    "name": "CGM glikozes monitorēšanas programma",
-                    "alternateName": "Программа мониторинга глюкозы CGM",
-                    "description": "14 dienu nepārtrauktā glikozes monitorēšana ar sensoru un personalizēta analīze"
-                  },
-                  "price": "249",
-                  "priceCurrency": "EUR",
-                  "priceSpecification": {
-                    "@type": "PriceSpecification",
-                    "price": "249",
-                    "priceCurrency": "EUR",
-                    "unitText": "14 dienas"
-                  },
-                  "availability": "https://schema.org/InStock"
                 }
               ]
             }
@@ -176,8 +159,8 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
             "@type": "Person",
             "@id": "https://sofijaivanova.lv/#person",
             "name": "Sofija Ivanova",
-            "jobTitle": "Uztura speciāliste, doktorante",
-            "description": "Reģistrēta uztura speciāliste (MSc Dietoloģijā, RSU), doktorante Latvijas Universitātē. Specializācija — diabēta profilakse, metabolā veselība, CGM diagnostika.",
+            "jobTitle": "Sertificēta dietoloģe, doktorante",
+            "description": "Sertificēta dietoloģe (MSc Uzturzinātnē, RSU), doktorante Latvijas Universitātē. Pētniecība — uztura loma diabēta ārstēšanā un profilaksē, personalizēts uzturs.",
             "url": "https://sofijaivanova.lv",
             "image": "https://sofijaivanova.lv/assets/img/hero-doctor-cutout.png",
             "alumniOf": [
@@ -196,13 +179,12 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
               {
                 "@type": "EducationalOccupationalCredential",
                 "credentialCategory": "degree",
-                "name": "MSc Dietoloģijā"
+                "name": "MSc Uzturzinātnē"
               }
             ],
             "knowsAbout": [
               "Dietetics",
               "Diabetes Prevention",
-              "CGM Monitoring",
               "Metabolic Health",
               "Gut Health",
               "Nutritional Science"
@@ -219,7 +201,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
             "@id": "https://sofijaivanova.lv/#website",
             "url": "https://sofijaivanova.lv",
             "name": "Sofija Ivanova — Uztura Speciāliste Rīgā",
-            "description": "Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Diabēta profilakse, CGM diagnostika, metabolā veselība.",
+            "description": "Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Diabēta profilakse, metabolā veselība, zarnu veselība.",
             "publisher": { "@id": "https://sofijaivanova.lv/#person" },
             "inLanguage": ["lv", "ru", "en"]
           },
@@ -230,7 +212,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
             "name": "Sofija Ivanova | Uztura Speciāliste Rīgā | Personalizētas Uztura Konsultācijas",
             "isPartOf": { "@id": "https://sofijaivanova.lv/#website" },
             "about": { "@id": "https://sofijaivanova.lv/#person" },
-            "description": "Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas, diabēta profilakse, CGM glikozes monitorēšana.",
+            "description": "Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas, diabēta profilakse, metabolā veselība.",
             "inLanguage": ["lv", "ru", "en"],
             "breadcrumb": {
               "@type": "BreadcrumbList",
@@ -267,7 +249,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
             "name": "Kāda ir atšķirība no parasta dietologa?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku, kas ir unikāla iespēja Latvijā."
+              "text": "Pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas — katrs ieteikums ir pielāgots tieši Jūsu situācijai. Katram klientam individuāla analīze un personalizēts uztura plāns."
             }
           },
           {
@@ -285,14 +267,6 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
               "@type": "Answer",
               "text": "Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas jau 2–3 nedēļu laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos."
             }
-          },
-          {
-            "@type": "Question",
-            "name": "Kas ir CGM sensors un kam tas noderēs?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14 dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz katru ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros piedāvā tikai Sofija Ivanova."
-            }
           }
         ]
       }
@@ -304,8 +278,8 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" /></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" /></noscript>
 
     <!-- Preload LCP hero image -->
     <link rel="preload" as="image" type="image/webp" href="/assets/img/hero-doctor-cutout-1024w.webp" media="(min-width: 769px)" />

@@ -387,15 +387,15 @@ describe('Config Module', () => {
 
     describe('Service Prices', () => {
         it('should have all service prices defined', () => {
-            const services = ['initial', 'followup', 'package3', 'package5', 'cgm-diagnostic', 'consultation', 'free-consultation'];
+            const services = ['initial', 'followup', 'package3', 'package5', 'consultation'];
             services.forEach(service => {
                 expect(config.servicePrices[service]).toBeDefined();
                 expect(typeof config.servicePrices[service]).toBe('number');
             });
         });
 
-        it('free-consultation should be 0', () => {
-            expect(config.servicePrices['free-consultation']).toBe(0);
+        it('consultation should be 80', () => {
+            expect(config.servicePrices['consultation']).toBe(80);
         });
     });
 

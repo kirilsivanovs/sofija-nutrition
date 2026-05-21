@@ -94,10 +94,6 @@ describe('Translations Module', () => {
             expect(translations.lv.services.package3).toBe('3 konsultāciju pakete');
         });
 
-        test('free-consultation should be "Bezmaksas 15 min konsultācija"', () => {
-            expect(translations.lv.services['free-consultation']).toBe('Bezmaksas 15 min konsultācija');
-        });
-
         test('all service names should have corresponding translations', () => {
             const serviceKeys = Object.keys(servicePrices);
             
@@ -149,7 +145,7 @@ describe('Translations Module', () => {
         test('English services should have proper names', () => {
             expect(translations.en.services.initial).toBe('Initial Consultation');
             expect(translations.en.services.followup).toBe('Follow-up Consultation');
-            expect(translations.en.services['free-consultation']).toBe('Free 15-min Consultation');
+            expect(translations.en.services.consultation).toBe('Nutrition Consultation');
         });
 
         test('English format labels should be correct', () => {
@@ -192,13 +188,7 @@ describe('Translations Module', () => {
             expect(servicePrices.followup).toBe(45);
             expect(servicePrices.package3).toBe(150);
             expect(servicePrices.package5).toBe(220);
-            expect(servicePrices['cgm-diagnostic']).toBe(150);
             expect(servicePrices.consultation).toBe(80);
-            expect(servicePrices['free-consultation']).toBe(0);
-        });
-
-        test('free consultation should be 0', () => {
-            expect(servicePrices['free-consultation']).toBe(0);
         });
 
         test('all prices should be non-negative numbers', () => {
