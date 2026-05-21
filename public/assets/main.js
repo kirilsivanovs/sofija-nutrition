@@ -14,10 +14,10 @@
       nav_cabinet: 'Pacienta kabinets',
 
       // Hero
-      hero_eyebrow: 'Rīga · Individuālas konsultācijas',
-      hero_title: 'Veselība sākas ar uzturu',
+      hero_eyebrow: 'Sertificēta dietoloģe · Rīga',
+      hero_title: 'Uzturs, kas strādā tieši Jums',
       hero_subtitle:
-        'Palīdzu sakārtot uzturu, balstoties uz zinātni — individuāli, bez vispārīgām diētām.',
+        'Nepalīdz diētas? Trūkst enerģijas? Vēlaties sakārtot svaru vai cukura līmeni? Palīdzēšu ar individuālu, zinātniski pamatotu pieeju — bez gatavām shēmām.',
       hero_cta_primary: 'Rezervēt konsultāciju',
       hero_cta_secondary: 'Pakalpojumi',
       hero_credential_degree: 'Klātienē un tiešsaistē',
@@ -31,6 +31,16 @@
       trust_reg: 'Reģistrēta speciāliste',
       trust_reg_sub: 'ārstniecības personu reģistrs',
 
+      // For Whom
+      whom_title: 'Konsultācija ir piemērota, ja Jūs',
+      whom_1: 'Esat izmēģinājuši vairākas diētas, bet nekas nav palīdzējis ilgtermiņā',
+      whom_2: 'Vēlaties kontrolēt svaru bez striktu ierobežojumu',
+      whom_3: 'Jūtat hronisko nogurumu un enerģijas trūkumu',
+      whom_4: 'Jums ir prediabēts, insulīna rezistence vai paaugstināts cukurs',
+      whom_5: 'Vēlaties uzlabot gremošanu un zarnu veselību',
+      whom_6: 'Meklējat speciālistu, kas balstās uz zinātni, nevis modes tendencēm',
+      whom_cta: 'Pieteikties konsultācijai',
+
       // Services
       services_tag: 'Pakalpojumi',
       services_title: 'Kā es varu Jums palīdzēt',
@@ -38,49 +48,43 @@
         'Katrs cilvēks ir unikāls — tāpēc mans darbs sākas ar Jūsu stāstu, nevis gatavu shēmu.',
       srv_1_title: 'Individuāla konsultācija',
       srv_1_desc:
-        '60 min konsultācija klātienē vai tiešsaistē. Analizējam uztura ieradumus, veselības stāvokli un kopīgi nosakām mērķus.',
+        'Sapratīsiet, kas tieši Jūsu uzturā nestrādā un ko mainīt, lai jau pirmajās nedēļās juttu atšķirību. Klātienē vai tiešsaistē, 60 min.',
       srv_2_title: 'Personalizēts uztura plāns',
       srv_2_desc:
-        'Uztura plāns, kas pielāgots Jūsu ķermeņa vajadzībām, dzīvesstilam un ēdiena preferencēm. Nav universālu diētu.',
+        'Saņemsiet konkrētu ēdienkarti, kas garšo, ir reāli iekļaujama Jūsu ikdienā un ņem vērā veselības mērķus. Nevis diēta — bet jauns ēšanas veids.',
       srv_3_title: 'Metabolā veselība',
       srv_3_desc:
-        'Palīdzība ar insulīna rezistenci, prediabētu, svara kontroli un enerģijas līmeņa optimizāciju. Zinātniski pamatota pieeja.',
-      srv_4_tag: 'Unikāla iespēja',
-      srv_4_title: 'CGM diagnostika',
-      srv_4_desc:
-        '14 dienu glikozes monitorēšana ar sensoru. Precīzi dati par to, kā Jūsu organisms reaģē uz katru ēdienu. Pieejams kā papildus iespēja.',
+        'Stabilizēsiet cukura līmeni, uzlabosiet enerģiju un kontrolēsiet svaru bez galēju ierobežojumu. Īpaši aktuāli ar prediabētu vai insulīna rezistenci.',
       srv_5_title: 'Zarnu veselība',
       srv_5_desc:
-        'Uztura optimizācija, kas veicina zarnu trakta veselību un stiprina imūnsistēmu. Mikrobioma atbalsts ar uzturu.',
+        'Atvadīsieties no vēdera uzpūšanās, diskomforta un nestabilas gremošanas. Uztura stratēģija, kas atjauno līdzsvaru zarnu traktā.',
       srv_6_title: 'Ilgtermiņa atbalsts',
       srv_6_desc:
-        'Regulāras pārbaudes un plāna korekcijas. Pavadīšu Jūs ceļā uz jauniem, ilgtspējīgiem paradumiem.',
+        'Rezultāts saglabājas, jo neesat viena. Follow-up vizītes, plāna korekcijas un atbalsts, kamēr jaunie paradumi kļūst par normu.',
 
-      // How I Work
-      process_tag: 'Process',
-      process_title: 'Kā norit sadarbība',
-      proc_1_title: 'Iepazīšanās',
-      proc_1_desc:
-        'Īss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi izlemsim, kāds formāts Jums der vislabāk.',
-      proc_2_title: 'Konsultācija un plāns',
-      proc_2_desc:
-        'Padziļināta 60 min konsultācija. Analizējam Jūsu uzturu, veselību un izstrādājam individuālu rīcības plānu.',
-      proc_3_title: 'Rezultāts un atbalsts',
-      proc_3_desc:
-        'Saņemat personalizētu uztura plānu un turpinu Jūs atbalstīt ar follow-up konsultācijām, lai nodrošinātu ilgtspējīgus rezultātus.',
+      // What You'll Get (Outcomes)
+      outcomes_tag: 'Rezultāts',
+      outcomes_title: 'Ko Jūs iegūsiet',
+      out_1_title: 'Individuāls uztura plāns',
+      out_1_desc:
+        'Nevis gatava shēma, bet personalizēts plāns, kas ņem vērā Jūsu veselību, garšas preferences un dzīvesveidu.',
+      out_2_title: 'Vairāk enerģijas un skaidrība',
+      out_2_desc:
+        'Pirmās izmaiņas jūtamas jau 2–3 nedēļās: labāks miegs, stabilāka enerģija dienā, skaidrāka domāšana.',
+      out_3_title: 'Ilgtspējīgi rezultāti',
+      out_3_desc:
+        'Bez jojo efekta. Iemācīsieties ēst pareizi sev — lai rezultāti saglabājas gadiem, ne tikai nedēļām.',
 
       // Pricing
       price_consult: 'Konsultācija (60 min)',
       price_consult_val: 'no 65 €',
-      price_cgm: 'CGM programma (14 dienas)',
-      price_cgm_val: 'no 249 €',
 
       // About
       about_tag: 'Par mani',
       about_lead:
         'Palīdzu cilvēkiem sakārtot uzturu, balstoties uz zinātni un personalizētu pieeju. Aktīvi piedalos pētniecības projektos un praksē izmantoju pierādījumos balstītas metodes.',
       about_text:
-        'Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija balstās uz pierādījumiem — ne modes diētām vai vispārīgiem padomiem. Darbā izmantoju arī modernas tehnoloģijas, piemēram, CGM glikozes sensorus, kas ļauj precīzi izprast organisma reakcijas.',
+        'Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija balstās uz pierādījumiem \u2014 ne modes diētām vai vispārīgiem padomiem. Pētniecībā fokusējos uz uztura lomu diabēta ārstēšanā un profilaksē.',
       cred_2_title: 'Doktorante',
       cred_2_loc: 'Latvijas Universitāte',
       cred_3_title: 'MSc Dietoloģijā',
@@ -120,9 +124,12 @@
       faq_q4: 'Cik ātri var sagaidīt rezultātus?',
       faq_a4:
         'Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas 2–3 nedēļu laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos. Follow-up konsultācijas palīdz noturēt progresu ilgtermiņā.',
-      faq_q5: 'Kas ir CGM sensors un kam tas noderēs?',
+      faq_q5: 'Cik maksā konsultācija?',
       faq_a5:
-        'CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14 dienas mēra cukura līmeni reāllaikā. Tas parāda, kā Jūsu organisms reaģē uz ēdienu, stresu un miegu. Uztura konsultāciju ietvaros tā ir iespēja iegūt precīzus, personalizētus datus.',
+        'Individuālā konsultācija (60 min) — no 65 €. Cena ietver pilnu uztura analīzi, personalizētu plānu un rekomendācijas. Atkārtota vizīte un ilgtermiņa paketes pieejamas par izdevīgākām cenām.',
+      faq_q6: 'Kā sagatavoties pirmajai konsultācijai?',
+      faq_a6:
+        'Nekāda īpaša sagatavošanās nav nepieciešama. Ja Jums ir nesenas analīzes (asins bioķīmija, cukurs, lipīdi) — paņemiet līdzi. Ja nav — sāksim ar to, kas ir pieejams, un visu pārējo izplānosim kopā.',
 
       // Why Choose Me
       why_tag: 'Kāpēc izvēlēties mani',
@@ -132,6 +139,11 @@
       // Booking extra
       booking_flexibility:
         'Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.',
+
+      // Final CTA
+      final_cta_title: 'Gatavi sākt ceļu uz labāku veselību?',
+      final_cta_text: 'Pirmais solis ir vienkāršs — izvēlieties laiku, un es parūpēšos par pārējo.',
+      final_cta_btn: 'Rezervēt konsultāciju',
 
       // Footer extra
       footer_contact_title: 'Kontakti',
@@ -165,9 +177,10 @@
       nav_cabinet: 'Кабинет пациента',
 
       // Hero
-      hero_eyebrow: 'Рига · Индивидуальные консультации',
-      hero_title: 'Здоровье начинается с питания',
-      hero_subtitle: 'Помогу наладить питание, опираясь на науку — индивидуально, без общих диет.',
+      hero_eyebrow: 'Сертифицированный диетолог · Рига',
+      hero_title: 'Питание, которое работает именно для Вас',
+      hero_subtitle:
+        'Диеты не помогают? Не хватает энергии? Хотите наладить вес или уровень сахара? Помогу с индивидуальным, научно обоснованным подходом — без готовых схем.',
       hero_cta_primary: 'Записаться',
       hero_cta_secondary: 'Услуги',
       hero_credential_degree: 'Очно и онлайн',
@@ -181,6 +194,16 @@
       trust_reg: 'Зарегистрированный специалист',
       trust_reg_sub: 'реестр медработников',
 
+      // For Whom
+      whom_title: 'Консультация подойдёт, если Вы',
+      whom_1: 'Перепробовали несколько диет, но ничего не помогло надолго',
+      whom_2: 'Хотите контролировать вес без строгих ограничений',
+      whom_3: 'Чувствуете хроническую усталость и нехватку энергии',
+      whom_4: 'У Вас предиабет, инсулинорезистентность или повышенный сахар',
+      whom_5: 'Хотите улучшить пищеварение и здоровье кишечника',
+      whom_6: 'Ищете специалиста, который опирается на науку, а не модные тренды',
+      whom_cta: 'Записаться на консультацию',
+
       // Services
       services_tag: 'Услуги',
       services_title: 'Как я могу Вам помочь',
@@ -188,49 +211,43 @@
         'Каждый человек уникален — поэтому моя работа начинается с Вашей истории, а не с готовой схемы.',
       srv_1_title: 'Индивидуальная консультация',
       srv_1_desc:
-        '60 мин консультация очно или онлайн. Анализируем пищевые привычки, состояние здоровья и совместно определяем цели.',
+        'Поймёте, что именно в Вашем питании не работает и что изменить, чтобы уже в первые недели почувствовать разницу. Очно или онлайн, 60 мин.',
       srv_2_title: 'Персонализированный план питания',
       srv_2_desc:
-        'План питания, адаптированный к потребностям Вашего тела, образу жизни и пищевым предпочтениям. Никаких универсальных диет.',
+        'Получите конкретное меню, которое вкусное, реально вписывается в Вашу жизнь и учитывает цели здоровья. Не диета — а новый способ питания.',
       srv_3_title: 'Метаболическое здоровье',
       srv_3_desc:
-        'Помощь при инсулинорезистентности, предиабете, контроле веса и оптимизации уровня энергии. Научно обоснованный подход.',
-      srv_4_tag: 'Уникальная возможность',
-      srv_4_title: 'CGM-диагностика',
-      srv_4_desc:
-        '14-дневный мониторинг глюкозы с помощью сенсора. Точные данные о том, как Ваш организм реагирует на каждый продукт. Доступно как дополнительная опция.',
+        'Стабилизируете сахар, улучшите энергию и возьмёте вес под контроль без крайних ограничений. Особенно актуально при предиабете или инсулинорезистентности.',
       srv_5_title: 'Здоровье кишечника',
       srv_5_desc:
-        'Оптимизация питания для здоровья желудочно-кишечного тракта и укрепления иммунитета. Поддержка микробиома через питание.',
+        'Избавитесь от вздутия, дискомфорта и нестабильного пищеварения. Стратегия питания, которая восстанавливает баланс в ЖКТ.',
       srv_6_title: 'Долгосрочная поддержка',
       srv_6_desc:
-        'Регулярные проверки и корректировки плана. Буду сопровождать Вас на пути к новым, устойчивым привычкам.',
+        'Результат сохраняется, потому что Вы не одна. Follow-up визиты, корректировки плана и поддержка, пока новые привычки станут нормой.',
 
-      // How I Work
-      process_tag: 'Процесс',
-      process_title: 'Как проходит сотрудничество',
-      proc_1_title: 'Знакомство',
-      proc_1_desc:
-        'Короткий предварительный звонок, на котором узнаю Вашу ситуацию и цели. Вместе решим, какой формат подходит лучше всего.',
-      proc_2_title: 'Консультация и план',
-      proc_2_desc:
-        'Углублённая 60-минутная консультация. Анализируем Ваше питание, здоровье и разрабатываем индивидуальный план действий.',
-      proc_3_title: 'Результат и поддержка',
-      proc_3_desc:
-        'Получаете персонализированный план питания и продолжаю поддерживать Вас follow-up консультациями для устойчивых результатов.',
+      // What You'll Get (Outcomes)
+      outcomes_tag: 'Результат',
+      outcomes_title: 'Что Вы получите',
+      out_1_title: 'Индивидуальный план питания',
+      out_1_desc:
+        'Не готовая схема, а персонализированный план, который учитывает Ваше здоровье, вкусовые предпочтения и образ жизни.',
+      out_2_title: 'Больше энергии и ясность',
+      out_2_desc:
+        'Первые изменения ощутимы уже через 2–3 недели: лучше сон, стабильная энергия в течение дня, ясное мышление.',
+      out_3_title: 'Устойчивые результаты',
+      out_3_desc:
+        'Без эффекта йо-йо. Научитесь питаться правильно для себя — чтобы результат сохранялся годами, а не неделями.',
 
       // Pricing
       price_consult: 'Консультация (60 мин)',
       price_consult_val: 'от 65 €',
-      price_cgm: 'CGM-программа (14 дней)',
-      price_cgm_val: 'от 249 €',
 
       // About
       about_tag: 'Обо мне',
       about_lead:
         'Помогаю людям наладить питание на основе науки и персонализированного подхода. Активно участвую в исследовательских проектах и применяю доказательные методы в практике.',
       about_text:
-        'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах — не модных диетах или общих советах. В работе использую также современные технологии, например, CGM-сенсоры глюкозы, позволяющие точно понять реакции организма.',
+        'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах \u2014 не модных диетах или общих советах. В исследованиях фокусируюсь на роли питания в лечении и профилактике диабета.',
       cred_2_title: 'Докторант',
       cred_2_loc: 'Латвийский Университет',
       cred_3_title: 'MSc в диетологии',
@@ -263,20 +280,28 @@
         'Для всех, кто хочет наладить питание научно обоснованным способом — независимо от возраста или цели. Работаю с контролем веса, уровнем энергии, метаболическим здоровьем, предиабетом и здоровьем кишечника.',
       faq_q2: 'Чем это отличается от обычного диетолога?',
       faq_a2:
-        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет — каждая рекомендация адаптирована к Вашей ситуации. Дополнительно предлагаю CGM-диагностику.',
+        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет \u2014 каждая рекомендация адаптирована к Вашей ситуации.',
       faq_q3: 'Доступны ли консультации онлайн?',
       faq_a3:
         'Да, работаю как очно в Риге, так и онлайн. Видео-консультации так же эффективны и доступны клиентам в Латвии и за её пределами.',
       faq_q4: 'Как быстро можно ожидать результатов?',
       faq_a4:
         'Первые положительные изменения (энергия, сон, самочувствие) обычно ощущаются через 2–3 недели. Устойчивые результаты по весу и здоровью — через 2–4 месяца. Follow-up консультации помогают закрепить прогресс надолго.',
-      faq_q5: 'Что такое CGM-сенсор и кому он полезен?',
+      faq_q5: 'Сколько стоит консультация?',
       faq_a5:
-        'CGM (непрерывный мониторинг глюкозы) — небольшое устройство на коже, которое 14 дней измеряет уровень сахара в реальном времени. Оно показывает, как Ваш организм реагирует на еду, стресс и сон. В рамках консультации это даёт точные персонализированные данные.',
+        'Индивидуальная консультация (60 мин) — от 65 €. Цена включает полный анализ питания, персонализированный план и рекомендации. Повторные визиты и пакеты доступны по выгодным ценам.',
+      faq_q6: 'Как подготовиться к первой консультации?',
+      faq_a6:
+        'Никакой специальной подготовки не нужно. Если у Вас есть недавние анализы (биохимия крови, сахар, липиды) — возьмите с собой. Если нет — начнём с того, что есть, и спланируем остальное вместе.',
 
       // Booking extra
       booking_flexibility:
         'Запись возможна и вне рабочего времени. Консультации доступны очно в Риге и онлайн.',
+
+      // Final CTA
+      final_cta_title: 'Готовы начать путь к лучшему здоровью?',
+      final_cta_text: 'Первый шаг прост — выберите время, а я позабочусь об остальном.',
+      final_cta_btn: 'Записаться на консультацию',
 
       // Footer extra
       footer_contact_title: 'Контакты',
@@ -310,10 +335,10 @@
       nav_cabinet: 'Patient Cabinet',
 
       // Hero
-      hero_eyebrow: 'Riga · Individual consultations',
-      hero_title: 'Health starts with nutrition',
+      hero_eyebrow: 'Certified Dietitian · Riga',
+      hero_title: 'Nutrition that works for You',
       hero_subtitle:
-        'I help improve your diet based on science — individually, without generic diets.',
+        "Diets not working? Lacking energy? Want to manage weight or blood sugar? I'll help with an individual, science-based approach — no ready-made templates.",
       hero_cta_primary: 'Book consultation',
       hero_cta_secondary: 'Services',
       hero_credential_degree: 'In-person & online',
@@ -327,6 +352,16 @@
       trust_reg: 'Registered specialist',
       trust_reg_sub: 'medical practitioners registry',
 
+      // For Whom
+      whom_title: 'A consultation is right for You if',
+      whom_1: "You've tried several diets but nothing worked long-term",
+      whom_2: 'You want to manage weight without strict restrictions',
+      whom_3: 'You feel chronic fatigue and lack of energy',
+      whom_4: 'You have prediabetes, insulin resistance, or high blood sugar',
+      whom_5: 'You want to improve digestion and gut health',
+      whom_6: "You're looking for a specialist who relies on science, not trends",
+      whom_cta: 'Book a consultation',
+
       // Services
       services_tag: 'Services',
       services_title: 'How I can help You',
@@ -334,49 +369,43 @@
         "Every person is unique — that's why my work begins with your story, not a ready-made template.",
       srv_1_title: 'Individual consultation',
       srv_1_desc:
-        '60 min consultation in-person or online. We analyze your dietary habits, health status, and set goals together.',
+        "Understand exactly what in your nutrition isn't working and what to change to feel the difference within weeks. In-person or online, 60 min.",
       srv_2_title: 'Personalized meal plan',
       srv_2_desc:
-        "A nutrition plan tailored to your body's needs, lifestyle, and food preferences. No universal diets.",
+        "Get a concrete meal plan that's delicious, realistically fits your life, and takes health goals into account. Not a diet — a new way of eating.",
       srv_3_title: 'Metabolic health',
       srv_3_desc:
-        'Help with insulin resistance, prediabetes, weight management, and energy optimization. Science-based approach.',
-      srv_4_tag: 'Unique opportunity',
-      srv_4_title: 'CGM diagnostics',
-      srv_4_desc:
-        '14-day glucose monitoring with a sensor. Precise data on how your body responds to each food. Available as an add-on option.',
+        'Stabilize blood sugar, boost energy, and take control of weight without extreme restrictions. Especially relevant for prediabetes or insulin resistance.',
       srv_5_title: 'Gut health',
       srv_5_desc:
-        'Nutrition optimization for gut health and immune system support. Microbiome support through diet.',
+        'Say goodbye to bloating, discomfort, and unstable digestion. A nutrition strategy that restores balance in the GI tract.',
       srv_6_title: 'Long-term support',
       srv_6_desc:
-        "Regular check-ups and plan adjustments. I'll support you on the path to new, sustainable habits.",
+        "Results last because you're not alone. Follow-up visits, plan adjustments, and support until new habits become the norm.",
 
-      // How I Work
-      process_tag: 'Process',
-      process_title: 'How the collaboration works',
-      proc_1_title: 'Getting acquainted',
-      proc_1_desc:
-        "A brief introductory call where I learn about your situation and goals. Together we'll decide which format works best for you.",
-      proc_2_title: 'Consultation & plan',
-      proc_2_desc:
-        'In-depth 60 min consultation. We analyze your nutrition, health, and develop a personalized action plan.',
-      proc_3_title: 'Results & support',
-      proc_3_desc:
-        'You receive a personalized nutrition plan and I continue supporting you with follow-up consultations for lasting results.',
+      // What You'll Get (Outcomes)
+      outcomes_tag: 'Results',
+      outcomes_title: "What You'll get",
+      out_1_title: 'Individual nutrition plan',
+      out_1_desc:
+        'Not a generic template, but a personalized plan that considers your health, taste preferences, and lifestyle.',
+      out_2_title: 'More energy and clarity',
+      out_2_desc:
+        'First changes felt within 2–3 weeks: better sleep, stable energy throughout the day, clearer thinking.',
+      out_3_title: 'Sustainable results',
+      out_3_desc:
+        'No yo-yo effect. Learn to eat right for yourself — so results last years, not just weeks.',
 
       // Pricing
       price_consult: 'Consultation (60 min)',
       price_consult_val: 'from €65',
-      price_cgm: 'CGM program (14 days)',
-      price_cgm_val: 'from €249',
 
       // About
       about_tag: 'About Me',
       about_lead:
         'I help people improve nutrition through a science-based and personalized approach. I actively participate in research projects and apply evidence-based methods in practice.',
       about_text:
-        "My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. I also use modern technologies, such as CGM glucose sensors, which allow precise understanding of the body's responses.",
+        'My approach combines academic knowledge and practical experience. Every consultation is evidence-based \u2014 not trendy diets or generic advice. My research focuses on the role of nutrition in diabetes treatment and prevention.',
       cred_2_title: 'Doctoral Student',
       cred_2_loc: 'University of Latvia',
       cred_3_title: 'MSc in Dietetics',
@@ -409,20 +438,28 @@
         'For anyone who wants to improve nutrition in a science-based way — regardless of age or goal. I work with weight management, energy levels, metabolic health, prediabetes, and gut health.',
       faq_q2: 'How is this different from a regular dietitian?',
       faq_a2:
-        "My approach is based on research and individual data. I don't prescribe generic diets — every recommendation is tailored to your situation. I also offer CGM diagnostics.",
+        "My approach is based on research and individual data. I don't prescribe generic diets \u2014 every recommendation is tailored to your situation.",
       faq_q3: 'Are online consultations available?',
       faq_a3:
         'Yes, I work both in-person in Riga and online. Video consultations are equally effective and available in Latvia and abroad.',
       faq_q4: 'How quickly can I expect results?',
       faq_a4:
         'First positive changes (energy, sleep, well-being) are usually felt within 2–3 weeks. Sustainable weight and health results — in 2–4 months. Follow-up consultations help maintain long-term progress.',
-      faq_q5: 'What is a CGM sensor and who is it useful for?',
+      faq_q5: 'How much does a consultation cost?',
       faq_a5:
-        'CGM (continuous glucose monitoring) is a small skin-worn device that measures blood sugar in real time for 14 days. It shows how your body responds to food, stress, and sleep. Within consultations, it provides precise personalized data.',
+        'Individual consultation (60 min) — from €65. The price includes full nutrition analysis, personalized plan, and recommendations. Follow-up visits and long-term packages available at better rates.',
+      faq_q6: 'How to prepare for the first consultation?',
+      faq_a6:
+        "No special preparation needed. If you have recent lab results (blood biochemistry, sugar, lipids) — bring them along. If not — we'll start with what's available and plan the rest together.",
 
       // Booking extra
       booking_flexibility:
         'Booking available outside working hours as well. Consultations available in-person in Riga and online.',
+
+      // Final CTA
+      final_cta_title: 'Ready to start your journey to better health?',
+      final_cta_text: "The first step is simple — choose a time, and I'll take care of the rest.",
+      final_cta_btn: 'Book a consultation',
 
       // Footer extra
       footer_contact_title: 'Contact',
@@ -453,6 +490,11 @@
 
   function updateLanguage(lang) {
     currentLang = lang;
+    try {
+      localStorage.setItem('preferredLang', lang);
+    } catch (e) {
+      /* private browsing */
+    }
 
     // Update Buttons
     langButtons.forEach((btn) => {
@@ -501,11 +543,23 @@
     });
   }
 
-  // Initialize language (without updating calendar - it initializes itself with 'lv')
-  currentLang = 'lv';
-  langButtons.forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.lang === 'lv');
-  });
+  // Initialize language from localStorage or default to 'lv'
+  const savedLang = (() => {
+    try {
+      return localStorage.getItem('preferredLang');
+    } catch (e) {
+      return null;
+    }
+  })();
+  const initLang = ['lv', 'ru', 'en'].includes(savedLang) ? savedLang : 'lv';
+  if (initLang !== 'lv') {
+    updateLanguage(initLang);
+  } else {
+    currentLang = 'lv';
+    langButtons.forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.lang === 'lv');
+    });
+  }
 
   // Mobile menu is handled by inline script in index.astro
   // Only add close-on-link-click and close-on-overlay here (safe to double-attach)
@@ -523,6 +577,33 @@
     document.body.style.width = '';
   }
 
+  // Focus trap for mobile menu (accessibility)
+  function handleMenuKeydown(e) {
+    if (!mobileNavMenu?.classList.contains('open')) return;
+
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+      mobileMenuBtn?.focus();
+      return;
+    }
+
+    if (e.key !== 'Tab') return;
+
+    const focusable = mobileNavMenu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   if (mobileNavMenu) {
     // Close menu when clicking a link
     mobileNavAnchors.forEach((link) => {
@@ -535,5 +616,8 @@
         closeMobileMenu();
       }
     });
+
+    // Focus trap
+    document.addEventListener('keydown', handleMenuKeydown);
   }
 });

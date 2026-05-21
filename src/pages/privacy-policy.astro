@@ -7,18 +7,18 @@ import Layout from '../layouts/Layout.astro';
   description="Privātuma politika un personas datu apstrādes noteikumi. Sofija Ivanova uztura konsultāciju pakalpojumi."
   canonicalPath="/privacy-policy/"
 >
-  <div style="max-width: 900px; margin: 0 auto; padding: 80px 20px;">
-    <h1 style="font-size: 48px; font-weight: 700; color: #1f2937; margin-bottom: 24px;">
+  <article class="max-w-3xl mx-auto px-5 md:px-8 py-20 md:py-28">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
       Privātuma politika
     </h1>
 
-    <p style="color: #6b7280; font-size: 14px; margin-bottom: 40px;">
+    <p class="text-gray-500 text-sm mb-10">
       Pēdējās izmaiņas: 1. februāris, 2026
     </p>
 
-    <div style="font-size: 18px; line-height: 1.8; color: #374151;">
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+    <div class="prose prose-lg prose-gray max-w-none">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           1. Vispārīgā informācija
         </h2>
         <p>
@@ -28,146 +28,133 @@ import Layout from '../layouts/Layout.astro';
         </p>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           2. Datu pārzinis
         </h2>
         <p>
           Datu pārzinis: SIA "Sofija Ivanova Nutrition"<br />
-          E-pasts: <a href="mailto:info@sofijaivanova.lv" style="color: #a78f72;"
-            >info@sofijaivanova.lv</a
-          ><br />
+          E-pasts: <a href="mailto:info@sofijaivanova.lv" class="text-secondary font-semibold hover:underline">info@sofijaivanova.lv</a><br />
           Tālrunis: +371 XXXXXXXX
         </p>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           3. Kādus datus mēs vācam
         </h2>
-        <ul style="list-style: none; padding: 0;">
-          <li style="margin-bottom: 12px;">✓ Vārds un uzvārds</li>
-          <li style="margin-bottom: 12px;">✓ E-pasta adrese</li>
-          <li style="margin-bottom: 12px;">✓ Tālruņa numurs</li>
-          <li style="margin-bottom: 12px;">✓ Informācija par konsultācijas pakalpojumu</li>
-          <li style="margin-bottom: 12px;">
-            ✓ Maksājumu dati (apstrādā trešā puse - Stripe/PayPal)
-          </li>
+        <ul class="list-none p-0 space-y-3">
+          <li>✓ Vārds un uzvārds</li>
+          <li>✓ E-pasta adrese</li>
+          <li>✓ Tālruņa numurs</li>
+          <li>✓ Informācija par konsultācijas pakalpojumu</li>
+          <li>✓ Maksājumu dati (apstrādā trešā puse - Stripe/PayPal)</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           4. Kādiem nolūkiem izmantojam datus
         </h2>
-        <ul style="list-style: none; padding: 0;">
-          <li style="margin-bottom: 12px;">✓ Konsultāciju ierakstu apstrāde un apstiprinājums</li>
-          <li style="margin-bottom: 12px;">✓ Pakalpojumu sniegšana</li>
-          <li style="margin-bottom: 12px;">✓ Saziņa ar klientiem</li>
-          <li style="margin-bottom: 12px;">✓ Grāmatvedības un nodokļu pienākumu izpilde</li>
-          <li style="margin-bottom: 12px;">✓ Vietnes uzlabošana (ar Jūsu piekrišanu)</li>
+        <ul class="list-none p-0 space-y-3">
+          <li>✓ Konsultāciju ierakstu apstrāde un apstiprinājums</li>
+          <li>✓ Pakalpojumu sniegšana</li>
+          <li>✓ Saziņa ar klientiem</li>
+          <li>✓ Grāmatvedības un nodokļu pienākumu izpilde</li>
+          <li>✓ Vietnes uzlabošana (ar Jūsu piekrišanu)</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           5. Sīkdatnes (Cookies)
         </h2>
         <p>Mēs izmantojam šādus sīkdatņu veidus:</p>
-        <ul style="margin-top: 16px;">
-          <li style="margin-bottom: 12px;">
-            <strong>Nepieciešamās sīkdatnes</strong> - Nodrošina vietnes pamatfunkcionalitāti (piemēram,
+        <ul class="mt-4 space-y-3">
+          <li>
+            <strong>Nepieciešamās sīkdatnes</strong> — Nodrošina vietnes pamatfunkcionalitāti (piemēram,
             ierakstu sistēma, sesijas saglabāšana)
           </li>
-          <li style="margin-bottom: 12px;">
-            <strong>Analītikas sīkdatnes</strong> - Palīdz mums saprast, kā apmeklētāji izmanto vietni
+          <li>
+            <strong>Analītikas sīkdatnes</strong> — Palīdz mums saprast, kā apmeklētāji izmanto vietni
             (tikai ar Jūsu piekrišanu)
           </li>
-          <li style="margin-bottom: 12px;">
-            <strong>Mārketinga sīkdatnes</strong> - Personalizēti piedāvājumi (tikai ar Jūsu piekrišanu)
+          <li>
+            <strong>Mārketinga sīkdatnes</strong> — Personalizēti piedāvājumi (tikai ar Jūsu piekrišanu)
           </li>
         </ul>
-        <p style="margin-top: 16px;">
+        <p class="mt-4">
           Jūs jebkurā brīdī varat mainīt sīkdatņu iestatījumus, noklikšķinot uz pogas "🍪 Sīkdatnes"
           lapas apakšējā labajā stūrī.
         </p>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           6. Jūsu tiesības
         </h2>
         <p>Saskaņā ar GDPR Jums ir šādas tiesības:</p>
-        <ul style="margin-top: 16px;">
-          <li style="margin-bottom: 12px;">✓ Tiesības piekļūt saviem datiem</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības labot neprecīzus datus</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības dzēst datus ("tiesības tikt aizmirstam")</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības ierobežot datu apstrādi</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības uz datu pārnesamību</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības atsaukt piekrišanu</li>
-          <li style="margin-bottom: 12px;">✓ Tiesības iesniegt sūdzību Datu valsts inspekcijai</li>
+        <ul class="mt-4 space-y-3">
+          <li>✓ Tiesības piekļūt saviem datiem</li>
+          <li>✓ Tiesības labot neprecīzus datus</li>
+          <li>✓ Tiesības dzēst datus ("tiesības tikt aizmirstam")</li>
+          <li>✓ Tiesības ierobežot datu apstrādi</li>
+          <li>✓ Tiesības uz datu pārnesamību</li>
+          <li>✓ Tiesības atsaukt piekrišanu</li>
+          <li>✓ Tiesības iesniegt sūdzību Datu valsts inspekcijai</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           7. Datu glabāšanas termiņi
         </h2>
-        <ul style="list-style: none; padding: 0;">
-          <li style="margin-bottom: 12px;">✓ Ierakstu dati: 3 gadi pēc pakalpojuma sniegšanas</li>
-          <li style="margin-bottom: 12px;">
-            ✓ Grāmatvedības dokumenti: 5 gadi (saskaņā ar likumu)
-          </li>
-          <li style="margin-bottom: 12px;">✓ Mārketinga dati: līdz piekrišanas atsaukšanai</li>
+        <ul class="list-none p-0 space-y-3">
+          <li>✓ Ierakstu dati: 3 gadi pēc pakalpojuma sniegšanas</li>
+          <li>✓ Grāmatvedības dokumenti: 5 gadi (saskaņā ar likumu)</li>
+          <li>✓ Mārketinga dati: līdz piekrišanas atsaukšanai</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           8. Datu drošība
         </h2>
         <p>Mēs izmantojam mūsdienu drošības pasākumus, lai aizsargātu Jūsu datus:</p>
-        <ul style="margin-top: 16px;">
-          <li style="margin-bottom: 12px;">✓ SSL/HTTPS šifrēšana</li>
-          <li style="margin-bottom: 12px;">✓ Azure drošības standardi</li>
-          <li style="margin-bottom: 12px;">✓ Regulāra datu dublēšana</li>
-          <li style="margin-bottom: 12px;">✓ Ierobežota piekļuve datiem</li>
+        <ul class="mt-4 space-y-3">
+          <li>✓ SSL/HTTPS šifrēšana</li>
+          <li>✓ Azure drošības standardi</li>
+          <li>✓ Regulāra datu dublēšana</li>
+          <li>✓ Ierobežota piekļuve datiem</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           9. Trešās puses pakalpojumi
         </h2>
-        <ul style="list-style: none; padding: 0;">
-          <li style="margin-bottom: 12px;">
-            <strong>Microsoft Azure</strong> - Hosting un datu glabāšana (EU serveri)
-          </li>
-          <li style="margin-bottom: 12px;">
-            <strong>Stripe/PayPal</strong> - Maksājumu apstrāde (GDPR compliant)
-          </li>
+        <ul class="list-none p-0 space-y-3">
+          <li><strong>Microsoft Azure</strong> — Hosting un datu glabāšana (EU serveri)</li>
+          <li><strong>Stripe/PayPal</strong> — Maksājumu apstrāde (GDPR compliant)</li>
         </ul>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           10. Kontakti
         </h2>
         <p>
           Ja Jums ir jautājumi par datu aizsardzību vai vēlaties izmantot savas tiesības, lūdzu,
           sazinieties ar mums:
         </p>
-        <p style="margin-top: 16px;">
-          E-pasts: <a
-            href="mailto:privacy@sofijaivanova.lv"
-            style="color: #a78f72; font-weight: 600;">privacy@sofijaivanova.lv</a
-          ><br />
+        <p class="mt-4">
+          E-pasts: <a href="mailto:privacy@sofijaivanova.lv" class="text-secondary font-semibold hover:underline">privacy@sofijaivanova.lv</a><br />
           Tālrunis: +371 XXXXXXXX
         </p>
       </section>
 
-      <section style="margin-bottom: 40px;">
-        <h2 style="font-size: 32px; font-weight: 700; color: #a78f72; margin-bottom: 16px;">
+      <section class="mb-10">
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
           11. Izmaiņas privātuma politikā
         </h2>
         <p>
@@ -177,15 +164,13 @@ import Layout from '../layouts/Layout.astro';
       </section>
     </div>
 
-    <div
-      style="margin-top: 60px; padding-top: 40px; border-top: 2px solid #e5e7eb; text-align: center;"
-    >
+    <div class="mt-16 pt-10 border-t-2 border-gray-200 text-center">
       <a
         href="/"
-        style="display: inline-block; background: #a78f72; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s;"
+        class="inline-block bg-secondary text-white px-8 py-3.5 rounded-lg font-semibold no-underline hover:opacity-90 transition-opacity"
       >
         ← Atpakaļ uz sākumlapu
       </a>
     </div>
-  </div>
+  </article>
 </Layout>

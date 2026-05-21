@@ -4,14 +4,23 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
 <Layout
-  title="Uztura Speciāliste Rīgā — Sofija Ivanova | Personalizētas Konsultācijas, CGM Diagnostika"
-  description="Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, CGM glikozes monitorēšana, personalizēts uztura plāns. Doktorante LU."
+  title="Dietoloģe Rīgā — Sofija Ivanova | Personalizētas Uztura Konsultācijas"
+  description="Sertificēta dietoloģe Rīgā (Nr. 75650061277). Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, personalizēts uztura plāns, metabolā veselība. MSc uzturzinātnē, doktorante LU."
   canonicalPath="/"
 >
+  <!-- Skip to Content (Accessibility) -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:outline-none"
+  >
+    Pāriet uz saturu
+  </a>
+
   <!-- Header -->
   <header
-    class="bg-white/95 backdrop-blur-sm sticky top-0 z-[1000] shadow-sm border-b border-gray-100/50 transition-transform duration-300"
+    class="bg-white/95 backdrop-blur-sm sticky top-0 z-1000 shadow-sm border-b border-gray-100/50 transition-transform duration-300"
     id="site-header"
+    role="banner"
   >
     <!-- Top Bar with Logo and Language -->
     <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
@@ -47,7 +56,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
         <!-- Mobile Menu Button -->
         <button
           type="button"
-          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-[999] relative cursor-pointer"
+          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-999 relative cursor-pointer"
           style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
           aria-label="Menu"
           aria-expanded="false"
@@ -61,7 +70,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     </div>
 
     <!-- Navigation Tabs (Desktop) -->
-    <nav class="hidden md:block border-t border-gray-100">
+    <nav class="hidden md:block border-t border-gray-100" aria-label="Galvenā navigācija">
       <div class="max-w-6xl mx-auto px-4 md:px-8">
         <div class="flex gap-1">
           <a href="#services" class="nav-tab">
@@ -193,741 +202,730 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 </Layout>
 
 <!-- Hero Section -->
-<section id="hero" class="hero" aria-labelledby="hero-title">
-  <div class="hero__inner">
-    <!-- Header -->
-    <div class="hero__header">
-      <div class="hero__eyebrow">
-        <span class="hero__eyebrow-line" aria-hidden="true"></span>
-        <span data-i18n="hero_eyebrow">Rīga · Individuālas konsultācijas</span>
-      </div>
-      <h1 id="hero-title" class="hero__title" data-i18n="hero_title">
-        Veselība sākas<br />ar uzturu
-      </h1>
-    </div>
-
-    <!-- Image -->
-    <div class="hero__image-column">
-      <picture class="hero__picture">
-        <img
-          src="/assets/img/hero-doctor-cutout.png"
-          alt="Uztura speciāliste Sofija Ivanova — individuālas konsultācijas Rīgā un tiešsaistē"
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-          width="2200"
-          height="1691"
-        />
-      </picture>
-      <div class="hero__credential">
-        <span class="hero__credential-title" data-i18n="hero_credential_degree"
-          >Klātienē un tiešsaistē</span
-        >
-        <span class="hero__credential-dot" aria-hidden="true"></span>
-        <span class="hero__credential-location" data-i18n="hero_credential_label">Rīga</span>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div class="hero__body">
-      <p class="hero__subtitle" data-i18n="hero_subtitle">
-        Palīdzu sakārtot uzturu, balstoties uz zinātni — individuāli, bez vispārīgām diētām.
-      </p>
-      <div class="hero__actions">
-        <a href="#contact" class="hero__btn hero__btn--primary" data-i18n="hero_cta_primary">
-          Rezervēt konsultāciju
-        </a>
-        <a href="#services" class="hero__btn hero__btn--outline" data-i18n="hero_cta_secondary">
-          Pakalpojumi
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Trust Metrics Bar -->
-<section class="trust-bar">
-  <div class="trust-metrics">
-    <div class="trust-metric">
-      <div class="trust-metric-icon"><i class="ph ph-certificate"></i></div>
-      <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_msc">MSc Dietoloģijā</span>
-        <span class="trust-metric-label" data-i18n="trust_msc_sub">Rīgas Stradiņa universitāte</span
-        >
-      </div>
-    </div>
-    <div class="trust-metric">
-      <div class="trust-metric-icon"><i class="ph ph-graduation-cap"></i></div>
-      <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_phd">Doktorante</span>
-        <span class="trust-metric-label" data-i18n="trust_phd_sub">Latvijas Universitāte</span>
-      </div>
-    </div>
-    <div class="trust-metric">
-      <div class="trust-metric-icon"><i class="ph ph-shield-check"></i></div>
-      <div class="trust-metric-text">
-        <span class="trust-metric-value" data-i18n="trust_reg">Reģistrēta speciāliste</span>
-        <span class="trust-metric-label" data-i18n="trust_reg_sub"
-          >ārstniecības personu reģistrā</span
-        >
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Services Section -->
-<section id="services" class="py-20 md:py-24 lg:py-28 bg-cream">
-  <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <!-- Section Header -->
-    <div class="text-center mb-12 md:mb-16">
-      <span
-        class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
-        data-i18n="services_tag">Pakalpojumi</span
-      >
-      <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-4"
-        data-i18n="services_title"
-      >
-        Kā es varu Jums palīdzēt
-      </h2>
-      <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto" data-i18n="services_desc">
-        Katrs cilvēks ir unikāls — tāpēc mans darbs sākas ar Jūsu stāstu, nevis gatavu shēmu.
-      </p>
-    </div>
-
-    <!-- Services Grid -->
-    <div class="services-grid">
-      <!-- Service 1: Individual Consultation -->
-      <div class="service-card">
-        <div class="service-icon">
-          <i class="ph ph-chats-circle"></i>
+<main id="main-content">
+  <section id="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero__inner">
+      <!-- Header -->
+      <div class="hero__header">
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-line" aria-hidden="true"></span>
+          <span data-i18n="hero_eyebrow">Sertificēta dietoloģe · Rīga</span>
         </div>
-        <h3 class="service-title" data-i18n="srv_1_title">Individuāla konsultācija</h3>
-        <p class="service-desc" data-i18n="srv_1_desc">
-          60 min konsultācija klātienē vai tiešsaistē. Analizējam uztura ieradumus, veselības
-          stāvokli un kopīgi nosakām mērķus.
-        </p>
+        <h1 id="hero-title" class="hero__title" data-i18n="hero_title">
+          Uzturs, kas<br />strādā tieši Jums
+        </h1>
       </div>
 
-      <!-- Service 2: Personalized Meal Plan -->
-      <div class="service-card">
-        <div class="service-icon">
-          <i class="ph ph-notebook"></i>
-        </div>
-        <h3 class="service-title" data-i18n="srv_2_title">Personalizēts uztura plāns</h3>
-        <p class="service-desc" data-i18n="srv_2_desc">
-          Uztura plāns, kas pielāgots Jūsu ķermeņa vajadzībām, dzīvesstilam un ēdiena preferencēm.
-          Nav universālu diētu.
-        </p>
-      </div>
-
-      <!-- Service 3: Metabolic Health -->
-      <div class="service-card">
-        <div class="service-icon">
-          <i class="ph ph-heartbeat"></i>
-        </div>
-        <h3 class="service-title" data-i18n="srv_3_title">Metabolā veselība</h3>
-        <p class="service-desc" data-i18n="srv_3_desc">
-          Palīdzība ar insulīna rezistenci, prediabētu, svara kontroli un enerģijas līmeņa
-          optimizāciju. Zinātniski pamatota pieeja.
-        </p>
-      </div>
-
-      <!-- Service 4: CGM Diagnostics (FEATURED) -->
-      <div class="service-card service-card--featured">
-        <span class="service-tag service-tag--unique">
-          <i class="ph ph-star"></i>
-          <span data-i18n="srv_4_tag">Unikāla iespēja</span>
-        </span>
-        <div class="service-icon">
-          <i class="ph ph-chart-line-up"></i>
-        </div>
-        <h3 class="service-title" data-i18n="srv_4_title">CGM diagnostika</h3>
-        <p class="service-desc" data-i18n="srv_4_desc">
-          14 dienu glikozes monitorēšana ar sensoru. Precīzi dati par to, kā Jūsu organisms reaģē uz
-          katru ēdienu. Pieejams kā papildus iespēja.
-        </p>
-      </div>
-
-      <!-- Service 5: Gut Health -->
-      <div class="service-card">
-        <div class="service-icon">
-          <i class="ph ph-leaf"></i>
-        </div>
-        <h3 class="service-title" data-i18n="srv_5_title">Zarnu veselība</h3>
-        <p class="service-desc" data-i18n="srv_5_desc">
-          Uztura optimizācija, kas veicina zarnu trakta veselību un stiprina imūnsistēmu. Mikrobioma
-          atbalsts ar uzturu.
-        </p>
-      </div>
-
-      <!-- Service 6: Long-term Support -->
-      <div class="service-card">
-        <div class="service-icon">
-          <i class="ph ph-hand-heart"></i>
-        </div>
-        <h3 class="service-title" data-i18n="srv_6_title">Ilgtermiņa atbalsts</h3>
-        <p class="service-desc" data-i18n="srv_6_desc">
-          Regulāras pārbaudes un plāna korekcijas. Pavadīšu Jūs ceļā uz jauniem, ilgtspējīgiem
-          paradumiem.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How I Work Section -->
-<section class="py-20 md:py-24 lg:py-28 bg-white">
-  <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <div class="text-center mb-12 md:mb-16">
-      <span
-        class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
-        data-i18n="process_tag">Process</span
-      >
-      <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight"
-        data-i18n="process_title"
-      >
-        Kā norit sadarbība
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-      <!-- Step 1 -->
-      <div class="text-center">
-        <div
-          class="w-16 h-16 mx-auto mb-6 rounded-full bg-cream border-2 border-secondary/30 flex items-center justify-center"
-        >
-          <span class="font-serif text-2xl font-bold text-secondary">1</span>
-        </div>
-        <h3
-          class="font-serif text-xl md:text-2xl font-bold text-primary mb-3"
-          data-i18n="proc_1_title"
-        >
-          Iepazīšanās
-        </h3>
-        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="proc_1_desc">
-          Ĭss saraksīts telefona zvans, kurā iepazīstos ar Jūsu situāciju un mērķiem. Kopīgi
-          izlemsim, kāds formāts Jums der vislabāk.
-        </p>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="text-center">
-        <div
-          class="w-16 h-16 mx-auto mb-6 rounded-full bg-cream border-2 border-secondary/30 flex items-center justify-center"
-        >
-          <span class="font-serif text-2xl font-bold text-secondary">2</span>
-        </div>
-        <h3
-          class="font-serif text-xl md:text-2xl font-bold text-primary mb-3"
-          data-i18n="proc_2_title"
-        >
-          Konsultācija un plāns
-        </h3>
-        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="proc_2_desc">
-          Padziļināta 60 min konsultācija. Analizējam Jūsu uzturu, veselību un izstrādājam
-          individuālu rīcības plānu.
-        </p>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="text-center">
-        <div
-          class="w-16 h-16 mx-auto mb-6 rounded-full bg-cream border-2 border-secondary/30 flex items-center justify-center"
-        >
-          <span class="font-serif text-2xl font-bold text-secondary">3</span>
-        </div>
-        <h3
-          class="font-serif text-xl md:text-2xl font-bold text-primary mb-3"
-          data-i18n="proc_3_title"
-        >
-          Rezultāts un atbalsts
-        </h3>
-        <p class="text-gray-600 text-sm md:text-base leading-relaxed" data-i18n="proc_3_desc">
-          Saņemat personalizētu uztura plānu un turpinu Jūs atbalstīt ar follow-up konsultācijām,
-          lai nodrošinātu ilgtspējīgus rezultātus.
-        </p>
-      </div>
-    </div>
-
-    <!-- Price hint -->
-    <div class="mt-12 md:mt-16 text-center">
-      <div
-        class="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 bg-cream rounded-2xl px-6 md:px-10 py-5 border border-secondary/15"
-      >
-        <div class="text-center sm:text-left">
-          <span
-            class="text-sm uppercase tracking-wider text-gray-500 block mb-1"
-            data-i18n="price_consult">Konsultācija (60 min)</span
-          >
-          <span class="font-serif text-2xl font-bold text-primary" data-i18n="price_consult_val"
-            >no 65 €</span
-          >
-        </div>
-        <div class="hidden sm:block w-px h-10 bg-gray-200"></div>
-        <div class="text-center sm:text-left">
-          <span
-            class="text-sm uppercase tracking-wider text-gray-500 block mb-1"
-            data-i18n="price_cgm">CGM programma (14 dienas)</span
-          >
-          <span class="font-serif text-2xl font-bold text-primary" data-i18n="price_cgm_val"
-            >no 249 €</span
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- About Section -->
-<section id="about" class="py-20 md:py-24 lg:py-28 bg-cream">
-  <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <!-- Two-column layout with photo -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16 md:mb-20">
-      <!-- Photo Column -->
-      <div class="relative">
-        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50">
-          <img
-            src="/assets/img/aboutme.png"
-            alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
-            class="w-full aspect-[4/3] object-cover"
+      <!-- Image -->
+      <div class="hero__image-column">
+        <picture class="hero__picture">
+          <source
+            type="image/webp"
+            srcset="/assets/img/hero-doctor-cutout-480w.webp 480w, /assets/img/hero-doctor-cutout-768w.webp 768w, /assets/img/hero-doctor-cutout-1024w.webp 1024w, /assets/img/hero-doctor-cutout-1440w.webp 1440w"
+            sizes="(max-width: 768px) 480px, (max-width: 1024px) 768px, (max-width: 1440px) 1024px, 1440px"
           />
+          <img
+            src="/assets/img/hero-doctor-cutout-fallback.png"
+            alt="Uztura speciāliste Sofija Ivanova — individuālas konsultācijas Rīgā un tiešsaistē"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            width="1024"
+            height="787"
+          />
+        </picture>
+        <div class="hero__credential">
+          <span class="hero__credential-title" data-i18n="hero_credential_degree"
+            >Klātienē un tiešsaistē</span
+          >
+          <span class="hero__credential-dot" aria-hidden="true"></span>
+          <span class="hero__credential-location" data-i18n="hero_credential_label">Rīga</span>
         </div>
       </div>
 
-      <!-- Text Column -->
-      <div>
+      <!-- Body -->
+      <div class="hero__body">
+        <p class="hero__subtitle" data-i18n="hero_subtitle">
+          Nepalīdz diētas? Trūkst enerģijas? Vēlaties sakārtot svaru vai cukura līmeni? Palīdzēšu ar
+          individuālu, zinātniski pamatotu pieeju — bez gatavām shēmām.
+        </p>
+        <div class="hero__actions">
+          <a href="#contact" class="hero__btn hero__btn--primary" data-i18n="hero_cta_primary">
+            Rezervēt konsultāciju
+          </a>
+          <a href="#services" class="hero__btn hero__btn--outline" data-i18n="hero_cta_secondary">
+            Pakalpojumi
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Metrics Bar -->
+  <section class="trust-bar">
+    <div class="trust-metrics">
+      <div class="trust-metric">
+        <div class="trust-metric-icon"><i class="ph ph-certificate"></i></div>
+        <div class="trust-metric-text">
+          <span class="trust-metric-value" data-i18n="trust_msc">MSc Uzturzinātnē</span>
+          <span class="trust-metric-label" data-i18n="trust_msc_sub"
+            >Rīgas Stradiņa universitāte</span
+          >
+        </div>
+      </div>
+      <div class="trust-metric">
+        <div class="trust-metric-icon"><i class="ph ph-graduation-cap"></i></div>
+        <div class="trust-metric-text">
+          <span class="trust-metric-value" data-i18n="trust_phd">Doktorante</span>
+          <span class="trust-metric-label" data-i18n="trust_phd_sub">Latvijas Universitāte</span>
+        </div>
+      </div>
+      <div class="trust-metric">
+        <div class="trust-metric-icon"><i class="ph ph-shield-check"></i></div>
+        <div class="trust-metric-text">
+          <span class="trust-metric-value" data-i18n="trust_reg">Sertificēta dietoloģe</span>
+          <span class="trust-metric-label" data-i18n="trust_reg_sub">Nr. 75650061277</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- "For Whom" Section — conversion driver -->
+  <section class="py-16 md:py-20 bg-cream">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-10 md:mb-12">
+        <h2
+          class="font-serif text-3xl md:text-4xl text-primary font-medium tracking-tight mb-4"
+          data-i18n="whom_title"
+        >
+          Konsultācija ir piemērota, ja Jūs
+        </h2>
+      </div>
+
+      <div class="whom-grid">
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_1"
+            >Esat izmēģinājuši vairākas diētas, bet nekas nav palīdzējis ilgtermiņā</span
+          >
+        </div>
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_2">Vēlaties kontrolēt svaru bez striktu ierobežojumu</span>
+        </div>
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_3">Jūtat hronisko nogurumu un enerģijas trūkumu</span>
+        </div>
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_4"
+            >Jums ir prediabēts, insulīna rezistence vai paaugstināts cukurs</span
+          >
+        </div>
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_5">Vēlaties uzlabot gremošanu un zarnu veselību</span>
+        </div>
+        <div class="whom-item">
+          <i class="ph ph-arrow-right whom-icon" aria-hidden="true"></i>
+          <span data-i18n="whom_6"
+            >Meklējat speciālistu, kas balstās uz zinātni, nevis modes tendencēm</span
+          >
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="#contact" class="btn-cta btn-solid" data-i18n="whom_cta">
+          Pieteikties konsultācijai
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-20 md:py-24 lg:py-28 bg-cream">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-12 md:mb-16">
         <span
-          class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
-          data-i18n="about_tag">Par mani</span
+          class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
+          data-i18n="services_tag">Pakalpojumi</span
         >
         <h2
-          class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight mb-6"
+          class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-medium tracking-tight mb-4"
+          data-i18n="services_title"
         >
-          Sofija Ivanova
+          Kā es varu Jums palīdzēt
         </h2>
-        <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
-          Esmu reģistrēta uztura speciāliste un doktorante Latvijas Universitātē. Aktīvi piedalos
-          pētniecības projektos un palīdzu cilvēkiem sakārtot uzturu, pamatojoties uz zinātni.
+        <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto" data-i18n="services_desc">
+          Katrs cilvēks ir unikāls — tāpēc mans darbs sākas ar Jūsu stāstu, nevis gatavu shēmu.
         </p>
-        <p class="text-base text-gray-600 leading-relaxed" data-i18n="about_text">
-          Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija
-          balstās uz pierādījumiem — ne modes diētām vai vispārīgiem padomiem. Darbā izmantoju arī
-          modernas tehnoloģijas, piemēram, CGM glikozes sensorus, kas ļauj precīzi izprast organisma
-          reakcijas.
+      </div>
+
+      <!-- Services Grid -->
+      <div class="services-grid">
+        <!-- Service 1: Individual Consultation -->
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="ph ph-chats-circle"></i>
+          </div>
+          <h3 class="service-title" data-i18n="srv_1_title">Individuāla konsultācija</h3>
+          <p class="service-desc" data-i18n="srv_1_desc">
+            Sapratīsiet, kas tieši Jūsu uzturā nestrādā un ko mainīt, lai jau pirmajās nedēļās juttu
+            atšķirību. Klātienē vai tiešsaistē, 60 min.
+          </p>
+        </div>
+
+        <!-- Service 2: Personalized Meal Plan -->
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="ph ph-notebook"></i>
+          </div>
+          <h3 class="service-title" data-i18n="srv_2_title">Personalizēts uztura plāns</h3>
+          <p class="service-desc" data-i18n="srv_2_desc">
+            Saņemsiet konkrētu ēdienkarti, kas garšo, ir reāli iekļaujama Jūsu ikdienā un ņem vērā
+            veselības mērķus. Nevis diēta — bet jauns ēšanas veids.
+          </p>
+        </div>
+
+        <!-- Service 3: Metabolic Health -->
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="ph ph-heartbeat"></i>
+          </div>
+          <h3 class="service-title" data-i18n="srv_3_title">Metabolā veselība</h3>
+          <p class="service-desc" data-i18n="srv_3_desc">
+            Stabilizēsiet cukura līmeni, uzlabosiet enerģiju un kontrolēsiet svaru bez galēju
+            ierobežojumu. Īpaši aktuāli ar prediabētu vai insulīna rezistenci.
+          </p>
+        </div>
+
+        <!-- Service 4: Gut Health -->
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="ph ph-leaf"></i>
+          </div>
+          <h3 class="service-title" data-i18n="srv_5_title">Zarnu veselība</h3>
+          <p class="service-desc" data-i18n="srv_5_desc">
+            Atvadīsieties no vēdera uzpūšanās, diskomforta un nestabilas gremošanas. Uztura
+            stratēģija, kas atjauno līdzsvaru zarnu traktā.
+          </p>
+        </div>
+
+        <!-- Service 6: Long-term Support -->
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="ph ph-hand-heart"></i>
+          </div>
+          <h3 class="service-title" data-i18n="srv_6_title">Ilgtermiņa atbalsts</h3>
+          <p class="service-desc" data-i18n="srv_6_desc">
+            Rezultāts saglabājas, jo neesat viena. Follow-up vizītes, plāna korekcijas un atbalsts,
+            kamēr jaunie paradumi kļūst par normu.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What You'll Get Section (replaces generic Process) -->
+  <section class="py-20 md:py-24 lg:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-12 md:mb-16">
+        <span
+          class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
+          data-i18n="outcomes_tag">Rezultāts</span
+        >
+        <h2
+          class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-medium tracking-tight"
+          data-i18n="outcomes_title"
+        >
+          Ko Jūs iegūsiet
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <!-- Outcome 1 -->
+        <div class="outcome-card">
+          <div class="outcome-icon">
+            <i class="ph ph-clipboard-text"></i>
+          </div>
+          <h3 class="outcome-title" data-i18n="out_1_title">Individuāls uztura plāns</h3>
+          <p class="outcome-desc" data-i18n="out_1_desc">
+            Nevis gatava shēma, bet personalizēts plāns, kas ņem vērā Jūsu veselību, garšas
+            preferences un dzīvesveidu.
+          </p>
+        </div>
+
+        <!-- Outcome 2 -->
+        <div class="outcome-card">
+          <div class="outcome-icon">
+            <i class="ph ph-lightning"></i>
+          </div>
+          <h3 class="outcome-title" data-i18n="out_2_title">Vairāk enerģijas un skaidrība</h3>
+          <p class="outcome-desc" data-i18n="out_2_desc">
+            Pirmās izmaiņas jūtamas jau 2–3 nedēļās: labāks miegs, stabilāka enerģija dienā,
+            skaidrāka domāšana.
+          </p>
+        </div>
+
+        <!-- Outcome 3 -->
+        <div class="outcome-card">
+          <div class="outcome-icon">
+            <i class="ph ph-trend-up"></i>
+          </div>
+          <h3 class="outcome-title" data-i18n="out_3_title">Ilgtspējīgi rezultāti</h3>
+          <p class="outcome-desc" data-i18n="out_3_desc">
+            Bez jojo efekta. Iemācīsieties ēst pareizi sev — lai rezultāti saglabājas gadiem, ne
+            tikai nedēļām.
+          </p>
+        </div>
+      </div>
+
+      <!-- Price hint -->
+      <div class="mt-12 md:mt-16 text-center">
+        <div
+          class="inline-flex items-center gap-4 bg-cream rounded-2xl px-6 md:px-10 py-5 border border-secondary/15"
+        >
+          <div class="text-center">
+            <span
+              class="text-sm uppercase tracking-wider text-gray-500 block mb-1"
+              data-i18n="price_consult">Konsultācija (60 min)</span
+            >
+            <span class="font-serif text-2xl font-bold text-primary" data-i18n="price_consult_val"
+              >no 65 €</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 md:py-24 lg:py-28 bg-cream">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <!-- Two-column layout with photo -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16 md:mb-20">
+        <!-- Photo Column -->
+        <div class="relative">
+          <div class="relative rounded-2xl overflow-hidden shadow-lg border border-gray-100/50">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="/assets/img/aboutme-480w.webp 480w, /assets/img/aboutme-768w.webp 768w, /assets/img/aboutme-1024w.webp 1024w"
+                sizes="(max-width: 768px) 480px, (max-width: 1024px) 768px, 1024px"
+              />
+              <img
+                src="/assets/img/aboutme-fallback.png"
+                alt="Uztura speciāliste Sofija Ivanova — personalizēta uztura konsultācija Rīgā"
+                class="w-full aspect-4/3 object-cover"
+                loading="lazy"
+                decoding="async"
+                width="1024"
+                height="768"
+              />
+            </picture>
+          </div>
+        </div>
+
+        <!-- Text Column -->
+        <div>
+          <span
+            class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
+            data-i18n="about_tag">Par mani</span
+          >
+          <h2
+            class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-medium tracking-tight mb-6"
+          >
+            Sofija Ivanova
+          </h2>
+          <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-6" data-i18n="about_lead">
+            Esmu sertificēta dietoloģe un doktorante Latvijas Universitātes Klīniskās un
+            personalizētās medicīnas katedrā. Pētījumu fokuss — uztura loma diabēta ārstēšanā un
+            profilaksē.
+          </p>
+          <p class="text-base text-gray-600 leading-relaxed" data-i18n="about_text">
+            Mans mērķis — apvienot zinātniskos pierādījumus ar praktiskām stratēģijām, palīdzot
+            cilvēkiem veikt ilgtspējīgas dzīvesveida izmaiņas, samazināt hronisko slimību risku un
+            uzlabot ilgtermiņa veselības rezultātus.
+          </p>
+
+          <!-- Certification Badges -->
+          <div class="cert-badges">
+            <div class="cert-badge">
+              <div class="cert-badge-icon">
+                <i class="ph ph-graduation-cap"></i>
+              </div>
+              <div class="cert-badge-text">
+                <span class="cert-badge-org">Rīgas Stradiņa universitāte</span>
+                <span class="cert-badge-role">MSc Uzturzinātne</span>
+              </div>
+            </div>
+            <div class="cert-badge">
+              <div class="cert-badge-icon">
+                <i class="ph ph-book-open-text"></i>
+              </div>
+              <div class="cert-badge-text">
+                <span class="cert-badge-org">Latvijas Universitāte</span>
+                <span class="cert-badge-role">Doktorantūra</span>
+              </div>
+            </div>
+            <div class="cert-badge">
+              <div class="cert-badge-icon">
+                <i class="ph ph-shield-check"></i>
+              </div>
+              <div class="cert-badge-text">
+                <span class="cert-badge-org">Ārstniecības personu reģistrs</span>
+                <span class="cert-badge-role">Nr. 75650061277</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-20 md:py-24 lg:py-28 bg-white">
+    <div class="max-w-3xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-12 md:mb-16">
+        <span
+          class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
+          data-i18n="faq_tag">Biežāk uzdotie jautājumi</span
+        >
+        <h2
+          class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-medium tracking-tight"
+          data-i18n="faq_title"
+        >
+          Kas jāzina pirms pieteikšanās
+        </h2>
+      </div>
+
+      <div class="faq-list" id="faqList">
+        <!-- FAQ 1 -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q1">Kam ir domātas konsultācijas?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a1">
+              Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai
+              mērķa. Strādāju ar svara kontroli, enerģijas problēmām, metabolo veselību, prediabētu,
+              zarnu veselību un uztura optimizāciju.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 2 -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q2">Kāda ir atšķirība no parasta dietologa?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a2">
+              Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas —
+              katrs ieteikums ir pielāgots tieši Jūsu situācijai.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 3 -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q3">Vai konsultācijas ir pieejamas tiešsaistē?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a3">
+              Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat
+              efektīvas un pieejamas klientiem visā Latvijā un ārpus tās.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 4 -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q4">Cik ātri var sagaidīt rezultātus?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a4">
+              Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas jau 2–3 nedēļu
+              laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos. Regulāras follow-up
+              konsultācijas nodrošina, ka progress turpinās ilgtermiņā.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 5 — Pricing (most asked question) -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q5">Cik maksā konsultācija?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a5">
+              Individuālā konsultācija (60 min) — no 65 €. Cena ietver pilnu uztura analīzi,
+              personalizētu plānu un rekomendācijas. Atkārtota vizīte un ilgtermiņa paketes
+              pieejamas par izdevīgākām cenām.
+            </p>
+          </div>
+        </details>
+
+        <!-- FAQ 6 — Reduce hesitation -->
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span data-i18n="faq_q6">Kā sagatavoties pirmajai konsultācijai?</span>
+            <svg
+              class="faq-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p class="faq-answer-inner" data-i18n="faq_a6">
+              Nekāda īpaša sagatavošanās nav nepieciešama. Ja Jums ir nesenas analīzes (asins
+              bioķīmija, cukurs, lipīdi) — paņemiet līdzi. Ja nav — sāksim ar to, kas ir pieejams,
+              un visu pārējo izplānosim kopā.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion Script (exclusive open — close others when one opens) -->
+  <script is:inline>
+    (function () {
+      var list = document.getElementById('faqList');
+      if (!list) return;
+      list.addEventListener(
+        'toggle',
+        function (e) {
+          if (!e.target.open) return;
+          var items = list.querySelectorAll('details.faq-item');
+          for (var i = 0; i < items.length; i++) {
+            if (items[i] !== e.target) items[i].removeAttribute('open');
+          }
+        },
+        true
+      );
+    })();
+  </script>
+
+  <!-- Contact Section -->
+  <section id="contact" class="booking-section">
+    <div class="booking-shell">
+      <!-- Left column: minimal context, no clutter -->
+      <div class="booking-intro">
+        <span class="booking-eyebrow" data-i18n="booking_eyebrow">Individuāla konsultācija</span>
+        <h2 class="booking-title" data-i18n="booking_title">Rezervējiet konsultāciju</h2>
+        <p class="booking-subtitle" data-i18n="booking_subtitle">
+          Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.
+        </p>
+
+        <!-- Compact trust line — replaces 3 big trust cards -->
+        <div class="booking-trust-compact">
+          <span class="booking-trust-item">
+            <i class="ph ph-shield-check"></i>
+            <span data-i18n="booking_trust_compact_1">Konfidenciāli</span>
+          </span>
+          <span class="booking-trust-divider"></span>
+          <span class="booking-trust-item">
+            <i class="ph ph-video-camera"></i>
+            <span data-i18n="booking_trust_compact_2">Klātienē vai online</span>
+          </span>
+          <span class="booking-trust-divider"></span>
+          <span class="booking-trust-item">
+            <i class="ph ph-clock"></i>
+            <span data-i18n="booking_trust_compact_3">Atbilde 24h</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Calendar card — hero of the section -->
+      <div class="booking-card">
+        <div id="bookingCalendar" class="booking-calendar-wrapper"></div>
+        <p class="booking-note" data-i18n="booking_note">
+          Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.
         </p>
       </div>
     </div>
 
-    <!-- Science & Conference Gallery -->
-    <div>
-      <div class="text-center mb-10">
-        <h3
-          class="font-serif text-2xl md:text-3xl text-primary font-bold mb-3"
-          data-i18n="science_title"
-        >
-          Zinātniskā darbība
-        </h3>
-        <p class="text-gray-700 max-w-2xl mx-auto" data-i18n="science_subtitle">
-          Aktīvi piedalos starptautiskās konferencēs un zinātnes popularizēšanas pasākumos
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Featured Card -->
-        <div
-          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
-        >
-          <div class="aspect-[4/3] overflow-hidden">
-            <img
-              src="/assets/img/zinatnieku_nakts.png"
-              alt="Sofija Ivanova — uztura zinātnes popularizēšana Zinātnieku naktī Latvijā"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <div class="p-5">
-            <div
-              class="inline-flex items-center gap-1.5 text-sm font-medium text-secondary bg-secondary/10 rounded-full px-3 py-1 mb-3"
-            >
-              <i class="ph ph-lightbulb"></i>
-              <span data-i18n="gallery_2_tag">Izglītība</span>
-            </div>
-            <h4
-              class="font-serif text-lg text-primary font-semibold mb-2"
-              data-i18n="gallery_2_title"
-            >
-              Zinātnieku nakts
-            </h4>
-            <p class="text-sm text-gray-600" data-i18n="gallery_2_desc">
-              Ikgadējais zinātnes popularizēšanas pasākums Latvijā
-            </p>
-          </div>
-        </div>
-
-        <!-- EASD Card -->
-        <div
-          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
-        >
-          <div class="aspect-[4/3] overflow-hidden relative">
-            <img
-              src="/assets/img/conference_EASD2025_Vienna.jpg"
-              alt="Sofija Ivanova EASD 2025 Eiropas diabēta pētījumu kongresā Vīnē"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
-            <div
-              class="absolute top-3 right-3 bg-accent text-white text-sm font-bold px-2.5 py-1 rounded-full"
-            >
-              2025
-            </div>
-          </div>
-          <div class="p-5">
-            <div
-              class="inline-flex items-center gap-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full px-3 py-1 mb-3"
-            >
-              <i class="ph ph-globe"></i>
-              <span data-i18n="gallery_1_tag">Starptautisks</span>
-            </div>
-            <h4
-              class="font-serif text-lg text-primary font-semibold mb-2"
-              data-i18n="gallery_1_title"
-            >
-              EASD 2025, Vīne
-            </h4>
-            <p class="text-sm text-gray-600" data-i18n="gallery_1_desc">
-              Eiropas Diabēta pētījumu asociācijas kongress
-            </p>
-          </div>
-        </div>
-
-        <!-- Hospital Card -->
-        <div
-          class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100/70"
-        >
-          <div class="aspect-[4/3] overflow-hidden">
-            <img
-              src="/assets/img/health_literacy_day_stradins_hospital_hq.jpg"
-              alt="Veselībpratības diena Paula Stradiņa klīniskajā universitātes slimnīcā — uztura izglītība"
-              loading="lazy"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <div class="p-5">
-            <div
-              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary bg-primary/10 rounded-full px-3 py-1 mb-3"
-            >
-              <i class="ph ph-hospital"></i>
-              <span data-i18n="gallery_3_tag">Klīniskais</span>
-            </div>
-            <h4
-              class="font-serif text-lg text-primary font-semibold mb-2"
-              data-i18n="gallery_3_title"
-            >
-              Veselībpratības diena
-            </h4>
-            <p class="text-sm text-gray-600" data-i18n="gallery_3_desc">
-              Paula Stradiņa Klīniskā universitātes slimnīca
-            </p>
-          </div>
-        </div>
-      </div>
+    <!-- Flexibility note -->
+    <div class="booking-urgency">
+      <i class="ph ph-info"></i>
+      <span data-i18n="booking_flexibility"
+        >Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un
+        tiešsaistē.</span
+      >
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FAQ Section -->
-<section id="faq" class="py-20 md:py-24 lg:py-28 bg-white">
-  <div class="max-w-3xl mx-auto px-4 md:px-8">
-    <div class="text-center mb-12 md:mb-16">
-      <span
-        class="inline-block text-sm uppercase tracking-widest text-secondary font-semibold mb-3"
-        data-i18n="faq_tag">Biežāk uzdotie jautājumi</span
-      >
-      <h2
-        class="font-serif text-3xl md:text-4xl lg:text-5xl text-primary font-semibold tracking-tight"
-        data-i18n="faq_title"
-      >
-        Kas jāzina pirms pieteikšanās
+  <!-- Pre-Footer CTA -->
+  <section class="final-cta animate-on-scroll fade-up" aria-labelledby="final-cta-title">
+    <div class="final-cta__inner">
+      <h2 id="final-cta-title" class="final-cta__title" data-i18n="final_cta_title">
+        Gatavi sākt ceļu uz labāku veselību?
       </h2>
-    </div>
-
-    <div class="faq-list" id="faqList">
-      <!-- FAQ 1 -->
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span data-i18n="faq_q1">Kam ir domātas konsultācijas?</span>
-          <svg
-            class="faq-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M12 5v14M5 12h14"></path>
-          </svg>
-        </button>
-        <div class="faq-answer">
-          <p class="faq-answer-inner" data-i18n="faq_a1">
-            Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā — neatkarīgi no vecuma vai
-            mērķa. Strādāju ar svara kontroli, enerģijas problēmām, metabolo veselību, prediabētu,
-            zarnu veselību un uztura optimizāciju.
-          </p>
-        </div>
-      </div>
-
-      <!-- FAQ 2 -->
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span data-i18n="faq_q2">Kāda ir atšķirība no parasta dietologa?</span>
-          <svg
-            class="faq-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M12 5v14M5 12h14"></path>
-          </svg>
-        </button>
-        <div class="faq-answer">
-          <p class="faq-answer-inner" data-i18n="faq_a2">
-            Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas —
-            katrs ieteikums ir pielāgots tieši Jūsu situācijai. Papildus piedāvāju CGM diagnostiku,
-            kas ir unikāla iespēja Latvijā.
-          </p>
-        </div>
-      </div>
-
-      <!-- FAQ 3 -->
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span data-i18n="faq_q3">Vai konsultācijas ir pieejamas tiešsaistē?</span>
-          <svg
-            class="faq-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M12 5v14M5 12h14"></path>
-          </svg>
-        </button>
-        <div class="faq-answer">
-          <p class="faq-answer-inner" data-i18n="faq_a3">
-            Jā, strādāju gan klātienē Rīgā, gan tiešsaistē. Video konsultācijas ir tikpat efektīvas
-            un pieejamas klientiem visā Latvijā un ārpus tās.
-          </p>
-        </div>
-      </div>
-
-      <!-- FAQ 4 -->
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span data-i18n="faq_q4">Cik ātri var sagaidīt rezultātus?</span>
-          <svg
-            class="faq-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M12 5v14M5 12h14"></path>
-          </svg>
-        </button>
-        <div class="faq-answer">
-          <p class="faq-answer-inner" data-i18n="faq_a4">
-            Pirmās pozitīvās izmaiņas (enerģija, miegs, pašsajūta) parasti jūtamas jau 2–3 nedēļu
-            laikā. Ilgtspējīgi svara un veselības rezultāti — 2–4 mēnešos. Regulāras follow-up
-            konsultācijas nodrošina, ka progress turpinās ilgtermiņā.
-          </p>
-        </div>
-      </div>
-
-      <!-- FAQ 5 -->
-      <div class="faq-item">
-        <button class="faq-question" type="button">
-          <span data-i18n="faq_q5">Kas ir CGM sensors un kam tas noderēs?</span>
-          <svg
-            class="faq-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M12 5v14M5 12h14"></path>
-          </svg>
-        </button>
-        <div class="faq-answer">
-          <p class="faq-answer-inner" data-i18n="faq_a5">
-            CGM (nepārtrauktās glikozes monitorēšanas) sensors ir neliela ierīce uz ādas, kas 14
-            dienas mēra cukura līmeni reāllaikā. Tas parāda, kā tieši Jūsu organisms reaģē uz katru
-            ēdienu, stresu un miegu. Latvijā šo pakalpojumu uztura konsultāciju ietvaros piedāvāju
-            tikai es — tā ir unikāla iespēja saņemt precīzus, personalizētus datus.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ Toggle Script -->
-<script is:inline>
-  (function () {
-    var list = document.getElementById('faqList');
-    if (!list) return;
-    list.addEventListener('click', function (e) {
-      var btn = e.target.closest('.faq-question');
-      if (!btn) return;
-      var item = btn.closest('.faq-item');
-      var wasOpen = item.classList.contains('open');
-      // Close all
-      var items = list.querySelectorAll('.faq-item');
-      for (var i = 0; i < items.length; i++) items[i].classList.remove('open');
-      // Toggle clicked
-      if (!wasOpen) item.classList.add('open');
-    });
-  })();
-</script>
-
-<!-- Contact Section -->
-<section id="contact" class="booking-section">
-  <div class="booking-shell">
-    <!-- Left column: minimal context, no clutter -->
-    <div class="booking-intro">
-      <span class="booking-eyebrow" data-i18n="booking_eyebrow">Individuāla konsultācija</span>
-      <h2 class="booking-title" data-i18n="booking_title">Rezervējiet konsultāciju</h2>
-      <p class="booking-subtitle" data-i18n="booking_subtitle">
-        Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.
+      <p class="final-cta__text" data-i18n="final_cta_text">
+        Pirmais solis ir vienkāršs — izvēlieties laiku, un es parūpēšos par pārējo.
       </p>
-
-      <!-- Compact trust line — replaces 3 big trust cards -->
-      <div class="booking-trust-compact">
-        <span class="booking-trust-item">
-          <i class="ph ph-shield-check"></i>
-          <span data-i18n="booking_trust_compact_1">Konfidenciāli</span>
-        </span>
-        <span class="booking-trust-divider"></span>
-        <span class="booking-trust-item">
-          <i class="ph ph-video-camera"></i>
-          <span data-i18n="booking_trust_compact_2">Klātienē vai online</span>
-        </span>
-        <span class="booking-trust-divider"></span>
-        <span class="booking-trust-item">
-          <i class="ph ph-clock"></i>
-          <span data-i18n="booking_trust_compact_3">Atbilde 24h</span>
-        </span>
-      </div>
+      <a href="#contact" class="final-cta__btn" data-i18n="final_cta_btn">
+        Rezervēt konsultāciju <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      </a>
     </div>
+  </section>
 
-    <!-- Calendar card — hero of the section -->
-    <div class="booking-card">
-      <div id="bookingCalendar" class="booking-calendar-wrapper"></div>
-      <p class="booking-note" data-i18n="booking_note">
-        Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.
-      </p>
-    </div>
-  </div>
-
-  <!-- Flexibility note -->
-  <div class="booking-urgency">
-    <i class="ph ph-info"></i>
-    <span data-i18n="booking_flexibility"
-      >Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un
-      tiešsaistē.</span
-    >
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-primary text-white py-12">
-  <div class="max-w-6xl mx-auto px-4 md:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <!-- Brand -->
-      <div class="text-center md:text-left">
-        <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
-        <p class="text-white/70 text-sm" data-i18n="footer_subtitle">Rīga · Reģ. Nr. 75650061277</p>
-      </div>
-
-      <!-- Contact Links -->
-      <div class="text-center">
-        <h4
-          class="text-sm uppercase tracking-wider text-white/50 mb-3"
-          data-i18n="footer_contact_title"
-        >
-          Kontakti
-        </h4>
-        <div class="flex flex-col items-center gap-2 text-sm">
-          <a
-            href="mailto:info@sofijaivanova.lv"
-            class="text-white/80 hover:text-white transition-colors"
-          >
-            <i class="ph ph-envelope-simple" aria-hidden="true"></i> info@sofijaivanova.lv
-          </a>
-          <a
-            href="https://wa.me/37120000000"
-            class="text-white/80 hover:text-white transition-colors"
-            target="_blank"
-            rel="noopener"
-          >
-            <i class="ph ph-whatsapp-logo" aria-hidden="true"></i> WhatsApp
-          </a>
-        </div>
-      </div>
-
-      <!-- Social & Links -->
-      <div class="text-center md:text-right">
-        <h4
-          class="text-sm uppercase tracking-wider text-white/50 mb-3"
-          data-i18n="footer_follow_title"
-        >
-          Sekojiet
-        </h4>
-        <div class="flex justify-center md:justify-end gap-3">
-          <a
-            href="https://www.instagram.com/sofija.nutrition"
-            target="_blank"
-            rel="noopener"
-            class="footer-social-link"
-            aria-label="Instagram"
-          >
-            <i class="ph ph-instagram-logo"></i>
-          </a>
-          <a
-            href="https://www.facebook.com/sofijaivanova.nutrition"
-            target="_blank"
-            rel="noopener"
-            class="footer-social-link"
-            aria-label="Facebook"
-          >
-            <i class="ph ph-facebook-logo"></i>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/sofijaivanova"
-            target="_blank"
-            rel="noopener"
-            class="footer-social-link"
-            aria-label="LinkedIn"
-          >
-            <i class="ph ph-linkedin-logo"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
+  <!-- Footer -->
+  <footer class="bg-primary text-white py-12 relative">
     <div
-      class="border-t border-white/20 pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
+      class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary to-transparent opacity-60"
+      aria-hidden="true"
     >
-      <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
-      <a
-        href="/privacy-policy"
-        class="text-white/50 text-sm hover:text-white/80 transition-colors"
-        data-i18n="footer_privacy">Privātuma politika</a
-      >
     </div>
-  </div>
-</footer>
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <!-- Brand -->
+        <div class="text-center md:text-left">
+          <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
+          <p class="text-white/70 text-sm" data-i18n="footer_subtitle">
+            Rīga · Reģ. Nr. 75650061277
+          </p>
+        </div>
+
+        <!-- Contact Links -->
+        <div class="text-center">
+          <h4
+            class="text-sm uppercase tracking-wider text-white/50 mb-3"
+            data-i18n="footer_contact_title"
+          >
+            Kontakti
+          </h4>
+          <div class="flex flex-col items-center gap-2 text-sm">
+            <a
+              href="mailto:info@sofijaivanova.lv"
+              class="text-white/80 hover:text-white transition-colors"
+            >
+              <i class="ph ph-envelope-simple" aria-hidden="true"></i> info@sofijaivanova.lv
+            </a>
+            <a
+              href="https://wa.me/37120000000"
+              class="text-white/80 hover:text-white transition-colors"
+              target="_blank"
+              rel="noopener"
+            >
+              <i class="ph ph-whatsapp-logo" aria-hidden="true"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- Social & Links -->
+        <div class="text-center md:text-right">
+          <h4
+            class="text-sm uppercase tracking-wider text-white/50 mb-3"
+            data-i18n="footer_follow_title"
+          >
+            Sekojiet
+          </h4>
+          <div class="flex justify-center md:justify-end gap-3">
+            <a
+              href="https://www.instagram.com/sofija.nutrition"
+              target="_blank"
+              rel="noopener"
+              class="footer-social-link"
+              aria-label="Instagram"
+            >
+              <i class="ph ph-instagram-logo"></i>
+            </a>
+            <a
+              href="https://www.facebook.com/sofijaivanova.nutrition"
+              target="_blank"
+              rel="noopener"
+              class="footer-social-link"
+              aria-label="Facebook"
+            >
+              <i class="ph ph-facebook-logo"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/sofijaivanova"
+              target="_blank"
+              rel="noopener"
+              class="footer-social-link"
+              aria-label="LinkedIn"
+            >
+              <i class="ph ph-linkedin-logo"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="border-t border-white/20 pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
+      >
+        <p class="text-white/60 text-sm">© 2026 Sofija Ivanova</p>
+        <a
+          href="/privacy-policy"
+          class="text-white/50 text-sm hover:text-white/80 transition-colors"
+          data-i18n="footer_privacy">Privātuma politika</a
+        >
+      </div>
+    </div>
+  </footer>
+</main>
 
 <!-- Cookie Settings Button (fixed bottom-right) - Minimal Premium Design -->
 <button

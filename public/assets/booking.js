@@ -222,13 +222,20 @@ class BookingCalendar {
 
   async loadAvailability() {
     try {
+      let response;
+
       // Try external Azure Functions API first
-      let response = await fetch(`${API_BASE_URL}/api/availability`, {
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      });
+      try {
+        response = await fetch(`${API_BASE_URL}/api/availability`, {
+          signal: AbortSignal.timeout(10000), // 10 second timeout
+        });
+      } catch {
+        // Network error (API not running) — fall through to fallback
+        response = null;
+      }
 
       // Fallback to static JSON for local development
-      if (!response.ok) {
+      if (!response || !response.ok) {
         console.log('API not available, falling back to static JSON');
         response = await fetch('/data/availability.json');
       }
@@ -357,68 +364,70 @@ class BookingCalendar {
                                 <p class="no-date-selected">${this.t('selectDate')}</p>
                             </div>
                         </div>
-
-                        <div class="booking-form-section" style="display: none;">
-                            <form class="booking-form" id="bookingForm" novalidate>
-                                <div class="selected-datetime"></div>
-
-                                <div class="form-group">
-                                    <label>${this.t('serviceLabel')}</label>
-                                    <select name="serviceType" id="serviceTypeSelect">
-                                        ${this.renderServiceOptions()}
-                                    </select>
-                                </div>
-
-                                <div class="form-group" id="formatGroup">
-                                    <label>${this.t('formatLabel')}</label>
-                                    <div class="format-options">
-                                        <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="online" id="formatOnline">
-                                            <span class="format-label">
-                                                <i class="ph ph-video-camera"></i>
-                                                ${this.t('formatOnline')}
-                                            </span>
-                                        </label>
-                                        <label class="format-option">
-                                            <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson">
-                                            <span class="format-label">
-                                                <i class="ph ph-map-pin"></i>
-                                                ${this.t('formatInPerson')}
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('nameLabel')}</label>
-                                    <input type="text" name="name" placeholder="Anna">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('emailLabel')}</label>
-                                    <input type="email" name="email" placeholder="anna@email.com">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('phoneLabel')}</label>
-                                    <div class="phone-input-wrapper">
-                                        <span class="phone-prefix">+371</span>
-                                        <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>${this.t('messageLabel')}</label>
-                                    <textarea name="message" rows="2" placeholder="..."></textarea>
-                                </div>
-
-                                <button type="submit" class="booking-submit-btn">
-                                    <i class="ph ph-calendar-check"></i>
-                                    ${this.t('submitBtn')}
-                                </button>
-                            </form>
-                        </div>
                     </div>
+                </div>
+
+                <div class="booking-form-section" style="display: none;">
+                    <form class="booking-form" id="bookingForm" novalidate>
+                        <div class="selected-datetime"></div>
+
+                        <div class="booking-form-grid">
+                            <div class="form-group">
+                                <label>${this.t('serviceLabel')}</label>
+                                <select name="serviceType" id="serviceTypeSelect">
+                                    ${this.renderServiceOptions()}
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="formatGroup">
+                                <label>${this.t('formatLabel')}</label>
+                                <div class="format-options">
+                                    <label class="format-option">
+                                        <input type="radio" name="consultationFormat" value="online" id="formatOnline">
+                                        <span class="format-label">
+                                            <i class="ph ph-video-camera"></i>
+                                            ${this.t('formatOnline')}
+                                        </span>
+                                    </label>
+                                    <label class="format-option">
+                                        <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson">
+                                        <span class="format-label">
+                                            <i class="ph ph-map-pin"></i>
+                                            ${this.t('formatInPerson')}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('nameLabel')}</label>
+                                <input type="text" name="name" placeholder="Anna">
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('emailLabel')}</label>
+                                <input type="email" name="email" placeholder="anna@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('phoneLabel')}</label>
+                                <div class="phone-input-wrapper">
+                                    <span class="phone-prefix">+371</span>
+                                    <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>${this.t('messageLabel')}</label>
+                                <textarea name="message" rows="2" placeholder="..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="booking-submit-btn">
+                            <i class="ph ph-calendar-check"></i>
+                            ${this.t('submitBtn')}
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -590,7 +599,9 @@ class BookingCalendar {
 
     if (slots.length === 0) {
       timeSlotsEl.innerHTML = `<p class="no-slots">${this.t('noSlots')}</p>`;
-      if (formSection) formSection.style.display = 'none';
+      if (formSection) {
+        formSection.style.display = 'none';
+      }
       return;
     }
 
@@ -624,7 +635,9 @@ class BookingCalendar {
 
     // Hide form if time not selected
     const formSection = this.container.querySelector('.booking-form-section');
-    if (formSection) formSection.style.display = 'none';
+    if (formSection) {
+      formSection.style.display = 'none';
+    }
   }
 
   selectTime(time) {
@@ -926,6 +939,8 @@ class BookingCalendar {
     // Create error message element
     const errorEl = document.createElement('div');
     errorEl.className = 'field-error-message';
+    errorEl.setAttribute('role', 'alert');
+    errorEl.setAttribute('aria-live', 'polite');
     errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${message}`;
 
     // Insert after input or its parent (for select wrappers)
@@ -1006,6 +1021,8 @@ class BookingCalendar {
         // Add error
         const errorEl = document.createElement('div');
         errorEl.className = 'field-error-message';
+        errorEl.setAttribute('role', 'alert');
+        errorEl.setAttribute('aria-live', 'polite');
         errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.formatRequired}`;
         formatGroup.appendChild(errorEl);
       }
@@ -1015,6 +1032,38 @@ class BookingCalendar {
     return isValid;
   }
   // ========== End Validation Methods ==========
+
+  /** Build booking details summary HTML for the success modal */
+  buildBookingDetailsHtml(booking) {
+    const date = booking.date ? this.formatDateDisplay(booking.date) : '';
+    const time = booking.time || '';
+    const format =
+      booking.consultationFormat === 'in-person'
+        ? this.t('formatInPerson')
+        : this.t('formatOnline');
+
+    const dateLabel =
+      this.currentLang === 'ru'
+        ? 'Дата и время'
+        : this.currentLang === 'en'
+          ? 'Date & time'
+          : 'Datums un laiks';
+    const formatLbl =
+      this.currentLang === 'ru' ? 'Формат' : this.currentLang === 'en' ? 'Format' : 'Formāts';
+
+    return `
+      <div class="booking-details-summary">
+        <div class="detail-row">
+          <i class="ph ph-calendar"></i>
+          <span><strong>${dateLabel}:</strong> ${date}, ${time}</span>
+        </div>
+        <div class="detail-row">
+          <i class="ph ph-monitor"></i>
+          <span><strong>${formatLbl}:</strong> ${format}</span>
+        </div>
+      </div>
+    `;
+  }
 
   showSuccessWithInvoice(booking) {
     // Add to local booked array
@@ -1038,11 +1087,14 @@ class BookingCalendar {
             ? `<p class="invoice-info">Invoice <strong>${booking.id}</strong> has been sent to your email.<br>Amount: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
             : `<p class="invoice-info">Rēķins <strong>${booking.id}</strong> ir nosūtīts uz Jūsu e-pastu.<br>Summa: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`;
 
+      const detailsHtml = this.buildBookingDetailsHtml(booking);
+
       successContent.innerHTML = `
                 <div class="success-icon">
                     <i class="ph ph-check-circle"></i>
                 </div>
                 <h3>${this.t('successTitle')}</h3>
+                ${detailsHtml}
                 ${invoiceInfo}
                 <p>${this.t('successText')}</p>
                 <button class="close-success-btn">${this.t('closeBtn')}</button>
@@ -1095,20 +1147,26 @@ class BookingCalendar {
       });
     }
 
-    // Show success modal with proper close handler
+    // Show success modal with booking details
     const modal = this.container.querySelector('.booking-success-modal');
+    const successContent = modal?.querySelector('.success-content');
+    if (successContent) {
+      const detailsHtml = this.buildBookingDetailsHtml(bookingData);
+      successContent.innerHTML = `
+        <div class="success-icon"><i class="ph ph-check-circle"></i></div>
+        <h3>${this.t('successTitle')}</h3>
+        ${detailsHtml}
+        <p>${this.t('successText')}</p>
+        <button class="close-success-btn">${this.t('closeBtn')}</button>
+      `;
+      successContent.querySelector('.close-success-btn').onclick = () => {
+        modal.style.display = 'none';
+        this.render();
+        this.attachEventListeners();
+      };
+    }
     if (modal) {
       modal.style.display = 'flex';
-
-      // Re-attach close button event
-      const closeBtn = modal.querySelector('.close-success-btn');
-      if (closeBtn) {
-        closeBtn.onclick = () => {
-          modal.style.display = 'none';
-          this.render();
-          this.attachEventListeners();
-        };
-      }
     }
 
     // Reset form
