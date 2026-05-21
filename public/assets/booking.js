@@ -222,13 +222,20 @@ class BookingCalendar {
 
   async loadAvailability() {
     try {
+      let response;
+
       // Try external Azure Functions API first
-      let response = await fetch(`${API_BASE_URL}/api/availability`, {
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      });
+      try {
+        response = await fetch(`${API_BASE_URL}/api/availability`, {
+          signal: AbortSignal.timeout(10000), // 10 second timeout
+        });
+      } catch {
+        // Network error (API not running) — fall through to fallback
+        response = null;
+      }
 
       // Fallback to static JSON for local development
-      if (!response.ok) {
+      if (!response || !response.ok) {
         console.log('API not available, falling back to static JSON');
         response = await fetch('/data/availability.json');
       }

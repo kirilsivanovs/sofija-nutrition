@@ -968,20 +968,27 @@
 }
 
 /* =============================================================================
-   BOOKING CALENDAR - Mobile First, Single Source of Truth
-   Layout: stacked on mobile, 2-col on wide cards only
-   All internal layout uses container queries (no viewport media for grid)
+   BOOKING CALENDAR - Mobile First, Perfectionist Edition
+   ─────────────────────────────────────────────────────────────────────────────
+   Philosophy:
+   • Every element fits and is visible at 320px width minimum
+   • Container queries for internal layout (responds to card width)
+   • Fluid typography via clamp() — no jarring breakpoint jumps
+   • Touch targets ≥ 44px on all interactive elements
+   • No horizontal overflow at any resolution
+   • Calendar grid uses minmax to prevent cell crushing
    ============================================================================= */
 
-/* Main Container - also the container query context */
+/* Main Container - container query context */
 .booking-calendar {
   background: var(--color-white);
-  border-radius: 24px;
+  border-radius: clamp(16px, 3vw, 24px);
   box-shadow: var(--booking-shadow-soft);
   border: 1px solid rgba(27, 67, 50, 0.12);
   font-family: var(--font-booking);
   container-type: inline-size;
   overflow: hidden;
+  width: 100%;
 }
 
 /* Header */
@@ -989,7 +996,7 @@
   position: relative;
   background: linear-gradient(120deg, #173d2f 0%, #2d6a4f 100%);
   color: white;
-  padding: 20px 24px;
+  padding: clamp(14px, 3cqi, 24px) clamp(16px, 4cqi, 28px);
   overflow: hidden;
 }
 
@@ -1005,7 +1012,7 @@
 
 .booking-header h3 {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: clamp(18px, 4cqi, 26px);
   margin: 0;
   font-weight: 600;
   position: relative;
@@ -1016,14 +1023,16 @@
 .booking-body {
   display: grid;
   grid-template-columns: 1fr;
+  min-width: 0;
 }
 
 /* Left Side - Calendar */
 .booking-left {
-  padding: 20px;
+  padding: clamp(14px, 3cqi, 24px);
   border-bottom: 1px solid rgba(27, 67, 50, 0.12);
   background: linear-gradient(180deg, #ffffff 0%, #fbfaf7 100%);
   min-width: 0;
+  overflow: hidden;
 }
 
 /* Calendar Navigation */
@@ -1031,19 +1040,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: clamp(10px, 2cqi, 16px);
+  gap: 8px;
 }
 
 .calendar-month-year {
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: clamp(16px, 3.5cqi, 21px);
   font-weight: 600;
   color: var(--color-primary);
+  white-space: nowrap;
+  text-align: center;
+  flex: 1;
 }
 
 .cal-nav-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid rgba(27, 67, 50, 0.15);
   background: white;
   border-radius: 999px;
@@ -1054,6 +1067,7 @@
   transition: all 0.2s ease;
   color: var(--color-text);
   box-shadow: 0 4px 12px rgba(17, 40, 28, 0.08);
+  flex-shrink: 0;
 }
 
 .cal-nav-btn:hover {
@@ -1071,25 +1085,28 @@
 /* Calendar Grid */
 .calendar-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  margin-bottom: 6px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(1px, 0.5cqi, 4px);
+  margin-bottom: clamp(4px, 1cqi, 8px);
 }
 
 .weekday {
   text-align: center;
-  font-size: 11px;
+  font-size: clamp(9px, 2cqi, 12px);
   font-weight: 600;
   color: var(--color-text-light);
-  padding: 6px 0;
+  padding: clamp(4px, 1cqi, 8px) 0;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .calendar-days {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(1px, 0.5cqi, 4px);
 }
 
 .day {
@@ -1097,13 +1114,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  border-radius: 10px;
+  font-size: clamp(12px, 2.8cqi, 14px);
+  border-radius: clamp(8px, 2cqi, 12px);
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
   font-weight: 500;
-  min-height: 36px;
+  min-height: 0;
+  min-width: 0;
   border: 1px solid transparent;
   background: rgba(255, 255, 255, 0.9);
   touch-action: manipulation;
@@ -1112,7 +1130,7 @@
   -webkit-user-select: none;
 }
 
-.day.empty { cursor: default; }
+.day.empty { cursor: default; background: transparent; }
 .day.past { color: #c5c9c6; cursor: not-allowed; background: transparent; }
 .day.unavailable { color: #b1b7b4; cursor: not-allowed; background: rgba(245, 246, 244, 0.6); }
 
@@ -1144,20 +1162,20 @@
 .day.available::after {
   content: '';
   position: absolute;
-  bottom: 3px;
+  bottom: clamp(2px, 0.5cqi, 4px);
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: clamp(3px, 0.8cqi, 5px);
+  height: clamp(3px, 0.8cqi, 5px);
   background: var(--color-accent);
   border-radius: 50%;
 }
 
 .day.selected::after { background: var(--color-secondary); }
 
-/* Right Side - Time Slots (+ form in old JS structure) */
+/* Right Side - Time Slots */
 .booking-right {
-  padding: 20px;
+  padding: clamp(14px, 3cqi, 24px);
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   display: flex;
   flex-direction: column;
@@ -1166,17 +1184,17 @@
 
 .time-section h4 {
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: clamp(16px, 3cqi, 18px);
   color: var(--color-primary);
   margin: 0 0 12px 0;
   font-weight: 600;
 }
 
-/* Time Slots - always 2 cols, constrained */
+/* Time Slots - 2 cols, constrained */
 .time-slots {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: clamp(6px, 1.2cqi, 10px);
   margin-bottom: 16px;
 }
 
@@ -1186,11 +1204,14 @@
   background: white;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: clamp(13px, 2.5cqi, 14px);
   font-weight: 500;
   transition: all 0.2s ease;
   color: var(--color-text);
   min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -1218,7 +1239,7 @@
   text-align: center;
   color: var(--color-muted);
   font-size: 14px;
-  padding: 24px 16px;
+  padding: clamp(16px, 3cqi, 24px) 16px;
 }
 
 /* =============================================================================
@@ -1226,7 +1247,7 @@
    ============================================================================= */
 .booking-form-section {
   border-top: 1px solid rgba(27, 67, 50, 0.14);
-  padding: 20px;
+  padding: clamp(14px, 3cqi, 24px);
   background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
   min-width: 0;
   animation: formSlideIn 0.35s ease-out;
@@ -1239,10 +1260,10 @@
 
 /* Only round bottom corners when form-section is direct child of calendar */
 .booking-calendar > .booking-form-section {
-  border-radius: 0 0 24px 24px;
+  border-radius: 0 0 clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px);
 }
 
-/* Form grid (new JS structure) - single col by default */
+/* Form grid - single col by default */
 .booking-form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1261,9 +1282,10 @@
   color: var(--color-primary);
   margin-bottom: 16px;
   flex-wrap: wrap;
+  word-break: break-word;
 }
 
-.selected-datetime i { font-size: 16px; }
+.selected-datetime i { font-size: 16px; flex-shrink: 0; }
 
 .booking-form .form-group {
   margin-bottom: 14px;
@@ -1321,7 +1343,7 @@
   padding: 10px 14px;
   border: 1px solid rgba(27, 67, 50, 0.14);
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: var(--font-booking);
   transition: border-color 0.2s ease;
   background: #fffdf9;
@@ -1377,9 +1399,9 @@
 }
 
 .booking-submit-btn i { font-size: 18px; flex-shrink: 0; }
-.booking-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+.booking-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-/* Format Options - vertical by default (safe for any width) */
+/* Format Options - vertical by default */
 .format-options {
   display: flex;
   flex-direction: column;
@@ -1415,7 +1437,7 @@
   color: var(--color-text-light);
   min-width: 0;
   width: 100%;
-  height: 100%;
+  min-height: 44px;
   box-sizing: border-box;
 }
 
@@ -1443,55 +1465,18 @@
 
 /* =============================================================================
    CONTAINER QUERIES - respond to card width, not viewport
+   Split point at 580px ensures calendar grid has room for 7 columns + time panel
    ============================================================================= */
 
-/* Wide card: 2-column body, horizontal format options, 2-col form grid */
-@container (min-width: 640px) {
+/* Wide card: 2-column body */
+@container (min-width: 580px) {
   .booking-body {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(240px, 1.1fr) minmax(200px, 0.9fr);
   }
 
   .booking-left {
     border-bottom: none;
     border-right: 1px solid rgba(27, 67, 50, 0.12);
-    padding: 24px;
-  }
-
-  .booking-right {
-    padding: 24px;
-  }
-
-  .booking-header {
-    padding: 24px 28px;
-  }
-
-  .booking-header h3 {
-    font-size: 26px;
-  }
-
-  .calendar-month-year {
-    font-size: 21px;
-  }
-
-  .weekday {
-    font-size: 12px;
-    letter-spacing: 1px;
-    padding: 8px 0;
-  }
-
-  .calendar-weekdays,
-  .calendar-days {
-    gap: 4px;
-  }
-
-  .day {
-    font-size: 14px;
-    min-height: 44px;
-    border-radius: 12px;
-  }
-
-  .booking-form-section {
-    padding: 24px;
   }
 
   .format-options {
@@ -1508,10 +1493,14 @@
   }
 }
 
-/* Extra wide card: 3-col time slots */
-@container (min-width: 900px) {
+/* Extra wide card: 3-col time slots, bigger day cells */
+@container (min-width: 800px) {
   .time-slots {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .day {
+    min-height: 44px;
   }
 }
 
