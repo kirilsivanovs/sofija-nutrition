@@ -454,6 +454,7 @@ export async function cancelBooking(
   options: CancelOptions = {}
 ): Promise<{ success: boolean; bookingId: string }> {
   const log = options.onLog || console.log;
+  const logError = options.onError || console.error;
   const reason = options.reason || 'Cancelled by admin';
 
   const booking = await getBooking(bookingId);
@@ -503,7 +504,7 @@ export async function cancelBooking(
       log(`Cancellation email sent to ${booking.email}`);
     } catch (err: unknown) {
       const error = err as { message?: string };
-      console.error('Cancellation email error:', error.message);
+      logError(`Cancellation email failed for booking ${bookingId}:`, error.message);
     }
   }
 
