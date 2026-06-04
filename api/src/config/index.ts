@@ -165,7 +165,9 @@ export const branding: BrandingConfig = {
   // (PVN likums 59. p.) is not a VAT payer, so invoices carry no VAT and cite no exemption article.
   // Set BRANDING_VAT_STATUS=exempt only after VID confirms the medical exemption (PVN likums 52. p.),
   // or BRANDING_VAT_STATUS=standard when registered as a standard-rate VAT payer.
-  vatStatus: (['not-registered', 'exempt', 'standard'].includes(process.env.BRANDING_VAT_STATUS || '')
+  vatStatus: (['not-registered', 'exempt', 'standard'].includes(
+    process.env.BRANDING_VAT_STATUS || ''
+  )
     ? process.env.BRANDING_VAT_STATUS
     : 'not-registered') as BrandingConfig['vatStatus'],
 };

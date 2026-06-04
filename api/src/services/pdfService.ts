@@ -106,7 +106,20 @@ export function resetFontCache(): void {
  * Generate an invoice PDF
  */
 export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array> {
-  const { bookingId, name, email, phone, personalCode, date, time, serviceName, formatLabel, price, notes, t } = data;
+  const {
+    bookingId,
+    name,
+    email,
+    phone,
+    personalCode,
+    date,
+    time,
+    serviceName,
+    formatLabel,
+    price,
+    notes,
+    t,
+  } = data;
 
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
@@ -143,7 +156,12 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   // Invoice number box
   page.drawRectangle({ x: 50, y: y - 50, width: 200, height: 50, color: lightGray });
   page.drawText(`${t.pdfNumber}: ${bookingId}`, { x: 60, y: y - 20, size: 11, font: boldFont });
-  page.drawText(`${t.pdfDate}: ${new Date().toLocaleDateString('lv-LV')}`, { x: 60, y: y - 38, size: 11, font });
+  page.drawText(`${t.pdfDate}: ${new Date().toLocaleDateString('lv-LV')}`, {
+    x: 60,
+    y: y - 38,
+    size: 11,
+    font,
+  });
   y -= 80;
 
   // Client section
@@ -191,7 +209,13 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   // Total box
   page.drawRectangle({ x: width - 200, y: y - 5, width: 150, height: 30, color: lightGray });
   page.drawText(t.pdfTotal + ':', { x: width - 190, y: y + 5, size: 12, font: boldFont });
-  page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', { x: width - 100, y: y + 5, size: 14, font: boldFont, color: primaryColor });
+  page.drawText(price > 0 ? `€${price.toFixed(2)}` : 'FREE', {
+    x: width - 100,
+    y: y + 5,
+    size: 14,
+    font: boldFont,
+    color: primaryColor,
+  });
   y -= 55;
 
   // Payment info (only if price > 0)
@@ -205,17 +229,38 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
     page.drawText(`${payment.recipientName}`, { x: 50, y, size: 11, font });
     y -= 16;
     if (branding.taxRegNumber) {
-      page.drawText(`Reģ. Nr.: ${branding.taxRegNumber}`, { x: 50, y, size: 11, font, color: grayColor });
+      page.drawText(`Reģ. Nr.: ${branding.taxRegNumber}`, {
+        x: 50,
+        y,
+        size: 11,
+        font,
+        color: grayColor,
+      });
       y -= 16;
     }
     if (branding.vatStatus === 'standard' && branding.vatNumber) {
-      page.drawText(`PVN Nr.: ${branding.vatNumber}`, { x: 50, y, size: 11, font, color: grayColor });
+      page.drawText(`PVN Nr.: ${branding.vatNumber}`, {
+        x: 50,
+        y,
+        size: 11,
+        font,
+        color: grayColor,
+      });
       y -= 16;
     } else if (branding.vatStatus === 'exempt') {
-      page.drawText('Atbrīvots no PVN (PVN likuma 52. panta pirmās daļas 3. punkts).', { x: 50, y, size: 10, font, color: grayColor });
+      page.drawText('Atbrīvots no PVN (PVN likuma 52. panta pirmās daļas 3. punkts).', {
+        x: 50,
+        y,
+        size: 10,
+        font,
+        color: grayColor,
+      });
       y -= 16;
     } else {
-      page.drawText('Pakalpojuma sniedzējs nav reģistrēts PVN maksātājs (PVN cena netiek piemērota).', { x: 50, y, size: 10, font, color: grayColor });
+      page.drawText(
+        'Pakalpojuma sniedzējs nav reģistrēts PVN maksātājs (PVN cena netiek piemērota).',
+        { x: 50, y, size: 10, font, color: grayColor }
+      );
       y -= 16;
     }
     page.drawText(`${t.pdfReference}: ${bookingId}`, { x: 50, y, size: 11, font });
@@ -244,5 +289,5 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
 
 module.exports = {
   generateInvoicePDF,
-  resetFontCache
+  resetFontCache,
 };

@@ -168,7 +168,12 @@
   height: 5px;
   margin: 22px auto 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-secondary) 0%, #e0c290 55%, rgba(196, 160, 110, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary) 0%,
+    #e0c290 55%,
+    rgba(196, 160, 110, 0) 100%
+  );
 }
 
 .hero__image-column {

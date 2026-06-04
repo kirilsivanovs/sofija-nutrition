@@ -212,8 +212,18 @@ export async function createBooking(
   const warn = options.onWarn || console.warn;
   const logError = options.onError || console.error;
 
-  const { name, email, phone, date, time, serviceId, consultationFormat, notes, language, personalCode } =
-    bookingInput;
+  const {
+    name,
+    email,
+    phone,
+    date,
+    time,
+    serviceId,
+    consultationFormat,
+    notes,
+    language,
+    personalCode,
+  } = bookingInput;
 
   // Validate date constraints
   validateNotWeekend(date);

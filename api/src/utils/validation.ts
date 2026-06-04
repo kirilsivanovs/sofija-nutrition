@@ -156,7 +156,8 @@ export function sanitizeEmail(email: unknown): ValidationResult {
   const normalized = email.toLowerCase().trim().substring(0, 254);
 
   // RFC 5322 упрощённая проверка
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   if (!emailRegex.test(normalized)) {
     return { valid: false, value: normalized, error: 'Invalid email format' };
@@ -413,8 +414,8 @@ export function validationErrorResponse(errors: Record<string, string>): Validat
     jsonBody: {
       error: 'Validation Error',
       code: 'VALIDATION_ERROR',
-      details: errors
-    }
+      details: errors,
+    },
   };
 }
 
@@ -436,5 +437,5 @@ module.exports = {
   sanitizeLanguage,
   sanitizePersonalCode,
   validateBookingInput,
-  validationErrorResponse
+  validationErrorResponse,
 };

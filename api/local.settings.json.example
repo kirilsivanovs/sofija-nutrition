@@ -19,12 +19,12 @@
     "BRANDING_VAT_STATUS": "not-registered",
     "PAYMENT_IBAN": "<your-real-business-IBAN>",
     "PAYMENT_RECIPIENT": "Sofija Ivanova",
-    
+
     "USE_MOCK_AI": "false",
     "USE_GEMINI": "true",
     "GEMINI_API_KEY": "<your-gemini-api-key>",
     "GEMINI_MODEL": "gemini-2.0-flash",
-    
+
     "AZURE_OPENAI_ENDPOINT": "https://your-resource.openai.azure.com",
     "AZURE_OPENAI_KEY": "<your-azure-openai-key>",
     "AZURE_OPENAI_DEPLOYMENT": "gpt-4-vision"

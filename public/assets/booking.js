@@ -1464,7 +1464,9 @@ class BookingCalendar {
       nameInput?.addEventListener('blur', () => this.validateAndShowError(nameInput));
       emailInput?.addEventListener('blur', () => this.validateAndShowError(emailInput));
       phoneInput?.addEventListener('blur', () => this.validateAndShowError(phoneInput));
-      personalCodeInput?.addEventListener('blur', () => this.validateAndShowError(personalCodeInput));
+      personalCodeInput?.addEventListener('blur', () =>
+        this.validateAndShowError(personalCodeInput)
+      );
 
       // Clear error on input (but don't validate until blur)
       nameInput?.addEventListener('input', () => {
