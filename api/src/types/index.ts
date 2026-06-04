@@ -21,6 +21,8 @@ export interface Booking {
   format: 'online' | 'in-person';
   consultationFormat?: 'online' | 'in-person'; // alias for format
   notes?: string;
+  personalCode?: string; // Latvian personas kods (optional, for VID expense claims)
+  privacyConsentAt?: string; // ISO timestamp when the client accepted the privacy policy
   status: BookingStatus;
   confirmationCode: string;
   createdAt: string;
@@ -240,6 +242,13 @@ export interface BrandingConfig {
   phone: string;
   address: string;
   registrationNumber: string;
+  vatNumber: string;
+  taxRegNumber: string;
+  // VAT status of the service provider:
+  // 'not-registered' — below the 50 000 EUR threshold (PVN likums 59. pants), not a VAT payer (default);
+  // 'exempt'         — registered VAT payer applying the medical exemption (PVN likums 52. p.), only if confirmed by VID;
+  // 'standard'       — registered VAT payer applying the standard rate.
+  vatStatus: 'not-registered' | 'exempt' | 'standard';
 }
 
 export interface PaymentConfig {

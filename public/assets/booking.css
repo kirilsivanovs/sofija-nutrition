@@ -2,13 +2,15 @@
  * Booking Calendar Styles
  */
 
-/* CSS Variables for standalone use */
+/* CSS Variables for standalone use — must match src/styles/global.css @theme */
 :root {
   --color-white: #ffffff;
   --color-primary: #1b4332;
-  --color-secondary: #d4a574;
+  --color-primary-dark: #143728;
+  --color-secondary: #c4a06e;
+  --color-secondary-dark: #9c7c46;
   --color-accent: #2d6a4f;
-  --color-cream: #f8f6f1;
+  --color-cream: #faf6ef;
   --color-border: #e5e7eb;
   --color-muted: #9ca3af;
   --color-text: #374151;
@@ -126,18 +128,19 @@
   gap: 12px;
   margin-bottom: 16px;
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-accent);
   opacity: 0.94;
 }
 
 .hero__eyebrow-line {
-  width: 28px;
-  height: 1px;
-  background: currentColor;
+  width: 36px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-secondary), rgba(196, 160, 110, 0));
 }
 
 .hero__title {
@@ -155,6 +158,17 @@
     'calt' 1,
     'kern' 1;
   text-rendering: optimizeLegibility;
+}
+
+/* Bold signature: gold brush stroke under the hero title */
+.hero__title::after {
+  content: '';
+  display: block;
+  width: clamp(72px, 11vw, 120px);
+  height: 5px;
+  margin: 22px auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-secondary) 0%, #e0c290 55%, rgba(196, 160, 110, 0) 100%);
 }
 
 .hero__image-column {
@@ -269,18 +283,19 @@
 }
 
 .hero__btn--primary {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   color: #fff;
   box-shadow:
-    0 1px 3px rgba(12, 28, 22, 0.15),
-    0 8px 20px rgba(27, 67, 50, 0.2);
+    0 1px 3px rgba(12, 28, 22, 0.18),
+    0 10px 24px rgba(27, 67, 50, 0.24);
 }
 
 .hero__btn--primary:hover {
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   box-shadow:
-    0 2px 4px rgba(12, 28, 22, 0.15),
-    0 12px 28px rgba(27, 67, 50, 0.22);
+    0 2px 4px rgba(12, 28, 22, 0.18),
+    0 14px 32px rgba(27, 67, 50, 0.28),
+    0 8px 26px rgba(196, 160, 110, 0.32);
   transform: translateY(-2px);
 }
 
@@ -324,6 +339,11 @@
     align-items: flex-start;
     text-align: left;
     padding: clamp(20px, 3.2vw, 34px) 0 8px;
+  }
+
+  .hero__title::after {
+    margin-left: 0;
+    margin-right: auto;
   }
 
   .hero__body {
@@ -1460,6 +1480,54 @@
   margin-bottom: 5px;
 }
 
+.booking-form .form-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-text-light);
+}
+
+/* Consent checkbox (GDPR) */
+.booking-form .form-consent {
+  margin-top: 4px;
+}
+
+.booking-form .consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.booking-form .consent-checkbox input[type='checkbox'] {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.booking-form .consent-checkbox a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.booking-form .form-consent.consent-error .consent-checkbox {
+  color: #c0392b;
+}
+
+.booking-form .form-consent.consent-error input[type='checkbox'] {
+  outline: 2px solid #c0392b;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Phone input */
 .phone-input-wrapper {
   display: flex;
@@ -1665,7 +1733,8 @@
     gap: 12px 20px;
   }
 
-  .booking-form-grid .form-group:last-child {
+  .booking-form-grid .form-group-full,
+  .booking-form-grid .form-consent {
     grid-column: 1 / -1;
   }
 }

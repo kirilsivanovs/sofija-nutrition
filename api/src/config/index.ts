@@ -148,14 +148,26 @@ export const rateLimits: RateLimitsConfig = {
 // ============================================
 
 export const branding: BrandingConfig = {
-  name: 'Sofija Ivanova',
-  website: 'www.sofija-nutrition.lv',
-  websiteUrl: 'https://www.sofija-nutrition.lv',
-  email: 'onboarding@resend.dev', // Replace with real domain when verified
-  emailDomain: 'resend.dev',
-  phone: '+371 20000000',
-  address: 'Rīga, Latvija',
-  registrationNumber: '75650061277',
+  name: process.env.BRANDING_NAME || 'Sofija Ivanova',
+  website: process.env.BRANDING_WEBSITE || 'www.sofijaivanova.lv',
+  websiteUrl: process.env.BRANDING_WEBSITE_URL || 'https://www.sofijaivanova.lv',
+  // After verifying the domain in Resend, set BRANDING_EMAIL=noreply@sofijaivanova.lv
+  email: process.env.BRANDING_EMAIL || 'onboarding@resend.dev',
+  emailDomain: process.env.BRANDING_EMAIL_DOMAIN || 'sofijaivanova.lv',
+  phone: process.env.BRANDING_PHONE || '+371 20000000',
+  address: process.env.BRANDING_ADDRESS || 'Rīga, Latvija',
+  registrationNumber: process.env.BRANDING_REG_NUMBER || '75650061277',
+  // PVN (VAT) number, set after VID registration, e.g. LV00000000000
+  vatNumber: process.env.BRANDING_VAT_NUMBER || '',
+  // Saimnieciskās darbības veicēja nodokļu maksātāja reģistrācijas Nr. (set after VID registration)
+  taxRegNumber: process.env.BRANDING_TAX_REG_NUMBER || '',
+  // VAT status. Default 'not-registered': a small practitioner below the 50 000 EUR threshold
+  // (PVN likums 59. p.) is not a VAT payer, so invoices carry no VAT and cite no exemption article.
+  // Set BRANDING_VAT_STATUS=exempt only after VID confirms the medical exemption (PVN likums 52. p.),
+  // or BRANDING_VAT_STATUS=standard when registered as a standard-rate VAT payer.
+  vatStatus: (['not-registered', 'exempt', 'standard'].includes(process.env.BRANDING_VAT_STATUS || '')
+    ? process.env.BRANDING_VAT_STATUS
+    : 'not-registered') as BrandingConfig['vatStatus'],
 };
 
 // ============================================
@@ -163,11 +175,12 @@ export const branding: BrandingConfig = {
 // ============================================
 
 export const payment: PaymentConfig = {
-  bank: 'Swedbank',
-  bankName: 'Swedbank',
-  iban: 'LV00HABA0000000000000', // Replace with real IBAN
-  swift: 'HABALV22',
-  recipientName: 'Sofija Ivanova',
+  bank: process.env.PAYMENT_BANK || 'Swedbank',
+  bankName: process.env.PAYMENT_BANK || 'Swedbank',
+  // Set PAYMENT_IBAN to the real business account IBAN before going live
+  iban: process.env.PAYMENT_IBAN || 'LV00HABA0000000000000',
+  swift: process.env.PAYMENT_SWIFT || 'HABALV22',
+  recipientName: process.env.PAYMENT_RECIPIENT || 'Sofija Ivanova',
   currency: 'EUR',
 };
 

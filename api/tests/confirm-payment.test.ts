@@ -153,7 +153,7 @@ describe('Payment Confirmation Email', () => {
         it('should include back link to website', () => {
             const html = generateConfirmationPageHTML('success', 'Test message');
             
-            expect(html).toContain('sofija-nutrition.lv');
+            expect(html).toContain('sofijaivanova.lv');
             expect(html).toContain('Atgriezties uz mājaslapu');
         });
     });

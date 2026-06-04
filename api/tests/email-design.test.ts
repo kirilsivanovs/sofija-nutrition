@@ -35,7 +35,7 @@ const designSystem = {
     },
     branding: {
         name: 'Sofija Ivanova',
-        website: 'www.sofija-nutrition.lv',
+        website: 'www.sofijaivanova.lv',
         subtitleLV: 'Uztura speciāliste · PhD',
         subtitleEN: 'Nutrition Specialist · PhD',
         subtitleRU: 'Специалист по питанию · PhD'
@@ -115,8 +115,8 @@ describe('Email Design System', () => {
             expect(designSystem.branding.name).toBe('Sofija Ivanova');
         });
 
-        test('website should be sofija-nutrition.lv', () => {
-            expect(designSystem.branding.website).toBe('www.sofija-nutrition.lv');
+        test('website should be sofijaivanova.lv', () => {
+            expect(designSystem.branding.website).toBe('www.sofijaivanova.lv');
         });
 
         test('subtitles should include PhD', () => {

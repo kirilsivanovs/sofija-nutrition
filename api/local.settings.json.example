@@ -10,6 +10,15 @@
     "BUSINESS_NAME": "Your Business Name",
     "ADMIN_EMAILS": "ivanovs.kirils95@gmail.com",
     "FUNCTIONS_CORS_ALLOWED_ORIGINS": "http://localhost:4321,http://localhost:3000,https://your-domain.com",
+
+    "PAYMENT_TOKEN_SECRET": "<generate-with: openssl rand -hex 32>",
+    "BRANDING_EMAIL": "noreply@sofijaivanova.lv",
+    "BRANDING_PHONE": "+371 20000000",
+    "BRANDING_VAT_NUMBER": "<your-PVN-number-after-VID-registration>",
+    "BRANDING_TAX_REG_NUMBER": "<saimnieciskas-darbibas-registracijas-Nr-after-VID>",
+    "BRANDING_VAT_STATUS": "not-registered",
+    "PAYMENT_IBAN": "<your-real-business-IBAN>",
+    "PAYMENT_RECIPIENT": "Sofija Ivanova",
     
     "USE_MOCK_AI": "false",
     "USE_GEMINI": "true",

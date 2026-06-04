@@ -18,6 +18,7 @@ export interface InvoiceData {
   name: string;
   email: string;
   phone?: string;
+  personalCode?: string;
   date: string;
   time: string;
   serviceName: string;
@@ -105,7 +106,7 @@ export function resetFontCache(): void {
  * Generate an invoice PDF
  */
 export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array> {
-  const { bookingId, name, email, phone, date, time, serviceName, formatLabel, price, notes, t } = data;
+  const { bookingId, name, email, phone, personalCode, date, time, serviceName, formatLabel, price, notes, t } = data;
 
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
@@ -153,7 +154,12 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   page.drawText(`${t.pdfEmail}: ${email}`, { x: 50, y, size: 11, font });
   y -= 16;
   page.drawText(`${t.pdfPhone}: ${phone || t.pdfNotProvided}`, { x: 50, y, size: 11, font });
-  y -= 35;
+  y -= 16;
+  if (personalCode) {
+    page.drawText(`Personas kods: ${personalCode}`, { x: 50, y, size: 11, font });
+    y -= 16;
+  }
+  y -= 19;
 
   // Service section
   page.drawText(t.pdfService, { x: 50, y, size: 14, font: boldFont, color: primaryColor });
@@ -196,6 +202,22 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
     y -= 16;
     page.drawText(`IBAN: ${payment.iban}`, { x: 50, y, size: 11, font });
     y -= 16;
+    page.drawText(`${payment.recipientName}`, { x: 50, y, size: 11, font });
+    y -= 16;
+    if (branding.taxRegNumber) {
+      page.drawText(`Reģ. Nr.: ${branding.taxRegNumber}`, { x: 50, y, size: 11, font, color: grayColor });
+      y -= 16;
+    }
+    if (branding.vatStatus === 'standard' && branding.vatNumber) {
+      page.drawText(`PVN Nr.: ${branding.vatNumber}`, { x: 50, y, size: 11, font, color: grayColor });
+      y -= 16;
+    } else if (branding.vatStatus === 'exempt') {
+      page.drawText('Atbrīvots no PVN (PVN likuma 52. panta pirmās daļas 3. punkts).', { x: 50, y, size: 10, font, color: grayColor });
+      y -= 16;
+    } else {
+      page.drawText('Pakalpojuma sniedzējs nav reģistrēts PVN maksātājs (PVN cena netiek piemērota).', { x: 50, y, size: 10, font, color: grayColor });
+      y -= 16;
+    }
     page.drawText(`${t.pdfReference}: ${bookingId}`, { x: 50, y, size: 11, font });
     y -= 35;
   }

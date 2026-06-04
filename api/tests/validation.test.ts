@@ -13,6 +13,7 @@ import {
   sanitizeNotes,
   sanitizeServiceId,
   sanitizeFormat,
+  sanitizePersonalCode,
   validateBookingInput,
   validationErrorResponse,
 } from '../src/utils/validation';
@@ -153,6 +154,43 @@ describe('Input Validation', () => {
 
     test('should reject invalid phone format', () => {
       const result = sanitizePhone('123');
+      expect(result.valid).toBe(false);
+    });
+  });
+
+  describe('sanitizePersonalCode', () => {
+    test('should accept empty personal code (optional field)', () => {
+      const result = sanitizePersonalCode('');
+      expect(result.valid).toBe(true);
+      expect(result.value).toBe('');
+    });
+
+    test('should accept undefined personal code', () => {
+      const result = sanitizePersonalCode(undefined);
+      expect(result.valid).toBe(true);
+      expect(result.value).toBe('');
+    });
+
+    test('should accept and normalize valid old-format code with hyphen', () => {
+      const result = sanitizePersonalCode('010180-12345');
+      expect(result.valid).toBe(true);
+      expect(result.value).toBe('010180-12345');
+    });
+
+    test('should normalize 11 digits without hyphen', () => {
+      const result = sanitizePersonalCode('01018012345');
+      expect(result.valid).toBe(true);
+      expect(result.value).toBe('010180-12345');
+    });
+
+    test('should accept new-format code starting with 32', () => {
+      const result = sanitizePersonalCode('321234-56789');
+      expect(result.valid).toBe(true);
+      expect(result.value).toBe('321234-56789');
+    });
+
+    test('should reject code with wrong number of digits', () => {
+      const result = sanitizePersonalCode('12345');
       expect(result.valid).toBe(false);
     });
   });

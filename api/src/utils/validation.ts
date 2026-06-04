@@ -26,6 +26,7 @@ export interface BookingInput {
   consultationFormat?: string;
   notes?: string;
   language?: string;
+  personalCode?: string;
 }
 
 export interface SanitizedBookingData {
@@ -38,6 +39,7 @@ export interface SanitizedBookingData {
   consultationFormat: string;
   notes: string;
   language: string;
+  personalCode: string;
 }
 
 export interface BookingValidationResult {
@@ -299,6 +301,32 @@ export function sanitizeFormat(format: unknown): ValidationResult {
 }
 
 /**
+ * Валидация Latvian personas kods (опционально, для подачи чека в VID).
+ * Формат: DDMMYY-XXXXX или новый 32XXXX-XXXXX (11 цифр).
+ */
+export function sanitizePersonalCode(personalCode: unknown): ValidationResult {
+  if (!personalCode || typeof personalCode !== 'string') {
+    return { valid: true, value: '' };
+  }
+
+  const trimmed = personalCode.trim();
+  if (trimmed === '') {
+    return { valid: true, value: '' };
+  }
+
+  const digits = trimmed.replace(/\D/g, '');
+  if (digits.length !== 11) {
+    return {
+      valid: false,
+      value: trimmed,
+      error: 'Invalid personal code. Use format DDMMYY-XXXXX',
+    };
+  }
+
+  return { valid: true, value: `${digits.slice(0, 6)}-${digits.slice(6)}` };
+}
+
+/**
  * Валидация языка
  */
 export function sanitizeLanguage(language: unknown): ValidationResult {
@@ -362,6 +390,10 @@ export function validateBookingInput(body: BookingInput): BookingValidationResul
   const notes = sanitizeNotes(body.notes);
   data.notes = notes.value;
 
+  const personalCode = sanitizePersonalCode(body.personalCode);
+  if (!personalCode.valid && personalCode.error) errors.personalCode = personalCode.error;
+  data.personalCode = personalCode.value;
+
   const language = sanitizeLanguage(body.language);
   data.language = language.value;
 
@@ -402,6 +434,7 @@ module.exports = {
   sanitizeServiceId,
   sanitizeFormat,
   sanitizeLanguage,
+  sanitizePersonalCode,
   validateBookingInput,
   validationErrorResponse
 };
