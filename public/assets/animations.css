@@ -11,7 +11,7 @@
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, #1b4332, #d4a574);
+  background: linear-gradient(90deg, #1b4332, #c4a06e);
   width: 0%;
   z-index: 9999;
   will-change: width;

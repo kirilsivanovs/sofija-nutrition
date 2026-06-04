@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -273,7 +273,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     </script>
 
     <!-- SPA-like page transitions -->
-    <ViewTransitions />
+    <ClientRouter />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -331,8 +331,9 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
         <p><strong>Sofija Ivanova</strong> — Uztura speciāliste</p>
         <p>
           Tālrunis: <a href="tel:+37120223399" style="color:#c4a06e">+371 2022 3399</a> | E-pasts: <a
-            href="mailto:info@sofija-nutrition.lv"
-            style="color:#c4a06e">info@sofija-nutrition.lv</a>
+            href="mailto:info@sofijaivanova.lv"
+            style="color:#c4a06e">info@sofijaivanova.lv</a
+          >
         </p>
       </div>
     </noscript>

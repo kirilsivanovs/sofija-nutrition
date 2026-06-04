@@ -34,6 +34,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend (Node 22 — Astro 6 requires >=22.12; SWA/Oryx only ships Node 20)
+        run: npm run build
+
       - name: Prepare API shared files
         run: cp shared/translations.js api/shared-translations.js
 
@@ -45,14 +56,13 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           # ── Build config ──
-          app_location: /
-          output_location: dist
-          app_build_command: npm run build
-          # Managed API — deploys Functions alongside frontend (free tier)
+          # Frontend is pre-built above on Node 22; deploy the ready dist/ as-is.
+          app_location: dist
+          output_location: ''
+          skip_app_build: true
+          # Managed API — built by Oryx (api engines >=20, Node 20 is fine)
           api_location: api
           api_build_command: npm run build
-        env:
-          NODE_VERSION: 20
 
   e2e:
     name: E2E (Preview)
@@ -68,7 +78,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies

@@ -34,6 +34,8 @@ export interface HttpResponse {
 const allowedOrigins: string[] = [
   'http://localhost:4321',
   'http://localhost:3000',
+  'https://www.sofijaivanova.lv',
+  'https://sofijaivanova.lv',
   'https://www.sofija-nutrition.lv',
   'https://sofija-nutrition.lv',
 ];

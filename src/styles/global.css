@@ -1,12 +1,21 @@
 ﻿@import 'tailwindcss';
 
-/* Custom Tailwind Theme */
+/* Custom Tailwind Theme — single source of truth for brand tokens.
+   Web UI surfaces (global.css, booking.css, animations.css) must reference
+   these exact values. Email/PDF colours live in api/src/config (separate channel). */
 @theme {
-  --color-primary: #1b4332;
-  --color-secondary: #c4a06e;
-  --color-accent: #2d6a4f;
-  --color-cream: #faf6ef;
-  --color-bg-light: #fffdfa;
+  /* Brand greens */
+  --color-primary: #1b4332; /* deep forest — headings, solid buttons */
+  --color-primary-dark: #143728; /* hover/pressed depth */
+  --color-accent: #2d6a4f; /* lighter forest — links, hover accents */
+
+  /* Brand gold (single canonical value across the whole web UI) */
+  --color-secondary: #c4a06e; /* decorative accents, dividers, icons */
+  --color-secondary-dark: #9c7c46; /* accessible gold for text on light bg (>=4.5:1) */
+
+  /* Surfaces */
+  --color-cream: #faf6ef; /* warm section background */
+  --color-bg-light: #fffdfa; /* page background */
 
   --font-serif: 'Lora', serif;
   --font-sans: 'Inter', sans-serif;
@@ -59,6 +68,8 @@ h5,
 h6 {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+  line-height: 1.18;
+  letter-spacing: -0.011em;
   font-feature-settings:
     'liga' 1,
     'calt' 1;
@@ -159,12 +170,16 @@ button:active,
 }
 
 .btn-solid {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   color: #ffffff;
 }
 
 .btn-solid:hover {
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  box-shadow:
+    0 2px 4px rgba(12, 28, 22, 0.14),
+    0 14px 32px rgba(27, 67, 50, 0.26),
+    0 8px 26px rgba(196, 160, 110, 0.3);
 }
 
 .btn-outline {

@@ -148,6 +148,7 @@
       // Footer extra
       footer_contact_title: 'Kontakti',
       footer_follow_title: 'Sekojiet',
+      footer_terms: 'Pakalpojumu noteikumi',
       footer_privacy: 'Privātuma politika',
       // Booking
       contact_tag: 'Kontakti',
@@ -306,6 +307,7 @@
       // Footer extra
       footer_contact_title: 'Контакты',
       footer_follow_title: 'Подписывайтесь',
+      footer_terms: 'Условия оказания услуг',
       footer_privacy: 'Политика конфиденциальности',
       // Booking
       contact_tag: 'Контакты',
@@ -464,6 +466,7 @@
       // Footer extra
       footer_contact_title: 'Contact',
       footer_follow_title: 'Follow',
+      footer_terms: 'Terms of Service',
       footer_privacy: 'Privacy Policy',
       // Booking
       contact_tag: 'Contact',

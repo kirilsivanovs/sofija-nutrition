@@ -4,6 +4,7 @@
  */
 
 import { TableClient } from '@azure/data-tables';
+import { createHmac, timingSafeEqual } from 'crypto';
 import type { Booking, BookingStatus } from '../types';
 import { env, tables, booking as bookingConfig } from '../config';
 import {
@@ -289,18 +290,33 @@ export function generateBookingId(): string {
 }
 
 /**
- * Generate a payment confirmation token
+ * Secret used to sign payment confirmation tokens.
+ * Set PAYMENT_TOKEN_SECRET in production to a long random value.
  */
-export function generatePaymentToken(bookingId: string, email: string): string {
-  return Buffer.from(`${bookingId}:${email}`).toString('base64');
+function getPaymentTokenSecret(): string {
+  return process.env.PAYMENT_TOKEN_SECRET || 'dev-insecure-payment-token-secret';
 }
 
 /**
- * Verify a payment confirmation token
+ * Generate a payment confirmation token (HMAC-SHA256 signed)
+ */
+export function generatePaymentToken(bookingId: string, email: string): string {
+  return createHmac('sha256', getPaymentTokenSecret())
+    .update(`${bookingId}:${email}`)
+    .digest('hex');
+}
+
+/**
+ * Verify a payment confirmation token (constant-time comparison)
  */
 export function verifyPaymentToken(token: string, bookingId: string, email: string): boolean {
-  const expected = Buffer.from(`${bookingId}:${email}`).toString('base64');
-  return token === expected;
+  const expected = generatePaymentToken(bookingId, email);
+  const tokenBuffer = Buffer.from(token);
+  const expectedBuffer = Buffer.from(expected);
+  if (tokenBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+  return timingSafeEqual(tokenBuffer, expectedBuffer);
 }
 
 /**

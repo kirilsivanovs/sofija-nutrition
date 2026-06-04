@@ -39,7 +39,11 @@ const sharedTranslations = {
       nameLabel: 'Jūsu vārds',
       emailLabel: 'E-pasts',
       phoneLabel: 'Telefons',
+      personalCodeLabel: 'Personas kods (neobligāts)',
+      personalCodeHint: 'Norādiet, ja vēlaties iesniegt čeku VID attaisnoto izdevumu atgūšanai.',
       messageLabel: 'Komentārs (neobligāts)',
+      consentText:
+        'Es piekrītu, ka mani personas dati tiek apstrādāti saskaņā ar <a href="/privacy-policy/" target="_blank" rel="noopener">privātuma politiku</a> un <a href="/terms/" target="_blank" rel="noopener">pakalpojumu noteikumiem</a>.',
       submitBtn: 'Apstiprināt rezervāciju',
     },
 
@@ -172,7 +176,11 @@ const sharedTranslations = {
       nameLabel: 'Your name',
       emailLabel: 'Email',
       phoneLabel: 'Phone',
+      personalCodeLabel: 'Personal code (optional)',
+      personalCodeHint: 'Provide it if you want to submit the receipt to VID for a tax refund.',
       messageLabel: 'Comment (optional)',
+      consentText:
+        'I agree that my personal data is processed in accordance with the <a href="/privacy-policy/" target="_blank" rel="noopener">privacy policy</a> and <a href="/terms/" target="_blank" rel="noopener">terms of service</a>.',
       submitBtn: 'Confirm booking',
     },
 
@@ -305,7 +313,11 @@ const sharedTranslations = {
       nameLabel: 'Ваше имя',
       emailLabel: 'Email',
       phoneLabel: 'Телефон',
+      personalCodeLabel: 'Персональный код (необязательно)',
+      personalCodeHint: 'Укажите, если хотите подать чек в VID для возврата налога.',
       messageLabel: 'Комментарий (необязательно)',
+      consentText:
+        'Я соглашаюсь на обработку моих персональных данных в соответствии с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="/terms/" target="_blank" rel="noopener">условиями оказания услуг</a>.',
       submitBtn: 'Подтвердить запись',
     },
 
@@ -408,8 +420,8 @@ const sharedTranslations = {
 
 // Common data (not language-specific)
 const commonData = {
-  email: 'info@sofija-nutrition.lv',
-  website: 'sofija-nutrition.lv',
+  email: 'info@sofijaivanova.lv',
+  website: 'sofijaivanova.lv',
 };
 
 // Export for Node.js (CommonJS)

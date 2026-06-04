@@ -625,7 +625,7 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
     
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -713,7 +713,7 @@ exports[`Email Templates Snapshots generateCancellationEmailHTML should match sn
     
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -833,7 +833,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should escape HTML in
         
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -953,7 +953,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
         
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -1073,7 +1073,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
         
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -1193,7 +1193,7 @@ exports[`Email Templates Snapshots generateClientEmailHTML should match snapshot
         
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -1223,7 +1223,7 @@ exports[`Email Templates Snapshots generateConfirmationPageHTML should match sna
         <div style="padding: 25px 20px; text-align: center;">
             <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Šī rezervācija jau ir apstiprināta iepriekš.</p>
             
-            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+            <a href="https://www.sofijaivanova.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
         </div>
     </div>
 </body>
@@ -1248,7 +1248,7 @@ exports[`Email Templates Snapshots generateConfirmationPageHTML should match sna
         <div style="padding: 25px 20px; text-align: center;">
             <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Kļūda: rezervācija nav atrasta.</p>
             
-            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+            <a href="https://www.sofijaivanova.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
         </div>
     </div>
 </body>
@@ -1273,7 +1273,7 @@ exports[`Email Templates Snapshots generateConfirmationPageHTML should match sna
         <div style="padding: 25px 20px; text-align: center;">
             <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Rezervācija BK-2026-001 ir apstiprināta!</p>
             <p style="margin: 0 0 20px 0; padding: 10px 15px; background: #e3f2fd; border-radius: 8px; color: #1565c0; font-size: 14px;">📧 E-pasts klientam nosūtīts!</p>
-            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+            <a href="https://www.sofijaivanova.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
         </div>
     </div>
 </body>
@@ -1298,7 +1298,7 @@ exports[`Email Templates Snapshots generateConfirmationPageHTML should match sna
         <div style="padding: 25px 20px; text-align: center;">
             <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; line-height: 1.5;">Maksājums apstiprināts!</p>
             
-            <a href="https://www.sofija-nutrition.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
+            <a href="https://www.sofijaivanova.lv" style="display: inline-block; padding: 12px 25px; background: #2d5a4a; color: white; text-decoration: none; border-radius: 8px; font-size: 14px;">Atgriezties uz mājaslapu</a>
         </div>
     </div>
 </body>
@@ -1372,7 +1372,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>
@@ -1451,7 +1451,7 @@ exports[`Email Templates Snapshots generatePaymentConfirmedEmailHTML should matc
     
     <tr>
         <td style="background-color: #2d5a4a; padding: 20px; text-align: center;">
-            <a href="https://www.sofija-nutrition.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofija-nutrition.lv</a>
+            <a href="https://www.sofijaivanova.lv" style="color: #d4a574; font-size: 14px; text-decoration: none; font-weight: 500;">www.sofijaivanova.lv</a>
             <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.6); font-size: 12px;">© 2026 Sofija Ivanova</p>
         </td>
     </tr>

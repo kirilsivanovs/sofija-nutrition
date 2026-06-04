@@ -50,6 +50,7 @@ export interface BookingInput {
   consultationFormat: string;
   notes?: string;
   language?: string;
+  personalCode?: string;
 }
 
 export interface BookingResult {
@@ -211,8 +212,18 @@ export async function createBooking(
   const warn = options.onWarn || console.warn;
   const logError = options.onError || console.error;
 
-  const { name, email, phone, date, time, serviceId, consultationFormat, notes, language } =
-    bookingInput;
+  const {
+    name,
+    email,
+    phone,
+    date,
+    time,
+    serviceId,
+    consultationFormat,
+    notes,
+    language,
+    personalCode,
+  } = bookingInput;
 
   // Validate date constraints
   validateNotWeekend(date);
@@ -277,6 +288,8 @@ export async function createBooking(
       paymentConfirmed: false,
       status: 'pending',
       createdAt: new Date().toISOString(),
+      personalCode: personalCode || '',
+      privacyConsentAt: new Date().toISOString(),
     };
 
     // Save to storage
@@ -291,6 +304,7 @@ export async function createBooking(
         name: bookingData.name,
         email: bookingData.email,
         phone: bookingData.phone,
+        personalCode: bookingData.personalCode as string | undefined,
         date: bookingData.date,
         time: bookingData.time,
         serviceName: bookingData.serviceName,

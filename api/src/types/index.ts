@@ -7,9 +7,9 @@
 // ============================================
 
 export interface Booking {
-  partitionKey: string;  // date (YYYY-MM-DD)
-  rowKey: string;        // guid
-  id?: string;           // alias for rowKey (for backward compatibility)
+  partitionKey: string; // date (YYYY-MM-DD)
+  rowKey: string; // guid
+  id?: string; // alias for rowKey (for backward compatibility)
   name: string;
   email: string;
   phone?: string;
@@ -21,6 +21,8 @@ export interface Booking {
   format: 'online' | 'in-person';
   consultationFormat?: 'online' | 'in-person'; // alias for format
   notes?: string;
+  personalCode?: string; // Latvian personas kods (optional, for VID expense claims)
+  privacyConsentAt?: string; // ISO timestamp when the client accepted the privacy policy
   status: BookingStatus;
   confirmationCode: string;
   createdAt: string;
@@ -29,7 +31,7 @@ export interface Booking {
   cancelReason?: string;
   language: Language;
   paymentStatus?: PaymentStatus;
-  paymentConfirmed?: boolean;  // flag for payment confirmation
+  paymentConfirmed?: boolean; // flag for payment confirmation
   reminderSent?: boolean;
   reminder2hSent?: boolean;
 }
@@ -39,13 +41,13 @@ export type PaymentStatus = 'pending' | 'paid' | 'refunded' | 'failed';
 export type Language = 'lv' | 'ru' | 'en';
 
 export interface Service {
-  partitionKey: string;  // "SERVICE"
-  rowKey: string;        // serviceId
+  partitionKey: string; // "SERVICE"
+  rowKey: string; // serviceId
   serviceId: string;
   name: LocalizedString;
   description?: LocalizedString;
   price: number;
-  duration: number;      // minutes
+  duration: number; // minutes
   allowOnline: boolean;
   allowInPerson: boolean;
   isActive: boolean;
@@ -62,8 +64,8 @@ export interface LocalizedString {
 }
 
 export interface AdminSettings {
-  partitionKey: string;  // "config"
-  rowKey: string;        // setting type
+  partitionKey: string; // "config"
+  rowKey: string; // setting type
   [key: string]: unknown;
 }
 
@@ -75,8 +77,8 @@ export interface WorkSchedule extends AdminSettings {
 export interface DaySchedule {
   [day: string]: {
     enabled: boolean;
-    start: string;  // "09:00"
-    end: string;    // "17:00"
+    start: string; // "09:00"
+    end: string; // "17:00"
   };
 }
 
@@ -94,7 +96,7 @@ export interface Vacation {
 
 export interface BlockedDate extends AdminSettings {
   rowKey: 'blockedDates';
-  blockedDates: string[];  // array of dates YYYY-MM-DD
+  blockedDates: string[]; // array of dates YYYY-MM-DD
 }
 
 // ============================================
@@ -240,6 +242,13 @@ export interface BrandingConfig {
   phone: string;
   address: string;
   registrationNumber: string;
+  vatNumber: string;
+  taxRegNumber: string;
+  // VAT status of the service provider:
+  // 'not-registered' — below the 50 000 EUR threshold (PVN likums 59. pants), not a VAT payer (default);
+  // 'exempt'         — registered VAT payer applying the medical exemption (PVN likums 52. p.), only if confirmed by VID;
+  // 'standard'       — registered VAT payer applying the standard rate.
+  vatStatus: 'not-registered' | 'exempt' | 'standard';
 }
 
 export interface PaymentConfig {
@@ -326,24 +335,24 @@ export interface TranslationObject {
   emailQuestions: string;
   emailRegards: string;
   emailSubtitle: string;
-  
+
   // Formats
   formatOnline: string;
   formatInPerson: string;
-  
+
   // Payment
   paymentConfirmedSubject: (id: string) => string;
   paymentConfirmedTitle: string;
   paymentConfirmedText: string;
   paymentWaitingText: string;
-  
+
   // Cancellation
   cancellationSubject: (id: string) => string;
   cancellationTitle: string;
   cancellationText: string;
   cancellationDetails: string;
   cancellationQuestions: string;
-  
+
   // PDF
   pdfSubtitle: string;
   pdfInvoice: string;
@@ -364,10 +373,10 @@ export interface TranslationObject {
   pdfNotes: string;
   pdfThankYou: string;
   pdfNotProvided: string;
-  
+
   // Services
   services: Record<string, string>;
-  
+
   // Allow additional properties
   [key: string]: unknown;
 }

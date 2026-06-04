@@ -219,11 +219,11 @@ describe('Translation Coverage', () => {
 
   describe('Common Data', () => {
     test('should have email address', () => {
-      expect(commonData.email).toBe('info@sofija-nutrition.lv');
+      expect(commonData.email).toBe('info@sofijaivanova.lv');
     });
 
     test('should have website', () => {
-      expect(commonData.website).toBe('sofija-nutrition.lv');
+      expect(commonData.website).toBe('sofijaivanova.lv');
     });
   });
 });

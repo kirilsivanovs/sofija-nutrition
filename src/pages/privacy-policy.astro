@@ -8,13 +8,9 @@ import Layout from '../layouts/Layout.astro';
   canonicalPath="/privacy-policy/"
 >
   <article class="max-w-3xl mx-auto px-5 md:px-8 py-20 md:py-28">
-    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-      Privātuma politika
-    </h1>
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">Privātuma politika</h1>
 
-    <p class="text-gray-500 text-sm mb-10">
-      Pēdējās izmaiņas: 1. februāris, 2026
-    </p>
+    <p class="text-gray-500 text-sm mb-10">Pēdējās izmaiņas: 1. februāris, 2026</p>
 
     <div class="prose prose-lg prose-gray max-w-none">
       <section class="mb-10">
@@ -22,9 +18,9 @@ import Layout from '../layouts/Layout.astro';
           1. Vispārīgā informācija
         </h2>
         <p>
-          SIA "Sofija Ivanova Nutrition" (turpmāk - "Uzņēmums") apņemas aizsargāt Jūsu personas
-          datus saskaņā ar Eiropas Savienības Vispārīgo datu aizsardzības regulu (GDPR) un Latvijas
-          Republikas normatīvajiem aktiem.
+          Sofija Ivanova, saimnieciskās darbības veicēja (turpmāk - "Pārzinis") apņemas aizsargāt
+          Jūsu personas datus saskaņā ar Eiropas Savienības Vispārīgo datu aizsardzības regulu
+          (GDPR) un Latvijas Republikas normatīvajiem aktiem.
         </p>
       </section>
 
@@ -33,9 +29,15 @@ import Layout from '../layouts/Layout.astro';
           2. Datu pārzinis
         </h2>
         <p>
-          Datu pārzinis: SIA "Sofija Ivanova Nutrition"<br />
-          E-pasts: <a href="mailto:info@sofijaivanova.lv" class="text-secondary font-semibold hover:underline">info@sofijaivanova.lv</a><br />
-          Tālrunis: +371 XXXXXXXX
+          Datu pārzinis: Sofija Ivanova, saimnieciskās darbības veicēja (reģistrēta VID)<br />
+          Nodokļu maksātāja reģistrācijas Nr.: [aizpildīt pēc reģistrācijas VID]<br />
+          PVN maksātāja statuss: nav reģistrēts PVN maksātājs (PVN maksātāja Nr. tiks norādīts pēc reģistrācijas,
+          ja tāda būs nepieciešama)<br />
+          E-pasts: <a
+            href="mailto:info@sofijaivanova.lv"
+            class="text-secondary font-semibold hover:underline">info@sofijaivanova.lv</a
+          ><br />
+          Tālrunis: +371 2022 3399
         </p>
       </section>
 
@@ -48,8 +50,19 @@ import Layout from '../layouts/Layout.astro';
           <li>✓ E-pasta adrese</li>
           <li>✓ Tālruņa numurs</li>
           <li>✓ Informācija par konsultācijas pakalpojumu</li>
-          <li>✓ Maksājumu dati (apstrādā trešā puse - Stripe/PayPal)</li>
+          <li>
+            ✓ Veselības informācija, ko Jūs brīvprātīgi sniedzat uztura konsultācijai/terapijai
+          </li>
+          <li>✓ Maksājumu dati (bānkas pārskaitījums uz norādīto kontu)</li>
         </ul>
+        <p class="mt-4">
+          Tā kā uztura konsultācijas un medicīniskā uztura terapiju sniedz
+          <strong>ārstniecības persona</strong>, daļa datu var būt veselības dati (īpašu kategoriju
+          personas dati GDPR 9. panta izpratnē). Šādus datus apstrādājam tikai veselības aprūpes
+          (uztura konsultāciju/terapijas) nodrošināšanai, pamatojoties uz GDPR 9. panta 2. punkta
+          "h" apakšpunktu, un uz tiem attiecas <strong>profesionālais noslēpums</strong> saskaņā ar Ārstniecības
+          likumu.
+        </p>
       </section>
 
       <section class="mb-10">
@@ -110,7 +123,10 @@ import Layout from '../layouts/Layout.astro';
           7. Datu glabāšanas termiņi
         </h2>
         <ul class="list-none p-0 space-y-3">
-          <li>✓ Ierakstu dati: 3 gadi pēc pakalpojuma sniegšanas</li>
+          <li>✓ Konsultāciju pieraksta dati: 3 gadi pēc pakalpojuma sniegšanas</li>
+          <li>
+            ✓ Medicīniskā dokumentācija: saskaņā ar normatīvajos aktos noteikto glabāšanas termiņu
+          </li>
           <li>✓ Grāmatvedības dokumenti: 5 gadi (saskaņā ar likumu)</li>
           <li>✓ Mārketinga dati: līdz piekrišanas atsaukšanai</li>
         </ul>
@@ -135,21 +151,24 @@ import Layout from '../layouts/Layout.astro';
         </h2>
         <ul class="list-none p-0 space-y-3">
           <li><strong>Microsoft Azure</strong> — Hosting un datu glabāšana (EU serveri)</li>
-          <li><strong>Stripe/PayPal</strong> — Maksājumu apstrāde (GDPR compliant)</li>
+          <li><strong>Resend</strong> — E-pasta ziņojumu piegāde (apstiprinājumi)</li>
+          <li><strong>Meta (Facebook/Instagram)</strong> — Reklāmas pakalpojumi</li>
+          <li><strong>Bānkas pārskaitījums</strong> — Maksājumu apstrāde (Swedbank)</li>
         </ul>
       </section>
 
       <section class="mb-10">
-        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">
-          10. Kontakti
-        </h2>
+        <h2 class="font-serif text-2xl md:text-3xl font-bold text-secondary mb-4">10. Kontakti</h2>
         <p>
           Ja Jums ir jautājumi par datu aizsardzību vai vēlaties izmantot savas tiesības, lūdzu,
           sazinieties ar mums:
         </p>
         <p class="mt-4">
-          E-pasts: <a href="mailto:privacy@sofijaivanova.lv" class="text-secondary font-semibold hover:underline">privacy@sofijaivanova.lv</a><br />
-          Tālrunis: +371 XXXXXXXX
+          E-pasts: <a
+            href="mailto:privacy@sofijaivanova.lv"
+            class="text-secondary font-semibold hover:underline">privacy@sofijaivanova.lv</a
+          ><br />
+          Tālrunis: +371 2022 3399
         </p>
       </section>
 
