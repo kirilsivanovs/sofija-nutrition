@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import AppHeader from '../components/common/AppHeader.astro';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
+import '../styles/booking.css';
 ---
 
 <Layout
@@ -890,5 +891,9 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 <!-- GDPR Cookie Consent (TypeScript) -->
 <script>
   import '../components/CookieConsent';
+</script>
+
+<script>
+  import '../scripts/booking/booking-calendar.js';
 </script>
 </Layout>

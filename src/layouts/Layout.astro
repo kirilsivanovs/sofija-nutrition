@@ -296,9 +296,6 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
       media="(max-width: 768px)"
     />
 
-    <!-- Booking Calendar Styles -->
-    <link rel="stylesheet" href="/assets/booking.css" />
-
     <!-- Animations Styles (non-critical, load async) -->
     <link
       rel="preload"
@@ -325,11 +322,8 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
     <slot />
 
-    <!-- Shared translations (loaded before booking.js) -->
+    <!-- Shared translations -->
     <script is:inline src="/assets/shared-translations.js"></script>
-    <script>
-      import '../scripts/booking/booking-calendar.js';
-    </script>
     <script defer is:inline src="/assets/main.js"></script>
     <script defer is:inline src="/assets/animations.js"></script>
   </body>
