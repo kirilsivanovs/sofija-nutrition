@@ -35,7 +35,7 @@
       }
     },
     {
-      "route": "/cabinet",
+      "route": "/cabinet*",
       "allowedRoles": ["authenticated"]
     },
     {
@@ -65,6 +65,10 @@
     }
   ],
   "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/aad?post_login_redirect_uri=.referrer",
+      "statusCode": 302
+    },
     "404": {
       "rewrite": "/error.html"
     }
