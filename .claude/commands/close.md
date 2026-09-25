@@ -9,7 +9,7 @@ Close the task in `$ARGUMENTS`. No sub-agent. This is the only way work leaves t
 2. Check, and report each in one line:
    - `status` is `review` or `done`. Anything earlier → say what is still owed (`/work <ID>`) and ask before closing anyway.
    - A `split: true` parent: every sub-task is `done` or `review`.
-   - The branch from `branch:` — `git branch --merged origin/<default>` (after `git fetch --prune`) contains it, or it no longer exists locally. Unmerged, or uncommitted changes on it → say so and ask; never close silently over unmerged work. If the branch is currently checked out in a worktree slot, first `git -C <slot> switch --detach origin/main` (found via `git worktree list`) so `git branch -d` can succeed.
+   - The branch from `branch:` — `git branch --merged origin/<default>` (after `git fetch --prune`) contains it, or it no longer exists locally. Unmerged, or uncommitted changes on it → say so and ask; never close silently over unmerged work.
 3. Every check passed → close without asking. A check failed → say which and stop; the user closes anyway by saying so.
 4. Close: set `status: done` (and on each sub-task), append `- <date>: closed via /close — <merged|not merged, per user>`, update `updated:`, then move the folder with `New-Item -ItemType Directory -Force .claude/tasks/_archive/<category>; Move-Item .claude/tasks/<category>/<ID> .claude/tasks/_archive/<category>/<ID>`.
 

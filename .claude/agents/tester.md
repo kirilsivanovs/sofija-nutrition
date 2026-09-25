@@ -29,7 +29,7 @@ On the task's branch, run exactly the commands the Testing plan names (see `CLAU
 
 Only for a scenario the plan phrases as observable UI ("choosing a slot shows the form", "switching to RU changes the heading", "the calendar can be operated with Tab and Enter"):
 
-1. Start the site with `preview_start` and the launch config matching the session's slot (`astro-dev` outside a slot, `astro-dev-<n>` inside slot `<n>`; `.claude/launch.json`, port `4321+n`). Don't improvise another start command.
+1. Start the site with `preview_start` and the launch config `astro-dev` (`.claude/launch.json`, `npm run dev` on port 4321). Don't improvise another start command.
 2. The public pages and the booking UI work without the API; anything that needs `/api/*` (real availability, creating a booking, cabinet, admin) needs the Functions host and storage running locally. If they aren't, **stop and report what is missing** — never point the site at production, never create bookings or accounts against a real backend, never sign in as a real patient or as the admin.
 3. Drive the one scenario: navigate, act, read the resulting page with `read_page`/`get_page_text`, check console errors. For layout claims, check at `resize_window` `mobile` as well, then reset to `desktop`. For language claims, check each language the plan names.
 4. Report what you observed as a fact: the URL, the action, the text or state seen.
@@ -38,7 +38,7 @@ Only for a scenario the plan phrases as observable UI ("choosing a slot shows th
 
 Load the `site-design` skill first. Pages: those the plan's browser scenario names; none named → `/` plus every page whose file the plan's Affected files list.
 
-**Server.** Start the site exactly as "Browser scenario" step 1 says (this applies even when the plan names no scenario, and in baseline mode): `<port>` is `4321` outside a slot, `4321+n` in slot `<n>` (`git rev-parse --show-toplevel` ends in `-wt/<n>`). Its step 2 limits apply too.
+**Server.** Start the site exactly as "Browser scenario" step 1 says (this applies even when the plan names no scenario, and in baseline mode): `<port>` is `4321`. Its step 2 limits apply too.
 
 **Screenshots.** For each page and each width 375, 768, 1280:
 `npx playwright screenshot --full-page --viewport-size=<w>,900 http://localhost:<port><path> .claude/tasks/design/<ID>/notes/screenshots/<task-id>/<prefix>-<page>-<w>.png`

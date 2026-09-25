@@ -8,14 +8,6 @@ Print the board. No sub-agent. Read it with **one** call and never open a task f
 grep -H -E '^(id|title|status|priority|kind|size|area|branch|parent|split|recurring|architectural):' .claude/tasks/[!_]*/*/task.md .claude/tasks/[!_]*/*/sub-tasks/*.md .claude/tasks/SN-*/task.md .claude/tasks/SN-*/sub-tasks/*.md 2>/dev/null
 ```
 
-Then read every lock in a second call:
-
-```powershell
-Get-ChildItem .claude/tasks/*/*/.lock -ErrorAction SilentlyContinue
-```
-
-Read each file's `claimed:`/`worktree:` lines and show one line per lock next to its task (branch, age); mark it `stale` per the README's rule (older than 12h with `worktree: (pending)` or a worktree path that no longer exists).
-
 Group by how far along the task is, most advanced first — finishing beats starting:
 
 **В работе** — `review`, `testing`, `in-progress`, `branched`
