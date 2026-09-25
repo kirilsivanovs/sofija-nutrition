@@ -78,7 +78,7 @@ Pass a sub-agent the task file's path and nothing else, unless it needs what the
 
 First check whether this session is in a worktree slot: `git rev-parse --git-dir` vs `git rev-parse --git-common-dir` — equal → **main checkout**, different → **in a slot**.
 
-**Main checkout** → do not cut the branch. List slots (`Get-ChildItem ../sofija-nutrition-astro-wt -Directory`), and for each run `git -C <slot> branch --show-current` (empty output = free). Report the first free slot, or, if none is free, say to run `.claude/scripts/manage-worktree-slot.ps1 -Action Create -Slot <n+1>`. Stop here — this is a hard stop (below).
+**Main checkout** → do not cut the branch. List slots (`Get-ChildItem ../sofija-nutrition-astro-wt -Directory`), and for each run `git -C <slot> branch --show-current` (empty output = free). Report the first free slot, or, if none is free, say to run `.claude/scripts/manage-worktree-slot.ps1 -Action Create -Slot <n+1>`. This session hands the task off, so delete its `.lock` and add one `## Log` line (`handed off, waiting for a slot session`); otherwise the slot session would skip it as locked. Stop here — this is a hard stop (below).
 
 **In a slot** → proceed as before. Name: `<id-lowercased>-<short-slug-of-title>`. A sub-task uses its parent's branch. Base: `main`, unless the plan says the task stacks on another task's unmerged branch.
 
