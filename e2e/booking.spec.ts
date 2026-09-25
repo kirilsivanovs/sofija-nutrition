@@ -64,7 +64,7 @@ test.describe('Booking Flow', () => {
 
     // Click on an available date (weekday)
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (await availableDay.isVisible()) {
       await availableDay.click();
@@ -73,6 +73,41 @@ test.describe('Booking Flow', () => {
       const timeSlots = bookingSection.locator('.time-slot, .time-btn, [class*="time"]');
       await expect(timeSlots.first()).toBeVisible({ timeout: 5000 });
     }
+  });
+
+  test('can select a date using only the keyboard', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          slots: {
+            '2027-06-02': ['09:00', '10:00', '11:00'],
+            '2027-06-03': ['09:00', '14:00', '15:00', '16:00'],
+          },
+          booked: [],
+          serviceTypes: [],
+        }),
+      });
+    });
+    // The calendar already fetched real availability on the initial page load;
+    // reload so this test's mocked response drives the render deterministically.
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    const focusedCell = bookingSection.locator('[role="gridcell"][tabindex="0"]');
+    await focusedCell.focus();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+
+    const selectedCell = bookingSection.locator('[role="gridcell"][aria-selected="true"]');
+    await expect(selectedCell).toBeVisible({ timeout: 5000 });
+
+    const timeSlots = bookingSection.locator('.time-slot, .time-btn, [class*="time"]');
+    await expect(timeSlots.first()).toBeVisible({ timeout: 5000 });
   });
 
   test('full booking flow with mocked API', async ({ page }) => {
@@ -127,7 +162,7 @@ test.describe('Booking Flow', () => {
 
     // Step 1: Select a date
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
@@ -193,7 +228,7 @@ test.describe('Booking Flow', () => {
 
     // Select date and time
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
@@ -248,7 +283,7 @@ test.describe('Booking Flow', () => {
 
     // Select date and time
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
@@ -301,7 +336,7 @@ test.describe('Booking Flow', () => {
 
     // Select date and time
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
@@ -356,7 +391,7 @@ test.describe('Booking Flow', () => {
 
     // Select date and time
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();
@@ -406,7 +441,7 @@ test.describe('Booking Flow', () => {
 
     // Select date and time
     const availableDay = bookingSection
-      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
       .first();
     if (!(await availableDay.isVisible())) {
       test.skip();

@@ -1268,9 +1268,23 @@
 }
 
 .calendar-days {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.5cqi, 4px);
+}
+
+.week {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: clamp(1px, 0.5cqi, 4px);
+  gap: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .day {
@@ -1292,6 +1306,11 @@
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }
 
 .day.empty {

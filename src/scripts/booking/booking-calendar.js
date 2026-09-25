@@ -5,6 +5,12 @@
  * Uses shared translations from shared-translations.js
  */
 
+import {
+  reorderWeekdaysMondayFirst,
+  getMonthGridDates,
+  getKeyTargetDate,
+} from './calendar-grid';
+
 // API is served from the same domain (SWA managed API)
 const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:7071' : '';
 
@@ -30,6 +36,9 @@ function buildUITranslations(lang) {
     weekdays: t.calendar.weekdays,
     months: t.calendar.months,
     today: t.calendar.today,
+    prevMonthLabel: t.calendar.prevMonthLabel,
+    nextMonthLabel: t.calendar.nextMonthLabel,
+    gridLabel: t.calendar.gridLabel,
     selectedLabel: t.calendar.selectedLabel,
     serviceLabel: t.form.serviceLabel,
     formatLabel: t.form.formatLabel,
@@ -99,6 +108,9 @@ const fallbackTranslations = {
     closeBtn: 'Aizvērt',
     selectedLabel: 'Izvēlēts',
     today: 'Šodien',
+    prevMonthLabel: 'Iepriekšējais mēnesis',
+    nextMonthLabel: 'Nākamais mēnesis',
+    gridLabel: 'Kalendārs',
     // Validation messages
     validation: {
       nameRequired: 'Lūdzu, ievadiet savu vārdu',
@@ -149,6 +161,9 @@ const fallbackTranslations = {
     closeBtn: 'Закрыть',
     selectedLabel: 'Выбрано',
     today: 'Сегодня',
+    prevMonthLabel: 'Предыдущий месяц',
+    nextMonthLabel: 'Следующий месяц',
+    gridLabel: 'Календарь',
     // Validation messages
     validation: {
       nameRequired: 'Пожалуйста, введите ваше имя',
@@ -199,6 +214,9 @@ const fallbackTranslations = {
     closeBtn: 'Close',
     selectedLabel: 'Selected',
     today: 'Today',
+    prevMonthLabel: 'Previous month',
+    nextMonthLabel: 'Next month',
+    gridLabel: 'Calendar',
     // Validation messages
     validation: {
       nameRequired: 'Please enter your name',
@@ -219,6 +237,8 @@ class BookingCalendar {
     this.currentDate = new Date();
     this.selectedDate = null;
     this.selectedTime = null;
+    this.focusedDate = null;
+    this._calendarHadFocus = false;
     this.availability = null;
     this.serviceSettings = [];
     this.currentLang = options.lang || 'lv';
@@ -365,16 +385,17 @@ class BookingCalendar {
                     <div class="booking-left">
                         <div class="calendar-section">
                             <div class="calendar-nav">
-                                <button class="cal-nav-btn prev" aria-label="Previous month">
+                                <button class="cal-nav-btn prev" aria-label="${this.t('prevMonthLabel')}">
                                     <i class="ph ph-caret-left"></i>
                                 </button>
-                                <span class="calendar-month-year"></span>
-                                <button class="cal-nav-btn next" aria-label="Next month">
+                                <span class="calendar-month-year" id="calendarMonthLabel" aria-live="polite"></span>
+                                <button class="cal-nav-btn next" aria-label="${this.t('nextMonthLabel')}">
                                     <i class="ph ph-caret-right"></i>
                                 </button>
                             </div>
+                            <span id="calendarGridLabel" class="sr-only">${this.t('gridLabel')}</span>
                             <div class="calendar-weekdays"></div>
-                            <div class="calendar-days"></div>
+                            <div class="calendar-days" role="grid" aria-labelledby="calendarGridLabel calendarMonthLabel"></div>
                         </div>
                     </div>
 
@@ -518,10 +539,10 @@ class BookingCalendar {
       }
     }
 
-    // Render weekdays
+    // Render weekdays (Monday-first)
     const weekdaysEl = this.container.querySelector('.calendar-weekdays');
     if (weekdaysEl) {
-      weekdaysEl.innerHTML = this.t('weekdays')
+      weekdaysEl.innerHTML = reorderWeekdaysMondayFirst(this.t('weekdays'))
         .map((day) => `<span class="weekday">${day}</span>`)
         .join('');
     }
@@ -530,26 +551,51 @@ class BookingCalendar {
     const daysEl = this.container.querySelector('.calendar-days');
     if (!daysEl) return;
 
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    let daysHTML = '';
+    // Snapshot before replacing daysEl.innerHTML below: destroying the currently
+    // focused cell fires a native focusout on the container, which would otherwise
+    // clear this flag before we get a chance to restore focus on the new cell.
+    const hadFocusBeforeRender = this._calendarHadFocus;
 
-    // Empty cells before first day
-    for (let i = 0; i < firstDay; i++) {
-      daysHTML += '<span class="day empty"></span>';
+    if (!this.focusedDate) {
+      this.focusedDate = this.selectedDate ? new Date(this.selectedDate) : new Date(today);
     }
 
-    // Days of month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day);
+    const gridDates = getMonthGridDates(year, month);
+
+    // Reclamp focusedDate if it falls outside the month now being rendered
+    // (e.g. availability loads and jumps the visible month after the initial render).
+    const inGridMonth = gridDates.some(
+      (d) => d && d.getFullYear() === this.focusedDate.getFullYear() && d.getMonth() === this.focusedDate.getMonth()
+    );
+    if (!inGridMonth) {
+      const selectedInGrid =
+        this.selectedDate &&
+        gridDates.find((d) => d && this.formatDateISO(d) === this.selectedDate);
+      const firstInGrid = gridDates.find((d) => d !== null);
+      this.focusedDate = selectedInGrid || firstInGrid || this.focusedDate;
+    }
+
+    const focusedDateStr = this.formatDateISO(this.focusedDate);
+    const weeks = [];
+    for (let i = 0; i < gridDates.length; i += 7) {
+      weeks.push(gridDates.slice(i, i + 7));
+    }
+
+    const cellHTML = (date) => {
+      if (!date) {
+        return '<span class="day empty" role="gridcell" aria-disabled="true"></span>';
+      }
+
       const dateStr = this.formatDateISO(date);
       const isPast = date < today;
       const isToday = date.getTime() === today.getTime();
       const hasSlots = this.hasAvailableSlots(dateStr);
       const isSelected = this.selectedDate === dateStr;
+      const isDisabled = isPast || !hasSlots;
+      const isFocused = dateStr === focusedDateStr;
 
       let classes = ['day'];
       if (isPast) classes.push('past');
@@ -558,10 +604,24 @@ class BookingCalendar {
       if (isSelected) classes.push('selected');
       if (!hasSlots && !isPast) classes.push('unavailable');
 
-      daysHTML += `<span class="${classes.join(' ')}" data-date="${dateStr}">${day}</span>`;
-    }
+      const ariaLabel = new Intl.DateTimeFormat(this.currentLang, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      }).format(date);
 
-    daysEl.innerHTML = daysHTML;
+      return `<span class="${classes.join(' ')}" data-date="${dateStr}" role="gridcell" tabindex="${isFocused ? '0' : '-1'}" aria-selected="${isSelected}" aria-disabled="${isDisabled}" aria-label="${ariaLabel}">${date.getDate()}</span>`;
+    };
+
+    daysEl.innerHTML = weeks
+      .map((week) => `<div class="week" role="row">${week.map(cellHTML).join('')}</div>`)
+      .join('');
+
+    if (hadFocusBeforeRender) {
+      const focusedCell = daysEl.querySelector(`.day[data-date="${focusedDateStr}"]`);
+      focusedCell?.focus();
+      this._calendarHadFocus = true;
+    }
   }
 
   hasAvailableSlots(dateStr) {
@@ -656,7 +716,11 @@ class BookingCalendar {
 
     // Update calendar UI
     this.container.querySelectorAll('.day').forEach((day) => {
-      day.classList.toggle('selected', day.dataset.date === dateStr);
+      const isSelected = day.dataset.date === dateStr;
+      day.classList.toggle('selected', isSelected);
+      if (day.hasAttribute('role')) {
+        day.setAttribute('aria-selected', String(isSelected));
+      }
     });
 
     // Update time section header
@@ -1346,6 +1410,54 @@ class BookingCalendar {
         },
         { passive: false }
       );
+
+      calendarDays.addEventListener('focusin', () => {
+        this._calendarHadFocus = true;
+      });
+      calendarDays.addEventListener('focusout', () => {
+        this._calendarHadFocus = false;
+      });
+
+      const navigationKeys = [
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown',
+        'Home',
+        'End',
+        'PageUp',
+        'PageDown',
+      ];
+
+      calendarDays.addEventListener('keydown', (e) => {
+        if (navigationKeys.includes(e.key)) {
+          const currentFocused = this.focusedDate || new Date();
+          const targetDate = getKeyTargetDate(currentFocused, e.key);
+          if (!targetDate) return;
+
+          e.preventDefault();
+          this._calendarHadFocus = true;
+          this.focusedDate = targetDate;
+
+          if (
+            targetDate.getFullYear() !== this.currentDate.getFullYear() ||
+            targetDate.getMonth() !== this.currentDate.getMonth()
+          ) {
+            this.currentDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+          }
+
+          this.renderCalendar();
+          return;
+        }
+
+        if (e.key === 'Enter' || e.key === ' ') {
+          const dayEl = e.target.closest('.day');
+          if (dayEl && dayEl.getAttribute('aria-disabled') !== 'true') {
+            e.preventDefault();
+            this.selectDate(dayEl.dataset.date);
+          }
+        }
+      });
     }
 
     // Time slot selection
