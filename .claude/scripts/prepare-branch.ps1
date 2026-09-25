@@ -4,6 +4,9 @@
 
 .DESCRIPTION
     The scripted form of .claude/agents/branch-preparer.md, run by /work at gate 2.
+    Runs inside whichever checkout it is called from - the main checkout, or a
+    worktree slot created by manage-worktree-slot.ps1 - resolving $repo from its own
+    script path either way; there is no assumption of one shared checkout.
     Refuses a dirty working tree, detects the default branch from origin/HEAD
     (falling back to whichever single one of origin/main / origin/master exists),
     fetches, then checks out the branch if it already exists locally or creates it
