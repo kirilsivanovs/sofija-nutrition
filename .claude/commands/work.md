@@ -89,7 +89,7 @@ Exit 2 → report the reason exactly; a dirty tree is a hard stop. Then record `
 1. **Commit on the task branch.** Stage exactly the files `developer` reported and `git status` shows as changed — never `git add -A`, never the known clutter, never anything under `.claude/tasks/`. One commit, Conventional Commits style matching the history (`fix(api): …`, `feat: …`, `chore: …`), subject in English, the task id in the body (`Task: SN-012`), then the `Co-Authored-By` trailer for the model running this session.
 2. **Update main.** `git fetch origin --prune`, `git checkout main`, `git merge --ff-only origin/main`.
 3. **Merge.** `git merge --ff-only <branch>`. Not fast-forward (main moved) → `git checkout <branch>`, `git rebase main`, re-run verification, then merge again. A rebase conflict → `git rebase --abort` and hard stop.
-4. **Pre-deploy steps.** If the plan's **Production / manual steps** include anything the user must do *before* the code reaches production (set an app setting, rotate a key, create a resource), stop here: the commit is on local `main`, not pushed. Report the steps; the user says "пушь" when done. Steps that come *after* deploy don't stop the push; list them in the final report.
+4. **Pre-deploy steps.** If the plan's **Production / manual steps** include anything needed *before* the code reaches production, run the ones the Azure/GitHub rule in `CLAUDE.md` allows yourself (one line per command). If any step needs a secret value or falls outside that rule, stop here: the commit is on local `main`, not pushed. Report those steps; the user says "пушь" when done. Steps that come *after* deploy don't stop the push; list them in the final report.
 5. **Push.** `git push origin main`. Say that this deploys: the frontend after CI passes, the API immediately when `api/**` or `shared/**` changed.
 6. **Clean up.** `git branch -d <branch>` (it is merged, so `-d` succeeds; if it refuses, leave it and say so). Set `status: done` (and on sub-tasks), one `## Log` line with the commit hash, move the folder to `.claude/tasks/_archive/<ID>/`.
 
@@ -105,7 +105,7 @@ The only places `/work` stops before `done`:
 - A rebase conflict.
 - Pre-deploy manual steps (step 6.4).
 - A stage truncated twice (the task needs a smaller split — run `/orchestrate force dev-planner <ID>`).
-- Anything the plan says needs a secret value, an Azure/GitHub setting change or a data repair — the user does those.
+- Anything the plan says needs a secret value, a data repair, or an Azure/GitHub change outside the `CLAUDE.md` rule — the user does those.
 
 At a hard stop: say what stopped, what is already done (commit hashes, branch, status), and the one thing that unblocks it. Leave the board in an honest state.
 

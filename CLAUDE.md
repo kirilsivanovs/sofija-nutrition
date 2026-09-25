@@ -45,7 +45,8 @@ Diary entries, measurements, complaints and consultation notes are health data (
 - Never put personal data or secrets in task files, notes, logs, test fixtures, commit messages or chat replies. Use storage keys and synthetic data.
 - Never read `.env`, `api/local.settings.json` or `.auth/` (denied in settings). If a task needs a secret's value, the user sets it in Key Vault / app settings.
 - New processors of patient data (email, video, payments, AI) must be EU-hosted or covered by a DPA with SCCs — flag it in the analysis before building on one.
-- Production changes (Azure app settings, deploys, role assignments, data repairs) follow change management: verified and reviewed by the pipeline, pushed to `main` (which deploys), Azure/GitHub settings changed by the user. Nothing here changes settings, secrets or data in Azure directly.
+- Code reaches production only through the pipeline: verified, reviewed, pushed to `main` (which deploys).
+- **Azure/GitHub changes (development stage, no real patient data yet — confirmed by the user 2026-09-25):** the main session may run `az`/`gh` commands that change resources in the site's resource group (`PersonalProjects`, subscription `KirilsSubscription`; `az` uses the isolated `AZURE_CONFIG_DIR` from `.claude/settings.local.json`, never the corporate login), after stating each command in one line. Never: read secret values (list setting names only), touch the data plane (table contents), delete the Storage account, grant a role broader than one resource, or act outside that resource group. A secret's value is still set by the user. Revoke this rule before the first real patient data arrives.
 - Least privilege for every identity and role you propose (e.g. *Storage Table Data Contributor* on one account, not *Contributor* on the subscription). Flag anything broader.
 
 ## Language

@@ -9,7 +9,7 @@ The site must read as one real practitioner's practice: a nutritionist in Riga w
 
 ## What makes it specific
 
-- **Real photographs only.** Sofija, her room, her food, her talks (EASD 2025 Vienna, Researchers' Night, Health Literacy Day at Stradiņš hospital — already in `public/assets/img/*-600w.webp`). Never AI-generated images of people, never a "doctor" stock photo, never a title she does not hold (no "Dr." before the doctorate is defended).
+- **Real photographs only.** Sofija, her room, her food, her talks (EASD 2025 Vienna, Researchers' Night, Health Literacy Day at Stradiņš hospital — already in `public/assets/img/*-600w.webp`). Never an AI-generated image of any subject (people, food, devices, backgrounds), never a "doctor" stock photo; a section without a real photo goes without an image, never a title she does not hold (no "Dr." before the doctorate is defended).
 - **Her subject as the visual language.** Glucose curves, time-in-range bands (3.9–10 mmol/L), before/after meal comparisons with anonymised data, real units. Use it in one place per page, drawn to scale, not as decoration everywhere.
 - **Her words.** Copy comes from Sofija, first person, concrete: "First consultation: 60 minutes, online or in Riga, 80 €". If a task has no copy, use a clearly marked placeholder and log `copy pending from Sofija`; never write health promises.
 - **Editorial layout** over card grids: a readable column, asymmetry, long paragraphs where something needs explaining. A card is used only when the item is genuinely a separate object (a service with a price).

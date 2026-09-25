@@ -14,7 +14,7 @@ This practice processes **health data** (GDPR Art. 9): diary entries, meal photo
 - **No personal data in logs, error responses, analytics, URLs or client-side storage.** Log storage keys and outcomes (`booking <RowKey> confirmed`), never an email, name, phone, personas kods or diary text. Error bodies to the client are generic.
 - **No real personal data in tests, fixtures, task files, commits or screenshots.** Synthetic values only (`patient@example.test`, `+371 20000000` is fine *only* in tests).
 - **Never read or print secrets** (`.env`, `api/local.settings.json`, `.auth/`). Secrets live in Key Vault / app settings, read at runtime.
-- **Never change production from here** — app settings, roles, data repairs and deploys go through the pipeline (verified, reviewed, then pushed to `main`) and change management. A plan may contain the command for the user to run; the agent does not run it.
+- **Code and data never change in production from here** — deploys go through the pipeline (verified, reviewed, then pushed to `main`); data repairs are the user's. Azure/GitHub resource settings follow the development-stage rule in `CLAUDE.md` (main session only, one resource group, no secret values, no data plane); once real patient data exists, they return to the user under change management.
 
 ## Checklist for a plan or a review
 
