@@ -25,7 +25,7 @@ The site must read as one real practitioner's practice: a nutritionist in Riga w
 ## Tokens and styles
 
 - One CSS system. New styles go into the token-based system the task's plan names (currently `src/styles/fresh-clinical.css` + Tailwind via Vite); don't add to `public/assets/booking.css` or `tailwind-custom.css` (legacy, to be removed), and don't add inline `<style>` blocks to pages.
-- Colours from tokens only. Text on the sage accent uses `--fc-sage-deep` (≈6:1); plain `#5b8c6e` fails AA for body-size text.
+- Colours from tokens only. Text on the sage accent uses `--color-sage-deep` (≈6:1); plain `#5b8c6e` fails AA for body-size text.
 - Fonts must cover Latvian diacritics (ā č ē ģ ī ķ ļ ņ š ū ž) and Cyrillic. At most two families, loaded with the weights actually used.
 - Icons: self-hosted SVG or one pinned icon weight; never an unpinned CDN script.
 

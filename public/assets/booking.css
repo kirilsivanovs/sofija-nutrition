@@ -2,21 +2,12 @@
  * Booking Calendar Styles
  */
 
-/* CSS Variables for standalone use — must match src/styles/global.css @theme */
+/* Brand tokens (primary/secondary/accent/cream/border/muted/text-light/fonts) now
+   come from src/styles/global.css via fresh-clinical.css, loaded before this file.
+   Only booking-local values that have no equivalent there remain. */
 :root {
   --color-white: #ffffff;
-  --color-primary: #1b4332;
-  --color-primary-dark: #143728;
-  --color-secondary: #c4a06e;
-  --color-secondary-dark: #9c7c46;
-  --color-accent: #2d6a4f;
-  --color-cream: #faf6ef;
-  --color-border: #e5e7eb;
-  --color-muted: #9ca3af;
   --color-text: #374151;
-  --color-text-light: #6b7280;
-  --font-serif: 'Lora', serif;
-  --font-sans: 'Inter', sans-serif;
   --font-booking: 'Manrope', sans-serif;
   --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --booking-shadow-soft: 0 12px 30px rgba(17, 40, 28, 0.12);

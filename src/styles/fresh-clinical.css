@@ -1,0 +1,36 @@
+/* fresh-clinical.css — single source of truth for brand tokens.
+   Web UI surfaces (global.css, booking.css, animations.css, admin.css) must
+   reference these exact values via var(--color-*) etc. Email/PDF colours
+   live in api/src/config (separate channel). */
+@theme static {
+  /* Brand greens */
+  --color-primary: #1b4332; /* deep forest — headings, solid buttons */
+  --color-primary-dark: #143728; /* hover/pressed depth */
+  --color-accent: #2d6a4f; /* lighter forest — links, hover accents */
+
+  /* CGM/time-in-range green accent */
+  --color-sage: #4f8f68; /* decorative accent, no contrast requirement */
+  --color-sage-deep: #2f6b46; /* text-safe accent, >=4.5:1 — see tests/design-tokens.test.ts */
+
+  /* Brand gold — decorative only from here on (dividers, icon backgrounds, badge accents) */
+  --color-secondary: #c4a06e;
+  --color-secondary-dark: #9c7c46; /* decorative only; NOT a body-text-safe colour */
+
+  /* Surfaces */
+  --color-cream: #faf6ef; /* warm section background */
+  --color-bg-light: #fffdfa; /* page background */
+
+  /* Neutrals */
+  --color-ink: #1f2937;
+  --color-text-light: #6b7280;
+  --color-muted: #9ca3af;
+  --color-border: #e5e7eb;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-serif: 'Lora', serif;
+  --font-sans: 'Inter', sans-serif;
+}

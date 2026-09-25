@@ -1,25 +1,5 @@
 ﻿@import 'tailwindcss';
-
-/* Custom Tailwind Theme — single source of truth for brand tokens.
-   Web UI surfaces (global.css, booking.css, animations.css) must reference
-   these exact values. Email/PDF colours live in api/src/config (separate channel). */
-@theme {
-  /* Brand greens */
-  --color-primary: #1b4332; /* deep forest — headings, solid buttons */
-  --color-primary-dark: #143728; /* hover/pressed depth */
-  --color-accent: #2d6a4f; /* lighter forest — links, hover accents */
-
-  /* Brand gold (single canonical value across the whole web UI) */
-  --color-secondary: #c4a06e; /* decorative accents, dividers, icons */
-  --color-secondary-dark: #9c7c46; /* accessible gold for text on light bg (>=4.5:1) */
-
-  /* Surfaces */
-  --color-cream: #faf6ef; /* warm section background */
-  --color-bg-light: #fffdfa; /* page background */
-
-  --font-serif: 'Lora', serif;
-  --font-sans: 'Inter', sans-serif;
-}
+@import './fresh-clinical.css';
 
 /* Base font size optimization for readability */
 html {
@@ -618,7 +598,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   transform: translateY(-50%);
   width: 3px;
   height: 24px;
-  background: var(--color-secondary, #c9a36a);
+  background: var(--color-secondary);
   border-radius: 0 3px 3px 0;
 }
 
@@ -936,8 +916,8 @@ nav .flex.gap-1::-webkit-scrollbar {
   gap: 8px;
   margin-top: 24px;
   padding: 12px 20px;
-  background: rgba(212, 165, 116, 0.1);
-  border: 1px solid rgba(212, 165, 116, 0.2);
+  background: rgba(196, 160, 110, 0.1);
+  border: 1px solid rgba(196, 160, 110, 0.2);
   border-radius: 12px;
   font-size: 0.875rem;
   color: var(--color-primary);
@@ -972,7 +952,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
   box-shadow:
-    0 0 16px rgba(212, 165, 116, 0.35),
+    0 0 16px rgba(196, 160, 110, 0.35),
     0 4px 12px rgba(0, 0, 0, 0.15);
 }
 

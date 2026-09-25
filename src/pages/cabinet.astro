@@ -287,13 +287,13 @@ import AppHeader from '../components/common/AppHeader.astro';
   <style is:global>
     /* ---- Design tokens ---- */
     :root {
-      --diary-green: #1b4332;
-      --diary-green-light: #295d45;
+      --diary-green: var(--color-primary);
+      --diary-green-light: var(--color-accent);
       --diary-cream: #fbf8f2;
       --diary-warm: #f6f1e8;
       --diary-border: #e6e0d6;
-      --diary-gold: #c9a36a;
-      --diary-text: #1f2937;
+      --diary-gold: var(--color-secondary-dark);
+      --diary-text: var(--color-ink);
       --diary-text-dim: #64748b;
       --diary-radius: 16px;
       --diary-max-w: 480px;
@@ -534,7 +534,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .meal-section-title i {
       font-size: 18px;
-      color: var(--diary-gold);
+      color: var(--diary-text);
       width: 32px;
       height: 32px;
       display: flex;
@@ -1011,7 +1011,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .btn-save-fav:hover {
       border-color: var(--diary-gold);
-      color: var(--diary-gold);
+      color: var(--diary-text);
     }
     .btn-text {
       color: var(--diary-text-dim);
