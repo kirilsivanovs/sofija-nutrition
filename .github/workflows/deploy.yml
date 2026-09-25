@@ -1,0 +1,97 @@
+# ============================================
+# Deploy (API + Frontend)
+# Triggers on CI success on main; deploys the API first,
+# then the frontend against the same tested commit.
+# ============================================
+name: Deploy
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  api:
+    name: Build & Deploy API
+    runs-on: ubuntu-latest
+    environment: production
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build API
+        working-directory: api
+        run: npm run build
+
+      - name: Install production dependencies in dist
+        working-directory: api/dist
+        run: npm install --omit=dev
+
+      - name: Login to Azure
+        uses: Azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: sofija-nutrition-api
+          package: api/dist
+
+  frontend:
+    name: Deploy to Azure Static Web Apps
+    runs-on: ubuntu-latest
+    needs: [api]
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend (Node 22 — Astro 6 requires >=22.12; SWA/Oryx only ships Node 20)
+        run: npm run build
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          # ── Build config ──
+          # Frontend is pre-built above on Node 22; deploy the ready dist/ as-is.
+          app_location: dist
+          output_location: ''
+          skip_app_build: true
+          # API is a linked standalone Function App — no managed API here.
+          api_location: ''
