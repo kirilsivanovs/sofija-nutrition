@@ -22,7 +22,7 @@ npx jest -c api/jest.config.js api/tests/<file>.test.ts -t "<name>"  # api
 npx jest -c shared/jest.config.js shared/tests/<file>.test.ts      # shared
 npx tsc -p api/tsconfig.json --noEmit                            # api typecheck — part of verifying any api change
 npm run build                                                    # astro build; verifies any frontend change
-npx playwright test e2e/<file>.spec.ts                           # needs `npm run dev` on :4321 (launch config `astro-dev`)
+npx playwright test e2e/<file>.spec.ts                           # needs `npm run dev` on :4321 (launch config `astro-dev`); inside a slot `<n>`, port is `4321+n` and `PLAYWRIGHT_BASE_URL` must match (`astro-dev-<n>` in `.claude/launch.json`).
 ```
 
 Three frontend suites are excluded in `jest.config.cjs` as broken (`booking-state`, `booking-formatters`, `apiClient`). A plan that relies on one must fix and re-enable it, not add to the list.
@@ -85,5 +85,6 @@ Diary entries, measurements, complaints and consultation notes are health data (
 
 - Plain language maps to the matching command: a bare id or "давай возьмём SN-012" is `/work SN-012`, "давай дизайн" is `/work design`, "продолжай" is `/work`, "что там по задачам" is `/board`, "заведи задачу …" is `/new`, "где в коде..." is `/find`. Say which command you took it as. A bare "yes" after a gate authorises the stage just described.
 - No pull requests. Never force-push, `reset --hard` or rewrite pushed history.
-- Never isolate a writing agent in a worktree (`isolation: worktree`, or `claude --bg`): worktrees don't carry the uncommitted edits each seam builds on.
+- Never isolate a writing agent in a worktree (`isolation: worktree`, or `claude --bg`): worktrees don't carry the uncommitted edits each seam builds on — this is about a sub-agent inside one task, not the per-task/session worktree slot `/work` itself now runs in (`.claude/scripts/manage-worktree-slot.ps1`).
+- A session commits only from its own slot; never `git -C` into another slot or the main checkout to commit.
 - **Autopilot:** no confirmation gates. Wherever a choice comes up, take the recommended option and say in one line which. Ask the user only at `/work`'s hard stops (a question only they or Sofija can answer, foreign uncommitted changes, still failing after two fix rounds, a rebase conflict, pre-deploy manual steps).

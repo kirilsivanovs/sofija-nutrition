@@ -14,7 +14,7 @@ Run the checks for the task in `$ARGUMENTS` yourself. **No sub-agent.** Do not w
    npx tsc -p api/tsconfig.json --noEmit
    ```
 
-   The hook trims Jest and Playwright output — don't add flags, don't pipe it. No Testing plan recorded → run the suite for the changed unit's area plus that area's typecheck/build, and say you did because the plan named none. A browser scenario in the plan is not run here; say `/orchestrate force tester <ID>` runs it.
+   The hook trims Jest and Playwright output — don't add flags, don't pipe it. No Testing plan recorded → run the suite for the changed unit's area plus that area's typecheck/build, and say you did because the plan named none. A browser scenario in the plan is not run here; say `/orchestrate force tester <ID>` runs it. When running Playwright from inside a slot `<n>`, set `$env:PLAYWRIGHT_BASE_URL = "http://localhost:$(4321+<n>)"` first (`playwright.config.ts:3` already reads it).
 4. Report in a few lines: passed/failed counts per command, and for each failure the test name, the assertion message and `file:line`, or the first type/build error with `file:line`. Never paste the output.
 
 This command never changes `status`. Failures → say `/work <ID>` sends them back to `developer`. Do not do that yourself.

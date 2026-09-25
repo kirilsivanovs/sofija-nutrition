@@ -29,7 +29,7 @@ Say in one line which stage the normal route would have chosen and why you are o
 
 Bring work started by hand into the board. No sub-agent.
 
-1. Find the branch: `git branch --list "<id-lowercased>-*"`, or the one the user names. Record it in `branch`.
+1. Find the branch: `git branch --list "<id-lowercased>-*"`, or the one the user names. Record it in `branch`. Claim its `.lock` per SN-024.1's format if none exists yet: `branch:` found above, `worktree:` from `git worktree list` if the branch is checked out in a slot, else `(pending)`, `claimed: <now>`.
 2. **Do not advance `status` past what the file earns.** Empty `## Plan` → leave `status`; the pipeline still owes a planning pass. Plan written and branch exists → `status: branched`.
 3. Leave every uncommitted change exactly where it is. Never stash, reset, commit or switch branches.
 4. Append one dated `## Log` line: the branch adopted, and that it was created outside the pipeline.
