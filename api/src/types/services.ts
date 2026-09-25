@@ -113,8 +113,13 @@ export interface IBookingRepository {
   acquireSlotLock(date: string, time: string): Promise<SlotLockResult>;
   releaseSlotLock(date: string, time: string, lockId: string): Promise<void>;
   generateBookingId(): string;
-  generatePaymentToken(bookingId: string, email: string): string;
-  verifyPaymentToken(token: string, bookingId: string, email: string): boolean;
+  generatePaymentToken(bookingId: string, email: string, expiresAtSec: number): string;
+  verifyPaymentToken(
+    token: string,
+    bookingId: string,
+    email: string,
+    nowMs?: number
+  ): boolean;
 }
 
 // ============================================

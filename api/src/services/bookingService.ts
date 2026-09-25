@@ -8,7 +8,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const config = require('../config');
 const { branding, servicePrices } = config;
-const API_BASE_URL = config.API_BASE_URL;
 
 import translations from '../translations';
 import {
@@ -17,6 +16,7 @@ import {
   updateBooking,
   generateBookingId,
   generatePaymentToken,
+  verifyPaymentToken,
   isSlotBooked,
   acquireSlotLock,
   releaseSlotLock,
@@ -74,7 +74,6 @@ export interface BookingData {
   language: string;
   consultationFormat: string;
   price: number;
-  paymentToken: string;
   paymentConfirmed: boolean;
   status: string;
   createdAt: string;
@@ -117,6 +116,11 @@ export const BookingErrorCodes = {
 } as const;
 
 export type BookingErrorCode = (typeof BookingErrorCodes)[keyof typeof BookingErrorCodes];
+
+/**
+ * How long after the appointment date a payment confirmation link stays valid.
+ */
+export const PAYMENT_LINK_DAYS_AFTER_APPOINTMENT = 7;
 
 /**
  * Custom error class for booking-related errors
@@ -197,6 +201,24 @@ function validateNotHoliday(date: string): void {
   }
 }
 
+/**
+ * Builds the admin-facing payment confirmation link: an expiring token bound
+ * to this booking's id and email, valid until the end of the appointment day
+ * (UTC) plus PAYMENT_LINK_DAYS_AFTER_APPOINTMENT.
+ */
+export function buildPaymentConfirmationUrl(
+  bookingId: string,
+  email: string,
+  date: string
+): string {
+  const appointmentEndOfDayUtc = new Date(`${date}T23:59:59Z`).getTime();
+  const expiresAtSec = Math.floor(
+    (appointmentEndOfDayUtc + PAYMENT_LINK_DAYS_AFTER_APPOINTMENT * 24 * 60 * 60 * 1000) / 1000
+  );
+  const token = generatePaymentToken(bookingId, email, expiresAtSec);
+  return `${branding.websiteUrl}/api/confirm-payment?id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`;
+}
+
 // ============================================
 // Booking Operations
 // ============================================
@@ -261,7 +283,6 @@ export async function createBooking(
 
     // Generate booking data
     const bookingId = generateBookingId();
-    const paymentToken = generatePaymentToken(bookingId, email);
 
     const service = serviceId;
     const price = (servicePrices as Record<string, number>)[service] || 65;
@@ -284,7 +305,6 @@ export async function createBooking(
       language: langCode as string,
       consultationFormat,
       price,
-      paymentToken,
       paymentConfirmed: false,
       status: 'pending',
       createdAt: new Date().toISOString(),
@@ -349,10 +369,9 @@ async function sendBookingEmails(
   pdfBase64: Uint8Array | null,
   { log, logError }: { log: (...args: unknown[]) => void; logError: (...args: unknown[]) => void }
 ): Promise<void> {
-  const { name, email, bookingId, serviceName, formatLabel, date, time, price, paymentToken } =
-    bookingData;
+  const { name, email, bookingId, serviceName, formatLabel, date, time, price } = bookingData;
 
-  const confirmPaymentUrl = `${API_BASE_URL}/api/confirm-payment?token=${paymentToken}`;
+  const confirmPaymentUrl = buildPaymentConfirmationUrl(bookingId, email, date);
 
   const displayData = {
     name,
@@ -411,23 +430,25 @@ async function sendBookingEmails(
 }
 
 /**
- * Confirms payment for a booking
+ * Confirms payment for one booking. The token must verify against that
+ * booking's id and email; a missing booking and a failed verification give
+ * the same error so a caller cannot tell the two apart.
  */
 export async function confirmPayment(
+  bookingId: string,
   token: string,
   options: LoggingOptions = {}
 ): Promise<{ success: boolean; bookingId: string }> {
   const log = options.onLog || console.log;
 
-  if (!token) {
-    throw new BookingError('Token is required', BookingErrorCodes.INVALID_TOKEN, 400);
+  if (!bookingId || !token) {
+    throw new BookingError('Invalid or expired token', BookingErrorCodes.INVALID_TOKEN, 400);
   }
 
-  // Find booking by token
-  const booking = await getBooking(token);
+  const booking = await getBooking(bookingId);
 
-  if (!booking) {
-    throw new BookingError('Booking not found', BookingErrorCodes.BOOKING_NOT_FOUND, 404);
+  if (!booking || !verifyPaymentToken(token, bookingId, booking.email)) {
+    throw new BookingError('Invalid or expired token', BookingErrorCodes.INVALID_TOKEN, 400);
   }
 
   if (booking.paymentConfirmed) {
@@ -444,8 +465,8 @@ export async function confirmPayment(
     id: booking.rowKey || booking.id || '',
     date: booking.date,
     paymentConfirmed: true,
+    paymentConfirmedAt: new Date().toISOString(),
     status: 'confirmed' as const,
-    confirmedAt: new Date().toISOString(),
   });
 
   log(`Payment confirmed for booking ${booking.rowKey || booking.id}`);

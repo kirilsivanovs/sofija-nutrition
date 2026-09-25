@@ -2,6 +2,8 @@
  * Jest test setup - подавляем информационные логи для чистого вывода
  */
 
+process.env.PAYMENT_TOKEN_SECRET ??= 'test-secret-' + 'x'.repeat(40);
+
 // Сохраняем оригинальные функции
 const originalLog = console.log;
 const originalWarn = console.warn;

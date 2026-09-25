@@ -262,7 +262,8 @@ describe('Booking Flow Simulation', () => {
       const bookingRepository = require('../src/services/bookingRepository');
       const bookingId = 'SN-FLOW123';
       const email = 'test@test.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const expiresAtSec = Math.floor(Date.now() / 1000) + 3600;
+      const token = bookingRepository.generatePaymentToken(bookingId, email, expiresAtSec);
       const isValid = bookingRepository.verifyPaymentToken(token, bookingId, email);
       expect(isValid).toBe(true);
     });
@@ -342,19 +343,20 @@ describe('Security', () => {
       const bookingRepository = require('../src/services/bookingRepository');
       const bookingId = 'SN-SECRET123';
       const email = 'secret@test.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const expiresAtSec = Math.floor(Date.now() / 1000) + 3600;
+      const token = bookingRepository.generatePaymentToken(bookingId, email, expiresAtSec);
 
-      // Base64 decodes to "bookingId:email", so the raw token shouldn't contain plain text
-      // but the decoded value will contain the ID
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');
+      expect(token).not.toContain(bookingId);
     });
 
     it('should reject tampered tokens', () => {
       const bookingRepository = require('../src/services/bookingRepository');
       const bookingId = 'SN-TAMPER123';
       const email = 'tamper@test.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const expiresAtSec = Math.floor(Date.now() / 1000) + 3600;
+      const token = bookingRepository.generatePaymentToken(bookingId, email, expiresAtSec);
 
       // Tamper with token
       const tamperedToken = token.slice(0, -5) + 'XXXXX';

@@ -289,34 +289,72 @@ export function generateBookingId(): string {
   return `SN-${Date.now().toString(36).toUpperCase()}`;
 }
 
+const PAYMENT_TOKEN_PATTERN = /^(\d{1,12})\.([0-9a-f]{64})$/;
+
 /**
  * Secret used to sign payment confirmation tokens.
- * Set PAYMENT_TOKEN_SECRET in production to a long random value.
+ * PAYMENT_TOKEN_SECRET must be set in production to a long random value;
+ * there is no fallback because the previous default was public (this repo is public).
  */
 function getPaymentTokenSecret(): string {
-  return process.env.PAYMENT_TOKEN_SECRET || 'dev-insecure-payment-token-secret';
+  const secret = process.env.PAYMENT_TOKEN_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error('PAYMENT_TOKEN_SECRET must be set to a random value of at least 32 characters');
+  }
+  return secret;
 }
 
 /**
- * Generate a payment confirmation token (HMAC-SHA256 signed)
+ * Throws at startup if PAYMENT_TOKEN_SECRET is missing or too short, so the
+ * function app fails closed instead of falling back to a guessable secret.
  */
-export function generatePaymentToken(bookingId: string, email: string): string {
+export function assertPaymentTokenSecretConfigured(): void {
+  getPaymentTokenSecret();
+}
+
+function paymentTokenDigest(bookingId: string, email: string, expiresAtSec: number): string {
   return createHmac('sha256', getPaymentTokenSecret())
-    .update(`${bookingId}:${email}`)
+    .update(`payment-confirm:${bookingId}:${email.trim().toLowerCase()}:${expiresAtSec}`)
     .digest('hex');
 }
 
 /**
- * Verify a payment confirmation token (constant-time comparison)
+ * Generate an expiring payment confirmation token bound to one booking and email.
+ * Format: `<expiresAtSec>.<hmac-hex>`.
  */
-export function verifyPaymentToken(token: string, bookingId: string, email: string): boolean {
-  const expected = generatePaymentToken(bookingId, email);
-  const tokenBuffer = Buffer.from(token);
-  const expectedBuffer = Buffer.from(expected);
-  if (tokenBuffer.length !== expectedBuffer.length) {
+export function generatePaymentToken(
+  bookingId: string,
+  email: string,
+  expiresAtSec: number
+): string {
+  return `${expiresAtSec}.${paymentTokenDigest(bookingId, email, expiresAtSec)}`;
+}
+
+/**
+ * Verify a payment confirmation token (constant-time comparison), rejecting
+ * malformed and expired tokens.
+ */
+export function verifyPaymentToken(
+  token: string,
+  bookingId: string,
+  email: string,
+  nowMs: number = Date.now()
+): boolean {
+  const match = PAYMENT_TOKEN_PATTERN.exec(token);
+  if (!match) {
     return false;
   }
-  return timingSafeEqual(tokenBuffer, expectedBuffer);
+  const expiresAtSec = Number(match[1]);
+  if (expiresAtSec * 1000 <= nowMs) {
+    return false;
+  }
+  const expected = paymentTokenDigest(bookingId, email, expiresAtSec);
+  const providedBuffer = Buffer.from(match[2], 'hex');
+  const expectedBuffer = Buffer.from(expected, 'hex');
+  if (providedBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+  return timingSafeEqual(providedBuffer, expectedBuffer);
 }
 
 /**
@@ -383,6 +421,7 @@ module.exports = {
   generateBookingId,
   generatePaymentToken,
   verifyPaymentToken,
+  assertPaymentTokenSecretConfigured,
   isUsingAzureStorage,
   isSlotBooked,
   getAllInMemoryBookings,

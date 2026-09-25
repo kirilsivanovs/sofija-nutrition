@@ -88,7 +88,8 @@ npm run test:all
 |--------|-------|-------------|
 | GET | `/api/availability/{date?}` | Available time slots |
 | POST | `/api/bookings` | Create booking |
-| GET | `/api/confirm-payment` | Payment confirmation |
+| GET | `/api/confirm-payment` | Payment confirmation page (renders only, no state change) |
+| POST | `/api/dashboard/bookings/{id}/confirm-payment` | Confirm payment (admin) |
 
 ### Food Tracker (authenticated)
 | Method | Route | Description |

@@ -63,16 +63,31 @@ describe('Booking Repository Service', () => {
     });
   });
 
+  const futureExpiry = () => Math.floor(Date.now() / 1000) + 3600;
+
   describe('generatePaymentToken', () => {
     it('should generate token for booking ID', () => {
-      const token = bookingRepository.generatePaymentToken('SN-TEST123');
+      const token = bookingRepository.generatePaymentToken(
+        'SN-TEST123',
+        'test@example.com',
+        futureExpiry()
+      );
       expect(typeof token).toBe('string');
       expect(token.length).toBeGreaterThan(10);
     });
 
     it('should generate different tokens for different IDs', () => {
-      const token1 = bookingRepository.generatePaymentToken('SN-TEST123');
-      const token2 = bookingRepository.generatePaymentToken('SN-TEST456');
+      const expiresAtSec = futureExpiry();
+      const token1 = bookingRepository.generatePaymentToken(
+        'SN-TEST123',
+        'test@example.com',
+        expiresAtSec
+      );
+      const token2 = bookingRepository.generatePaymentToken(
+        'SN-TEST456',
+        'test@example.com',
+        expiresAtSec
+      );
       expect(token1).not.toBe(token2);
     });
   });
@@ -81,7 +96,7 @@ describe('Booking Repository Service', () => {
     it('should verify valid token', () => {
       const bookingId = 'SN-TEST123';
       const email = 'test@example.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const token = bookingRepository.generatePaymentToken(bookingId, email, futureExpiry());
       const result = bookingRepository.verifyPaymentToken(token, bookingId, email);
       expect(result).toBe(true);
     });
@@ -103,7 +118,7 @@ describe('Booking Repository Service', () => {
     it('should reject token with wrong bookingId', () => {
       const bookingId = 'SN-TEST123';
       const email = 'test@example.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const token = bookingRepository.generatePaymentToken(bookingId, email, futureExpiry());
       const result = bookingRepository.verifyPaymentToken(token, 'SN-WRONG', email);
       expect(result).toBe(false);
     });
@@ -111,7 +126,7 @@ describe('Booking Repository Service', () => {
     it('should reject token with wrong email', () => {
       const bookingId = 'SN-TEST123';
       const email = 'test@example.com';
-      const token = bookingRepository.generatePaymentToken(bookingId, email);
+      const token = bookingRepository.generatePaymentToken(bookingId, email, futureExpiry());
       const result = bookingRepository.verifyPaymentToken(token, bookingId, 'wrong@test.com');
       expect(result).toBe(false);
     });

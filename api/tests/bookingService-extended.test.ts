@@ -250,7 +250,7 @@ describe('BookingService - Advanced Scenarios', () => {
         it('should reject payment confirmation with invalid token', async () => {
             const invalidToken = 'invalid-token-12345';
 
-            await expect(confirmPayment(invalidToken))
+            await expect(confirmPayment('SN-NOPE0000', invalidToken))
                 .rejects
                 .toThrow();
         });
