@@ -57,7 +57,7 @@ Diary entries, measurements, complaints and consultation notes are health data (
 
 ## Context discipline
 
-- Read with `Grep`/`Glob` first; open whole files only when you must edit them. `cabinet.astro` (2k lines), `public/assets/booking.js` (1.5k), `booking.css` and `admin.css` (2.3k each) are expensive — read ranges.
+- Read with `Grep`/`Glob` first; open whole files only when you must edit them. `cabinet.astro` (2k lines), `src/scripts/booking/booking-calendar.js` (1.5k), `booking.css` and `admin.css` (2.3k each) are expensive — read ranges.
 - Never paste build/test output into the reply — report the failing assertion and `file:line`.
 - Work is tracked in `.claude/tasks/` (see its README). It is the memory between sessions and it is local only (gitignored).
 - A task file stays **within 12 KB** (a hook enforces it). `## Log` is one line per event.

@@ -342,7 +342,9 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
     <!-- Shared translations (loaded before booking.js) -->
     <script is:inline src="/assets/shared-translations.js"></script>
-    <script defer is:inline src="/assets/booking.js"></script>
+    <script>
+      import '../scripts/booking/booking-calendar.js';
+    </script>
     <script defer is:inline src="/assets/main.js"></script>
     <script defer is:inline src="/assets/animations.js"></script>
   </body>

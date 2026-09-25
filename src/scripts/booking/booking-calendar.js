@@ -1511,7 +1511,4 @@ class BookingCalendar {
   }
 }
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = BookingCalendar;
-}
+window.BookingCalendar = BookingCalendar;
