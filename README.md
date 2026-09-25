@@ -49,8 +49,7 @@ sofija-nutrition/
 
 | Resource | Type | Region |
 |---|---|---|
-| `sofija-nutrition` | Static Web App | West Europe |
-| `sofija-nutrition-api` | Function App (Node.js 22), linked to the SWA as its bring-your-own backend | West Europe |
+| `sofija-nutrition` | Static Web App (managed API, no separate resource) | West Europe |
 | `sofijanutristg` | Storage Account (Table Storage) | West Europe |
 
 ## Tech Stack
@@ -117,7 +116,7 @@ npm run test:all
 PR → CI + CodeQL → Preview Deploy (SWA) → E2E (Preview)
   └── merge to main after all checks pass
 
-main → CI → Deploy: api (Function App) → frontend (SWA, no managed API)
+main → CI → Deploy (SWA + managed API)
 ```
 
 ### Required GitHub Secrets
@@ -125,9 +124,6 @@ main → CI → Deploy: api (Function App) → frontend (SWA, no managed API)
 | Secret | Description |
 |--------|-------------|
 | `AZURE_STATIC_WEB_APPS_API_TOKEN` | SWA deployment token |
-| `AZURE_CLIENT_ID` | OIDC federated credential client ID for the `production` environment |
-| `AZURE_TENANT_ID` | Entra tenant ID for OIDC login |
-| `AZURE_SUBSCRIPTION_ID` | Azure subscription ID for OIDC login |
 
 ### Branch Protection + Auto-merge (recommended)
 
@@ -137,8 +133,8 @@ main → CI → Deploy: api (Function App) → frontend (SWA, no managed API)
 ### Manual Deployment
 
 ```bash
-# API and frontend deploy automatically via the `deploy.yml` GitHub Actions
-# workflow, triggered by a successful CI run on main (api job, then frontend).
+# API and frontend deploy together via SWA managed functions,
+# triggered by `deploy.yml` on CI success.
 ```
 
 ## Workspace Structure

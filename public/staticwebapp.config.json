@@ -83,5 +83,8 @@
   },
   "mimeTypes": {
     ".json": "application/json"
+  },
+  "platform": {
+    "apiRuntime": "node:22"
   }
 }
