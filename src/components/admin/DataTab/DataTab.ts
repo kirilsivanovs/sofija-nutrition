@@ -3,6 +3,8 @@
  * Following Single Responsibility and SOLID principles
  */
 
+import { escapeHtml } from '../../../utils/escapeHtml';
+
 interface TableData {
   entities: any[];
   columns: string[];
@@ -60,7 +62,6 @@ export class DataTabController {
   init(): void {
     this.initDOMElements();
     this.setupEventListeners();
-    this.exposeGlobalFunctions();
   }
 
   /**
@@ -111,14 +112,20 @@ export class DataTabController {
     this.elements.batchDeleteBtn?.addEventListener('click', () => this.batchDelete());
     this.elements.batchExportBtn?.addEventListener('click', () => this.batchExport());
     this.elements.deselectAllBtn?.addEventListener('click', () => this.deselectAll());
-  }
 
-  /**
-   * Expose functions to window for onclick handlers
-   */
-  private exposeGlobalFunctions(): void {
-    (window as any).deleteEntity = (pk: string, rk: string) => this.deleteEntity(pk, rk);
-    (window as any).sortTable = (column: string) => this.sortTable(column);
+    this.elements.tableHeader?.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest('[data-sort-column]') as HTMLElement | null;
+      if (target?.dataset.sortColumn) {
+        this.sortTable(target.dataset.sortColumn);
+      }
+    });
+
+    this.elements.tableBody?.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest('[data-delete-pk]') as HTMLElement | null;
+      if (target?.dataset.deletePk !== undefined && target.dataset.deleteRk !== undefined) {
+        this.deleteEntity(target.dataset.deletePk, target.dataset.deleteRk);
+      }
+    });
   }
 
   /**
@@ -259,8 +266,8 @@ export class DataTabController {
       ${columns
         .map(
           (col: string) => `
-        <th onclick="sortTable('${col}')" style="cursor: pointer; user-select: none;">
-          ${col}
+        <th data-sort-column="${escapeHtml(col)}" style="cursor: pointer; user-select: none;">
+          ${escapeHtml(col)}
           ${
             this.currentSortColumn === col
               ? this.currentSortDirection === 'asc'
@@ -301,11 +308,11 @@ export class DataTabController {
                 else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;';
                 else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;';
               }
-              return `<td style="${style}" title="${String(value).replace(/"/g, '&quot;')}">${displayValue}</td>`;
+              return `<td style="${style}" title="${escapeHtml(value)}">${escapeHtml(displayValue)}</td>`;
             })
             .join('')}
           <td>
-            <button onclick="deleteEntity('${pk}', '${rk}')" class="btn-close" title="Dzēst">
+            <button data-delete-pk="${escapeHtml(pk)}" data-delete-rk="${escapeHtml(rk)}" class="btn-close" title="Dzēst">
               <i class="ph ph-trash"></i>
             </button>
           </td>

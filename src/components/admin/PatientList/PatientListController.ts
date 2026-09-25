@@ -3,6 +3,7 @@
  * Following Single Responsibility and SOLID principles
  */
 import { PatientService, type Patient } from '../../../services/admin/PatientService';
+import { escapeHtml } from '../../../utils/escapeHtml';
 
 export class PatientListController {
   private service: PatientService;
@@ -155,18 +156,18 @@ export class PatientListController {
     const secondary = this.service.getSecondaryInfo(patient);
 
     return `
-      <div class="patient-item ${isActive ? 'active' : ''}" data-user-id="${patient.userId}" role="button" tabindex="0">
+      <div class="patient-item ${isActive ? 'active' : ''}" data-user-id="${escapeHtml(patient.userId)}" role="button" tabindex="0">
         <div>
-          <div class="patient-id">${displayName}</div>
-          <div class="patient-meta">${secondary}</div>
+          <div class="patient-id">${escapeHtml(displayName)}</div>
+          <div class="patient-meta">${escapeHtml(secondary)}</div>
         </div>
         <div class="patient-actions">
           <div class="patient-meta">${patient.mealsCount || 0} ier.</div>
           <div style="display: flex; gap: 4px; align-items: center;">
-            <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${patient.userId}" data-enabled="${accessEnabled}">
+            <button class="access-toggle ${accessEnabled ? 'on' : 'off'}" data-user-id="${escapeHtml(patient.userId)}" data-enabled="${accessEnabled}">
               ${accessEnabled ? 'Atļauts' : 'Slēgts'}
             </button>
-            <button class="btn-remove-patient" data-user-id="${patient.userId}" title="Dzēst pacientu">
+            <button class="btn-remove-patient" data-user-id="${escapeHtml(patient.userId)}" title="Dzēst pacientu">
               <i class="ph ph-x"></i>
             </button>
           </div>

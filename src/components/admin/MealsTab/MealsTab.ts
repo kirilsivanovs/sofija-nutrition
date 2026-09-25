@@ -6,6 +6,7 @@
 import { PatientListController } from '../PatientList/PatientListController';
 import { PatientService } from '../../../services/admin/PatientService';
 import type { Patient } from '../../../services/admin/PatientService';
+import { escapeHtml } from '../../../utils/escapeHtml';
 
 interface MealItem {
   name: string;
@@ -409,7 +410,7 @@ export class MealsTabController {
           const time = this.formatMealTime(meal.createdAt);
           const items =
             (meal.items || [])
-              .map((item: MealItem) => `${item.name} (${item.weight}g)`)
+              .map((item: MealItem) => `${escapeHtml(item.name)} (${escapeHtml(item.weight)}g)`)
               .join(', ') || '—';
           const calories = Math.round(meal.totalCalories || 0);
           const protein = Math.round(meal.totalProtein || 0);

@@ -1209,6 +1209,8 @@ import AppHeader from '../components/common/AppHeader.astro';
 
   <!-- ============ SCRIPT ============ -->
   <script>
+    import { escapeHtml } from '../utils/escapeHtml';
+
     // ---- Globals ----
     let userId = '';
     let isCheckingAuth = false;
@@ -1228,14 +1230,6 @@ import AppHeader from '../components/common/AppHeader.astro';
     const $$ = (sel) => document.querySelectorAll(sel);
 
     // ---- Helpers ----
-    function escapeHtml(val) {
-      return String(val)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
     function formatDate(d) {
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
@@ -1473,11 +1467,11 @@ import AppHeader from '../components/common/AppHeader.astro';
                                         <span class="meal-item-kcal">${Math.round(cal)} kcal</span>
                                     </div>
                                     <div class="meal-item-detail">
-                                        ${item.weight}g · Obv. ${Math.round(p * 10) / 10}g · Tauki ${Math.round(f * 10) / 10}g · Ogh. ${Math.round(c * 10) / 10}g
+                                        ${escapeHtml(item.weight)}g · Obv. ${Math.round(p * 10) / 10}g · Tauki ${Math.round(f * 10) / 10}g · Ogh. ${Math.round(c * 10) / 10}g
                                     </div>
                                 </div>
                                 <div class="meal-item-actions">
-                                    <button class="meal-item-edit" data-edit-meal="${escapeHtml(meal.RowKey)}" data-edit-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" data-edit-type="${type}" data-edit-item='${escapeHtml(JSON.stringify({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs }))}' aria-label="Rediģēt">
+                                    <button class="meal-item-edit" data-edit-meal="${escapeHtml(meal.RowKey)}" data-edit-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" data-edit-type="${escapeHtml(type)}" data-edit-item='${escapeHtml(JSON.stringify({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs }))}' aria-label="Rediģēt">
                                         <i class="ph ph-pencil-simple"></i>
                                     </button>
                                     <button class="meal-item-delete" data-delete-meal="${escapeHtml(meal.RowKey)}" data-delete-date="${escapeHtml(formatDate(new Date(meal.createdAt)))}" aria-label="Dzēst">
@@ -1723,7 +1717,10 @@ import AppHeader from '../components/common/AppHeader.astro';
       }
       const reader = new FileReader();
       reader.onload = () => {
-        preview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
+        const img = document.createElement('img');
+        img.src = reader.result;
+        img.alt = 'Preview';
+        preview.replaceChildren(img);
         preview.classList.remove('hidden');
       };
       reader.readAsDataURL(file);
@@ -1907,9 +1904,9 @@ import AppHeader from '../components/common/AppHeader.astro';
                 <div class="food-chip" data-fav-apply='${escapeHtml(JSON.stringify(f))}'>
                     <div class="food-chip-body">
                         <div class="food-chip-name">${escapeHtml(f.name)}</div>
-                        <div class="food-chip-detail">${f.weight}g · Obv. ${f.protein}g · Tauki ${f.fat}g · Ogh. ${f.carbs}g</div>
+                        <div class="food-chip-detail">${escapeHtml(f.weight)}g · Obv. ${escapeHtml(f.protein)}g · Tauki ${escapeHtml(f.fat)}g · Ogh. ${escapeHtml(f.carbs)}g</div>
                     </div>
-                    <span class="food-chip-kcal">${f.calories} kcal</span>
+                    <span class="food-chip-kcal">${escapeHtml(f.calories)} kcal</span>
                     <button class="food-chip-del" data-fav-del="${escapeHtml(f.name)}" aria-label="Noņemt"><i class="ph ph-x"></i></button>
                 </div>
             `
@@ -1974,7 +1971,7 @@ import AppHeader from '../components/common/AppHeader.astro';
                 <div class="food-chip" data-recent-apply='${escapeHtml(JSON.stringify({ name: item.name, weight: item.weight, calories: item.calories, protein: item.protein, fat: item.fat, carbs: item.carbs }))}'>
                     <div class="food-chip-body">
                         <div class="food-chip-name">${escapeHtml(item.name)}</div>
-                        <div class="food-chip-detail">${item.weight}g · Obv. ${Math.round((item.protein || 0) * 10) / 10}g · Tauki ${Math.round((item.fat || 0) * 10) / 10}g · Ogh. ${Math.round((item.carbs || 0) * 10) / 10}g</div>
+                        <div class="food-chip-detail">${escapeHtml(item.weight)}g · Obv. ${Math.round((item.protein || 0) * 10) / 10}g · Tauki ${Math.round((item.fat || 0) * 10) / 10}g · Ogh. ${Math.round((item.carbs || 0) * 10) / 10}g</div>
                     </div>
                     <span class="food-chip-kcal">${Math.round(item.calories || 0)} kcal</span>
                 </div>
