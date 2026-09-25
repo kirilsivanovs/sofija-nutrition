@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
 ---
 
 <Layout
@@ -7,12 +9,14 @@ import Layout from '../layouts/Layout.astro';
   description="Pakalpojumu lietošanas noteikumi: pieteikšanās, apmaksa, atcelšana un atmaksa. Sofija Ivanova uztura konsultācijas."
   canonicalPath="/terms/"
 >
-  <article class="max-w-3xl mx-auto px-5 md:px-8 py-20 md:py-28">
-    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-      Pakalpojumu noteikumi
-    </h1>
+  <SiteHeader />
+</Layout>
 
-    <p class="text-gray-500 text-sm mb-10">Pēdējās izmaiņas: 4. jūnijs, 2026</p>
+<main id="main-content" class="fc-legal">
+  <article>
+    <h1>Pakalpojumu noteikumi</h1>
+
+    <p class="meta">Pēdējās izmaiņas: 4. jūnijs, 2026</p>
 
     <div class="prose prose-lg prose-gray max-w-none">
       <section class="mb-10">
@@ -45,12 +49,12 @@ import Layout from '../layouts/Layout.astro';
           3. Pieteikšanās un apmaksa
         </h2>
         <ul class="list-none p-0 space-y-3">
-          <li>✓ Konsultācijas tiek pieteiktas caur vietnes rezervācijas sistēmu.</li>
+          <li>Konsultācijas tiek pieteiktas caur vietnes rezervācijas sistēmu.</li>
           <li>
-            ✓ Apmaksa notiek ar bankas pārskaitījumu uz apstiprinājuma e-pastā norādīto kontu.
+            Apmaksa notiek ar bankas pārskaitījumu uz apstiprinājuma e-pastā norādīto kontu.
           </li>
-          <li>✓ Rezervācija tiek apstiprināta pēc apmaksas saņemšanas.</li>
-          <li>✓ Cenas ir norādītas eiro (EUR) un ir spēkā pieteikšanas brīdī.</li>
+          <li>Rezervācija tiek apstiprināta pēc apmaksas saņemšanas.</li>
+          <li>Cenas ir norādītas eiro (EUR) un ir spēkā pieteikšanas brīdī.</li>
         </ul>
       </section>
 
@@ -60,10 +64,10 @@ import Layout from '../layouts/Layout.astro';
         </h2>
         <ul class="list-none p-0 space-y-3">
           <li>
-            ✓ Konsultāciju var atcelt vai pārcelt ne vēlāk kā 24 stundas pirms norunātā laika.
+            Konsultāciju var atcelt vai pārcelt ne vēlāk kā 24 stundas pirms norunātā laika.
           </li>
-          <li>✓ Atceļot vēlāk nekā 24 stundas pirms konsultācijas, apmaksa netiek atmaksāta.</li>
-          <li>✓ Pārcelšana tiek piedāvāta atkarībā no pieejamajiem laikiem.</li>
+          <li>Atceļot vēlāk nekā 24 stundas pirms konsultācijas, apmaksa netiek atmaksāta.</li>
+          <li>Pārcelšana tiek piedāvāta atkarībā no pieejamajiem laikiem.</li>
         </ul>
       </section>
 
@@ -123,13 +127,10 @@ import Layout from '../layouts/Layout.astro';
       </section>
     </div>
 
-    <div class="mt-16 pt-10 border-t-2 border-gray-200 text-center">
-      <a
-        href="/"
-        class="inline-block bg-secondary text-white px-8 py-3.5 rounded-lg font-semibold no-underline hover:opacity-90 transition-opacity"
-      >
-        ← Atpakaļ uz sākumlapu
-      </a>
+    <div class="fc-legal-end">
+      <a href="/" class="back">← Atpakaļ uz sākumlapu</a>
     </div>
   </article>
-</Layout>
+</main>
+
+<SiteFooter />

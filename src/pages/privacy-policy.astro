@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
 ---
 
 <Layout
@@ -7,10 +9,14 @@ import Layout from '../layouts/Layout.astro';
   description="Privātuma politika un personas datu apstrādes noteikumi. Sofija Ivanova uztura konsultāciju pakalpojumi."
   canonicalPath="/privacy-policy/"
 >
-  <article class="max-w-3xl mx-auto px-5 md:px-8 py-20 md:py-28">
-    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">Privātuma politika</h1>
+  <SiteHeader />
+</Layout>
 
-    <p class="text-gray-500 text-sm mb-10">Pēdējās izmaiņas: 1. februāris, 2026</p>
+<main id="main-content" class="fc-legal">
+  <article>
+    <h1>Privātuma politika</h1>
+
+    <p class="meta">Pēdējās izmaiņas: 1. februāris, 2026</p>
 
     <div class="prose prose-lg prose-gray max-w-none">
       <section class="mb-10">
@@ -46,14 +52,14 @@ import Layout from '../layouts/Layout.astro';
           3. Kādus datus mēs vācam
         </h2>
         <ul class="list-none p-0 space-y-3">
-          <li>✓ Vārds un uzvārds</li>
-          <li>✓ E-pasta adrese</li>
-          <li>✓ Tālruņa numurs</li>
-          <li>✓ Informācija par konsultācijas pakalpojumu</li>
+          <li>Vārds un uzvārds</li>
+          <li>E-pasta adrese</li>
+          <li>Tālruņa numurs</li>
+          <li>Informācija par konsultācijas pakalpojumu</li>
           <li>
-            ✓ Veselības informācija, ko Jūs brīvprātīgi sniedzat uztura konsultācijai/terapijai
+            Veselības informācija, ko Jūs brīvprātīgi sniedzat uztura konsultācijai/terapijai
           </li>
-          <li>✓ Maksājumu dati (bānkas pārskaitījums uz norādīto kontu)</li>
+          <li>Maksājumu dati (bānkas pārskaitījums uz norādīto kontu)</li>
         </ul>
         <p class="mt-4">
           Tā kā uztura konsultācijas un medicīniskā uztura terapiju sniedz
@@ -70,11 +76,11 @@ import Layout from '../layouts/Layout.astro';
           4. Kādiem nolūkiem izmantojam datus
         </h2>
         <ul class="list-none p-0 space-y-3">
-          <li>✓ Konsultāciju ierakstu apstrāde un apstiprinājums</li>
-          <li>✓ Pakalpojumu sniegšana</li>
-          <li>✓ Saziņa ar klientiem</li>
-          <li>✓ Grāmatvedības un nodokļu pienākumu izpilde</li>
-          <li>✓ Vietnes uzlabošana (ar Jūsu piekrišanu)</li>
+          <li>Konsultāciju ierakstu apstrāde un apstiprinājums</li>
+          <li>Pakalpojumu sniegšana</li>
+          <li>Saziņa ar klientiem</li>
+          <li>Grāmatvedības un nodokļu pienākumu izpilde</li>
+          <li>Vietnes uzlabošana (ar Jūsu piekrišanu)</li>
         </ul>
       </section>
 
@@ -108,13 +114,13 @@ import Layout from '../layouts/Layout.astro';
         </h2>
         <p>Saskaņā ar GDPR Jums ir šādas tiesības:</p>
         <ul class="mt-4 space-y-3">
-          <li>✓ Tiesības piekļūt saviem datiem</li>
-          <li>✓ Tiesības labot neprecīzus datus</li>
-          <li>✓ Tiesības dzēst datus ("tiesības tikt aizmirstam")</li>
-          <li>✓ Tiesības ierobežot datu apstrādi</li>
-          <li>✓ Tiesības uz datu pārnesamību</li>
-          <li>✓ Tiesības atsaukt piekrišanu</li>
-          <li>✓ Tiesības iesniegt sūdzību Datu valsts inspekcijai</li>
+          <li>Tiesības piekļūt saviem datiem</li>
+          <li>Tiesības labot neprecīzus datus</li>
+          <li>Tiesības dzēst datus ("tiesības tikt aizmirstam")</li>
+          <li>Tiesības ierobežot datu apstrādi</li>
+          <li>Tiesības uz datu pārnesamību</li>
+          <li>Tiesības atsaukt piekrišanu</li>
+          <li>Tiesības iesniegt sūdzību Datu valsts inspekcijai</li>
         </ul>
       </section>
 
@@ -123,12 +129,12 @@ import Layout from '../layouts/Layout.astro';
           7. Datu glabāšanas termiņi
         </h2>
         <ul class="list-none p-0 space-y-3">
-          <li>✓ Konsultāciju pieraksta dati: 3 gadi pēc pakalpojuma sniegšanas</li>
+          <li>Konsultāciju pieraksta dati: 3 gadi pēc pakalpojuma sniegšanas</li>
           <li>
-            ✓ Medicīniskā dokumentācija: saskaņā ar normatīvajos aktos noteikto glabāšanas termiņu
+            Medicīniskā dokumentācija: saskaņā ar normatīvajos aktos noteikto glabāšanas termiņu
           </li>
-          <li>✓ Grāmatvedības dokumenti: 5 gadi (saskaņā ar likumu)</li>
-          <li>✓ Mārketinga dati: līdz piekrišanas atsaukšanai</li>
+          <li>Grāmatvedības dokumenti: 5 gadi (saskaņā ar likumu)</li>
+          <li>Mārketinga dati: līdz piekrišanas atsaukšanai</li>
         </ul>
       </section>
 
@@ -138,10 +144,10 @@ import Layout from '../layouts/Layout.astro';
         </h2>
         <p>Mēs izmantojam mūsdienu drošības pasākumus, lai aizsargātu Jūsu datus:</p>
         <ul class="mt-4 space-y-3">
-          <li>✓ SSL/HTTPS šifrēšana</li>
-          <li>✓ Azure drošības standardi</li>
-          <li>✓ Regulāra datu dublēšana</li>
-          <li>✓ Ierobežota piekļuve datiem</li>
+          <li>SSL/HTTPS šifrēšana</li>
+          <li>Azure drošības standardi</li>
+          <li>Regulāra datu dublēšana</li>
+          <li>Ierobežota piekļuve datiem</li>
         </ul>
       </section>
 
@@ -183,13 +189,10 @@ import Layout from '../layouts/Layout.astro';
       </section>
     </div>
 
-    <div class="mt-16 pt-10 border-t-2 border-gray-200 text-center">
-      <a
-        href="/"
-        class="inline-block bg-secondary text-white px-8 py-3.5 rounded-lg font-semibold no-underline hover:opacity-90 transition-opacity"
-      >
-        ← Atpakaļ uz sākumlapu
-      </a>
+    <div class="fc-legal-end">
+      <a href="/" class="back">← Atpakaļ uz sākumlapu</a>
     </div>
   </article>
-</Layout>
+</main>
+
+<SiteFooter />

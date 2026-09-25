@@ -1,0 +1,71 @@
+---
+---
+
+<footer class="fc-footer">
+  <div class="fc-wrap">
+    <div class="fc-foot-grid">
+      <div class="fc-foot-brand">
+        <div class="fb"><span class="mk"><i class="ph ph-leaf"></i></span><b>Sofija Ivanova</b></div>
+        <p data-i18n="footer_subtitle">Rīga · Reģ. Nr. 75650061277</p>
+        <div class="fc-socials">
+          <a href="https://www.instagram.com/sofija.nutrition" target="_blank" rel="noopener" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="https://www.facebook.com/sofijaivanova.nutrition" target="_blank" rel="noopener" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="https://www.linkedin.com/in/sofijaivanova" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+      <div class="fc-foot-links">
+        <h4 data-i18n="footer_contact_title">Kontakti</h4>
+        <a href="mailto:info@sofijaivanova.lv"><i class="ph ph-envelope-simple"></i> info@sofijaivanova.lv</a>
+        <a href="https://wa.me/37120000000" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i> WhatsApp</a>
+        <a href="/#contact"><i class="ph ph-map-pin"></i> Rīga, Latvija</a>
+      </div>
+      <div class="fc-foot-links">
+        <h4 data-i18n="footer_follow_title">Navigācija</h4>
+        <a href="/#services" data-i18n="nav_services">Pakalpojumi</a>
+        <a href="/#about" data-i18n="nav_about">Par mani</a>
+        <a href="/#faq" data-i18n="nav_faq">BUJ</a>
+        <a href="/#contact" data-i18n="nav_contact">Pieteikties</a>
+      </div>
+    </div>
+    <div class="fc-foot-bottom">
+      <span>© 2026 Sofija Ivanova</span>
+      <span>
+        <a href="/terms" data-i18n="footer_terms">Pakalpojumu noteikumi</a> ·
+        <a href="/privacy-policy" data-i18n="footer_privacy">Privātuma politika</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cookie Settings Button -->
+<button onclick="window.showCookieSettings()" class="cookie-settings-btn" aria-label="Sīkdatņu iestatījumi">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <circle cx="8" cy="9" r="1.5" fill="currentColor"></circle>
+    <circle cx="15" cy="8" r="1" fill="currentColor"></circle>
+    <circle cx="10" cy="14" r="1" fill="currentColor"></circle>
+    <circle cx="16" cy="13" r="1.5" fill="currentColor"></circle>
+    <circle cx="12" cy="17" r="1" fill="currentColor"></circle>
+  </svg>
+  <span>Sīkdatnes</span>
+</button>
+
+<style>
+  .cookie-settings-btn {
+    position: fixed; bottom: 16px; right: 16px; display: flex; align-items: center; gap: 6px;
+    background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    color: #14241c; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(91, 140, 110, 0.2);
+    cursor: pointer; font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif; letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); z-index: 9999; transition: all 0.2s ease; opacity: 0.85;
+  }
+  .cookie-settings-btn:hover { opacity: 1; background: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-color: rgba(91, 140, 110, 0.4); }
+  .cookie-settings-btn span { text-transform: uppercase; }
+  @media (max-width: 480px) {
+    .cookie-settings-btn span { display: none; }
+    .cookie-settings-btn { width: 44px; height: 44px; padding: 0; border-radius: 50%; justify-content: center; }
+  }
+</style>
+
+<script>
+  import '../CookieConsent';
+</script>

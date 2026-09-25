@@ -1,0 +1,117 @@
+---
+import ScrollToTop from './ScrollToTop.astro';
+---
+
+<!-- Skip to content -->
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:outline-none"
+>
+  Pāriet uz saturu
+</a>
+
+<!-- Header -->
+<header id="site-header" class="fc-header" role="banner">
+  <div class="fc-wrap fc-nav-inner">
+    <a href="/" class="fc-brand" aria-label="Sofija Ivanova — sākums">
+      <span class="mk"><i class="ph ph-leaf" aria-hidden="true"></i></span>
+      <span>
+        <b>Sofija Ivanova</b>
+        <span data-i18n="header_subtitle">Dietoloģe · Rīga</span>
+      </span>
+    </a>
+
+    <nav class="fc-navlinks" aria-label="Galvenā navigācija">
+      <a href="/#services" class="fc-navlink" data-i18n="nav_services">Pakalpojumi</a>
+      <a href="/#about" class="fc-navlink" data-i18n="nav_about">Par mani</a>
+      <a href="/#faq" class="fc-navlink" data-i18n="nav_faq">BUJ</a>
+      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="fc-navlink" data-i18n="nav_cabinet">Pacienta kabinets</a>
+      <span class="fc-lang">
+        <button class="lang-btn" data-lang="lv">LV</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+      </span>
+      <a href="/#contact" class="fc-navcta" data-i18n="nav_contact">Pieteikties</a>
+    </nav>
+
+    <button
+      type="button"
+      class="fc-burger mobile-menu-btn"
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav-menu"
+      style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
+    >
+      <span style="pointer-events:none;"></span>
+      <span style="pointer-events:none;"></span>
+      <span style="pointer-events:none;"></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div id="mobile-nav-menu" class="mobile-nav-menu">
+  <a href="/#services" data-i18n="nav_services" class="mobile-nav-item">Pakalpojumi</a>
+  <a href="/#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
+  <a href="/#faq" data-i18n="nav_faq" class="mobile-nav-item">BUJ</a>
+  <a href="/#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
+  <a
+    href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
+    data-i18n="nav_cabinet"
+    class="mobile-nav-item">Pacienta kabinets</a
+  >
+  <div class="flex gap-4 pt-6 border-t border-gray-200">
+    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
+    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
+    <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
+  </div>
+</div>
+
+<!-- Mobile menu script (iOS Safari compatible) -->
+<script is:inline>
+  (function () {
+    var btn = document.querySelector('.fc-header .mobile-menu-btn');
+    var menu = document.getElementById('mobile-nav-menu');
+    if (!btn || !menu) return;
+    function toggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isOpen = menu.classList.toggle('open');
+      btn.classList.toggle('active', isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+    function close() {
+      menu.classList.remove('open');
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', toggle, false);
+    var links = menu.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) links[i].addEventListener('click', close, false);
+    menu.addEventListener('click', function (e) { if (e.target === menu) close(); }, false);
+  })();
+</script>
+
+<!-- Smart header: hide on scroll down, show on scroll up -->
+<script is:inline>
+  (function () {
+    var header = document.getElementById('site-header');
+    if (!header) return;
+    var lastY = 0, ticking = false, threshold = 80;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        var y = window.pageYOffset;
+        if (document.querySelector('.mobile-nav-menu.open')) { ticking = false; return; }
+        header.style.transform = (y > threshold && y > lastY) ? 'translateY(-100%)' : 'translateY(0)';
+        lastY = y;
+        ticking = false;
+      });
+    }, { passive: true });
+  })();
+</script>
+
+<ScrollToTop />

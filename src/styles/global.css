@@ -9,9 +9,9 @@
   --color-primary-dark: #143728; /* hover/pressed depth */
   --color-accent: #2d6a4f; /* lighter forest — links, hover accents */
 
-  /* Brand gold (single canonical value across the whole web UI) */
-  --color-secondary: #c4a06e; /* decorative accents, dividers, icons */
-  --color-secondary-dark: #9c7c46; /* accessible gold for text on light bg (>=4.5:1) */
+  /* Brand sage accent (replaces former gold — Fresh Clinical palette) */
+  --color-secondary: #5b8c6e; /* decorative accents, dividers, icons */
+  --color-secondary-dark: #3f6d54; /* accessible sage for text on light bg (>=4.5:1) */
 
   /* Surfaces */
   --color-cream: #faf6ef; /* warm section background */
@@ -179,7 +179,7 @@ button:active,
   box-shadow:
     0 2px 4px rgba(12, 28, 22, 0.14),
     0 14px 32px rgba(27, 67, 50, 0.26),
-    0 8px 26px rgba(196, 160, 110, 0.3);
+    0 8px 26px rgba(91, 140, 110, 0.3);
 }
 
 .btn-outline {
@@ -627,7 +627,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   transform: translateY(-50%);
   width: 3px;
   height: 24px;
-  background: var(--color-secondary, #c9a36a);
+  background: var(--color-secondary, #5b8c6e);
   border-radius: 0 3px 3px 0;
 }
 
@@ -770,7 +770,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(196, 160, 110, 0.12);
+  background: rgba(91, 140, 110, 0.12);
   color: var(--color-secondary);
   font-size: 24px;
 }
@@ -859,7 +859,7 @@ nav .flex.gap-1::-webkit-scrollbar {
     background: linear-gradient(
       90deg,
       var(--color-secondary) 0%,
-      rgba(196, 160, 110, 0.3) 50%,
+      rgba(91, 140, 110, 0.3) 50%,
       var(--color-secondary) 100%
     );
     border-radius: 1px;
@@ -945,8 +945,8 @@ nav .flex.gap-1::-webkit-scrollbar {
   gap: 8px;
   margin-top: 24px;
   padding: 12px 20px;
-  background: rgba(212, 165, 116, 0.1);
-  border: 1px solid rgba(212, 165, 116, 0.2);
+  background: rgba(91, 140, 110, 0.1);
+  border: 1px solid rgba(91, 140, 110, 0.2);
   border-radius: 12px;
   font-size: 0.875rem;
   color: var(--color-primary);
@@ -981,7 +981,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
   box-shadow:
-    0 0 16px rgba(212, 165, 116, 0.35),
+    0 0 16px rgba(91, 140, 110, 0.35),
     0 4px 12px rgba(0, 0, 0, 0.15);
 }
 

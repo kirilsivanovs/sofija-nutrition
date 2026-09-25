@@ -99,13 +99,15 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 <style>
   /* Header Base Styles */
   .app-header {
-    background: var(--color-white, #ffffff);
-    border-bottom: 2px solid var(--color-primary, #1b4332);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #e4eee8;
     padding: 14px 20px;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.08);
+    box-shadow: 0 1px 0 rgba(27, 67, 50, 0.04);
   }
 
   .app-header-inner {
@@ -142,9 +144,10 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   }
 
   .app-logo-name {
-    font-family: var(--font-serif, 'Lora', serif);
-    font-size: 23px;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 21px;
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--color-primary, #1b4332);
     line-height: 1.1;
   }
@@ -291,7 +294,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     right: 40px;
     width: 1px;
     height: 0;
-    background: linear-gradient(180deg, transparent, var(--color-secondary, #c9a36a), transparent);
+    background: linear-gradient(180deg, transparent, var(--color-secondary, #5b8c6e), transparent);
     transform: translateY(-50%);
     transition: height 0.6s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0.5;
@@ -391,7 +394,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     transform: translateY(-50%);
     width: 3px;
     height: 24px;
-    background: var(--color-secondary, #c9a36a);
+    background: var(--color-secondary, #5b8c6e);
     border-radius: 0 3px 3px 0;
   }
 
