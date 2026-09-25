@@ -415,14 +415,14 @@ class BookingCalendar {
 
                         <div class="booking-form-grid">
                             <div class="form-group">
-                                <label>${this.t('serviceLabel')}</label>
+                                <label for="serviceTypeSelect">${this.t('serviceLabel')}</label>
                                 <select name="serviceType" id="serviceTypeSelect">
                                     ${this.renderServiceOptions()}
                                 </select>
                             </div>
 
-                            <div class="form-group" id="formatGroup">
-                                <label>${this.t('formatLabel')}</label>
+                            <div class="form-group" id="formatGroup" role="radiogroup" aria-labelledby="formatGroupLabel" aria-required="true">
+                                <label id="formatGroupLabel">${this.t('formatLabel')}</label>
                                 <div class="format-options">
                                     <label class="format-option">
                                         <input type="radio" name="consultationFormat" value="online" id="formatOnline">
@@ -442,37 +442,37 @@ class BookingCalendar {
                             </div>
 
                             <div class="form-group">
-                                <label>${this.t('nameLabel')}</label>
-                                <input type="text" name="name" placeholder="Anna">
+                                <label for="bookingName">${this.t('nameLabel')}</label>
+                                <input type="text" id="bookingName" name="name" placeholder="Anna" autocomplete="name" aria-required="true">
                             </div>
 
                             <div class="form-group">
-                                <label>${this.t('emailLabel')}</label>
-                                <input type="email" name="email" placeholder="anna@email.com">
+                                <label for="bookingEmail">${this.t('emailLabel')}</label>
+                                <input type="email" id="bookingEmail" name="email" placeholder="anna@email.com" autocomplete="email" aria-required="true">
                             </div>
 
                             <div class="form-group">
-                                <label>${this.t('phoneLabel')}</label>
+                                <label for="bookingPhone">${this.t('phoneLabel')}</label>
                                 <div class="phone-input-wrapper">
                                     <span class="phone-prefix">+371</span>
-                                    <input type="tel" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*">
+                                    <input type="tel" id="bookingPhone" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*" autocomplete="tel-national">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>${this.t('personalCodeLabel')}</label>
-                                <input type="text" name="personalCode" placeholder="000000-00000" maxlength="12" inputmode="numeric" autocomplete="off">
+                                <label for="bookingPersonalCode">${this.t('personalCodeLabel')}</label>
+                                <input type="text" id="bookingPersonalCode" name="personalCode" placeholder="000000-00000" maxlength="12" inputmode="numeric" autocomplete="off">
                                 <small class="form-hint">${this.t('personalCodeHint')}</small>
                             </div>
 
                             <div class="form-group form-group-full">
-                                <label>${this.t('messageLabel')}</label>
-                                <textarea name="message" rows="2" placeholder="..."></textarea>
+                                <label for="bookingMessage">${this.t('messageLabel')}</label>
+                                <textarea id="bookingMessage" name="message" rows="2" placeholder="..."></textarea>
                             </div>
 
                             <div class="form-group form-consent">
                                 <label class="consent-checkbox">
-                                    <input type="checkbox" name="consent" id="consentCheckbox">
+                                    <input type="checkbox" name="consent" id="consentCheckbox" aria-required="true">
                                     <span>${this.t('consentText')}</span>
                                 </label>
                             </div>
@@ -486,16 +486,16 @@ class BookingCalendar {
                 </div>
             </div>
 
-            <div class="booking-success-modal" style="display: none;">
+            <dialog class="booking-success-modal" aria-labelledby="successTitle">
                 <div class="success-content">
                     <div class="success-icon">
                         <i class="ph ph-check-circle"></i>
                     </div>
-                    <h3>${this.t('successTitle')}</h3>
+                    <h3 id="successTitle">${this.t('successTitle')}</h3>
                     <p>${this.t('successText')}</p>
                     <button class="close-success-btn">${this.t('closeBtn')}</button>
                 </div>
-            </div>
+            </dialog>
         `;
 
     this.renderCalendar();
@@ -1048,6 +1048,7 @@ class BookingCalendar {
     // Create error message element
     const errorEl = document.createElement('div');
     errorEl.className = 'field-error-message';
+    errorEl.id = `${inputElement.id || inputElement.name}-error`;
     errorEl.setAttribute('role', 'alert');
     errorEl.setAttribute('aria-live', 'polite');
     errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${message}`;
@@ -1055,6 +1056,9 @@ class BookingCalendar {
     // Insert after input or its parent (for select wrappers)
     const parent = inputElement.closest('.form-group') || inputElement.parentElement;
     parent.appendChild(errorEl);
+
+    inputElement.setAttribute('aria-describedby', errorEl.id);
+    inputElement.setAttribute('aria-invalid', 'true');
   }
 
   clearFieldError(inputElement) {
@@ -1071,6 +1075,9 @@ class BookingCalendar {
     if (existingError) {
       existingError.remove();
     }
+
+    inputElement.removeAttribute('aria-describedby');
+    inputElement.setAttribute('aria-invalid', 'false');
   }
 
   showFieldValid(inputElement) {
@@ -1124,7 +1131,7 @@ class BookingCalendar {
     // Validate radio buttons separately
     if (!formatInput) {
       const v = this.getValidationTranslations();
-      const formatGroup = form.querySelector('.format-options');
+      const formatGroup = form.querySelector('#formatGroup');
       if (formatGroup) {
         // Remove existing error
         const existingError = formatGroup.querySelector('.field-error-message');
@@ -1133,12 +1140,23 @@ class BookingCalendar {
         // Add error
         const errorEl = document.createElement('div');
         errorEl.className = 'field-error-message';
+        errorEl.id = 'formatGroup-error';
         errorEl.setAttribute('role', 'alert');
         errorEl.setAttribute('aria-live', 'polite');
         errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.formatRequired}`;
         formatGroup.appendChild(errorEl);
+        formatGroup.setAttribute('aria-describedby', errorEl.id);
+        formatGroup.setAttribute('aria-invalid', 'true');
       }
       isValid = false;
+    } else {
+      const formatGroup = form.querySelector('#formatGroup');
+      if (formatGroup) {
+        const existingError = formatGroup.querySelector('.field-error-message');
+        if (existingError) existingError.remove();
+        formatGroup.removeAttribute('aria-describedby');
+        formatGroup.setAttribute('aria-invalid', 'false');
+      }
     }
 
     // Validate consent checkbox (mandatory under GDPR)
@@ -1147,6 +1165,8 @@ class BookingCalendar {
       const existingConsentError = consentGroup?.querySelector('.field-error-message');
       if (existingConsentError) existingConsentError.remove();
       consentGroup?.classList.remove('consent-error');
+      consentGroup?.removeAttribute('aria-describedby');
+      consentGroup?.setAttribute('aria-invalid', 'false');
 
       if (!consentInput.checked) {
         const v = this.getValidationTranslations();
@@ -1154,10 +1174,13 @@ class BookingCalendar {
           consentGroup.classList.add('consent-error');
           const errorEl = document.createElement('div');
           errorEl.className = 'field-error-message';
+          errorEl.id = 'consentGroup-error';
           errorEl.setAttribute('role', 'alert');
           errorEl.setAttribute('aria-live', 'polite');
           errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.consentRequired}`;
           consentGroup.appendChild(errorEl);
+          consentGroup.setAttribute('aria-describedby', errorEl.id);
+          consentGroup.setAttribute('aria-invalid', 'true');
         }
         isValid = false;
       }
@@ -1227,7 +1250,7 @@ class BookingCalendar {
                 <div class="success-icon">
                     <i class="ph ph-check-circle"></i>
                 </div>
-                <h3>${this.t('successTitle')}</h3>
+                <h3 id="successTitle">${this.t('successTitle')}</h3>
                 ${detailsHtml}
                 ${invoiceInfo}
                 <p>${this.t('successText')}</p>
@@ -1236,23 +1259,29 @@ class BookingCalendar {
 
       // Re-attach close button event
       successContent.querySelector('.close-success-btn')?.addEventListener('click', () => {
-        modal.style.display = 'none';
-        this.render();
-        this.attachEventListeners();
-        this.renderCalendar();
+        modal.close();
       });
     }
 
     if (modal) {
-      modal.style.display = 'flex';
+      modal.showModal();
     }
-
-    // Reset form
-    this.selectedDate = null;
-    this.selectedTime = null;
 
     // Call callback
     this.onBookingComplete(booking);
+  }
+
+  /** Reset the form state and restore focus to the calendar after the success dialog closes */
+  closeSuccessModal() {
+    this.selectedDate = null;
+    this.selectedTime = null;
+    this.render();
+    this.attachEventListeners();
+    this.renderCalendar();
+    const cell = this.container.querySelector(
+      `[data-date="${this.formatDateISO(this.focusedDate)}"]`
+    );
+    cell?.focus();
   }
 
 
@@ -1560,10 +1589,12 @@ class BookingCalendar {
       formatInputs.forEach((input) => {
         input.addEventListener('change', () => {
           // Clear format error when selected
-          const formatGroup = form.querySelector('.format-options');
+          const formatGroup = form.querySelector('#formatGroup');
           if (formatGroup) {
             const errorEl = formatGroup.querySelector('.field-error-message');
             if (errorEl) errorEl.remove();
+            formatGroup.removeAttribute('aria-describedby');
+            formatGroup.setAttribute('aria-invalid', 'false');
           }
         });
       });
@@ -1586,17 +1617,10 @@ class BookingCalendar {
     });
 
     // Close success modal
+    const successModal = this.container.querySelector('.booking-success-modal');
+    successModal?.addEventListener('close', () => this.closeSuccessModal());
     this.container.querySelector('.close-success-btn')?.addEventListener('click', () => {
-      const modal = this.container.querySelector('.booking-success-modal');
-      if (modal) {
-        modal.style.display = 'none';
-      }
-      // Reset selected date and time to allow new booking
-      this.selectedDate = null;
-      this.selectedTime = null;
-      this.render(); // Re-render calendar
-      this.attachEventListeners(); // Re-attach event listeners
-      this.renderCalendar(); // Re-render calendar days to make them clickable again
+      successModal?.close();
     });
   }
 

@@ -1775,15 +1775,23 @@
 }
 
 /* Success Modal */
-.booking-success-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+dialog.booking-success-modal {
+  margin: auto;
+  border: none;
+  padding: 0;
+  background: transparent;
+  z-index: 2000;
+}
+
+dialog.booking-success-modal[open] {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
   padding: 20px;
+}
+
+dialog.booking-success-modal::backdrop {
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
 }
 

@@ -197,6 +197,88 @@ test.describe('Booking Flow', () => {
     await expect(successMessage).toBeVisible({ timeout: 10000 });
   });
 
+  test('closes the success dialog on Escape and returns focus to the calendar', async ({
+    page,
+  }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          slots: {
+            '2027-06-02': ['09:00', '10:00', '11:00', '14:00'],
+            '2027-06-03': ['09:00', '10:00'],
+          },
+          booked: [],
+          serviceTypes: [],
+        }),
+      });
+    });
+
+    await page.route('**/api/bookings', async (route) => {
+      const body = JSON.parse(route.request().postData() || '{}');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          bookingId: 'TEST-12345',
+          booking: {
+            id: 'TEST-12345',
+            bookingId: 'TEST-12345',
+            name: body.name,
+            email: body.email,
+            date: body.date,
+            time: body.time,
+            service: body.service || 'consultation',
+            serviceName: 'Konsultācija',
+            price: 65,
+          },
+        }),
+      });
+    });
+
+    // The calendar already fetched real availability on the initial page load;
+    // reload so this test's mocked response drives the render deterministically.
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    const availableDay = bookingSection
+      .locator('[role="gridcell"]:not([aria-disabled="true"])')
+      .first();
+    await expect(availableDay).toBeVisible({ timeout: 5000 });
+    await availableDay.click();
+
+    const timeSlot = bookingSection.locator('button.time-slot').first();
+    await expect(timeSlot).toBeVisible({ timeout: 5000 });
+    await timeSlot.click();
+
+    const nameInput = bookingSection.locator('input[name="name"]');
+    const emailInput = bookingSection.locator('input[name="email"]');
+    const phoneInput = bookingSection.locator('input[name="phone"]');
+    const consentCheckbox = bookingSection.locator('#consentCheckbox');
+
+    await expect(nameInput).toBeVisible({ timeout: 5000 });
+    await nameInput.fill('Test User');
+    await emailInput.fill('test@example.com');
+    await phoneInput.fill('+37120000000');
+    await consentCheckbox.check();
+
+    const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    const successDialog = page.locator('dialog.booking-success-modal');
+    await expect(successDialog).toBeVisible({ timeout: 10000 });
+
+    await page.keyboard.press('Escape');
+    await expect(successDialog).toBeHidden();
+    await expect(page.locator('[role="gridcell"]:focus')).toBeVisible();
+  });
+
   test('shows error when slot is already taken (409)', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
