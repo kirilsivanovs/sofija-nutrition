@@ -21,7 +21,13 @@ grep -H -E '^(id|title|status|priority|kind|size|area|branch|parent|split|recurr
 
 No argument → the most advanced task: `review` → `testing` → `in-progress` → `branched` → `planned` → `analyzed` → `new`; within a status, `priority` first (P0 → P3), then oldest. Skip `recurring: true` with an empty `## Pending batch`. Nothing left → say so and suggest `/new`.
 
+Skip (and say why) any task with a live `.lock` (not stale per the README's rule), any task whose `depends:` names an id whose `task.md`/parent isn't `status: done`, and — once both tasks have a `## Plan` — any task whose plan's Affected files overlap a currently-locked in-flight task's. This applies to auto-pick, a category argument, and an explicit id alike.
+
 One task per `/work`. When it is done, name the next one in one line; don't start it.
+
+## Claim the task
+
+Once a task is chosen, atomically create its `.lock` at `.claude/tasks/<cat>/<ID>/.lock` (`branch: <best-guess or blank if not yet cut>`, `worktree: (pending)`, `claimed: <now, ISO 8601>`) using `[System.IO.File]::Open($path,[System.IO.FileMode]::CreateNew)`, then close it. `CreateNew` throwing means another session claimed it in the meantime — report that and pick the next task instead of retrying. The lock is deleted at step 6's cleanup.
 
 ## Check the status against the file
 
