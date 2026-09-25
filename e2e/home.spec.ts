@@ -36,3 +36,11 @@ test('opens and closes the mobile nav menu from the single AppHeader burger butt
   await expect(page.locator('.mobile-nav-menu')).not.toHaveClass(/open/);
   await expect(btn).toBeFocused();
 });
+
+test('shows the pre-footer CTA heading with JavaScript disabled', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: /labāku veselību/i })).toBeVisible();
+  await context.close();
+});
