@@ -275,6 +275,120 @@ test.describe('Booking Flow', () => {
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
+  test('does not fake success on a generic 4xx response', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    // Mock availability
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          availableDates: { '2026-05-18': ['09:00'] },
+        }),
+      });
+    });
+
+    // Mock booking API - plain 400, not 409/429/5xx
+    await page.route('**/api/bookings', async (route) => {
+      await route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Bad request' }),
+      });
+    });
+
+    // Select date and time
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
+    if (!(await availableDay.isVisible())) {
+      test.skip();
+      return;
+    }
+    await availableDay.click();
+
+    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
+    await expect(timeSlot).toBeVisible({ timeout: 5000 });
+    await timeSlot.click();
+
+    // Fill minimal form
+    const nameInput = bookingSection.locator('input[name="name"]');
+    await expect(nameInput).toBeVisible({ timeout: 5000 });
+    await nameInput.fill('Test');
+    await bookingSection.locator('input[name="email"]').fill('test@example.com');
+
+    // Submit
+    const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
+    await submitBtn.click();
+
+    // Must never show a fabricated success modal
+    const successModal = page
+      .locator('[class*="success"], [class*="modal"]')
+      .filter({ hasText: /INV-|veiksmīga|success/i });
+    await expect(successModal).not.toBeVisible({ timeout: 5000 });
+
+    // Must show the generic error instead
+    const errorMessage = page.locator('[class*="error"], [class*="modal"]');
+    await expect(errorMessage).toBeVisible({ timeout: 10000 });
+  });
+
+  test('does not fake success on a network failure', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    // Mock availability
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          availableDates: { '2026-05-18': ['09:00'] },
+        }),
+      });
+    });
+
+    // Mock booking API - abort to simulate a network failure (not a timeout, not offline)
+    await page.route('**/api/bookings', async (route) => {
+      await route.abort();
+    });
+
+    // Select date and time
+    const availableDay = bookingSection
+      .locator('.calendar-day:not(.disabled):not(.weekend)')
+      .first();
+    if (!(await availableDay.isVisible())) {
+      test.skip();
+      return;
+    }
+    await availableDay.click();
+
+    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
+    await expect(timeSlot).toBeVisible({ timeout: 5000 });
+    await timeSlot.click();
+
+    // Fill minimal form
+    const nameInput = bookingSection.locator('input[name="name"]');
+    await expect(nameInput).toBeVisible({ timeout: 5000 });
+    await nameInput.fill('Test');
+    await bookingSection.locator('input[name="email"]').fill('test@example.com');
+
+    // Submit
+    const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
+    await submitBtn.click();
+
+    // Must never show a fabricated success modal
+    const successModal = page
+      .locator('[class*="success"], [class*="modal"]')
+      .filter({ hasText: /INV-|veiksmīga|success/i });
+    await expect(successModal).not.toBeVisible({ timeout: 5000 });
+
+    // Must show the generic error instead
+    const errorMessage = page.locator('[class*="error"], [class*="modal"]');
+    await expect(errorMessage).toBeVisible({ timeout: 10000 });
+  });
+
   test('booking form validates required fields', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();

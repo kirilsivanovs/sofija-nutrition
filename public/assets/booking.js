@@ -256,7 +256,7 @@ class BookingCalendar {
       }
 
       // Fallback to static JSON for local development
-      if (!response || !response.ok) {
+      if ((!response || !response.ok) && window.location.hostname === 'localhost') {
         console.log('API not available, falling back to static JSON');
         response = await fetch('/data/availability.json');
       }
@@ -761,8 +761,7 @@ class BookingCalendar {
         // Server error - show friendly message
         this.showBookingError('serverError');
       } else {
-        // Fallback for local development without API
-        this.simulateLocalBooking(bookingData);
+        this.showBookingError('serverError');
       }
     } catch (error) {
       console.error('Booking error:', error);
@@ -772,8 +771,7 @@ class BookingCalendar {
       } else if (!navigator.onLine) {
         this.showBookingError('offline');
       } else {
-        // Fallback for local development
-        this.simulateLocalBooking(bookingData);
+        this.showBookingError('serverError');
       }
     } finally {
       // Reset button state
@@ -1193,61 +1191,6 @@ class BookingCalendar {
     this.onBookingComplete(booking);
   }
 
-  simulateLocalBooking(bookingData) {
-    // For local development without API
-    const simulatedBooking = {
-      id: `INV-${Date.now().toString(36).toUpperCase()}`,
-      date: bookingData.date,
-      time: bookingData.time,
-      serviceType: bookingData.serviceType,
-      price:
-        bookingData.serviceType === 'cgm-diagnostic'
-          ? 150
-          : bookingData.serviceType === 'consultation'
-            ? 80
-            : 50,
-    };
-
-    // Add to local booked array
-    if (this.availability) {
-      this.availability.booked.push({
-        date: bookingData.date,
-        time: bookingData.time,
-        name: bookingData.name,
-        email: bookingData.email,
-        type: bookingData.serviceType,
-      });
-    }
-
-    // Show success modal with booking details
-    const modal = this.container.querySelector('.booking-success-modal');
-    const successContent = modal?.querySelector('.success-content');
-    if (successContent) {
-      const detailsHtml = this.buildBookingDetailsHtml(bookingData);
-      successContent.innerHTML = `
-        <div class="success-icon"><i class="ph ph-check-circle"></i></div>
-        <h3>${this.t('successTitle')}</h3>
-        ${detailsHtml}
-        <p>${this.t('successText')}</p>
-        <button class="close-success-btn">${this.t('closeBtn')}</button>
-      `;
-      successContent.querySelector('.close-success-btn').onclick = () => {
-        modal.style.display = 'none';
-        this.render();
-        this.attachEventListeners();
-      };
-    }
-    if (modal) {
-      modal.style.display = 'flex';
-    }
-
-    // Reset form
-    this.selectedDate = null;
-    this.selectedTime = null;
-
-    // Call callback
-    this.onBookingComplete(simulatedBooking);
-  }
 
   updateFormatOptions() {
     const serviceSelect = this.container.querySelector('#serviceTypeSelect');
