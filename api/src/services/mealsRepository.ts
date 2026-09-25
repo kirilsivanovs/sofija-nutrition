@@ -4,6 +4,7 @@
  */
 import { TableClient } from '@azure/data-tables';
 import type { Meal, DailyStats } from '../types/food.js';
+import { buildPartitionKeyFilter, sanitizeODataValue } from '../utils/odataSanitizer';
 
 export interface IMealsRepository {
   saveMeal(meal: Meal): Promise<Meal>;
@@ -79,9 +80,13 @@ export class MealsRepository implements IMealsRepository {
   }
 
   async getMealsByDate(userId: string, date: string): Promise<Meal[]> {
-    const partitionKey = `${userId}_${date}`;
+    const filter = buildPartitionKeyFilter(`${userId}_${date}`);
+    if (!filter) {
+      return [];
+    }
+
     const entities = this.tableClient.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${partitionKey}'` },
+      queryOptions: { filter },
     });
 
     const meals: Meal[] = [];
@@ -183,8 +188,13 @@ export class MealsRepository implements IMealsRepository {
   }
 
   async deleteAllUserMeals(userId: string): Promise<number> {
+    const safeUserId = sanitizeODataValue(userId);
+    if (!safeUserId) {
+      return 0;
+    }
+
     const entities = this.tableClient.listEntities({
-      queryOptions: { filter: `userId eq '${userId}'` },
+      queryOptions: { filter: `userId eq '${safeUserId}'` },
     });
 
     let deletedCount = 0;

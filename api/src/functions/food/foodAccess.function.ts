@@ -1,25 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { FoodAccessRepository } from '../../services/foodAccessRepository';
-
-interface ClientPrincipal {
-  userId?: string;
-  identityProvider?: string;
-  userDetails?: string;
-  userRoles?: string[];
-}
-
-function getPrincipal(request: HttpRequest): ClientPrincipal | null {
-  const principalHeader = request.headers.get('x-ms-client-principal');
-  if (!principalHeader) return null;
-
-  try {
-    const decoded = Buffer.from(principalHeader, 'base64').toString('utf-8');
-    const principal = JSON.parse(decoded) as ClientPrincipal;
-    return principal || null;
-  } catch {
-    return null;
-  }
-}
+import { getClientPrincipal } from '../../utils/clientPrincipal';
 
 /**
  * Patient endpoint to check access to food diary
@@ -29,7 +10,7 @@ export async function getFoodAccess(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  const principal = getPrincipal(request);
+  const principal = getClientPrincipal(request);
   const userId = principal?.userId || null;
   if (!userId) {
     return { status: 401, jsonBody: { error: 'Unauthorized' } };

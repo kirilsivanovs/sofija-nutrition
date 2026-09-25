@@ -1,12 +1,71 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import type { Meal } from '../../types/food.js';
 import { MealsRepository } from '../../services/mealsRepository';
+import { FoodAccessRepository } from '../../services/foodAccessRepository';
+import { getClientPrincipal } from '../../utils/clientPrincipal';
+import { validateDateFormat } from '../../utils/odataSanitizer';
 import { format } from 'date-fns';
 
 /**
  * Azure Function for meals CRUD operations
  * Following RESTful API design and Single Responsibility Principle
  */
+
+const MEAL_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
+
+const EDITABLE_MEAL_FIELDS = [
+  'mealType',
+  'items',
+  'totalCalories',
+  'totalProtein',
+  'totalFat',
+  'totalCarbs',
+  'photoUrl',
+  'confirmed',
+  'confirmedAt',
+] as const;
+
+/**
+ * Identity comes only from the SWA client principal. A claimed userId
+ * (query/body) is only ever compared to it, never trusted as the identity.
+ */
+async function authorizeDiaryPatient(
+  request: HttpRequest,
+  claimedUserId: string | null
+): Promise<{ userId: string } | HttpResponseInit> {
+  const principal = getClientPrincipal(request);
+  if (!principal) {
+    return { status: 401, jsonBody: { error: 'Unauthorized' } };
+  }
+
+  if (claimedUserId && claimedUserId !== principal.userId) {
+    return { status: 403, jsonBody: { error: 'Forbidden' } };
+  }
+
+  const accessRepository = new FoodAccessRepository(
+    process.env.AZURE_STORAGE_CONNECTION_STRING || ''
+  );
+  const access = await accessRepository.getAccess(principal.userId);
+  if (!access || !access.enabled) {
+    return { status: 403, jsonBody: { error: 'Forbidden' } };
+  }
+
+  return { userId: principal.userId };
+}
+
+function isHttpResponse(value: { userId: string } | HttpResponseInit): value is HttpResponseInit {
+  return (value as HttpResponseInit).status !== undefined;
+}
+
+function pickEditableFields(updates: Partial<Meal>): Partial<Meal> {
+  const picked: Partial<Meal> = {};
+  for (const field of EDITABLE_MEAL_FIELDS) {
+    if (field in updates) {
+      (picked as Record<string, unknown>)[field] = (updates as Record<string, unknown>)[field];
+    }
+  }
+  return picked;
+}
 
 // GET /api/meals?userId={userId}&date={YYYY-MM-DD}
 export async function getMeals(
@@ -16,21 +75,21 @@ export async function getMeals(
   context.log('GET meals request');
 
   try {
-    const userId = request.query.get('userId');
-    const date = request.query.get('date') || format(new Date(), 'yyyy-MM-dd');
+    const claimedUserId = request.query.get('userId');
+    const authz = await authorizeDiaryPatient(request, claimedUserId);
+    if (isHttpResponse(authz)) return authz;
 
-    if (!userId) {
-      return {
-        status: 400,
-        jsonBody: { error: 'userId is required' }
-      };
+    const rawDate = request.query.get('date');
+    const date = rawDate ? validateDateFormat(rawDate) : format(new Date(), 'yyyy-MM-dd');
+    if (!date) {
+      return { status: 400, jsonBody: { error: 'Invalid date' } };
     }
 
     const repository = new MealsRepository(
       process.env.AZURE_STORAGE_CONNECTION_STRING || ''
     );
 
-    const meals = await repository.getMealsByDate(userId, date);
+    const meals = await repository.getMealsByDate(authz.userId, date);
 
     return {
       status: 200,
@@ -54,8 +113,11 @@ export async function createMeal(
 
   try {
     const meal = await request.json() as Meal;
+    const claimedUserId = meal.userId || null;
+    const authz = await authorizeDiaryPatient(request, claimedUserId);
+    if (isHttpResponse(authz)) return authz;
 
-    if (!meal.userId || !meal.items || meal.items.length === 0) {
+    if (!meal.items || meal.items.length === 0) {
       return {
         status: 400,
         jsonBody: { error: 'Invalid meal data' }
@@ -68,10 +130,18 @@ export async function createMeal(
       meal.photoUrl = undefined;
     }
 
-    // Generate IDs if not present
-    const date = format(new Date(meal.createdAt || new Date()), 'yyyy-MM-dd');
-    meal.PartitionKey = `${meal.userId}_${date}`;
-    meal.RowKey = meal.RowKey || Date.now().toString();
+    // Owner and keys are derived from the principal, never the client
+    meal.userId = authz.userId;
+    let date = format(new Date(), 'yyyy-MM-dd');
+    if (meal.createdAt) {
+      const parsed = new Date(meal.createdAt);
+      if (isNaN(parsed.getTime())) {
+        return { status: 400, jsonBody: { error: 'Invalid createdAt' } };
+      }
+      date = format(parsed, 'yyyy-MM-dd');
+    }
+    meal.PartitionKey = `${authz.userId}_${date}`;
+    meal.RowKey = Date.now().toString();
 
     const repository = new MealsRepository(
       process.env.AZURE_STORAGE_CONNECTION_STRING || ''
@@ -102,13 +172,17 @@ export async function updateMeal(
   try {
     const mealId = request.params.mealId;
     const updates = await request.json() as Partial<Meal>;
-    const userId = request.query.get('userId');
-    const date = request.query.get('date');
+    const claimedUserId = request.query.get('userId');
+    const rawDate = request.query.get('date');
 
-    if (!userId || !date || !mealId) {
+    const authz = await authorizeDiaryPatient(request, claimedUserId);
+    if (isHttpResponse(authz)) return authz;
+
+    const date = rawDate ? validateDateFormat(rawDate) : null;
+    if (!date || !mealId || !MEAL_ID_PATTERN.test(mealId)) {
       return {
         status: 400,
-        jsonBody: { error: 'userId, date, and mealId are required' }
+        jsonBody: { error: 'date and mealId are required' }
       };
     }
 
@@ -116,7 +190,7 @@ export async function updateMeal(
       process.env.AZURE_STORAGE_CONNECTION_STRING || ''
     );
 
-    const existingMeal = await repository.getMealById(userId, date, mealId);
+    const existingMeal = await repository.getMealById(authz.userId, date, mealId);
     if (!existingMeal) {
       return {
         status: 404,
@@ -124,12 +198,14 @@ export async function updateMeal(
       };
     }
 
-    if (updates.photoUrl && updates.photoUrl.length > 50000) {
+    const editableUpdates = pickEditableFields(updates);
+
+    if (editableUpdates.photoUrl && editableUpdates.photoUrl.length > 50000) {
       context.warn?.('photoUrl too large, omitting from storage');
-      updates.photoUrl = undefined;
+      editableUpdates.photoUrl = undefined;
     }
 
-    const updatedMeal = { ...existingMeal, ...updates };
+    const updatedMeal = { ...existingMeal, ...editableUpdates };
     await repository.updateMeal(updatedMeal);
 
     return {
@@ -154,13 +230,17 @@ export async function deleteMeal(
 
   try {
     const mealId = request.params.mealId;
-    const userId = request.query.get('userId');
-    const date = request.query.get('date');
+    const claimedUserId = request.query.get('userId');
+    const rawDate = request.query.get('date');
 
-    if (!userId || !date || !mealId) {
+    const authz = await authorizeDiaryPatient(request, claimedUserId);
+    if (isHttpResponse(authz)) return authz;
+
+    const date = rawDate ? validateDateFormat(rawDate) : null;
+    if (!date || !mealId || !MEAL_ID_PATTERN.test(mealId)) {
       return {
         status: 400,
-        jsonBody: { error: 'userId, date, and mealId are required' }
+        jsonBody: { error: 'date and mealId are required' }
       };
     }
 
@@ -168,7 +248,15 @@ export async function deleteMeal(
       process.env.AZURE_STORAGE_CONNECTION_STRING || ''
     );
 
-    await repository.deleteMeal(userId, date, mealId);
+    const existingMeal = await repository.getMealById(authz.userId, date, mealId);
+    if (!existingMeal) {
+      return {
+        status: 404,
+        jsonBody: { error: 'Meal not found' }
+      };
+    }
+
+    await repository.deleteMeal(authz.userId, date, mealId);
 
     return {
       status: 204
@@ -190,21 +278,21 @@ export async function getDailyStats(
   context.log('GET daily stats request');
 
   try {
-    const userId = request.query.get('userId');
-    const date = request.query.get('date') || format(new Date(), 'yyyy-MM-dd');
+    const claimedUserId = request.query.get('userId');
+    const authz = await authorizeDiaryPatient(request, claimedUserId);
+    if (isHttpResponse(authz)) return authz;
 
-    if (!userId) {
-      return {
-        status: 400,
-        jsonBody: { error: 'userId is required' }
-      };
+    const rawDate = request.query.get('date');
+    const date = rawDate ? validateDateFormat(rawDate) : format(new Date(), 'yyyy-MM-dd');
+    if (!date) {
+      return { status: 400, jsonBody: { error: 'Invalid date' } };
     }
 
     const repository = new MealsRepository(
       process.env.AZURE_STORAGE_CONNECTION_STRING || ''
     );
 
-    const stats = await repository.getDailyStats(userId, date);
+    const stats = await repository.getDailyStats(authz.userId, date);
 
     return {
       status: 200,

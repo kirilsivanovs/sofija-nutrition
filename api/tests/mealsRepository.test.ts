@@ -2,6 +2,7 @@
  * Food Diary (Meals) Repository Tests
  * Tests CRUD operations, validation, and edge cases
  */
+import { TableClient } from '@azure/data-tables';
 import { MealsRepository } from '../src/services/mealsRepository';
 import { clearMockTables } from './__mocks__/azure-data-tables';
 import type { Meal } from '../src/types/food';
@@ -217,6 +218,55 @@ describe('MealsRepository', () => {
   });
 });
 
+describe('MealsRepository OData filters', () => {
+  let repository: MealsRepository;
+  let listEntitiesSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    clearMockTables();
+    repository = new MealsRepository('DefaultEndpointsProtocol=https;AccountName=test');
+    listEntitiesSpy = jest.spyOn(TableClient.prototype, 'listEntities');
+  });
+
+  afterEach(() => {
+    listEntitiesSpy.mockRestore();
+  });
+
+  describe('getMealsByDate', () => {
+    it('passes an escaped PartitionKey filter when ids are safe', async () => {
+      await repository.getMealsByDate('user123', '2026-05-15');
+
+      expect(listEntitiesSpy).toHaveBeenCalledWith({
+        queryOptions: { filter: "PartitionKey eq 'user123_2026-05-15'" },
+      });
+    });
+
+    it('does not query when userId contains an OData fragment', async () => {
+      const meals = await repository.getMealsByDate("x' or PartitionKey ne '", '2026-05-15');
+
+      expect(meals).toEqual([]);
+      expect(listEntitiesSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteAllUserMeals', () => {
+    it('passes an escaped userId filter when ids are safe', async () => {
+      await repository.deleteAllUserMeals('user123');
+
+      expect(listEntitiesSpy).toHaveBeenCalledWith({
+        queryOptions: { filter: "userId eq 'user123'" },
+      });
+    });
+
+    it('does not query when userId contains an OData fragment', async () => {
+      const deletedCount = await repository.deleteAllUserMeals("x' or PartitionKey ne '");
+
+      expect(deletedCount).toBe(0);
+      expect(listEntitiesSpy).not.toHaveBeenCalled();
+    });
+  });
+});
+
 describe('Meals Function - Validation Logic', () => {
   describe('photoUrl truncation', () => {
     it('should strip photoUrl over 50KB', () => {
@@ -239,11 +289,6 @@ describe('Meals Function - Validation Logic', () => {
   });
 
   describe('input validation', () => {
-    it('should require userId', () => {
-      const meal = { items: [{ name: 'Test' }] } as unknown as Meal;
-      expect(!meal.userId).toBe(true);
-    });
-
     it('should require non-empty items', () => {
       const meal = { userId: 'user1', items: [] } as unknown as Meal;
       expect(meal.items.length === 0).toBe(true);

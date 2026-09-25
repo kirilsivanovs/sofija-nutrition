@@ -69,6 +69,17 @@ class MockTableClient {
         return Promise.resolve();
     }
 
+    async upsertEntity(entity, mode = 'Merge') {
+        const key = `${entity.partitionKey}-${entity.rowKey}`;
+        const existing = mockTables.get(this.tableName).get(key);
+        if (mode === 'Merge' && existing) {
+            mockTables.get(this.tableName).set(key, { ...existing, ...entity });
+        } else {
+            mockTables.get(this.tableName).set(key, { ...entity });
+        }
+        return Promise.resolve();
+    }
+
     async deleteEntity(partitionKey, rowKey) {
         const key = `${partitionKey}-${rowKey}`;
         mockTables.get(this.tableName).delete(key);
