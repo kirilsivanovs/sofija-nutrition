@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '@phosphor-icons/web/regular';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -306,10 +307,6 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
       href="/assets/img/hero-doctor-cutout-480w.webp"
       media="(max-width: 768px)"
     />
-
-    <!-- Phosphor Icons (non-blocking) -->
-    <link rel="preconnect" href="https://unpkg.com" />
-    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Booking Calendar Styles -->
     <link rel="stylesheet" href="/assets/booking.css" />

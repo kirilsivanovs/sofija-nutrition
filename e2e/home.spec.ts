@@ -44,3 +44,11 @@ test('shows the pre-footer CTA heading with JavaScript disabled', async ({ brows
   await expect(page.getByRole('heading', { name: /labāku veselību/i })).toBeVisible();
   await context.close();
 });
+
+test('renders a Phosphor icon without contacting an external CDN', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', (r) => requests.push(r.url()));
+  await page.goto('/');
+  await expect(page.locator('i.ph.ph-arrow-right').first()).toBeVisible();
+  expect(requests.some((u) => u.includes('unpkg.com'))).toBe(false);
+});
