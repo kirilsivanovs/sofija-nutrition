@@ -88,13 +88,16 @@ First check whether this session is in a worktree slot: `git rev-parse --git-dir
 
 Exit 2 → report the reason exactly; a dirty tree is a hard stop. Then record `branch`, `status: branched`, one `## Log` line, and update this task's `.lock`: set `worktree:` to the slot path (`git rev-parse --show-toplevel`) in place of `(pending)`.
 
+A task under `.claude/tasks/design/` → before `developer` starts, invoke `tester` with the task path and **baseline**, so `before-*` screenshots of the unchanged pages exist. A failed baseline (dev server won't start) is logged in one line and does not stop the task.
+
 ### 5. Verification and review
 
 - **Verification is yours.** Run the plan's Testing plan as `/test` does (`.claude/commands/test.md`). Reduce it to one result line; never paste output.
 - Invoke `code-reviewer` with the task file's path and that result line.
 - Verification pass and verdict **Pass** or **Pass with notes** → `status: review` and go to step 6. Notes are logged in one line and not fixed.
 - Verification fail, or verdict **Fail** → a **fix round**: invoke `developer` with the failures and findings verbatim, then verify and review again. At most **two** fix rounds per task; still failing after the second → hard stop.
-- `tester` runs automatically, after `code-reviewer` passes, when the plan names a browser scenario. Its fail counts as a verification fail.
+- `tester` runs automatically, after `code-reviewer` passes, when the plan names a browser scenario, and **always** for a task under `.claude/tasks/design/` (its design check, `.claude/agents/tester.md`). Its fail, including any failed design-checklist item, counts as a verification fail. "Could not verify" on a design task is not a pass: fix what blocked it or hard-stop.
+- Design task passed → in the final report give the screenshot folder (`.claude/tasks/design/<ID>/notes/screenshots/<task-id>/`) so the user can compare `before-*` and `after-*`.
 
 ### 6. Commit, merge, push, close
 

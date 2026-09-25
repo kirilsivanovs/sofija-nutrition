@@ -41,6 +41,8 @@ For `task.md`, or for each sub-task file:
 - **Testing plan** — the exact command from `CLAUDE.md` "Build / test" with the test file and `-t` filter; tests go in the sibling test file, `it('<does what> when <condition>')`. Name each new test by its title — `code-reviewer` greps for them. Add the area's typecheck/build (`npx tsc -p api/tsconfig.json --noEmit` for `api`, `npm run build` for `frontend`).
 
   **Every seam gets a named verification.** Where unit tests don't apply — a workflow edit, a Bicep file, copy or a stylesheet — say what does prove it: the YAML parse, `az bicep build`, `npm run build`, or a browser scenario spelled out for `tester` (URL, action, expected text or state, and which of LV/RU/EN). "No tests needed" is not a Testing plan.
+
+  **A `design/` task** always gets `tester`'s design check (screenshots at 375/768/1280, the `site-design` checklist). Name in the Testing plan the pages it covers and, per page, what should visibly change, so the before/after comparison has something concrete to confirm.
 - **Production / manual steps** — carried from the analysis: what the user must do in Azure or GitHub after merge, in order, with the change-management note.
 - **Risks / open questions**.
 
