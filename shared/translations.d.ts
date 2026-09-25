@@ -9,6 +9,9 @@ export namespace sharedTranslations {
       let months: string[];
       let today: string;
       let selectedLabel: string;
+      let prevMonthLabel: string;
+      let nextMonthLabel: string;
+      let gridLabel: string;
     }
     namespace form {
       let serviceLabel: string;
@@ -124,6 +127,12 @@ export namespace sharedTranslations {
       export { today_1 as today };
       let selectedLabel_1: string;
       export { selectedLabel_1 as selectedLabel };
+      let prevMonthLabel_1: string;
+      export { prevMonthLabel_1 as prevMonthLabel };
+      let nextMonthLabel_1: string;
+      export { nextMonthLabel_1 as nextMonthLabel };
+      let gridLabel_1: string;
+      export { gridLabel_1 as gridLabel };
     }
     export { calendar_1 as calendar };
     export namespace form_1 {
@@ -298,6 +307,12 @@ export namespace sharedTranslations {
       export { today_2 as today };
       let selectedLabel_2: string;
       export { selectedLabel_2 as selectedLabel };
+      let prevMonthLabel_2: string;
+      export { prevMonthLabel_2 as prevMonthLabel };
+      let nextMonthLabel_2: string;
+      export { nextMonthLabel_2 as nextMonthLabel };
+      let gridLabel_2: string;
+      export { gridLabel_2 as gridLabel };
     }
     export { calendar_2 as calendar };
     export namespace form_2 {

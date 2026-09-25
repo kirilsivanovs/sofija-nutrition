@@ -30,6 +30,9 @@ const sharedTranslations = {
       ],
       today: 'Šodien',
       selectedLabel: 'Izvēlēts',
+      prevMonthLabel: 'Iepriekšējais mēnesis',
+      nextMonthLabel: 'Nākamais mēnesis',
+      gridLabel: 'Kalendārs',
     },
 
     // Form
@@ -167,6 +170,9 @@ const sharedTranslations = {
       ],
       today: 'Today',
       selectedLabel: 'Selected',
+      prevMonthLabel: 'Previous month',
+      nextMonthLabel: 'Next month',
+      gridLabel: 'Calendar',
     },
 
     // Form
@@ -304,6 +310,9 @@ const sharedTranslations = {
       ],
       today: 'Сегодня',
       selectedLabel: 'Выбрано',
+      prevMonthLabel: 'Предыдущий месяц',
+      nextMonthLabel: 'Следующий месяц',
+      gridLabel: 'Календарь',
     },
 
     // Form
