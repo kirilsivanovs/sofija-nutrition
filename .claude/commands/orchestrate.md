@@ -19,7 +19,7 @@ Append an item to an existing **recurring** task (copy fixes, translation gaps, 
 
 ## `force <stage> <task-id>`
 
-Run a specific stage against a task whose `status` would have routed elsewhere — `analyzer`, `architect`, `dev-planner`, `branch-preparer`, `developer`, `tester`, `code-reviewer`. `tester` is for a browser scenario the plan names, or when the user asks; its pass moves `testing` → `review`. Use this for re-planning, re-diagnosing a bug whose stated cause turned out wrong, or overriding the `architectural` flag.
+Run a specific stage against a task whose `status` would have routed elsewhere — `analyzer`, `architect`, `dev-planner`, `designer`, `branch-preparer`, `developer`, `tester`, `code-reviewer`. `tester` is for a browser scenario the plan names, or when the user asks; its pass moves `testing` → `review`. Use this for re-planning, re-diagnosing a bug whose stated cause turned out wrong, or overriding the `architectural` flag.
 
 Say in one line which stage the normal route would have chosen and why you are overriding it, then invoke that one agent and report as `/work` does.
 
@@ -48,4 +48,4 @@ These hold for every command:
 - **Git only as `work.md` step 6 does it**: one commit per task, fast-forward into `main`, `git branch -d` after merge. No force-push, no `reset --hard`, no rewriting pushed history.
 - **Never create a sub-agent**, and never invent a board field or folder that isn't in `.claude/tasks/README.md`.
 - Never fix, edit or implement anything in this session, however small (`/quick` is the user's explicit exception).
-- `analyzer` is the only opus stage on the route, and `architect` the only opus agent off it. Forcing either a second time on the same task means the first run was wrong — say that out loud.
+- `analyzer` is the only opus stage on every route, and `architect` the only opus agent off it; `designer` is opus too, but only on a `design/` task's route. Forcing any of the three a second time on the same task means the first run was wrong — say that out loud.

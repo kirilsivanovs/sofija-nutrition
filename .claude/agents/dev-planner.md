@@ -18,6 +18,8 @@ You turn an analysis into steps a developer can execute without re-exploring. Th
 
 A path to `.claude/tasks/<category>/<ID>/task.md` at `status: analyzed`. On the normal route you run only for `size: L`, or when `analyzer` left no plan. Treat `## Analysis` as settled; a `## Design` section outranks it wherever they differ.
 
+For a task under `.claude/tasks/design/`, `## Design direction` (written by `designer`) is settled input alongside `## Analysis`: every implementation step maps to a line of it. Missing `## Design direction` → stop and say so; don't improvise one yourself.
+
 You may `Grep`/`Glob` and run read-only `PowerShell` (`git log`, `git show`) to pin down paths and patterns. Do not modify any code file.
 
 If the analysis flags patient data, or `kind: security`, load the `patient-data` skill and build its checklist into the steps and the Testing plan. For UI work, load `site-design`.

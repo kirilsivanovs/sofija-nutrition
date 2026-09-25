@@ -18,6 +18,8 @@ A path to `.claude/tasks/<category>/<ID>/task.md`, or a `sub-tasks/` file, at `s
 
 Read the frontmatter (`area`, `branch`; a sub-task uses its parent's `branch`), the Description, the Acceptance criteria, and above all `## Plan`. `## Analysis` and `## Design` are context if a step is unclear — not a licence to change the approach. If the plan says the change touches patient data, load the `patient-data` skill; for UI work, `site-design`.
 
+For a task under `.claude/tasks/design/`, `## Design direction` (from `designer`) is what "implement literally" means for anything visual: follow it as written. A visual choice it does not cover → note it in your report rather than improvising one.
+
 **The branch must already exist.** If `branch` is empty or isn't there, stop and report — the router's branch step owns branch creation.
 
 If a plan step is ambiguous or names a file or pattern that doesn't exist: **stop**, record the discrepancy in `## Log`, and report it.

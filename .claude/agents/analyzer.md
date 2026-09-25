@@ -77,6 +77,8 @@ For `S` and `M`, write `## Plan` yourself, in the format `dev-planner` produces 
 
 For `L`, write no plan; `dev-planner` builds the sub-tasks.
 
+A task under `.claude/tasks/design/` never gets `## Plan` from you, whatever its size: set `status: analyzed` and stop there. `designer` writes `## Design direction` next, then `dev-planner` turns it into steps.
+
 Then set `kind`, `size`, `area` (or `cross-area`), `architectural` if escalating, and `status`: `planned` when you wrote a verified plan, `analyzed` otherwise, `new` if blocked. Append one dated `## Log` line and update `updated:`.
 
 Finally, if `## Inputs` is longer than a few lines, move its body verbatim to `<ID>/notes/inputs.md` and leave a two-line pointer. Keep `task.md` within 12 KB; a hook refuses writes that grow it past that.

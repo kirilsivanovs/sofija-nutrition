@@ -57,6 +57,8 @@ Load the `site-design` skill first. Pages: those the plan's browser scenario nam
 
 Any failed item is a verification failure, reported like a failing test: item, page, width/language, what is wrong. Judge only against the skill and the plan; taste beyond them is a note, not a failure.
 
+**8. `## Design direction` match** — a note, not a checklist fail: record whether the rendered page matches the task's `## Design direction` (palette, type, layout, the one motion moment). `designer` judges taste in its own `visual review` pass; you only record the observation.
+
 ## Report and set status
 
 Change `status` and append to `## Log` with **Edit**, never through the shell.

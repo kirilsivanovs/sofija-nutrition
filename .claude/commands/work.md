@@ -62,6 +62,8 @@ Run these in order from wherever `status` puts the task. After each stage, write
 
 Pass a sub-agent the task file's path and nothing else, unless it needs what the file cannot carry (failures or findings for `developer`, the verification result for `code-reviewer`, new inputs for a top-up). Never give a writing agent `isolation: worktree`.
 
+**A task under `.claude/tasks/design/`** takes a longer route at steps 1–2: `analyzer` (never writes `## Plan` for a `design/` task, sets `status: analyzed`) → `designer` in `direction` mode (writes `## Design direction`) → `dev-planner` → cut the branch. This costs a second opus pass (`designer` runs at `model: opus`, `effort: high`); say so in one line when you take it.
+
 **Downgrade `analyzer` to sonnet** (Agent `model: "sonnet"`) when the task already names the failing function with its `file:line` and is local to one area; `kind: security` or anything touching patient data stays on opus.
 
 **`architectural: true`** → run `architect` (opus) once, then `dev-planner`. Say that the task pays for a second opus pass and why.
@@ -88,6 +90,7 @@ A task under `.claude/tasks/design/` → before `developer` starts, invoke `test
 - Verification fail, or verdict **Fail** → a **fix round**: invoke `developer` with the failures and findings verbatim, then verify and review again. At most **two** fix rounds per task; still failing after the second → hard stop.
 - `tester` runs automatically, after `code-reviewer` passes, when the plan names a browser scenario, and **always** for a task under `.claude/tasks/design/` (its design check, `.claude/agents/tester.md`). Its fail, including any failed design-checklist item, counts as a verification fail. "Could not verify" on a design task is not a pass: fix what blocked it or hard-stop.
 - Design task passed → in the final report give the screenshot folder (`.claude/tasks/design/<ID>/notes/screenshots/<task-id>/`) so the user can compare `before-*` and `after-*`.
+- Design task passed `tester` → invoke `designer` in `visual review` mode. `done` → continue to step 6. A refinement list → pass it verbatim to `developer`, then run verification (this section) and `code-reviewer` again, then `tester` again. At most **2 refinement rounds**, separate from and after the fix rounds above; still not `done` after 2 → log the remaining refinements as a new task via `/new` (per "Work an agent left out of scope") and continue to step 6 — this is not a hard stop. List the refinement rounds taken in the final report.
 
 ### 6. Commit, merge, push, close
 
