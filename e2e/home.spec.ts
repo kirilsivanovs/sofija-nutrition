@@ -61,3 +61,8 @@ test('has no WhatsApp link or placeholder phone number in the structured data', 
   const ldJson = await page.locator('script[type="application/ld+json"]').first().textContent();
   expect(ldJson ?? '').not.toContain('+37120000000');
 });
+
+test('a direct link to #faq scrolls the FAQ section into view', async ({ page }) => {
+  await page.goto('/#faq');
+  await expect(page.locator('#faq')).toBeInViewport();
+});

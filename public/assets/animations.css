@@ -334,11 +334,3 @@
   }
 }
 
-/* ============================================
-   PERFORMANCE OPTIMIZATIONS
-   ============================================ */
-
-/* Prevent layout shift - use 'content' instead of 'layout style' for Safari compat */
-section {
-  contain: content;
-}

@@ -29,15 +29,6 @@ html {
   -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
 }
 
-/* Defer rendering of below-fold sections for faster initial paint */
-#services,
-#about,
-#faq,
-#contact {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 800px;
-}
-
 /* Accessibility: respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
