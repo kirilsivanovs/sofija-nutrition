@@ -52,3 +52,12 @@ test('renders a Phosphor icon without contacting an external CDN', async ({ page
   await expect(page.locator('i.ph.ph-arrow-right').first()).toBeVisible();
   expect(requests.some((u) => u.includes('unpkg.com'))).toBe(false);
 });
+
+test('has no WhatsApp link or placeholder phone number in the structured data', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
+  const ldJson = await page.locator('script[type="application/ld+json"]').first().textContent();
+  expect(ldJson ?? '').not.toContain('+37120000000');
+});
