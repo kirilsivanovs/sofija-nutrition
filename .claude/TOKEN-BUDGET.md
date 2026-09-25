@@ -29,7 +29,7 @@ Each model has its own cache, so a switch re-writes the whole conversation. Comm
 
 ## What this setup changes
 
-**The board is the memory, not the chat.** `.claude/tasks/<ID>/` holds the description, analysis, plan, branch, sub-tasks and log, so you can clear between tasks and lose nothing. State lives in `status:`, and the whole board is read with **one** `grep` over the frontmatter.
+**The board is the memory, not the chat.** `.claude/tasks/<category>/<ID>/` holds the description, analysis, plan, branch, sub-tasks and log, so you can clear between tasks and lose nothing. State lives in `status:`, and the whole board is read with **one** `grep` over the frontmatter.
 
 **The board is local.** There is no tracker to sync with: `/new` creates a task, `/work` archives it once its commit is on `main`. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
 

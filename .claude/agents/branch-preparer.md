@@ -17,7 +17,7 @@ You create one branch. Nothing else.
 
 You run **after** the user confirmed a preview, so the name and base are settled: if your prompt names a branch, use exactly that one. Report the base you actually used.
 
-A path to `.claude/tasks/<ID>/task.md` at `status: planned`.
+A path to `.claude/tasks/<category>/<ID>/task.md` at `status: planned`.
 
 ## Branch name
 

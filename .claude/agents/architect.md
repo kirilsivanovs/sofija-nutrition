@@ -12,7 +12,7 @@ You are the second opus stage on a task, which means it is now paying for opus t
 
 ## Input
 
-A path to `.claude/tasks/<ID>/task.md` with `architectural: true` and a completed `## Analysis`. Start from that analysis; do not redo it. Spend your budget only on the open design question it names.
+A path to `.claude/tasks/<category>/<ID>/task.md` with `architectural: true` and a completed `## Analysis`. Start from that analysis; do not redo it. Spend your budget only on the open design question it names.
 
 ## Research
 

@@ -12,7 +12,7 @@ Take one task from its current `status` all the way to `done`, running each stag
 Read the whole board in one call; don't open task files to browse:
 
 ```bash
-grep -H -E '^(id|title|status|priority|kind|size|area|branch|parent|split|recurring|architectural):' .claude/tasks/*/task.md .claude/tasks/*/sub-tasks/*.md 2>/dev/null
+grep -H -E '^(id|title|status|priority|kind|size|area|branch|parent|split|recurring|architectural):' .claude/tasks/[!_]*/*/task.md .claude/tasks/[!_]*/*/sub-tasks/*.md .claude/tasks/SN-*/task.md .claude/tasks/SN-*/sub-tasks/*.md 2>/dev/null
 ```
 
 `$ARGUMENTS` names an id (case-insensitive) → that one. A `split: true` parent → its children in order, then the parent.
@@ -91,7 +91,7 @@ Exit 2 → report the reason exactly; a dirty tree is a hard stop. Then record `
 3. **Merge.** `git merge --ff-only <branch>`. Not fast-forward (main moved) → `git checkout <branch>`, `git rebase main`, re-run verification, then merge again. A rebase conflict → `git rebase --abort` and hard stop.
 4. **Pre-deploy steps.** If the plan's **Production / manual steps** include anything needed *before* the code reaches production, run the ones the Azure/GitHub rule in `CLAUDE.md` allows yourself (one line per command). If any step needs a secret value or falls outside that rule, stop here: the commit is on local `main`, not pushed. Report those steps; the user says "пушь" when done. Steps that come *after* deploy don't stop the push; list them in the final report.
 5. **Push.** `git push origin main`. Say that this deploys: the frontend after CI passes, the API immediately when `api/**` or `shared/**` changed.
-6. **Clean up.** `git branch -d <branch>` (it is merged, so `-d` succeeds; if it refuses, leave it and say so). Set `status: done` (and on sub-tasks), one `## Log` line with the commit hash, move the folder to `.claude/tasks/_archive/<ID>/`.
+6. **Clean up.** `git branch -d <branch>` (it is merged, so `-d` succeeds; if it refuses, leave it and say so). Set `status: done` (and on sub-tasks), one `## Log` line with the commit hash, move the folder from `.claude/tasks/<category>/<ID>/` to `.claude/tasks/_archive/<category>/<ID>/` (create the category folder if missing).
 
 Never force-push, never `reset --hard`, never rewrite pushed history, never push a branch other than `main` unless the user asks.
 

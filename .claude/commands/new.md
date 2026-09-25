@@ -7,11 +7,17 @@ Create one task in `.claude/tasks/`. There is no external tracker: what you writ
 
 ## Id
 
-List `.claude/tasks/SN-*` and `.claude/tasks/_archive/SN-*` in one `Glob` each. The new id is `SN-` plus the highest number found + 1, three digits (`SN-001` on an empty board). Never reuse an archived id.
+`Glob .claude/tasks/**/SN-*/task.md` (every category, the archive and legacy flat folders at once). The new id is `SN-` plus the highest number found + 1, three digits (`SN-001` on an empty board). Never reuse an archived id.
 
 ## What to write
 
-Create `.claude/tasks/<ID>/task.md` from `_TEMPLATE.md`:
+## Category
+
+Pick the folder from the user's words, using the table in `.claude/tasks/README.md` ("Categories"): `design`, `functional`, `security`, `devops` or `maintenance`. Unsure → the one the main risk belongs to (a data leak in a UI bug is `security`). Say which you chose so the user can change it; never invent a new category.
+
+## What to write
+
+Create `.claude/tasks/<category>/<ID>/task.md` from `_TEMPLATE.md`:
 
 - `id`, `title` — a short imperative in English, from the user's words (translate if they wrote Russian; keep their meaning, not your interpretation).
 - `priority` — from `$ARGUMENTS` if given. Otherwise `P0` when the task is a security hole or could harm a patient (wrong booking, exposed data), `P2` for everything else; say which you chose so the user can change it.

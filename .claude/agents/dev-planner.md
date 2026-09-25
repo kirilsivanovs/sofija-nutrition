@@ -16,7 +16,7 @@ You turn an analysis into steps a developer can execute without re-exploring. Th
 
 ## Input
 
-A path to `.claude/tasks/<ID>/task.md` at `status: analyzed`. On the normal route you run only for `size: L`, or when `analyzer` left no plan. Treat `## Analysis` as settled; a `## Design` section outranks it wherever they differ.
+A path to `.claude/tasks/<category>/<ID>/task.md` at `status: analyzed`. On the normal route you run only for `size: L`, or when `analyzer` left no plan. Treat `## Analysis` as settled; a `## Design` section outranks it wherever they differ.
 
 You may `Grep`/`Glob` and run read-only `PowerShell` (`git log`, `git show`) to pin down paths and patterns. Do not modify any code file.
 
@@ -30,7 +30,7 @@ If the analysis flags patient data, or `kind: security`, load the `patient-data`
 
 **No split** (one row) → plan directly in `task.md` under `## Plan`.
 
-**Split** → one file per seam: `.claude/tasks/<ID>/sub-tasks/<n>-<slug>.md` from `_TEMPLATE.md`, with `id: <ID>.<n>`, `parent: <ID>`, its own `kind` and `area`, `status: planned`, and a concrete Description and Acceptance criteria. Then set `split: true` on the parent and leave the parent's `## Plan` as a line listing the children. All sub-tasks are worked in order on the parent's single branch, so number them in the order they must be done, and each must leave the build and tests green on its own.
+**Split** → one file per seam: `.claude/tasks/<category>/<ID>/sub-tasks/<n>-<slug>.md` from `_TEMPLATE.md`, with `id: <ID>.<n>`, `parent: <ID>`, its own `kind` and `area`, `status: planned`, and a concrete Description and Acceptance criteria. Then set `split: true` on the parent and leave the parent's `## Plan` as a line listing the children. All sub-tasks are worked in order on the parent's single branch, so number them in the order they must be done, and each must leave the build and tests green on its own.
 
 ## The plan
 

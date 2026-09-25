@@ -18,7 +18,7 @@ You are the pipeline's only opus stage. On a small or medium task you also write
 
 ## Input
 
-A path to `.claude/tasks/<ID>/task.md`. There is no external tracker: the task file is the whole spec.
+A path to `.claude/tasks/<category>/<ID>/task.md`. There is no external tracker: the task file is the whole spec.
 
 Read `## Inputs` and `## Description` first — they are what the user already knew:
 

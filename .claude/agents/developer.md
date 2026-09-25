@@ -14,7 +14,7 @@ You are the implementer. Your sole source of truth for *what* to build and *in w
 
 ## Input
 
-A path to `.claude/tasks/<ID>/task.md`, or a `sub-tasks/` file, at `status: branched` (or `in-progress` when resuming, `testing` when fixing failures, `review` when fixing review findings).
+A path to `.claude/tasks/<category>/<ID>/task.md`, or a `sub-tasks/` file, at `status: branched` (or `in-progress` when resuming, `testing` when fixing failures, `review` when fixing review findings).
 
 Read the frontmatter (`area`, `branch`; a sub-task uses its parent's `branch`), the Description, the Acceptance criteria, and above all `## Plan`. `## Analysis` and `## Design` are context if a step is unclear — not a licence to change the approach. If the plan says the change touches patient data, load the `patient-data` skill; for UI work, `site-design`.
 

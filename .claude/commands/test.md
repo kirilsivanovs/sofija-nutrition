@@ -5,7 +5,7 @@ argument-hint: "SN-012 | SN-012.2"
 
 Run the checks for the task in `$ARGUMENTS` yourself. **No sub-agent.** Do not write tests, do not fix failures, do not read source files.
 
-1. Find it: `.claude/tasks/<ID>/task.md`, or a `sub-tasks/` file when the id has a `.N` suffix. Read only its frontmatter (`area`, `branch`) and the **Testing plan** in `## Plan`.
+1. Find it: `.claude/tasks/<category>/<ID>/task.md`, or a `sub-tasks/` file when the id has a `.N` suffix. Read only its frontmatter (`area`, `branch`) and the **Testing plan** in `## Plan`.
 2. Make sure the repo is on that branch (`git branch --show-current`). Not on it → say so and stop; switching is `/work`'s job.
 3. Run each command the Testing plan names, from the repo root, one call per command — the forms are in `CLAUDE.md`, "Build / test":
 

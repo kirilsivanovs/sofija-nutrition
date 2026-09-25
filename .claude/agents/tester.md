@@ -19,7 +19,7 @@ Then, when the plan names a browser scenario, a third: **does the site do what t
 
 ## Input
 
-A path to `.claude/tasks/<ID>/task.md` (or a `sub-tasks/` file) at `status: testing`. Read `area`, `branch`, and the **Testing plan** in `## Plan`.
+A path to `.claude/tasks/<category>/<ID>/task.md` (or a `sub-tasks/` file) at `status: testing`. Read `area`, `branch`, and the **Testing plan** in `## Plan`.
 
 ## Run
 

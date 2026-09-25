@@ -9,7 +9,7 @@ The first token of `$ARGUMENTS` is the task id; everything after it (and anythin
 
 ## Where it goes
 
-1. Find `.claude/tasks/<ID>/task.md`. Not on the board → say so and offer `/new`; don't create an id here.
+1. Find `.claude/tasks/<category>/<ID>/task.md`. Not on the board → say so and offer `/new`; don't create an id here.
 2. Append to its `## Inputs` section. Never overwrite what is there; it is append-only and dated.
 
 ## How to file it
@@ -18,10 +18,10 @@ The first token of `$ARGUMENTS` is the task id; everything after it (and anythin
 
 **Pasted text** (a chat with Sofija, an email, notes from a call):
 - Under about 30 lines → inline under a `### <date> — <one-line label>` heading, verbatim.
-- Longer → write it to `.claude/tasks/<ID>/notes/<n>-<slug>.md` and leave a one-line pointer.
+- Longer → write it to `.claude/tasks/<category>/<ID>/notes/<n>-<slug>.md` and leave a one-line pointer.
 - Latvian or Russian text stays in its language (it is source material, and site copy must be exact); add a one-line English gist above it.
 
-**Attached files.** Copy them into `.claude/tasks/<ID>/notes/` rather than pointing at `Downloads`. Keep the original filename (slugged), list each with type, size and one clause.
+**Attached files.** Copy them into `.claude/tasks/<category>/<ID>/notes/` rather than pointing at `Downloads`. Keep the original filename (slugged), list each with type, size and one clause.
 
 - **PDF, PNG, JPG** — readable with `Read`. **Text-like** (md, txt, json, csv) — readable and greppable.
 - **.docx / .xlsx** — not readable by `Read`. Say so and ask for a PDF or the relevant part pasted.

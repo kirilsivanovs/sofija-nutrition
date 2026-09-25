@@ -13,7 +13,7 @@ The everyday commands cover normal work: `/new`, `/brief`, `/work`, `/board`, `/
 
 Append an item to an existing **recurring** task (copy fixes, translation gaps, small design nits). No sub-agent:
 
-1. Read `.claude/tasks/<task-id>/task.md`. Missing, or not `recurring: true` → stop and say so.
+1. Read `.claude/tasks/<category>/<task-id>/task.md`. Missing, or not `recurring: true` → stop and say so.
 2. Append one unchecked bullet to `## Pending batch` — never `## Current batch`, a round may be in flight. Update `updated:`. Don't touch `status`.
 3. Report the id and the appended item.
 
@@ -36,7 +36,7 @@ Bring work started by hand into the board. No sub-agent.
 
 ## `reindex`
 
-Sanity-check the board and report, changing nothing unless the user asks: ids that don't match their folder, duplicate or reused ids (including `_archive/`), a `parent:` pointing at nothing, a sub-task whose parent isn't `split: true`, an `area` not in the `CLAUDE.md` table, a frontmatter field the schema does not define, anything in `_archive/` not at `status: done`, a `branch` naming a branch that no longer exists, a task file over 12 KB, and anything in `.claude/tasks/` that `git check-ignore` says is **not** ignored (the board must never reach the public repo). Cheap — the README `grep`, one `git branch --list`, one `git check-ignore -v .claude/tasks/x`.
+Sanity-check the board and report, changing nothing unless the user asks: ids that don't match their folder, duplicate or reused ids (including `_archive/`), a `parent:` pointing at nothing, a sub-task whose parent isn't `split: true`, an `area` not in the `CLAUDE.md` table, a frontmatter field the schema does not define, anything in `_archive/` not at `status: done`, a `branch` naming a branch that no longer exists, a task file over 12 KB, a task folder outside the README's category folders (legacy flat `SN-*` or an unknown category), and anything in `.claude/tasks/` that `git check-ignore` says is **not** ignored (the board must never reach the public repo). Cheap — the README `grep`, one `git branch --list`, one `git check-ignore -v .claude/tasks/x`.
 
 ## Hard rules
 

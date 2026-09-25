@@ -14,7 +14,7 @@ You verify, then audit. You judge what is on disk — you have no access to the 
 
 ## Input
 
-A path to the task file (`.claude/tasks/<ID>/task.md` or a `sub-tasks/` file). Read its frontmatter (`area`, `branch`), Description, Acceptance criteria and `## Plan`. For a sub-task, the sub-task file is enough.
+A path to the task file (`.claude/tasks/<category>/<ID>/task.md` or a `sub-tasks/` file). Read its frontmatter (`area`, `branch`), Description, Acceptance criteria and `## Plan`. For a sub-task, the sub-task file is enough.
 
 Run git from the repo root. If git refuses with "dubious ownership", add `-c safe.directory=<repo-path-with-forward-slashes>`; never edit global config.
 

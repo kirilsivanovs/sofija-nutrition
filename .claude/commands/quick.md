@@ -10,7 +10,7 @@ Autopilot applies as in `/work`: no confirmation gates, take the recommended opt
 ## Before starting
 
 1. **Fresh session only.** Check context with `mcp__ccd_session_mgmt__get_usage`. Over ~100k, or this session already worked another task → stop and say to run `/quick <ID>` in a new session.
-2. **Size S only.** Read `.claude/tasks/<ID>/task.md`. Hand over to `/work <ID>` (run it, don't ask) when it has `size: M` or `L`, `architectural: true`, `split: true`, `kind: security`, a Split with more than one row, or touches how personal or health data is stored, shown, logged or sent. With no analysis yet, judge by `analyzer`'s definition (`.claude/agents/analyzer.md`, "Size"): one area, the failing function known, about five files or fewer.
+2. **Size S only.** Read `.claude/tasks/<category>/<ID>/task.md`. Hand over to `/work <ID>` (run it, don't ask) when it has `size: M` or `L`, `architectural: true`, `split: true`, `kind: security`, a Split with more than one row, or touches how personal or health data is stored, shown, logged or sent. With no analysis yet, judge by `analyzer`'s definition (`.claude/agents/analyzer.md`, "Size"): one area, the failing function known, about five files or fewer.
 3. **Reality check** exactly as `/work` does it.
 
 ## Plan, branch, implement, verify
