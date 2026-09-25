@@ -102,4 +102,4 @@ Gather first, then write. Keep the last few turns for the analysis, then the pla
 
 ## Return budget
 
-At most 30 lines — this is what the user approves. Requirement · root cause with evidence · areas · shape and why · the Split table, one line per row · production/manual steps · open questions · whether `architect` is needed · `size` and why. For S and M add up to 8 lines: the step headings and the test command with its filter.
+At most 30 lines — the router relays it to the user and plans from it. Requirement · root cause with evidence · areas · shape and why · the Split table, one line per row · production/manual steps · open questions · whether `architect` is needed · `size` and why. For S and M add up to 8 lines: the step headings and the test command with its filter.

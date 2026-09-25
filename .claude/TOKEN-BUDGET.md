@@ -31,7 +31,7 @@ Each model has its own cache, so a switch re-writes the whole conversation. Comm
 
 **The board is the memory, not the chat.** `.claude/tasks/<ID>/` holds the description, analysis, plan, branch, sub-tasks and log, so you can clear between tasks and lose nothing. State lives in `status:`, and the whole board is read with **one** `grep` over the frontmatter.
 
-**The board is local.** There is no tracker to sync with: `/new` creates a task, `/close` archives it after you merged the branch. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
+**The board is local.** There is no tracker to sync with: `/new` creates a task, `/work` archives it once its commit is on `main`. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
 
 **Thinking happens once, at the top.** `analyzer` (opus) establishes the requirement, the root cause and the shape, and for S/M tasks writes the steps too. `developer` (sonnet, low effort) executes them instead of re-deriving anything.
 
@@ -52,15 +52,15 @@ Each model has its own cache, so a switch re-writes the whole conversation. Comm
 | `analyzer` | **opus** | high | the one deep stage; 20 tool calls (26 with the S/M plan). Downgraded to sonnet by `/work` when the task already names the failing `file:line` and is not security or patient data |
 | `analyzer` top-up | sonnet | low | folding late input into an existing analysis |
 | `dev-planner` | sonnet | high | `size: L` only; its output is consumed literally by a low-effort agent, so it self-verifies paths and test filters |
-| `prepare-branch.ps1` | — | — | a script the router runs at gate 2; `branch-preparer` (haiku) is the fallback |
+| `prepare-branch.ps1` | — | — | a script the router runs before `developer`; `branch-preparer` (haiku) is the fallback |
 | `developer` | sonnet | low | follows an explicit plan; the bulk of all spend |
 | `code-reviewer` | sonnet | high | small input (a diff and a test result), last thing before a commit — don't starve it |
 | `tester` | sonnet | medium | off the route; for browser scenarios (booking, language switch, keyboard access) |
 | `architect` | opus | high | off the route; only via `/orchestrate force architect` for decisions that outlive the task (patient record model, auth boundary) |
 
-## Gates cost round trips, so there are three
+## No gates, but hard stops
 
-After `analyzer`, before cutting the branch, after the review verdict. `developer` → verification → `code-reviewer` run as one chain between the last two and report once.
+The user chose autopilot: `/work` runs every stage back to back and takes the recommended option at each choice, then commits, fast-forwards `main` and pushes — no pull requests. Every gate that was removed was a round trip re-sending the whole context, so this is also the cheaper route. What replaces the gates is verification plus an independent `code-reviewer` before any commit, at most two fix rounds, and a short list of hard stops (`work.md`) where only the user can act — most importantly, pre-deploy manual steps, because pushing `main` deploys production.
 
 ## Two isolation features that would break this pipeline
 
@@ -68,7 +68,7 @@ After `analyzer`, before cutting the branch, after the review verdict. `develope
 
 ## Watch the meter, and clear before it matters
 
-- `/work` offers `Очистить → <next command>` when a task reaches gate 3, when context passes ~150k, or when a new task starts in a session past ~120k. The command goes to the clipboard, because the clear happens as soon as the turn ends.
+- After a `/work` run, if context is past ~150k, `/work` says a fresh session is cheaper for the next task.
 - `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=20` is the backstop for a session nobody cleared.
 - `usage-log.js` appends one line per sub-agent run and per main turn to `.claude/metrics/usage.jsonl` (token counts only, keyed by `SN-NNN`). `.\.claude\scripts\usage-report.ps1 [-Ticket SN-012] [-Since 2026-10-01]` sums it by task and agent type.
 

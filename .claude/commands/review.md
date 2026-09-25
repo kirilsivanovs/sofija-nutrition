@@ -10,6 +10,6 @@ Run `code-reviewer` against the task in `$ARGUMENTS`, whatever its `status`. `/w
 3. Invoke `code-reviewer` with the task file's path. Pass on any specific concerns the user named in `$ARGUMENTS`.
 4. Relay the verdict and findings as returned — every `file:line` intact.
 
-The task's `status` does not change, whatever the verdict. If it passed and the task was already at `review`, say that `/close <ID>` archives it once the branch is merged.
+The task's `status` does not change, whatever the verdict. If it passed and the task was already at `review`, say that `/work <ID>` commits, merges and pushes it.
 
 Never fix anything here, and never re-run `developer` off the findings without the user asking.

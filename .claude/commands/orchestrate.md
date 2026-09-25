@@ -7,7 +7,7 @@ argument-hint: "force <stage> <id> | adopt <id> | capture-to <id> \"...\" | rein
 
 The everyday commands cover normal work: `/new`, `/brief`, `/work`, `/board`, `/find`, `/test`, `/review`, `/close`. This one exists for the cases they deliberately leave out.
 
-**Routing is defined once, in `.claude/commands/work.md`** — the state table, the gates, the one-agent rule. Never contradict it. The board's layout and schema are in `.claude/tasks/README.md`.
+**Routing is defined once, in `.claude/commands/work.md`** — the state table, the autopilot rule, the hard stops. Never contradict it. The board's layout and schema are in `.claude/tasks/README.md`.
 
 ## `capture-to <task-id> "<item>"`
 
@@ -42,11 +42,10 @@ Sanity-check the board and report, changing nothing unless the user asks: ids th
 
 These hold for every command:
 
-- **One agent per invocation, and a gate after it.** Never chain a second without reporting to the user first.
-- **Every gate ends in an `AskUserQuestion` picker**, per `work.md`.
+- **Autopilot**, per `work.md`: no confirmation gates; take the recommended option and say which. `force` runs the one stage named and then continues the normal route from the resulting status, as `/work` would.
 - **Never make a state change the user has not seen previewed.** Anything beyond the task's own files — cutting a branch, archiving a folder — is shown first and done second.
 - **Sub-agents never talk to each other.** They report to you; you report to the user.
-- **Never touch git history.** No commits, pushes, PRs or branch deletion.
+- **Git only as `work.md` step 6 does it**: one commit per task, fast-forward into `main`, `git branch -d` after merge. No force-push, no `reset --hard`, no rewriting pushed history.
 - **Never create a sub-agent**, and never invent a board field or folder that isn't in `.claude/tasks/README.md`.
 - Never fix, edit or implement anything in this session, however small (`/quick` is the user's explicit exception).
 - `analyzer` is the only opus stage on the route, and `architect` the only opus agent off it. Forcing either a second time on the same task means the first run was wrong — say that out loud.

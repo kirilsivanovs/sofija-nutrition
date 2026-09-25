@@ -25,4 +25,4 @@ One line per task:
 - `_archive/` is a count at the end, not a list, unless asked.
 - Empty board → say so and point at `/new`.
 
-End with one line naming the single most useful next command: `/work` when something is in flight, `/work <ID>` for the top P0, or "закоммитьте ветку и `/close <ID>`" when a task passed review and is only waiting on that.
+End with one line naming the single most useful next command: `/work` when something is in flight, `/work <ID>` for the top P0, or `/work <ID>` when a task is held at a hard stop (say which).

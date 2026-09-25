@@ -38,7 +38,7 @@ Run git from the repo root. If git refuses with "dubious ownership", add `-c saf
 7. Site copy: add every new string to all three languages in `shared/translations.js`. If the plan gives no Latvian/Russian/English text, use the English text in all three and log `copy pending from Sofija` — never invent medical claims.
 8. Write the tests the Testing plan names, with exactly those titles. `code-reviewer` checks each exists.
 9. Run the plan's test command, typecheck and build before calling a step done. Never paste output into your report — the failing assertion and `file:line`, nothing more.
-10. **Never commit, never push, never open a PR.** Everything stays as uncommitted edits on the branch.
+10. **Never commit or push.** Everything stays as uncommitted edits on the branch; the router commits after verification and review pass.
 11. Fixing verification failures or review findings (they're in your prompt)? Address exactly those, then leave the status where it was.
 12. Otherwise, once the plan is implemented and its checks pass: set `status: testing` and append **one** dated `## Log` line — what you implemented, the test result, the new status, anything still open.
 

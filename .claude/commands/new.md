@@ -27,4 +27,4 @@ If the request is clearly several independent pieces of work, say so and offer t
 
 ## Report
 
-Two lines: the id, title and priority, and what went into Inputs. Then close with `AskUserQuestion` (header `Next step`): `/work <ID>` (Recommended — the analysis starts from what was filed), `/brief <ID>` to add more first, or leave it on the board.
+Two lines: the id, title and priority, and what went into Inputs. Then, per autopilot, go straight on with `/work <ID>` (`.claude/commands/work.md`) — unless the user said only to file it ("просто заведи", "на потом") or several tasks were created at once; then name `/work <ID>` for the highest priority and stop.
