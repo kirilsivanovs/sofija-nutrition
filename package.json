@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "dev": "astro dev",
+    "dev:swa": "swa start http://localhost:4321 --api-devserver-url http://localhost:7071",
     "prebuild": "npm run sync:translations",
     "build": "astro build",
     "preview": "astro preview",
@@ -28,6 +29,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "@azure/static-web-apps-cli": "^2.0.10",
     "@playwright/test": "^1.58.2",
     "babel-plugin-transform-import-meta": "^2.3.3",
     "jest": "^30.2.0",

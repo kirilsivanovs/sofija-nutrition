@@ -17,7 +17,7 @@ import {
 } from '../src/utils/odataSanitizer';
 
 const VALID_ADMIN_KEY = process.env.ADMIN_API_KEY || 'test-admin-key-12345';
-const ADMIN_EMAIL = 'ivanovs.kirils95@gmail.com';
+const ADMIN_EMAIL = 'admin@example.com';
 
 // Helper to create mock request
 function createMockRequest(headers: Record<string, string> = {}) {

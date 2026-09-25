@@ -1,12 +1,12 @@
 /**
  * Authentication Middleware for Admin API (TypeScript)
  *
- * Поддерживает два типа авторизации:
+ * Поддерживает один метод авторизации:
  * 1. SWA Built-in Auth (Microsoft OAuth) - через x-ms-client-principal header
- * 2. E2E Token Auth - через X-E2E-Token header (только для тестов)
  *
  * ВАЖНО: Доступ к admin API разрешен только определенным email'ам,
- * указанным в переменной окружения ADMIN_EMAILS (разделенные запятыми)
+ * указанным в переменной окружения ADMIN_EMAILS (разделенные запятыми).
+ * Если ADMIN_EMAILS не задан — админов нет.
  */
 
 import {
@@ -24,8 +24,7 @@ import {
  * Получает список разрешенных admin email'ов
  */
 export function getAllowedAdminEmails(): string[] {
-  const adminEmailsEnv =
-    process.env.ADMIN_EMAILS || 'ivanovs.kirils95@gmail.com,sofija.ivanova.lv@gmail.com';
+  const adminEmailsEnv = process.env.ADMIN_EMAILS ?? '';
   return adminEmailsEnv
     .split(',')
     .map((email) => email.trim().toLowerCase())
@@ -123,7 +122,7 @@ export function checkAuthorization(
         if (!isAdminEmail(userEmail)) {
           return {
             authorized: false,
-            error: `Access denied: Email ${userEmail} is not authorized for admin access`,
+            error: 'Access denied: not authorized for admin access',
           };
         }
 
@@ -141,42 +140,6 @@ export function checkAuthorization(
     } catch {
       // Invalid principal, continue to next method
     }
-  }
-
-  // Метод 2: E2E Token Auth
-  const e2eToken = request.headers.get('x-e2e-token');
-  const expectedToken = process.env.E2E_TEST_TOKEN;
-
-  if (e2eToken && expectedToken && e2eToken === expectedToken) {
-    return {
-      authorized: true,
-      user: {
-        id: 'e2e-test-user',
-        name: 'E2E Test Runner',
-        provider: 'e2e-token',
-        roles: ['authenticated', 'admin'],
-      },
-      method: 'e2e-token',
-    };
-  }
-
-  // Метод 3: Проверка что запрос идёт с доверенного origin (для локальной разработки)
-  const origin = request.headers.get('origin') || '';
-  const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
-  const isDevMode =
-    process.env.NODE_ENV === 'development' || process.env.FUNCTIONS_WORKER_RUNTIME === 'node';
-
-  if (isLocalhost && isDevMode) {
-    return {
-      authorized: true,
-      user: {
-        id: 'local-dev',
-        name: 'Local Developer',
-        provider: 'localhost',
-        roles: ['authenticated', 'admin'],
-      },
-      method: 'localhost',
-    };
   }
 
   return {
@@ -217,7 +180,7 @@ export function unauthorizedResponse(message = 'Unauthorized'): UnauthorizedResp
       },
       meta: {
         timestamp: new Date().toISOString(),
-        hint: 'Use SWA auth or provide X-E2E-Token header',
+        hint: 'Sign in through SWA auth',
       },
     },
   };
