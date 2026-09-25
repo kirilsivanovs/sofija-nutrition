@@ -71,3 +71,12 @@ docs/
 # Local Copilot instructions override
 # ============================================
 .github/copilot-instructions.md
+
+# ============================================
+# Claude Code: local task board, usage metrics, personal settings
+# (the repo is public; task files describe unfixed issues)
+# ============================================
+.claude/tasks/
+.claude/metrics/*
+!.claude/metrics/README.md
+.claude/settings.local.json

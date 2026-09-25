@@ -1,0 +1,4 @@
+{
+  "//": "The project root is \"type\": \"module\"; these hooks are CommonJS scripts.",
+  "type": "commonjs"
+}
