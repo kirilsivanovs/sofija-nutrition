@@ -15,3 +15,24 @@ test('keeps the hero-to-footer content inside <body> in the raw HTML', async ({ 
   expect(mainStart).toBeLessThan(bodyClose);
   expect(html.trim().endsWith('</html>')).toBe(true);
 });
+
+test('shows exactly one header element on the landing page', async ({ page }) => {
+  await page.goto('/');
+  // Scoped to body > header: the dev-only astro-dev-toolbar custom element
+  // renders its own <header>s inside a shadow root, which a bare 'header'
+  // locator also matches since Playwright pierces open shadow roots.
+  await expect(page.locator('body > header')).toHaveCount(1);
+});
+
+test('opens and closes the mobile nav menu from the single AppHeader burger button', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/');
+  const btn = page.locator('.mobile-menu-btn');
+  await btn.click();
+  await expect(page.locator('.mobile-nav-menu')).toHaveClass(/open/);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.mobile-nav-menu')).not.toHaveClass(/open/);
+  await expect(btn).toBeFocused();
+});

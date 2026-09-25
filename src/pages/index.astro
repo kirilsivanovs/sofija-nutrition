@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AppHeader from '../components/common/AppHeader.astro';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
 ---
 
@@ -16,184 +17,64 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
     Pāriet uz saturu
   </a>
 
-  <!-- Header -->
-  <header
-    class="bg-white/95 backdrop-blur-sm sticky top-0 z-1000 shadow-sm border-b border-gray-100/50 transition-transform duration-300"
-    id="site-header"
-    role="banner"
-  >
-    <!-- Top Bar with Logo and Language -->
-    <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5">
-      <div class="flex justify-between items-center">
-        <!-- Logo -->
-        <a href="#" class="no-underline cursor-pointer group">
-          <div class="flex items-center gap-3">
-            <img
-              src="/assets/img/logo.svg"
-              alt="Sofija Ivanova uztura speciāliste logo"
-              class="h-8 md:h-10 w-auto"
-            />
-            <div class="flex flex-col">
-              <span
-                class="font-serif text-xl md:text-2xl font-semibold text-primary group-hover:text-accent transition-colors"
-                >Sofija Ivanova</span
-              >
-              <span
-                class="text-xs md:text-sm text-gray-500 uppercase tracking-widest"
-                data-i18n="header_subtitle">Rīga · Zinātniska pieeja</span
-              >
-            </div>
-          </div>
-        </a>
+  <AppHeader variant="public" showBurger={true} showAuth={false} subtitle="Rīga · Zinātniska pieeja">
+    <div slot="mobile-menu">
+      <a href="#services" data-i18n="nav_services" class="mobile-nav-item">Pakalpojumi</a>
+      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
+      <a href="#faq" data-i18n="nav_faq" class="mobile-nav-item">BUJ</a>
+      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
+      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" data-i18n="nav_cabinet" class="mobile-nav-item">Pacienta kabinets</a>
+      <div class="flex gap-4 pt-6 border-t border-gray-200">
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
+        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
+      </div>
+    </div>
+  </AppHeader>
 
-        <!-- Language Switcher (Desktop) -->
+  <nav class="hidden md:block border-t border-gray-100" aria-label="Galvenā navigācija">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="flex gap-1 justify-between items-center">
+        <div class="flex gap-1">
+          <a href="#services" class="nav-tab"><span data-i18n="nav_services">Pakalpojumi</span></a>
+          <a href="#about" class="nav-tab"><span data-i18n="nav_about">Par mani</span></a>
+          <a href="#faq" class="nav-tab"><span data-i18n="nav_faq">BUJ</span></a>
+          <a href="#contact" class="nav-tab"><span data-i18n="nav_contact">Pieteikties</span></a>
+          <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab"><span data-i18n="nav_cabinet">Pacienta kabinets</span></a>
+        </div>
         <div class="hidden md:flex gap-2 text-sm">
           <button class="lang-btn btn-chip" data-lang="lv">LV</button>
           <button class="lang-btn btn-chip" data-lang="en">EN</button>
           <button class="lang-btn btn-chip" data-lang="ru">RU</button>
         </div>
-
-        <!-- Mobile Menu Button -->
-        <button
-          type="button"
-          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 mobile-menu-btn z-999 relative cursor-pointer"
-          style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
-          aria-label="Menu"
-          aria-expanded="false"
-          aria-controls="mobile-nav-menu"
-        >
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;"></span>
-        </button>
       </div>
     </div>
+  </nav>
 
-    <!-- Navigation Tabs (Desktop) -->
-    <nav class="hidden md:block border-t border-gray-100" aria-label="Galvenā navigācija">
-      <div class="max-w-6xl mx-auto px-4 md:px-8">
-        <div class="flex gap-1">
-          <a href="#services" class="nav-tab">
-            <span data-i18n="nav_services">Pakalpojumi</span>
-          </a>
-          <a href="#about" class="nav-tab">
-            <span data-i18n="nav_about">Par mani</span>
-          </a>
-          <a href="#faq" class="nav-tab">
-            <span data-i18n="nav_faq">BUJ</span>
-          </a>
-          <a href="#contact" class="nav-tab">
-            <span data-i18n="nav_contact">Pieteikties</span>
-          </a>
-          <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab">
-            <span data-i18n="nav_cabinet">Pacienta kabinets</span>
-          </a>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Mobile Nav -->
-  <div id="mobile-nav-menu" class="mobile-nav-menu">
-    <a href="#services" data-i18n="nav_services" class="mobile-nav-item">Pakalpojumi</a>
-    <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
-    <a href="#faq" data-i18n="nav_faq" class="mobile-nav-item">BUJ</a>
-    <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
-    <a
-      href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
-      data-i18n="nav_cabinet"
-      class="mobile-nav-item">Pacienta kabinets</a
-    >
-    <div class="flex gap-4 pt-6 border-t border-gray-200">
-      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
-      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
-      <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
-    </div>
-  </div>
-
-  <!-- Mobile Menu Script - inline for iOS Safari compatibility -->
   <script is:inline>
     (function () {
-      var btn = document.querySelector('.mobile-menu-btn');
-      var menu = document.querySelector('.mobile-nav-menu');
-      if (!btn || !menu) return;
-
-      function toggle(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var isOpen = menu.classList.toggle('open');
-        btn.classList.toggle('active', isOpen);
-        btn.setAttribute('aria-expanded', String(isOpen));
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-        document.body.style.position = isOpen ? 'fixed' : '';
-        document.body.style.width = isOpen ? '100%' : '';
-        document.body.style.top = isOpen ? '0' : '';
-      }
-
-      function close() {
-        menu.classList.remove('open');
-        btn.classList.remove('active');
-        btn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-      }
-
-      // iOS Safari compatible click
-      btn.addEventListener('click', toggle, false);
-
-      // Close on link click
-      var links = menu.querySelectorAll('a');
-      for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', close, false);
-      }
-
-      // Close on overlay click
-      menu.addEventListener(
-        'click',
-        function (e) {
-          if (e.target === menu) close();
-        },
-        false
-      );
-    })();
-  </script>
-
-  <!-- Smart Header: hide on scroll down, show on scroll up -->
-  <script is:inline>
-    (function () {
-      var header = document.getElementById('site-header');
+      var header = document.querySelector('.app-header--public');
       if (!header) return;
       var lastY = 0;
       var ticking = false;
-      var threshold = 60; // px before hiding kicks in
-
-      window.addEventListener(
-        'scroll',
-        function () {
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(function () {
-              var y = window.pageYOffset;
-              var menuOpen = document.querySelector('.mobile-nav-menu.open');
-              if (menuOpen) {
-                ticking = false;
-                return;
-              }
-
-              if (y > threshold && y > lastY) {
-                header.style.transform = 'translateY(-100%)';
-              } else {
-                header.style.transform = 'translateY(0)';
-              }
-              lastY = y;
-              ticking = false;
-            });
-          }
-        },
-        { passive: true }
-      );
+      var threshold = 60;
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function () {
+            var y = window.pageYOffset;
+            var menuOpen = document.querySelector('.mobile-nav-menu.open');
+            if (menuOpen) { ticking = false; return; }
+            if (y > threshold && y > lastY) {
+              header.style.transform = 'translateY(-100%)';
+            } else {
+              header.style.transform = 'translateY(0)';
+            }
+            lastY = y;
+            ticking = false;
+          });
+        }
+      }, { passive: true });
     })();
   </script>
 

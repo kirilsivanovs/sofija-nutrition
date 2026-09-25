@@ -519,6 +519,33 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
           },
           false
         );
+
+        // Escape closes the menu and refocuses the button; Tab traps focus inside it
+        document.addEventListener('keydown', function (e) {
+          if (!menu.classList.contains('open')) return;
+
+          if (e.key === 'Escape') {
+            close();
+            btn.focus();
+            return;
+          }
+
+          if (e.key !== 'Tab') return;
+
+          const focusable = menu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+          if (!focusable.length) return;
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        });
       });
     }
 
