@@ -1,6 +1,6 @@
 ---
-description: Work a task end to end on autopilot — analysis, plan, branch, implementation, verification, review, commit, merge to main, push, close. Stops only where no agent can act. Takes a task id, or nothing for the most urgent one.
-argument-hint: "[SN-012 | SN-012.2 — or nothing]"
+description: Work a task end to end on autopilot — analysis, plan, branch, implementation, verification, review, commit, merge to main, push, close. Stops only where no agent can act. Takes a task id, a category (design, security, ...) for its most urgent task, or nothing for the most urgent one overall.
+argument-hint: "[SN-012 | SN-012.2 | design|functional|security|devops|maintenance — or nothing]"
 ---
 
 Take one task from its current `status` all the way to `done`, running each stage in turn without asking. You are a router: analysing, planning, implementing and reviewing happen in sub-agents, because their context dies when they return and yours is re-sent for the rest of the session. The mechanical steps are yours: cutting the branch, running the plan's checks, committing, merging, pushing, archiving.
@@ -16,6 +16,8 @@ grep -H -E '^(id|title|status|priority|kind|size|area|branch|parent|split|recurr
 ```
 
 `$ARGUMENTS` names an id (case-insensitive) → that one. A `split: true` parent → its children in order, then the parent.
+
+`$ARGUMENTS` names a category (a folder from the README's "Categories" table, case-insensitive; `дизайн`, `безопасность` etc. map to it) → the same pick as with no argument, but only among tasks in `.claude/tasks/<category>/`. Say which task it picked and why in one line. Nothing left in that category → say so, and name the category's archive count.
 
 No argument → the most advanced task: `review` → `testing` → `in-progress` → `branched` → `planned` → `analyzed` → `new`; within a status, `priority` first (P0 → P3), then oldest. Skip `recurring: true` with an empty `## Pending batch`. Nothing left → say so and suggest `/new`.
 

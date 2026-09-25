@@ -69,7 +69,7 @@ Diary entries, measurements, complaints and consultation notes are health data (
 |---|---|
 | `/new "<title>"` | create a task on the board (`SN-NNN`), optionally with a pasted description |
 | `/brief <ID> ...` | give a task what you already know — links, a pasted conversation, screenshots |
-| `/work [ID]` | run the one stage that task needs next, then report. `/next` is the same thing |
+| `/work [ID\|category]` | take that task (or the most urgent one in `design`, `functional`, `security`, `devops`, `maintenance`) to done. `/next` is the same thing |
 | `/board` | where every task stands |
 | `/find "..."` | where is X / how does Y work — changes nothing |
 | `/test <ID>` | run that task's tests — no agent, the cheapest command |
@@ -83,7 +83,7 @@ Diary entries, measurements, complaints and consultation notes are health data (
 
 `/work` takes a task from its `status` to `done` on autopilot: analysis, plan, branch, implementation, verification, review, commit, fast-forward merge into `main`, push, archive. `.claude/commands/work.md` holds the route, the fix rounds and the hard stops. **There are no pull requests: pushing `main` deploys production** (frontend after CI passes; API immediately until SN-006 gates it).
 
-- Plain language maps to the matching command: a bare id or "давай возьмём SN-012" is `/work SN-012`, "продолжай" is `/work`, "что там по задачам" is `/board`, "заведи задачу …" is `/new`, "где в коде..." is `/find`. Say which command you took it as. A bare "yes" after a gate authorises the stage just described.
+- Plain language maps to the matching command: a bare id or "давай возьмём SN-012" is `/work SN-012`, "давай дизайн" is `/work design`, "продолжай" is `/work`, "что там по задачам" is `/board`, "заведи задачу …" is `/new`, "где в коде..." is `/find`. Say which command you took it as. A bare "yes" after a gate authorises the stage just described.
 - No pull requests. Never force-push, `reset --hard` or rewrite pushed history.
 - Never isolate a writing agent in a worktree (`isolation: worktree`, or `claude --bg`): worktrees don't carry the uncommitted edits each seam builds on.
 - **Autopilot:** no confirmation gates. Wherever a choice comes up, take the recommended option and say in one line which. Ask the user only at `/work`'s hard stops (a question only they or Sofija can answer, foreign uncommitted changes, still failing after two fix rounds, a rebase conflict, pre-deploy manual steps).
