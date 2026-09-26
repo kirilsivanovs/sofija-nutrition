@@ -44,30 +44,41 @@ function contrast(hexA: string, hexB: string): number {
 }
 
 describe('design tokens contrast', () => {
-  const ink = readToken('color-ink');
-  const sageDeep = readToken('color-sage-deep');
-  const primary = readToken('color-primary');
-  const secondaryDark = readToken('color-secondary-dark');
-  const cream = readToken('color-cream');
-  const bgLight = readToken('color-bg-light');
+  const white = readToken('color-white');
+  const graphite = readToken('color-graphite');
+  const slate = readToken('color-slate');
+  const navy = readToken('color-navy');
+  const navyHover = readToken('color-navy-hover');
+  const range = readToken('color-range');
+  const mist = readToken('color-mist');
+  const error = readToken('color-error');
+  const high = readToken('color-high');
 
-  it('keeps ink text on light backgrounds at or above a 4.5:1 contrast ratio', () => {
-    expect(contrast(ink, cream)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(ink, bgLight)).toBeGreaterThanOrEqual(4.5);
+  it('keeps Graphite text at or above 4.5:1 on White and Mist', () => {
+    expect(contrast(graphite, white)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(graphite, mist)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('keeps the sage-deep accent at or above a 4.5:1 contrast ratio on light backgrounds', () => {
-    expect(contrast(sageDeep, cream)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(sageDeep, bgLight)).toBeGreaterThanOrEqual(4.5);
+  it('keeps Slate secondary text at or above 4.5:1 on White and Mist', () => {
+    expect(contrast(slate, white)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(slate, mist)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('keeps the primary green at or above a 3:1 contrast ratio for use as a focus ring on light backgrounds', () => {
-    expect(contrast(primary, cream)).toBeGreaterThanOrEqual(3);
-    expect(contrast(primary, bgLight)).toBeGreaterThanOrEqual(3);
+  it('keeps White text at or above 4.5:1 on Navy and Navy-hover', () => {
+    expect(contrast(white, navy)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(white, navyHover)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('keeps the secondary-dark gold at or above a 3:1 contrast ratio for decorative borders on light backgrounds', () => {
-    expect(contrast(secondaryDark, cream)).toBeGreaterThanOrEqual(3);
-    expect(contrast(secondaryDark, bgLight)).toBeGreaterThanOrEqual(3);
+  it('keeps Range at or above 4.5:1 on White and Mist', () => {
+    expect(contrast(range, white)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(range, mist)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('keeps Error at or above 4.5:1 on White', () => {
+    expect(contrast(error, white)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('keeps High below the 4.5:1 text floor, confirming it stays graphic-only', () => {
+    expect(contrast(high, white)).toBeLessThan(4.5);
   });
 });

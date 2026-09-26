@@ -12,17 +12,9 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Lora',
-      cssVariable: '--font-serif',
-      weights: [400, 500, 600, 700],
-      styles: ['normal'],
-      subsets: ['latin', 'latin-ext', 'cyrillic'],
-    },
-    {
-      provider: fontProviders.google(),
-      name: 'Inter',
+      name: 'Geologica',
       cssVariable: '--font-sans',
-      weights: [400, 500, 600, 700],
+      weights: [300, 400, 600],
       styles: ['normal'],
       subsets: ['latin', 'latin-ext', 'cyrillic'],
     },

@@ -23,11 +23,11 @@ html {
 
 body {
   overflow-x: hidden;
-  background-color: var(--color-bg-light);
+  background-color: var(--color-white);
   font-size: 1rem; /* 16px base */
   line-height: 1.6; /* Better readability */
   font-family: var(--font-sans);
-  color: #1f2937;
+  color: var(--color-graphite);
   text-rendering: optimizeSpeed; /* fast for body text */
 }
 
@@ -37,7 +37,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-optical-sizing: auto;
   line-height: 1.18;
   letter-spacing: -0.011em;
@@ -88,19 +88,14 @@ button,
   padding: 12px 24px;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease, color 0.2s ease;
   -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
-}
-
-button:active,
-.btn-primary:active {
-  transform: scale(0.98);
 }
 
 /* Keyboard focus ring (only visible for keyboard users) */
 :focus-visible {
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid var(--color-graphite);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -117,41 +112,39 @@ button:active,
   gap: 0.5rem;
   min-height: 54px;
   padding: 1rem 2.25rem;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
   text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-solid {
-  background: var(--color-primary);
+  background: var(--color-navy);
   color: #ffffff;
 }
 
 .btn-solid:hover {
-  background: var(--color-primary-dark);
+  background: var(--color-navy-hover);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  color: var(--color-navy);
+  border: 2px solid var(--color-navy);
 }
 
 .btn-outline:hover {
-  background: var(--color-primary);
+  background: var(--color-navy);
   color: #ffffff;
 }
 
 .btn-light {
   background: rgba(255, 255, 255, 0.95);
-  color: var(--color-primary);
+  color: var(--color-navy);
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
@@ -165,7 +158,7 @@ button:active,
   justify-content: center;
   min-height: 44px;
   padding: 0.5rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.875rem;
   transition:
@@ -175,8 +168,8 @@ button:active,
 }
 
 .btn-chip:hover {
-  background-color: rgba(27, 67, 50, 0.08);
-  color: var(--color-primary);
+  background-color: var(--color-mist);
+  color: var(--color-navy);
 }
 
 /* Input fields - better usability */
@@ -190,17 +183,15 @@ select {
   min-height: 48px;
   padding: 12px 16px;
   font-size: 16px; /* Prevents zoom on iOS */
-  border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-slate);
   transition: border-color 0.2s ease;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+  border-color: var(--color-graphite);
 }
 
 /* Checkbox and radio - optimal touch targets per WCAG */
