@@ -7,6 +7,7 @@
   const translations = {
     lv: {
       // Navigation
+      header_specialty: 'uztura speciāliste, Rīga',
       nav_services: 'Pakalpojumi',
       nav_about: 'Par mani',
       nav_faq: 'BUJ',
@@ -171,6 +172,8 @@
     },
     ru: {
       // Navigation
+      // proposed copy, pending Sofija's confirmation
+      header_specialty: 'специалист по питанию, Рига',
       nav_services: 'Услуги',
       nav_about: 'Обо мне',
       nav_faq: 'ЧЗВ',
@@ -330,6 +333,8 @@
     },
     en: {
       // Navigation
+      // proposed copy, pending Sofija's confirmation
+      header_specialty: 'nutrition specialist, Riga',
       nav_services: 'Services',
       nav_about: 'About',
       nav_faq: 'FAQ',
@@ -501,11 +506,9 @@
 
     // Update Buttons
     langButtons.forEach((btn) => {
-      if (btn.dataset.lang === lang) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
+      const isActive = btn.dataset.lang === lang;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
 
     // Update Text

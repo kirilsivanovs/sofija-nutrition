@@ -273,21 +273,6 @@ i.ph {
   padding: clamp(40px, 8vw, 80px) clamp(20px, 5vw, 40px);
 }
 
-/* Links - adequate spacing for touch */
-nav a:not(.nav-tab),
-.nav-link {
-  padding: 12px 16px;
-  margin: 0 4px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-/* Remove hover background for header nav links only */
-nav a:not(.nav-tab):hover,
-.nav-link:hover {
-  background-color: transparent;
-}
-
 /* Mobile optimization */
 @media (max-width: 768px) {
   /* Increase touch targets on mobile */
@@ -296,19 +281,6 @@ nav a:not(.nav-tab):hover,
     min-height: 48px;
     padding: 14px 28px;
     font-size: 1.0625rem; /* 17px - optimal for mobile */
-  }
-
-  nav a:not(.nav-tab),
-  .nav-link {
-    padding: 14px 20px;
-    font-size: 1rem;
-  }
-
-  /* Compact nav tabs on tablets */
-  .nav-tab {
-    padding: 10px 12px;
-    font-size: 13px;
-    gap: 6px;
   }
 
   /* Better mobile spacing */
@@ -391,64 +363,6 @@ nav a:not(.nav-tab):hover,
 
 .mobile-menu-btn span {
   transition: all 0.3s ease;
-}
-
-/* Navigation Tabs (Desktop) - Admin Panel Style */
-.nav-tab,
-nav .nav-tab,
-a.nav-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border: none;
-  background: none;
-  border-radius: 0;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280; /* text-gray-500 */
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  text-decoration: none;
-  min-height: auto;
-  min-width: auto;
-  margin: 0;
-}
-
-.nav-tab i {
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.nav-tab:hover,
-nav .nav-tab:hover,
-a.nav-tab:hover {
-  color: var(--color-primary);
-  background: var(--color-cream);
-}
-
-.nav-tab.active,
-.nav-tab:focus,
-nav .nav-tab.active,
-nav .nav-tab:focus {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-secondary);
-  background: var(--color-cream);
-}
-
-/* Scrollable tabs container */
-nav .flex.gap-1 {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-nav .flex.gap-1::-webkit-scrollbar {
-  display: none;
 }
 
 /* Premium mobile nav items */

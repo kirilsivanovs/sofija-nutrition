@@ -1,36 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
-    .s-stroke { stroke: #1B4332; }
-    .gold-stroke { stroke: #D4A574; }
+    text { fill: #1E2530; }
     @media (prefers-color-scheme: dark) {
-      .s-stroke { stroke: #5B9A7A; }
-      .gold-stroke { stroke: #E8C9A0; }
+      text { fill: #FFFFFF; }
     }
   </style>
-  
-  <!-- Upper arc -->
-  <path 
-    d="M21 12 A5 5 0 1 0 12 14"
-    fill="none"
-    class="s-stroke"
-    stroke-width="3"
-    stroke-linecap="round"
-  />
-  
-  <!-- Lower arc -->
-  <path 
-    d="M12 18 A5 5 0 1 0 21 20"
-    fill="none"
-    class="s-stroke"
-    stroke-width="3"
-    stroke-linecap="round"
-  />
-  
-  <!-- Golden diagonal -->
-  <path 
-    d="M12 14 L21 18"
-    class="gold-stroke"
-    stroke-width="3"
-    stroke-linecap="round"
-  />
+  <text
+    x="16"
+    y="23"
+    text-anchor="middle"
+    font-family="Geologica, sans-serif"
+    font-weight="600"
+    font-size="22"
+  >S</text>
 </svg>

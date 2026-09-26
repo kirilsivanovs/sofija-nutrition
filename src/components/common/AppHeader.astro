@@ -27,7 +27,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 <header class={`app-header app-header--${variant}`}>
   <div class="app-header-inner">
     {
-      showBurger && (
+      showBurger && variant !== 'public' && (
         <button
           type="button"
           class="mobile-menu-btn"
@@ -44,12 +44,65 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     }
 
     <a href="/" class="app-logo">
-      <img src="/assets/img/logo.svg" alt="Sofija Ivanova" class="app-logo-img" />
+      {variant === 'public' && (
+        <img
+          src="/assets/img/sofija-crop-88.webp"
+          width="44"
+          height="44"
+          alt=""
+          loading="lazy"
+          class="app-logo-crop"
+        />
+      )}
       <div class="app-logo-text">
         <span class="app-logo-name">Sofija Ivanova</span>
-        {subtitle && <span class="app-logo-sub">{subtitle}</span>}
+        {subtitle &&
+          (variant === 'public' ? (
+            <span class="app-logo-sub" data-i18n="header_specialty">
+              {subtitle}
+            </span>
+          ) : (
+            <span class="app-logo-sub">{subtitle}</span>
+          ))}
       </div>
     </a>
+
+    {
+      variant === 'public' && (
+        <nav class="app-public-nav">
+          <a href="#services" data-i18n="nav_services">
+            Pakalpojumi
+          </a>
+          <a href="#about" data-i18n="nav_about">
+            Par mani
+          </a>
+          <a href="#faq" data-i18n="nav_faq">
+            BUJ
+          </a>
+        </nav>
+      )
+    }
+
+    {
+      variant === 'public' && (
+        <div class="app-public-actions">
+          <div class="app-lang-switch">
+            <button class="lang-btn" data-lang="lv" aria-pressed="true">
+              LV
+            </button>
+            <button class="lang-btn" data-lang="ru" aria-pressed="false">
+              RU
+            </button>
+            <button class="lang-btn" data-lang="en" aria-pressed="false">
+              EN
+            </button>
+          </div>
+          <a href="#contact" class="app-public-cta" data-i18n="nav_contact">
+            Pieteikties
+          </a>
+        </div>
+      )
+    }
 
     {
       showAuth && (
@@ -89,7 +142,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 </header>
 
 {
-  showBurger && (
+  showBurger && variant !== 'public' && (
     <div id={mobileMenuId} class="mobile-nav-menu">
       <slot name="mobile-menu" />
     </div>
@@ -100,21 +153,55 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   /* Header Base Styles */
   .app-header {
     background: var(--color-white);
-    border-bottom: 2px solid var(--color-primary);
-    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-line);
+    /* Horizontal spacing lives on .app-header-inner (matches .hero__inner);
+       keep only vertical padding here. */
+    padding: 14px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.08);
+  }
+
+  @media (max-width: 760px) {
+    .app-header {
+      position: static;
+    }
+
+    .app-lang-switch button {
+      padding: 8px 10px;
+      font-size: 13px;
+      min-width: 40px;
+      min-height: 36px;
+    }
+
+    .app-header--public .app-logo-sub {
+      display: none;
+    }
   }
 
   .app-header-inner {
-    max-width: 1400px;
+    /* Matches .hero__inner (src/styles/booking.css) so the header and hero
+       content columns share one left edge at every viewport width. */
+    max-width: min(1280px, 96vw);
     margin: 0 auto;
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .app-header-inner {
+      padding: 0 clamp(18px, 3vw, 42px);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .app-header-inner {
+      max-width: min(1340px, 94vw);
+      padding: 0 clamp(14px, 2vw, 30px);
+    }
   }
 
   /* Logo Styles */
@@ -123,16 +210,20 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     align-items: center;
     gap: 14px;
     text-decoration: none;
-    transition: opacity 0.2s;
   }
 
-  .app-logo:hover {
-    opacity: 0.85;
+  .app-logo-crop {
+    height: 44px;
+    width: 44px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
   }
 
-  .app-logo-img {
-    height: 42px;
-    width: auto;
+  @media (min-width: 761px) {
+    .app-logo-crop {
+      display: none;
+    }
   }
 
   .app-logo-text {
@@ -142,19 +233,88 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   }
 
   .app-logo-name {
-    font-family: var(--font-serif, 'Lora', serif);
-    font-size: 23px;
-    font-weight: 700;
-    color: var(--color-primary);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-graphite);
     line-height: 1.1;
   }
 
   .app-logo-sub {
-    font-size: 11px;
-    color: var(--color-text-light);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 14px;
+    color: var(--color-slate);
     font-weight: 500;
+  }
+
+  /* Public nav / lang / CTA */
+  .app-public-nav {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-public-nav a {
+    padding: 12px 16px;
+    color: var(--color-graphite);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .app-public-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .app-lang-switch {
+    display: flex;
+    gap: 4px;
+  }
+
+  .app-lang-switch button {
+    background: transparent;
+    border: none;
+    padding: 8px 10px;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-slate);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+
+  .app-lang-switch button[aria-pressed='true'] {
+    color: var(--color-graphite);
+    font-weight: 600;
+    border-bottom-color: var(--color-navy);
+  }
+
+  .app-public-cta {
+    display: none;
+    background: var(--color-navy);
+    color: var(--color-white);
+    border-radius: var(--radius-sm);
+    height: 44px;
+    padding: 10px 20px;
+    align-items: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .app-public-cta:hover {
+    background: var(--color-navy-hover);
+  }
+
+  @media (min-width: 761px) {
+    .app-public-nav {
+      display: flex;
+    }
+    .app-public-cta {
+      display: inline-flex;
+    }
   }
 
   /* Auth Styles */
@@ -270,7 +430,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 60px;
-    background: linear-gradient(170deg, #ffffff 0%, var(--color-cream) 50%, #f5efe5 100%);
+    background: var(--color-white);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
@@ -281,24 +441,6 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-  }
-
-  /* Decorative gold accent line */
-  .mobile-nav-menu::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 40px;
-    width: 1px;
-    height: 0;
-    background: linear-gradient(180deg, transparent, var(--color-secondary), transparent);
-    transform: translateY(-50%);
-    transition: height 0.6s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.5;
-  }
-
-  .mobile-nav-menu.open::before {
-    height: 60%;
   }
 
   .mobile-nav-menu > * {
@@ -320,56 +462,25 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     gap: 16px;
     padding: 16px 24px;
     border-radius: 12px;
-    font-family: var(--font-serif, 'Cormorant Garamond', serif);
-    font-size: 1.35rem;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
     font-weight: 500;
-    color: var(--color-primary);
+    color: var(--color-graphite);
     text-decoration: none;
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 56px;
     width: 100%;
     max-width: 320px;
     box-shadow: none;
     position: relative;
-    letter-spacing: 0.02em;
-    /* Staggered entrance */
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  .mobile-nav-menu.open :global(a),
-  .mobile-nav-menu.open :global(button) {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .mobile-nav-menu.open :global(:nth-child(1)) {
-    transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .mobile-nav-menu.open :global(:nth-child(2)) {
-    transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .mobile-nav-menu.open :global(:nth-child(3)) {
-    transition: all 0.4s 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .mobile-nav-menu.open :global(:nth-child(4)) {
-    transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .mobile-nav-menu.open :global(:nth-child(5)) {
-    transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .mobile-nav-menu.open :global(:nth-child(6)) {
-    transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .mobile-nav-menu :global(a:hover),
   .mobile-nav-menu :global(button:hover) {
-    color: var(--color-primary);
-    background: rgba(27, 67, 50, 0.05);
-    transform: translateX(4px);
+    color: var(--color-graphite);
+    background: rgba(0, 0, 0, 0.04);
     box-shadow: none;
   }
 
@@ -378,8 +489,8 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   }
 
   .mobile-nav-menu :global(.mobile-nav-item.active) {
-    color: var(--color-primary);
-    background: rgba(27, 67, 50, 0.06);
+    color: var(--color-graphite);
+    background: var(--color-mist);
     font-weight: 600;
   }
 
@@ -391,24 +502,20 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     transform: translateY(-50%);
     width: 3px;
     height: 24px;
-    background: var(--color-secondary);
+    background: var(--color-range);
     border-radius: 0 3px 3px 0;
   }
 
   /* Responsive */
   @media (max-width: 480px) {
     .app-header {
-      padding: 12px 16px;
-    }
-    .app-logo-img {
-      height: 38px;
+      padding: 12px 0;
     }
     .app-logo-name {
-      font-size: 18px;
+      font-size: 17px;
     }
     .app-logo-sub {
-      font-size: 9px;
-      letter-spacing: 1.5px;
+      font-size: 14px;
     }
     .app-logout span,
     .login-text {
@@ -434,13 +541,10 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
       display: none;
     }
     .app-header {
-      padding: 18px 32px;
-    }
-    .app-logo-img {
-      height: 48px;
+      padding: 18px 0;
     }
     .app-logo-name {
-      font-size: 26px;
+      font-size: 17px;
     }
     .app-logout span,
     .login-text {
@@ -450,12 +554,11 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   /* Variant-specific adjustments */
   .app-header--cabinet {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-line);
   }
 
   .app-header--public {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
+    background: var(--color-white);
   }
 </style>
 

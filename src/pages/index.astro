@@ -18,66 +18,7 @@ import '../styles/booking.css';
     Pāriet uz saturu
   </a>
 
-  <AppHeader variant="public" showBurger={true} showAuth={false} subtitle="Rīga · Zinātniska pieeja">
-    <div slot="mobile-menu">
-      <a href="#services" data-i18n="nav_services" class="mobile-nav-item">Pakalpojumi</a>
-      <a href="#about" data-i18n="nav_about" class="mobile-nav-item">Par mani</a>
-      <a href="#faq" data-i18n="nav_faq" class="mobile-nav-item">BUJ</a>
-      <a href="#contact" data-i18n="nav_contact" class="mobile-nav-item">Pieteikties</a>
-      <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" data-i18n="nav_cabinet" class="mobile-nav-item">Pacienta kabinets</a>
-      <div class="flex gap-4 pt-6 border-t border-gray-200">
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="lv">LV</button>
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="en">EN</button>
-        <button class="lang-btn btn-chip bg-gray-100 text-base" data-lang="ru">RU</button>
-      </div>
-    </div>
-  </AppHeader>
-
-  <nav class="hidden md:block border-t border-gray-100" aria-label="Galvenā navigācija">
-    <div class="max-w-6xl mx-auto px-4 md:px-8">
-      <div class="flex gap-1 justify-between items-center">
-        <div class="flex gap-1">
-          <a href="#services" class="nav-tab"><span data-i18n="nav_services">Pakalpojumi</span></a>
-          <a href="#about" class="nav-tab"><span data-i18n="nav_about">Par mani</span></a>
-          <a href="#faq" class="nav-tab"><span data-i18n="nav_faq">BUJ</span></a>
-          <a href="#contact" class="nav-tab"><span data-i18n="nav_contact">Pieteikties</span></a>
-          <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" class="nav-tab"><span data-i18n="nav_cabinet">Pacienta kabinets</span></a>
-        </div>
-        <div class="hidden md:flex gap-2 text-sm">
-          <button class="lang-btn btn-chip" data-lang="lv">LV</button>
-          <button class="lang-btn btn-chip" data-lang="en">EN</button>
-          <button class="lang-btn btn-chip" data-lang="ru">RU</button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <script is:inline>
-    (function () {
-      var header = document.querySelector('.app-header--public');
-      if (!header) return;
-      var lastY = 0;
-      var ticking = false;
-      var threshold = 60;
-      window.addEventListener('scroll', function () {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(function () {
-            var y = window.pageYOffset;
-            var menuOpen = document.querySelector('.mobile-nav-menu.open');
-            if (menuOpen) { ticking = false; return; }
-            if (y > threshold && y > lastY) {
-              header.style.transform = 'translateY(-100%)';
-            } else {
-              header.style.transform = 'translateY(0)';
-            }
-            lastY = y;
-            ticking = false;
-          });
-        }
-      }, { passive: true });
-    })();
-  </script>
+  <AppHeader variant="public" showAuth={false} subtitle="uztura speciāliste, Rīga" />
 
   <!-- Scroll to Top Button -->
   <ScrollToTop />
