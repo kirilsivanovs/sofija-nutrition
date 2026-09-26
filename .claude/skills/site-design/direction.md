@@ -17,7 +17,7 @@ Reason for revision: the user picked SN-036 "Итог · A+D" (base A, questions
 | Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
 | High | #B06A00 | chart segment above range only | graphic |
 
-Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline. Navy stays scarce (user, 2026-09-26: "too much of it everywhere"): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
+Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Navy stays scarce (user, 2026-09-26: "too much of it everywhere"): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
 
 ## Type
 - Geologica only: 300 for H1 with the key phrase in 600; 400 body and H2; 600 buttons, labels, strong. Tabular figures in the chart and calendar.
@@ -25,7 +25,7 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 - Sentence case. No eyebrows, no uppercase labels.
 
 ## Layout
-- Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot).
+- Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer (SN-033, no burger). Sticky on desktop, static on phone; nothing hides on scroll.
 - Hero (5fr/7fr): thesis headline, lead, button, one format line; the glucose chart on the right.
 - Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, credentials, register number once), how the approach differs, how to book.
 - Booking: format toggle, A's week grid (Mon-first, Europe/Riga), summary panel with one button. Footer minimal.
