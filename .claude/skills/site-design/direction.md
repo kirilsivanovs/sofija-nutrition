@@ -1,43 +1,41 @@
-# Site direction (binding; written 2026-09-26)
+# Site direction (binding; revised 2026-09-26 by the user's pick in SN-036)
+
+Reason for revision: the user picked SN-036 "Итог · A+D" (base A, questions from D; photo logo on phone only) over the SN-034 Lora/Inter direction, which they judged AI-generic. Mockup: https://claude.ai/artifact/TgJykR7fPrccNiJu2RHsrW, source `.claude/tasks/design/SN-036/notes/mockups/index.html` (`.F` rules).
 
 ## Brief
-- Sofija Ivanova: certified dietitian in Riga, doctoral researcher on diabetes and CGM (not "Dr." until the defence).
-- Visitors: adults concerned about weight, energy, glucose or diabetes, reading in LV, RU or EN, on phone and desktop.
-- They must feel they are reading one researcher-clinician's own page, and book a first consultation without hunting.
+- Sofija Ivanova: nutrition specialist in Riga, doctoral researcher on diabetes and CGM (not "Dr." until the defence; title "uztura speciāliste" vs "sertificēta dietoloģe" pending her confirmation).
+- Visitors: adults concerned about weight, energy, glucose or digestion, in LV, RU or EN, on phone and desktop.
+- They must see why individual advice matters (the chart), get their questions answered in order, and book without hunting.
 
-## Palette (all from `src/styles/fresh-clinical.css`)
-| Name | Hex | Token | Role | Contrast on Paper |
-|---|---|---|---|---|
-| Paper | #fffdfa | `--color-bg-light` | the only page/section background | - |
-| Ink | #1f2937 | `--color-ink` | body text | 14.4:1 |
-| Slate | #6b7280 | `--color-text-light` | secondary text, input borders | 4.8:1 (fails 4.5 on Cream: 4.49) |
-| Forest | #1b4332 | `--color-primary` | headings, primary button fill (Paper text 10.9:1) | 10.9:1 |
-| Range | #2f6b46 | `--color-sage-deep` | links, the one in-range label | 6.2:1 |
-| Band | #4f8f68 | `--color-sage` | time-in-range band and trace in the figure only | 3.8:1 (graphic) |
+## Palette
+| Name | Hex | Role | Contrast on White |
+|---|---|---|---|
+| White | #FFFFFF | the only page background | - |
+| Graphite | #1E2530 | body text and headings | 15.4:1 |
+| Slate | #52607A | secondary text, index links | 6.3:1 |
+| Navy | #002D74 | action accent only: primary buttons (hover #001F52), selected slot/format, chart line B | 12.9:1 |
+| Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
+| High | #B06A00 | chart segment above range only | graphic |
 
-Rule #e5e7eb (`--color-border`) is the only hairline. Retired from web UI: Cream as section fill, gold `--color-secondary*` (keep only inside `logo.svg`; white on gold is 2.4:1), all gradients.
+Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline. Navy stays scarce (user, 2026-09-26: "too much of it everywhere"): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
 
 ## Type
-- Lora 500 for H1-H3 only; Inter 400 body, Inter 600 for buttons, labels, strong. Cut the other loaded weights when their last use goes.
-- Scale (desktop / 375px): H1 44/34px lh 1.1; H2 30/26 lh 1.2; H3 21/19 lh 1.3; body 18/17 lh 1.6; small 15px.
-- Sentence case everywhere. No `text-transform: uppercase`, no letter-spaced labels, no eyebrow above headings.
+- Geologica only: 300 for H1 with the key phrase in 600; 400 body and H2; 600 buttons, labels, strong. Tabular figures in the chart and calendar.
+- Scale (desktop / phone): H1 46/34 lh 1.1; question H2 30/24 lh 1.2; body 18/17 lh 1.6; small 15, chart labels 11-13.
+- Sentence case. No eyebrows, no uppercase labels.
 
-## Grid and measure
-- Container 1200px, 12 columns, 24px gutter; 20px side padding at 375px.
-- Prose max 68ch. Explanatory sections: heading in columns 1-4, text in 6-12 (asymmetric), stacking on mobile; FAQ and booking run one centred 8-column block, so the split is not a repeated template.
-- Sections separated by 96px / 64px space and a Rule top border, never by alternating fills.
-- Radius: 8px (`--radius-sm`) for buttons, inputs, service cards, calendar; 12px (`--radius-md`) for dialogs and the mobile menu only. Photos square-cornered. No pills.
-- Shadow only on what floats above the page: dialogs, mobile menu, the booking popover.
-- Cards only for things that are separate objects with a price (services). Lists stay lists.
+## Layout
+- Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot).
+- Hero (5fr/7fr): thesis headline, lead, button, one format line; the glucose chart on the right.
+- Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, credentials, register number once), how the approach differs, how to book.
+- Booking: format toggle, A's week grid (Mon-first, Europe/Riga), summary panel with one button. Footer minimal.
+- Container 1160px, 40px/20px side padding; sections split by a Line border, not fills. Radius 4px on buttons, slots, panels; photos square. Phone: single column, index static above the questions.
 
 ## The one motion moment
-State changes only, one timing: 200ms ease-out, for the FAQ answer reveal and the mobile menu opening. Hover is an instant colour or border change. No load, scroll, parallax, stagger or progress-bar motion. All motion off under `prefers-reduced-motion`.
+The index marker moving to the current question (200ms ease-out colour/border); smooth scroll on index clicks. Both off under `prefers-reduced-motion`. Nothing else animates.
 
 ## The glucose-curve figure
-One inline SVG on the landing, in the research/about section beside her CGM doctoral work: a 24h trace, Band shaded 3.9-10 mmol/L at 15% opacity, real axes (mmol/L, hours), labelled illustrative/synthetic, caption from Sofija (placeholder until she sends it). Nowhere else as decoration.
+Hero only: AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (normal post-meal for people without diabetes; user's choice, caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
 
-## References (screenshots local in `.claude/tasks/design/_references/`)
-- ourworldindata.org/diabetes - take: charts drawn to scale with source lines, flat panels, one accent. Avoid: dense chrome, all-caps sidebar labels.
-- nutritionsource.hsph.harvard.edu (carbohydrates and blood sugar) - take: plain reading column with a side list, square photo inset in the text, flat white page. Avoid: clip-art plate graphic, red-on-white headings.
-- quantamagazine.org/biology - take: serif headline + sans body, hairline column divider, image-left/text-right asymmetry. Avoid: spaced all-caps kicker above every title.
-- realfood-matters.net (independent CGM clinician) - take: the practitioner's real portrait carries the page. Avoid: entry pop-up, script logo, cramped two-line nav.
+## References
+`.claude/tasks/design/SN-036/notes/references.md` (~30 sites; what was taken per site).
