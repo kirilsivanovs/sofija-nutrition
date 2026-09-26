@@ -16,6 +16,11 @@ const indexAstro = fs.readFileSync(
   'utf-8'
 );
 
+const layoutAstro = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'layouts', 'Layout.astro'),
+  'utf-8'
+);
+
 describe('landing background decoration', () => {
   it('has no gradient background declarations in booking.css', () => {
     expect(bookingCss).not.toMatch(/(linear|radial)-gradient\(/);
@@ -83,5 +88,31 @@ describe('landing card chrome', () => {
 
   it('has no rounded-2xl utility left in index.astro', () => {
     expect(indexAstro).not.toMatch(/rounded-2xl/);
+  });
+});
+
+describe('landing load/scroll motion', () => {
+  it('deletes the animations.js and animations.css assets', () => {
+    expect(
+      fs.existsSync(path.join(__dirname, '..', 'public', 'assets', 'animations.js'))
+    ).toBe(false);
+    expect(
+      fs.existsSync(path.join(__dirname, '..', 'public', 'assets', 'animations.css'))
+    ).toBe(false);
+  });
+
+  it('no longer wires animations.css or animations.js into Layout.astro', () => {
+    expect(layoutAstro).not.toMatch(/animations\.(css|js)/);
+  });
+
+  it('has no hero or booking-card entrance keyframes left in booking.css', () => {
+    expect(bookingCss).not.toMatch(
+      /@keyframes (heroFadeUp|heroFadeIn|heroImageReveal|heroCredentialPop|bookingFadeUp)/
+    );
+  });
+
+  it('has no fadeInUp load animation left in global.css', () => {
+    expect(globalCss).not.toMatch(/@keyframes fadeInUp/);
+    expect(globalCss).not.toMatch(/\.animate-fade-in-up/);
   });
 });

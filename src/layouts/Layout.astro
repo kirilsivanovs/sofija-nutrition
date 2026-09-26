@@ -296,14 +296,6 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
       media="(max-width: 768px)"
     />
 
-    <!-- Animations Styles (non-critical, load async) -->
-    <link
-      rel="preload"
-      as="style"
-      href="/assets/animations.css"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript><link rel="stylesheet" href="/assets/animations.css" /></noscript>
   </head>
   <body class="font-sans text-gray-800 bg-bg-light antialiased">
     <noscript>
@@ -325,6 +317,5 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <!-- Shared translations -->
     <script is:inline src="/assets/shared-translations.js"></script>
     <script defer is:inline src="/assets/main.js"></script>
-    <script defer is:inline src="/assets/animations.js"></script>
   </body>
 </html>
