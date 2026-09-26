@@ -26,11 +26,11 @@
     min-height: 48px;
     padding: 0;
     border-radius: 50%;
-    background: rgba(255, 253, 250, 0.9);
+    background: var(--color-white);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: var(--color-primary);
-    border: 1px solid rgba(27, 67, 50, 0.15);
+    color: var(--color-graphite);
+    border: 1px solid var(--color-slate);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -54,9 +54,9 @@
 
   button.scroll-to-top:hover {
     opacity: 1;
-    background: rgba(255, 253, 250, 0.98);
+    background: var(--color-white);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    border-color: rgba(27, 67, 50, 0.25);
+    border-color: var(--color-graphite);
   }
 
   button.scroll-to-top:active {

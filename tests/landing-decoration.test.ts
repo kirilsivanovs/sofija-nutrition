@@ -116,3 +116,23 @@ describe('landing load/scroll motion', () => {
     expect(globalCss).not.toMatch(/\.animate-fade-in-up/);
   });
 });
+
+describe('landing colour roles', () => {
+  it('has no var(--color-primary) or var(--color-secondary) left in booking.css', () => {
+    expect(bookingCss).not.toMatch(/var\(--color-primary\)/);
+    expect(bookingCss).not.toMatch(/var\(--color-secondary\)/);
+  });
+
+  it('has no bg-primary/text-white utility left on the footer in index.astro', () => {
+    const footerIndex = indexAstro.indexOf('<footer');
+    const footerMarkup = indexAstro.slice(footerIndex, indexAstro.indexOf('</footer>') + '</footer>'.length);
+    expect(footerMarkup).not.toMatch(/bg-primary/);
+    expect(footerMarkup).not.toMatch(/text-white/);
+  });
+
+  it('includes a Pacienta kabinets link in the footer', () => {
+    const footerIndex = indexAstro.indexOf('<footer');
+    const footerMarkup = indexAstro.slice(footerIndex, indexAstro.indexOf('</footer>') + '</footer>'.length);
+    expect(footerMarkup).toMatch(/nav_cabinet/);
+  });
+});

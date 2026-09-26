@@ -206,22 +206,29 @@ input[type='radio'] {
 h1 {
   font-size: clamp(2rem, 5vw, 3.5rem); /* 32px - 56px */
   line-height: 1.1;
-  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: clamp(1.75rem, 4vw, 2.5rem); /* 28px - 40px */
   line-height: 1.2;
-  font-weight: 600;
   letter-spacing: -0.015em;
 }
 
 h3 {
   font-size: clamp(1.5rem, 3vw, 2rem); /* 24px - 32px */
   line-height: 1.3;
-  font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+/* Font-weight only, layered so Tailwind utility classes (e.g. font-normal) can override it
+   without affecting the always-winning size/line-height/letter-spacing rules above. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+  }
 }
 
 p {
@@ -246,7 +253,7 @@ i.ph {
 
 /* Booking calendar styles - optimized spacing */
 .calendar-container {
-  background: var(--color-cream);
+  background: var(--color-white);
   border-radius: var(--radius-sm);
   padding: clamp(20px, 5vw, 30px);
   max-width: 500px;
@@ -571,14 +578,14 @@ i.ph {
 }
 
 .outcome-card:hover {
-  border-color: var(--color-primary);
+  border-color: var(--color-graphite);
 }
 
 .outcome-title {
-  font-family: var(--font-serif, 'Lora', serif);
+  font-family: var(--font-sans);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   margin-bottom: 10px;
 }
 
@@ -615,7 +622,7 @@ i.ph {
   border: 1px solid rgba(27, 67, 50, 0.08);
   font-size: 15px;
   line-height: 1.5;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   transition:
     background 0.2s ease,
     border-color 0.2s ease;
@@ -631,7 +638,7 @@ i.ph {
 }
 
 .whom-icon {
-  color: var(--color-secondary);
+  color: var(--color-range);
   font-size: 16px;
   margin-top: 3px;
   flex-shrink: 0;
@@ -670,7 +677,7 @@ i.ph {
 }
 
 .cert-badge:hover {
-  border-color: var(--color-primary);
+  border-color: var(--color-graphite);
 }
 
 .cert-badge-text {
@@ -682,7 +689,7 @@ i.ph {
 .cert-badge-org {
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   line-height: 1.2;
 }
 
@@ -706,19 +713,26 @@ i.ph {
   gap: 8px;
   margin-top: 24px;
   padding: 12px 20px;
-  background: var(--color-bg-light);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
   font-size: 0.875rem;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .booking-urgency {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
 .booking-urgency i {
-  color: var(--color-secondary);
+  color: var(--color-range);
   font-size: 1.125rem;
   flex-shrink: 0;
 }
@@ -731,15 +745,57 @@ i.ph {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--color-mist);
+  color: var(--color-graphite);
   font-size: 1.25rem;
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .footer-social-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-line);
+}
+
+/* ── Cookie Settings Button ── */
+.cookie-settings-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-white);
+  color: var(--color-graphite);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-slate);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  z-index: 9999;
+}
+
+.cookie-settings-btn:hover {
+  background: var(--color-mist);
+}
+
+@media (max-width: 480px) {
+  .cookie-settings-btn span {
+    display: none;
+  }
+  .cookie-settings-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .cookie-settings-btn svg {
+    margin: 0;
+  }
 }
 
 /* ============================================

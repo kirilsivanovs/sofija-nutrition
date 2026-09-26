@@ -151,6 +151,7 @@
       footer_follow_title: 'Sekojiet',
       footer_terms: 'Pakalpojumu noteikumi',
       footer_privacy: 'Privātuma politika',
+      nav_cabinet: 'Pacienta kabinets',
       // Booking
       contact_tag: 'Kontakti',
       booking_eyebrow: 'Individuāla konsultācija',
@@ -312,6 +313,7 @@
       footer_follow_title: 'Подписывайтесь',
       footer_terms: 'Условия оказания услуг',
       footer_privacy: 'Политика конфиденциальности',
+      nav_cabinet: 'Кабинет пациента',
       // Booking
       contact_tag: 'Контакты',
       booking_eyebrow: 'Индивидуальная консультация',
@@ -473,6 +475,7 @@
       footer_follow_title: 'Follow',
       footer_terms: 'Terms of Service',
       footer_privacy: 'Privacy Policy',
+      nav_cabinet: 'Patient cabinet',
       // Booking
       contact_tag: 'Contact',
       booking_eyebrow: 'Personal Consultation',
