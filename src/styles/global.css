@@ -141,12 +141,12 @@ button:active,
 }
 
 .btn-solid {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  background: var(--color-primary);
   color: #ffffff;
 }
 
 .btn-solid:hover {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary);
   box-shadow:
     0 2px 4px rgba(12, 28, 22, 0.14),
     0 14px 32px rgba(27, 67, 50, 0.26),
@@ -262,23 +262,6 @@ p {
   animation: none;
   transform: none;
   opacity: 1;
-}
-
-/* Improved section separators */
-.section-divider {
-  position: relative;
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
-  border-radius: 2px;
 }
 
 /* iOS Safari link detection fix */
@@ -401,7 +384,7 @@ nav a:not(.nav-tab):hover,
   padding-left: 40px;
   padding-right: 40px;
   padding-bottom: 60px;
-  background: linear-gradient(170deg, #ffffff 0%, var(--color-cream, #faf6ef) 50%, #f5efe5 100%);
+  background: var(--color-bg-light);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
@@ -422,7 +405,6 @@ nav a:not(.nav-tab):hover,
   right: 40px;
   width: 1px;
   height: 0;
-  background: linear-gradient(180deg, transparent, var(--color-secondary), transparent);
   transform: translateY(-50%);
   transition: height 0.6s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0.5;
@@ -688,7 +670,6 @@ nav .flex.gap-1::-webkit-scrollbar {
 .credential-divider {
   width: 1px;
   height: 40px;
-  background: linear-gradient(180deg, transparent, var(--color-secondary), transparent);
   opacity: 0.5;
   flex-shrink: 0;
 }
@@ -721,7 +702,7 @@ nav .flex.gap-1::-webkit-scrollbar {
   text-align: center;
   padding: 32px 24px;
   border-radius: 16px;
-  background: var(--color-cream, #faf6ef);
+  background: var(--color-bg-light);
   border: 1px solid rgba(27, 67, 50, 0.06);
   transition:
     transform 0.2s ease,
@@ -820,23 +801,6 @@ nav .flex.gap-1::-webkit-scrollbar {
     position: relative;
   }
 
-  .process-steps::before {
-    content: '';
-    position: absolute;
-    top: 32px;
-    left: calc(16.67% + 32px);
-    right: calc(16.67% + 32px);
-    height: 2px;
-    background: linear-gradient(
-      90deg,
-      var(--color-secondary) 0%,
-      rgba(196, 160, 110, 0.3) 50%,
-      var(--color-secondary) 100%
-    );
-    border-radius: 1px;
-    z-index: 0;
-  }
-
   .process-steps > div {
     position: relative;
     z-index: 1;
@@ -916,8 +880,8 @@ nav .flex.gap-1::-webkit-scrollbar {
   gap: 8px;
   margin-top: 24px;
   padding: 12px 20px;
-  background: rgba(196, 160, 110, 0.1);
-  border: 1px solid rgba(196, 160, 110, 0.2);
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   font-size: 0.875rem;
   color: var(--color-primary);

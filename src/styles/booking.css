@@ -89,7 +89,7 @@
 .hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(165deg, #faf8f3 0%, #f6f1e8 58%, #f8f4ec 100%);
+  background: var(--color-bg-light);
   border-bottom: 1px solid rgba(27, 67, 50, 0.06);
 }
 
@@ -126,13 +126,6 @@
   opacity: 0.94;
 }
 
-.hero__eyebrow-line {
-  width: 36px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--color-secondary), rgba(196, 160, 110, 0));
-}
-
 .hero__title {
   font-family: var(--font-serif);
   font-size: clamp(40px, 9vw, 82px);
@@ -148,22 +141,6 @@
     'calt' 1,
     'kern' 1;
   text-rendering: optimizeLegibility;
-}
-
-/* Bold signature: gold brush stroke under the hero title */
-.hero__title::after {
-  content: '';
-  display: block;
-  width: clamp(72px, 11vw, 120px);
-  height: 5px;
-  margin: 22px auto 0;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    var(--color-secondary) 0%,
-    #e0c290 55%,
-    rgba(196, 160, 110, 0) 100%
-  );
 }
 
 .hero__image-column {
@@ -204,8 +181,6 @@
   padding: 10px 18px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(27, 67, 50, 0.12);
   box-shadow: 0 10px 30px rgba(17, 24, 39, 0.13);
   z-index: 2;
@@ -278,7 +253,7 @@
 }
 
 .hero__btn--primary {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  background: var(--color-primary);
   color: #fff;
   box-shadow:
     0 1px 3px rgba(12, 28, 22, 0.18),
@@ -286,7 +261,7 @@
 }
 
 .hero__btn--primary:hover {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary-dark);
   box-shadow:
     0 2px 4px rgba(12, 28, 22, 0.18),
     0 14px 32px rgba(27, 67, 50, 0.28),
@@ -334,11 +309,6 @@
     align-items: flex-start;
     text-align: left;
     padding: clamp(20px, 3.2vw, 34px) 0 8px;
-  }
-
-  .hero__title::after {
-    margin-left: 0;
-    margin-right: auto;
   }
 
   .hero__body {
@@ -486,7 +456,7 @@
   padding: 14px 16px;
   border-radius: 14px;
   border: 1px solid rgba(27, 67, 50, 0.08);
-  background: linear-gradient(180deg, #ffffff 0%, #fdfcf8 100%);
+  background: var(--color-bg-light);
   box-shadow: 0 4px 16px rgba(17, 24, 39, 0.05);
   transition:
     transform 0.3s ease,
@@ -572,7 +542,7 @@
   min-height: 100%;
   padding: 30px 26px;
   border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #fcfbf8 100%);
+  background: var(--color-bg-light);
   border: 1px solid rgba(27, 67, 50, 0.09);
   box-shadow: 0 8px 26px rgba(17, 24, 39, 0.06);
   transition:
@@ -582,42 +552,10 @@
   overflow: hidden;
 }
 
-.service-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, rgba(212, 165, 116, 0.9) 0%, rgba(45, 106, 79, 0.7) 100%);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
 .service-card:hover {
   border-color: rgba(27, 67, 50, 0.18);
   box-shadow: 0 16px 40px rgba(17, 24, 39, 0.11);
   transform: translateY(-5px);
-}
-
-.service-card:hover::before {
-  opacity: 1;
-}
-
-.service-card--featured {
-  background: linear-gradient(155deg, #1b4332 0%, #265b44 55%, #2d6a4f 100%);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 36px rgba(27, 67, 50, 0.3);
-}
-
-.service-card--featured::before {
-  opacity: 1;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.65) 0%, rgba(212, 165, 116, 0.9) 100%);
-}
-
-.service-card--featured:hover {
-  box-shadow: 0 22px 52px rgba(27, 67, 50, 0.38);
 }
 
 .service-icon {
@@ -723,7 +661,7 @@
 .faq-item {
   border: 1px solid rgba(27, 67, 50, 0.1);
   border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff 0%, #fdfcf9 100%);
+  background: var(--color-bg-light);
   box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
   overflow: hidden;
 }
@@ -836,7 +774,7 @@
 .booking-section {
   position: relative;
   padding: 76px 0 98px;
-  background: linear-gradient(180deg, #f9f6f0 0%, #f4efe6 100%);
+  background: var(--color-bg-light);
   overflow: hidden;
   font-family: var(--font-sans);
 }
@@ -929,10 +867,9 @@
   position: relative;
   padding: 18px;
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 246, 241, 0.9));
+  background: var(--color-bg-light);
   border: 1px solid rgba(27, 67, 50, 0.16);
   box-shadow: 0 24px 60px rgba(17, 40, 28, 0.2);
-  backdrop-filter: blur(6px);
   animation: bookingFadeUp 0.9s ease both;
 }
 
@@ -1057,7 +994,7 @@
 .final-cta {
   padding: 72px 24px;
   text-align: center;
-  background: linear-gradient(180deg, var(--color-cream, #faf6ef) 0%, #f3ede3 100%);
+  background: var(--color-bg-light);
   border-top: 1px solid rgba(27, 67, 50, 0.06);
 }
 
@@ -1148,20 +1085,10 @@
 /* Header */
 .booking-header {
   position: relative;
-  background: linear-gradient(120deg, #173d2f 0%, #2d6a4f 100%);
+  background: var(--color-primary);
   color: white;
   padding: clamp(14px, 3cqi, 24px) clamp(16px, 4cqi, 28px);
   overflow: hidden;
-}
-
-.booking-header::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(160px 90px at 10% 0%, rgba(255, 255, 255, 0.25), transparent 60%),
-    radial-gradient(220px 120px at 90% 20%, rgba(255, 255, 255, 0.18), transparent 65%);
-  pointer-events: none;
 }
 
 .booking-header h3 {
@@ -1184,7 +1111,7 @@
 .booking-left {
   padding: clamp(14px, 3cqi, 24px);
   border-bottom: 1px solid rgba(27, 67, 50, 0.12);
-  background: linear-gradient(180deg, #ffffff 0%, #fbfaf7 100%);
+  background: var(--color-bg-light);
   min-width: 0;
   overflow: hidden;
 }
@@ -1330,14 +1257,14 @@
 }
 
 .day.available:hover {
-  background: linear-gradient(135deg, #173d2f 0%, #2d6a4f 100%);
+  background: var(--color-primary);
   color: white;
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(17, 40, 28, 0.18);
 }
 
 .day.selected {
-  background: linear-gradient(135deg, #173d2f 0%, #2d6a4f 100%);
+  background: var(--color-primary);
   color: white;
   border-color: #1b4332;
   box-shadow: 0 6px 14px rgba(17, 40, 28, 0.18);
@@ -1362,7 +1289,7 @@
 /* Right Side - Time Slots */
 .booking-right {
   padding: clamp(14px, 3cqi, 24px);
-  background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
+  background: var(--color-bg-light);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -1413,7 +1340,7 @@
 }
 
 .time-slot.selected {
-  background: linear-gradient(135deg, #173d2f 0%, #2d6a4f 100%);
+  background: var(--color-primary);
   border-color: var(--color-primary);
   color: white;
   box-shadow: 0 6px 14px rgba(17, 40, 28, 0.18);
@@ -1434,7 +1361,7 @@
 .booking-form-section {
   border-top: 1px solid rgba(27, 67, 50, 0.14);
   padding: clamp(14px, 3cqi, 24px);
-  background: linear-gradient(180deg, #f6f2ea 0%, #f3efe7 100%);
+  background: var(--color-bg-light);
   min-width: 0;
   animation: formSlideIn 0.35s ease-out;
 }
@@ -1625,7 +1552,7 @@
 .booking-submit-btn {
   width: 100%;
   padding: 14px 20px;
-  background: linear-gradient(135deg, #173d2f 0%, #2d6a4f 100%);
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 14px;
@@ -1782,7 +1709,6 @@ dialog.booking-success-modal[open] {
 
 dialog.booking-success-modal::backdrop {
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
 }
 
 .success-content {
@@ -1889,14 +1815,14 @@ dialog.booking-success-modal::backdrop {
   padding: 60px 30px;
   text-align: center;
   min-height: 400px;
-  background: linear-gradient(135deg, #f8faf9 0%, #f0f4f2 100%);
+  background: var(--color-bg-light);
   border-radius: 16px;
 }
 
 .booking-error .error-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1927,7 +1853,7 @@ dialog.booking-success-modal::backdrop {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary);
   color: white;
   padding: 14px 28px;
   border-radius: 50px;
