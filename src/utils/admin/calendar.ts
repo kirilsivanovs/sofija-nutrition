@@ -225,7 +225,7 @@ export function showDayDetails(dateStr: string): void {
     }
     
     if (dayBookings.length === 0 && !holidayName) {
-        html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-muted);"></i><span>Nav ierakstu šajā dienā</span></div>';
+        html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-slate);"></i><span>Nav ierakstu šajā dienā</span></div>';
     } else {
         // Group bookings by status
         const confirmedBookings = dayBookings.filter(b => b.status === 'confirmed');

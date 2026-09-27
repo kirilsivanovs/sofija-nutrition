@@ -27,7 +27,7 @@ export async function loadHolidays(apiBase: string): Promise<void> {
                 </div>
             `).join('');
         } else {
-            list.innerHTML = '<p style="color:var(--color-text-light);">Nav svētku šajā gadā</p>';
+            list.innerHTML = '<p style="color:var(--color-slate);">Nav svētku šajā gadā</p>';
         }
     } catch (e) {
         list.innerHTML = '<p style="color:var(--color-error);">Kļūda ielādējot svētkus</p>';

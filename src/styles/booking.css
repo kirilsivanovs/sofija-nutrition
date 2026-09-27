@@ -20,7 +20,7 @@
 .hero {
   position: relative;
   overflow: hidden;
-  background: var(--color-bg-light);
+  background: var(--color-white);
   border-bottom: 1px solid rgba(27, 67, 50, 0.06);
 }
 
@@ -117,7 +117,7 @@
 .hero__credential-location {
   font-family: var(--font-sans);
   font-size: 12px;
-  color: var(--color-text-light);
+  color: var(--color-slate);
 }
 
 .hero__body {
@@ -359,7 +359,7 @@
   padding: 14px 16px;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(27, 67, 50, 0.08);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   transition: border-color 0.3s ease;
 }
 
@@ -376,7 +376,7 @@
 }
 
 .trust-metric-label {
-  color: var(--color-text-light);
+  color: var(--color-slate);
 }
 
 @media (max-width: 1023px) {
@@ -413,7 +413,7 @@
   min-height: 100%;
   padding: 30px 26px;
   border-radius: var(--radius-sm);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   border: 1px solid rgba(27, 67, 50, 0.09);
   transition: border-color 0.3s ease;
   overflow: hidden;
@@ -445,7 +445,7 @@
 .service-desc {
   font-size: 15px;
   line-height: 1.68;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   margin-top: auto;
 }
 
@@ -498,7 +498,7 @@
 .faq-item {
   border: 1px solid rgba(27, 67, 50, 0.1);
   border-radius: var(--radius-sm);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   overflow: hidden;
 }
 
@@ -529,7 +529,7 @@
 }
 
 .faq-question:hover {
-  color: var(--color-accent);
+  color: var(--color-graphite);
 }
 
 .faq-icon {
@@ -548,7 +548,7 @@
 
 .faq-item[open] .faq-icon {
   transform: rotate(45deg);
-  color: var(--color-accent);
+  color: var(--color-graphite);
 }
 
 .faq-answer {
@@ -559,7 +559,7 @@
   padding: 0 20px 20px;
   font-size: 15px;
   line-height: 1.72;
-  color: var(--color-text-light);
+  color: var(--color-slate);
 }
 
 /* =============================================
@@ -610,7 +610,7 @@
 .booking-section {
   position: relative;
   padding: 76px 0 98px;
-  background: var(--color-bg-light);
+  background: var(--color-white);
   overflow: hidden;
   font-family: var(--font-sans);
 }
@@ -648,7 +648,7 @@
 
 .booking-subtitle {
   font-size: 16px;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   max-width: 54ch;
   line-height: 1.68;
 }
@@ -688,7 +688,7 @@
   position: relative;
   padding: 18px;
   border-radius: var(--radius-sm);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   border: 1px solid var(--color-line);
 }
 
@@ -699,7 +699,7 @@
 .booking-note {
   margin-top: 12px;
   font-size: 13px;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   text-align: center;
 }
 
@@ -781,7 +781,7 @@
 .final-cta {
   padding: 72px 24px;
   text-align: center;
-  background: var(--color-bg-light);
+  background: var(--color-white);
   border-top: 1px solid rgba(27, 67, 50, 0.06);
 }
 
@@ -891,7 +891,7 @@
 .booking-left {
   padding: clamp(14px, 3cqi, 24px);
   border-bottom: 1px solid rgba(27, 67, 50, 0.12);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   min-width: 0;
   overflow: hidden;
 }
@@ -953,7 +953,7 @@
   text-align: center;
   font-size: clamp(9px, 2cqi, 12px);
   font-weight: 600;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   padding: clamp(4px, 1cqi, 8px) 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1065,7 +1065,7 @@
 /* Right Side - Time Slots */
 .booking-right {
   padding: clamp(14px, 3cqi, 24px);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -1124,7 +1124,7 @@
 .no-slots {
   grid-column: 1 / -1;
   text-align: center;
-  color: var(--color-muted);
+  color: var(--color-slate);
   font-size: 14px;
   padding: clamp(16px, 3cqi, 24px) 16px;
 }
@@ -1135,7 +1135,7 @@
 .booking-form-section {
   border-top: 1px solid rgba(27, 67, 50, 0.14);
   padding: clamp(14px, 3cqi, 24px);
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   min-width: 0;
   animation: formSlideIn 0.35s ease-out;
 }
@@ -1200,7 +1200,7 @@
   margin-top: 5px;
   font-size: 12px;
   line-height: 1.4;
-  color: var(--color-text-light);
+  color: var(--color-slate);
 }
 
 /* Consent checkbox (GDPR) */
@@ -1263,7 +1263,7 @@
   padding: 10px 10px 10px 14px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   background: #f8f9fa;
   border-right: 1px solid var(--color-slate);
   user-select: none;
@@ -1393,7 +1393,7 @@
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-light);
+  color: var(--color-slate);
   min-width: 0;
   width: 100%;
   min-height: 44px;
@@ -1402,7 +1402,7 @@
 
 .format-option .format-label i {
   font-size: 18px;
-  color: var(--color-muted);
+  color: var(--color-slate);
   transition: color 0.2s ease;
   flex-shrink: 0;
 }
@@ -1529,7 +1529,7 @@ dialog.booking-success-modal::backdrop {
 }
 
 .success-content p {
-  color: var(--color-text-light);
+  color: var(--color-slate);
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -1588,7 +1588,7 @@ dialog.booking-success-modal::backdrop {
   padding: 60px 30px;
   text-align: center;
   min-height: 400px;
-  background: var(--color-bg-light);
+  background: var(--color-mist);
   border-radius: var(--radius-sm);
 }
 
@@ -1617,7 +1617,7 @@ dialog.booking-success-modal::backdrop {
 }
 
 .booking-error p {
-  color: var(--color-text-light);
+  color: var(--color-slate);
   margin-bottom: 20px;
   font-size: 15px;
 }

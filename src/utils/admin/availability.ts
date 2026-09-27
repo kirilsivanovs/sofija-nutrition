@@ -29,13 +29,13 @@ export function loadAvailabilityForm(apiBase: string, onLoadCallback?: () => voi
             <div class="availability-day-header">
                 <span class="availability-day-name">${dayNames[day]}</span>
                 <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                    <input type="checkbox" id="day-${day}-enabled" checked style="width:20px;height:20px;accent-color:var(--color-primary);">
-                    <span style="font-size:14px;color:var(--color-text-light);">Aktīva</span>
+                    <input type="checkbox" id="day-${day}-enabled" checked style="width:20px;height:20px;accent-color:var(--color-navy);">
+                    <span style="font-size:14px;color:var(--color-slate);">Aktīva</span>
                 </label>
             </div>
             <div class="availability-day-times">
                 <input type="text" id="day-${day}-start" value="09:00" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" maxlength="5" class="input-field time-input">
-                <span style="color:var(--color-muted);">—</span>
+                <span style="color:var(--color-slate);">—</span>
                 <input type="text" id="day-${day}-end" value="17:00" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" maxlength="5" class="input-field time-input">
             </div>
         </div>
@@ -92,7 +92,7 @@ export function renderVacationPeriods(periods: any[]): void {
     if (!list) return;
     
     if (!periods || periods.length === 0) {
-        list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav atvaļinājuma periodu</p>';
+        list.innerHTML = '<p style="color:var(--color-slate);font-size:14px;">Nav atvaļinājuma periodu</p>';
         return;
     }
     
@@ -100,7 +100,7 @@ export function renderVacationPeriods(periods: any[]): void {
         <div class="blocked-item" style="background:var(--color-white);border-left:3px solid var(--color-slate);">
             <span>
                 <strong>${formatDate(v.startDate)}</strong> — <strong>${formatDate(v.endDate)}</strong>
-                ${v.reason ? '<span style="color:var(--color-text-light);margin-left:12px;">' + v.reason + '</span>' : ''}
+                ${v.reason ? '<span style="color:var(--color-slate);margin-left:12px;">' + v.reason + '</span>' : ''}
             </span>
             <button onclick="removeVacation('${v.id}')" class="btn-close" style="width:28px;height:28px;">
                 <i class="ph ph-x"></i>
@@ -117,7 +117,7 @@ export function renderBlockedDates(dates: any[]): void {
     if (!list) return;
     
     if (!dates || dates.length === 0) {
-        list.innerHTML = '<p style="color:var(--color-text-light);font-size:14px;">Nav bloķētu datumu</p>';
+        list.innerHTML = '<p style="color:var(--color-slate);font-size:14px;">Nav bloķētu datumu</p>';
         return;
     }
     

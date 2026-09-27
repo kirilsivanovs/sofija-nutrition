@@ -19,20 +19,4 @@
   --radius-md: 12px; /* dialogs, mobile menu */
 
   --font-sans: 'Geologica', sans-serif;
-
-  /* Temporary legacy aliases — remove in SN-033.6 once every consumer migrates */
-  --color-primary: var(--color-graphite);
-  --color-primary-dark: var(--color-graphite);
-  --color-accent: var(--color-slate);
-  --color-ink: var(--color-graphite);
-  --color-sage: var(--color-range);
-  --color-sage-deep: var(--color-range);
-  --color-secondary: var(--color-line);
-  --color-secondary-dark: var(--color-line);
-  --color-cream: var(--color-white);
-  --color-bg-light: var(--color-white);
-  --color-text-light: var(--color-slate);
-  --color-muted: var(--color-slate);
-  --color-border: var(--color-line);
-  --font-serif: var(--font-sans);
 }

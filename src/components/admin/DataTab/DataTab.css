@@ -36,7 +36,7 @@
   text-align: left;
   font-weight: 600;
   color: var(--color-text);
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 2px solid var(--color-line);
   white-space: nowrap;
 }
 
@@ -46,7 +46,7 @@
 
 .data-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-line);
   color: var(--color-text);
 }
 
@@ -65,9 +65,9 @@
 .table-footer {
   padding: 16px;
   background: var(--color-mist);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-line);
   font-size: 14px;
-  color: var(--color-muted);
+  color: var(--color-slate);
 }
 
 /* Checkbox styling */

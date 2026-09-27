@@ -36,9 +36,9 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
           aria-expanded="false"
           aria-controls={mobileMenuId}
         >
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
-          <span class="w-6 h-0.5 bg-primary transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
         </button>
       )
     }
@@ -326,7 +326,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   .app-user-name {
     font-size: 14px;
-    color: var(--color-ink);
+    color: var(--color-graphite);
     font-weight: 500;
     display: none;
   }
@@ -337,7 +337,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: var(--color-text-light);
+    color: var(--color-slate);
     text-decoration: none;
     padding: 10px 18px;
     border-radius: 8px;
@@ -390,20 +390,20 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     display: block;
     width: 24px;
     height: 2px;
-    background: var(--color-primary);
+    background: var(--color-navy);
     border-radius: 2px;
     transition: all 0.3s ease;
     pointer-events: none;
   }
 
   .mobile-menu-btn:hover span {
-    background: var(--color-accent);
+    background: var(--color-navy-hover);
   }
 
   /* Hamburger animation to X */
   .mobile-menu-btn.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 6px);
-    background: var(--color-primary);
+    background: var(--color-navy);
   }
 
   .mobile-menu-btn.active span:nth-child(2) {
@@ -412,7 +412,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   .mobile-menu-btn.active span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -6px);
-    background: var(--color-primary);
+    background: var(--color-navy);
   }
 
   /* ── Premium Fullscreen Mobile Menu ── */
