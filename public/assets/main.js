@@ -14,15 +14,21 @@
       nav_contact: 'Pieteikties',
       nav_cabinet: 'Pacienta kabinets',
 
-      // Hero
-      hero_eyebrow: 'Sertificēta dietoloģe · Rīga',
-      hero_title: 'Uzturs, kas strādā tieši Jums',
-      hero_subtitle:
-        'Nepalīdz diētas? Trūkst enerģijas? Vēlaties sakārtot svaru vai cukura līmeni? Palīdzēšu ar individuālu, zinātniski pamatotu pieeju — bez gatavām shēmām.',
-      hero_cta_primary: 'Rezervēt konsultāciju',
-      hero_cta_secondary: 'Pakalpojumi',
-      hero_credential_degree: 'Klātienē un tiešsaistē',
-      hero_credential_label: 'Rīga',
+      // Hero (chart hero, SN-015.1)
+      hero_title: 'Vienas un tās pašas brokastis. <strong>Divas dažādas glikozes līknes.</strong>',
+      hero_lead:
+        'Tāpēc es nesāku ar gatavu ēdienkarti. Pirmajā konsultācijā apskatām Jūsu analīzes, ikdienu un ēšanas paradumus, un plānu veidojam no tiem.',
+      hero_cta: 'Pieteikties konsultācijai',
+      hero_fact: '60 minūtes, klātienē Rīgā vai tiešsaistē',
+      hero_chart_heading: 'Glikoze pēc brokastīm, 07:00–11:00',
+      hero_legend_a: 'Cilvēks A',
+      hero_legend_b: 'Cilvēks B',
+      hero_readout_time: 'Laiks',
+      hero_readout_a: 'Cilvēks A',
+      hero_readout_b: 'Cilvēks B',
+      // copy pending from Sofija: 7.8 caption wording
+      hero_chart_caption:
+        'Ilustratīvi, sintētiski dati, nevis pacientu mērījumi. Diapazons 3,9–7,8 mmol/L.',
 
       // Trust Bar
       trust_msc: 'MSc Dietoloģijā',
@@ -181,15 +187,21 @@
       nav_contact: 'Записаться',
       nav_cabinet: 'Кабинет пациента',
 
-      // Hero
-      hero_eyebrow: 'Сертифицированный диетолог · Рига',
-      hero_title: 'Питание, которое работает именно для Вас',
-      hero_subtitle:
-        'Диеты не помогают? Не хватает энергии? Хотите наладить вес или уровень сахара? Помогу с индивидуальным, научно обоснованным подходом — без готовых схем.',
-      hero_cta_primary: 'Записаться',
-      hero_cta_secondary: 'Услуги',
-      hero_credential_degree: 'Очно и онлайн',
-      hero_credential_label: 'Рига',
+      // Hero (chart hero, SN-015.1)
+      hero_title: 'Один и тот же завтрак. <strong>Две разные кривые глюкозы.</strong>',
+      hero_lead:
+        'Поэтому я не начинаю с готового меню. На первой консультации мы смотрим Ваши анализы, повседневные привычки и питание, и уже на их основе строим план.',
+      hero_cta: 'Записаться на консультацию',
+      hero_fact: '60 минут, очно в Риге или онлайн',
+      hero_chart_heading: 'Глюкоза после завтрака, 07:00–11:00',
+      hero_legend_a: 'Человек A',
+      hero_legend_b: 'Человек B',
+      hero_readout_time: 'Время',
+      hero_readout_a: 'Человек A',
+      hero_readout_b: 'Человек B',
+      // copy pending from Sofija: 7.8 caption wording
+      hero_chart_caption:
+        'Иллюстративные, синтетические данные, а не показатели пациентов. Диапазон 3,9–7,8 ммоль/л.',
 
       // Trust Bar
       trust_msc: 'MSc Диетология',
@@ -343,15 +355,20 @@
       nav_contact: 'Contact',
       nav_cabinet: 'Patient Cabinet',
 
-      // Hero
-      hero_eyebrow: 'Certified Dietitian · Riga',
-      hero_title: 'Nutrition that works for You',
-      hero_subtitle:
-        "Diets not working? Lacking energy? Want to manage weight or blood sugar? I'll help with an individual, science-based approach — no ready-made templates.",
-      hero_cta_primary: 'Book consultation',
-      hero_cta_secondary: 'Services',
-      hero_credential_degree: 'In-person & online',
-      hero_credential_label: 'Riga',
+      // Hero (chart hero, SN-015.1)
+      hero_title: 'Same breakfast. <strong>Two different glucose curves.</strong>',
+      hero_lead:
+        "That's why I don't start with a ready-made meal plan. In the first consultation we look at your test results, daily routine and eating habits, and build the plan from there.",
+      hero_cta: 'Book a consultation',
+      hero_fact: '60 minutes, in person in Riga or online',
+      hero_chart_heading: 'Glucose after breakfast, 07:00–11:00',
+      hero_legend_a: 'Person A',
+      hero_legend_b: 'Person B',
+      hero_readout_time: 'Time',
+      hero_readout_a: 'Person A',
+      hero_readout_b: 'Person B',
+      // copy pending from Sofija: 7.8 caption wording
+      hero_chart_caption: 'Illustrative, synthetic data, not patient measurements. Range 3.9–7.8 mmol/L.',
 
       // Trust Bar
       trust_msc: 'MSc Dietetics',

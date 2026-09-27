@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import AppHeader from '../components/common/AppHeader.astro';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
 import '../styles/booking.css';
+import '../styles/chart.css';
 ---
 
 <Layout
@@ -24,57 +25,66 @@ import '../styles/booking.css';
   <ScrollToTop />
 <!-- Hero Section -->
 <main id="main-content">
-  <section id="hero" class="hero" aria-labelledby="hero-title">
-    <div class="hero__inner">
-      <!-- Header -->
-      <div class="hero__header">
-        <h1 id="hero-title" class="hero__title" data-i18n="hero_title">
-          Uzturs, kas<br />strādā tieši Jums
+  <section id="hero" class="hero-chart" aria-labelledby="hero-title">
+    <div class="hero-chart__inner">
+      <div>
+        <h1 id="hero-title" class="hero-chart__title" data-i18n="hero_title">
+          Vienas un tās pašas brokastis. <strong>Divas dažādas glikozes līknes.</strong>
         </h1>
-      </div>
-
-      <!-- Image -->
-      <div class="hero__image-column">
-        <picture class="hero__picture">
-          <source
-            type="image/webp"
-            srcset="/assets/img/hero-doctor-cutout-480w.webp 480w, /assets/img/hero-doctor-cutout-768w.webp 768w, /assets/img/hero-doctor-cutout-1024w.webp 1024w, /assets/img/hero-doctor-cutout-1440w.webp 1440w"
-            sizes="(max-width: 768px) 480px, (max-width: 1024px) 768px, (max-width: 1440px) 1024px, 1440px"
-          />
-          <img
-            src="/assets/img/hero-doctor-cutout-fallback.png"
-            alt="Uztura speciāliste Sofija Ivanova — individuālas konsultācijas Rīgā un tiešsaistē"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            width="1024"
-            height="787"
-          />
-        </picture>
-        <div class="hero__credential">
-          <span class="hero__credential-title" data-i18n="hero_credential_degree"
-            >Klātienē un tiešsaistē</span
-          >
-          <span class="hero__credential-dot" aria-hidden="true"></span>
-          <span class="hero__credential-location" data-i18n="hero_credential_label">Rīga</span>
-        </div>
-      </div>
-
-      <!-- Body -->
-      <div class="hero__body">
-        <p class="hero__subtitle" data-i18n="hero_subtitle">
-          Nepalīdz diētas? Trūkst enerģijas? Vēlaties sakārtot svaru vai cukura līmeni? Palīdzēšu ar
-          individuālu, zinātniski pamatotu pieeju — bez gatavām shēmām.
+        <p class="hero-chart__lead" data-i18n="hero_lead">
+          Tāpēc es nesāku ar gatavu ēdienkarti. Pirmajā konsultācijā apskatām Jūsu analīzes, ikdienu
+          un ēšanas paradumus, un plānu veidojam no tiem.
         </p>
-        <div class="hero__actions">
-          <a href="#contact" class="hero__btn hero__btn--primary" data-i18n="hero_cta_primary">
-            Rezervēt konsultāciju
-          </a>
-          <a href="#services" class="hero__btn hero__btn--outline" data-i18n="hero_cta_secondary">
-            Pakalpojumi
-          </a>
-        </div>
+        <a class="btn-cta btn-solid" href="#f-q6" data-i18n="hero_cta">Pieteikties konsultācijai</a>
+        <ul class="hero-chart__facts">
+          <li data-i18n="hero_fact">60 minūtes, klātienē Rīgā vai tiešsaistē</li>
+        </ul>
       </div>
+
+      <figure class="hero-chart__chart">
+        <div class="hero-chart__chart-head">
+          <h2 data-i18n="hero_chart_heading">Glikoze pēc brokastīm, 07:00–11:00</h2>
+          <ul class="hero-chart__legend">
+            <li>
+              <i class="hero-chart__legend-mark hero-chart__legend-mark--a" aria-hidden="true"></i>
+              <span data-i18n="hero_legend_a">Cilvēks A</span>
+            </li>
+            <li>
+              <i class="hero-chart__legend-mark hero-chart__legend-mark--b" aria-hidden="true"></i>
+              <span data-i18n="hero_legend_b">Cilvēks B</span>
+            </li>
+          </ul>
+        </div>
+        <svg
+          id="hero-svg"
+          class="hero-chart__svg"
+          viewBox="0 0 640 352"
+          role="img"
+          tabindex="0"
+          aria-label="Divu cilvēku glikozes līknes pēc vienādām brokastīm. A paliek diapazonā 3,9–7,8 mmol/L, B uz laiku pārsniedz 7,8 mmol/L."
+        ></svg>
+        <dl class="hero-chart__readout" aria-live="polite">
+          <div>
+            <dt data-i18n="hero_readout_time">Laiks</dt>
+            <dd id="hero-t">08:30</dd>
+          </div>
+          <div>
+            <dt data-i18n="hero_readout_a">Cilvēks A</dt>
+            <dd id="hero-va">7,1 mmol/L</dd>
+          </div>
+          <div>
+            <dt data-i18n="hero_readout_b">Cilvēks B</dt>
+            <dd id="hero-vb">10,1 mmol/L</dd>
+          </div>
+        </dl>
+        <figcaption class="hero-chart__caption">
+          <span data-i18n="hero_chart_caption"
+            >Ilustratīvi, sintētiski dati, nevis pacientu mērījumi. Diapazons 3,9–7,8 mmol/L.</span
+          >
+          <!-- copy pending from Sofija: 7.8 caption wording -->
+          <span id="hero-tir"></span>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
@@ -720,5 +730,11 @@ import '../styles/booking.css';
 
 <script>
   import '../scripts/booking/booking-calendar.js';
+</script>
+
+<!-- Hero glucose-band chart (SN-015.1): synthetic/illustrative data only -->
+<script>
+  import { initGlucoseChart, heroChartConfig } from '../scripts/glucose-chart';
+  initGlucoseChart('hero', heroChartConfig);
 </script>
 </Layout>
