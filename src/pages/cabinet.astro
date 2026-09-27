@@ -287,15 +287,15 @@ import AppHeader from '../components/common/AppHeader.astro';
   <style is:global>
     /* ---- Design tokens ---- */
     :root {
-      --diary-green: var(--color-primary);
-      --diary-green-light: var(--color-accent);
-      --diary-cream: #fbf8f2;
-      --diary-warm: #f6f1e8;
-      --diary-border: #e6e0d6;
-      --diary-gold: var(--color-secondary-dark);
-      --diary-text: var(--color-ink);
-      --diary-text-dim: #64748b;
-      --diary-radius: 16px;
+      --diary-green: var(--color-range);
+      --diary-green-light: var(--color-range);
+      --diary-cream: var(--color-white);
+      --diary-warm: var(--color-mist);
+      --diary-border: var(--color-line);
+      --diary-gold: var(--color-slate);
+      --diary-text: var(--color-graphite);
+      --diary-text-dim: var(--color-slate);
+      --diary-radius: var(--radius-sm);
       --diary-max-w: 480px;
       --macro-protein: #5b8def;
       --macro-fat: #f59e42;
@@ -318,12 +318,12 @@ import AppHeader from '../components/common/AppHeader.astro';
       font-size: 48px;
       color: var(--diary-border);
       margin-bottom: 16px;
-      display: block;
+      display: inline-block;
     }
     .diary-empty-state h2 {
-      font-family: var(--font-serif, 'Cormorant Garamond', serif);
       font-size: 24px;
-      color: var(--diary-green);
+      color: var(--diary-text);
+      font-weight: 400;
       margin: 0 0 8px;
     }
     .diary-empty-state p {
@@ -357,7 +357,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       height: 40px;
       color: var(--diary-green);
       font-size: 20px;
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       transition: background 0.15s;
     }
     .day-nav-btn:hover {
@@ -369,7 +369,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       align-items: center;
       gap: 2px;
       padding: 8px 28px;
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       transition: background 0.15s;
     }
     .day-nav-date:hover {
@@ -397,15 +397,12 @@ import AppHeader from '../components/common/AppHeader.astro';
     .summary-card {
       background: #fff;
       border: 1px solid var(--diary-border);
-      border-radius: 20px;
+      border-radius: var(--diary-radius);
       padding: 22px 20px;
       display: flex;
       align-items: center;
       gap: 24px;
       margin-bottom: 12px;
-      box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.04),
-        0 4px 12px rgba(0, 0, 0, 0.03);
     }
     .summary-ring-wrap {
       position: relative;
@@ -420,7 +417,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .ring-bg {
       fill: none;
-      stroke: var(--diary-warm);
+      stroke: var(--color-line);
       stroke-width: 8;
     }
     .ring-fill {
@@ -444,8 +441,8 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .ring-eaten {
       font-size: 26px;
-      font-weight: 700;
-      color: var(--diary-green);
+      font-weight: 600;
+      color: var(--diary-text);
       font-variant-numeric: tabular-nums;
     }
     .ring-label {
@@ -488,7 +485,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .macro-track {
       height: 7px;
-      background: var(--diary-warm);
+      background: var(--color-line);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -500,13 +497,13 @@ import AppHeader from '../components/common/AppHeader.astro';
       max-width: 100%;
     }
     .macro-fill-protein {
-      background: linear-gradient(90deg, #5b8def, #7ba6f7);
+      background: #5b8def;
     }
     .macro-fill-fat {
-      background: linear-gradient(90deg, #f59e42, #f7b76b);
+      background: #f59e42;
     }
     .macro-fill-carbs {
-      background: linear-gradient(90deg, #43d9ad, #6ae6c5);
+      background: #43d9ad;
     }
 
     /* ---- Meal Sections ---- */
@@ -516,9 +513,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       margin-bottom: 10px;
       overflow: hidden;
-      box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.04),
-        0 4px 12px rgba(0, 0, 0, 0.03);
     }
     .meal-section-header {
       display: flex;
@@ -583,9 +577,9 @@ import AppHeader from '../components/common/AppHeader.astro';
       transition: all 0.2s;
     }
     .meal-add-btn:hover {
-      background: var(--diary-green);
+      background: var(--color-navy);
       color: #fff;
-      border-color: var(--diary-green);
+      border-color: var(--color-navy);
     }
     .meal-section-items:empty + .meal-section-empty {
       display: block;
@@ -724,10 +718,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       color: var(--diary-text-dim);
       background: #fff;
       border: 1px solid var(--diary-border);
-      border-radius: 18px;
-      box-shadow:
-        0 8px 24px rgba(27, 67, 50, 0.06),
-        0 1px 2px rgba(27, 67, 50, 0.06);
+      border-radius: var(--diary-radius);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -758,8 +749,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       justify-content: center;
       gap: 6px;
       padding: 12px 16px;
-      border-radius: 14px;
-      box-shadow: 0 8px 18px rgba(27, 67, 50, 0.18);
+      border-radius: var(--diary-radius);
     }
 
     /* ---- Centered Modal ---- */
@@ -781,7 +771,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       left: 50%;
       z-index: 101;
       background: #fff;
-      border-radius: 20px;
+      border-radius: var(--diary-radius);
       width: calc(100% - 32px);
       max-width: var(--diary-max-w);
       max-height: 85dvh;
@@ -905,7 +895,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     .form-group input[type='number'] {
       padding: 10px 12px;
       border: 1.5px solid var(--diary-border);
-      border-radius: 10px;
+      border-radius: var(--diary-radius);
       font-size: 14px;
       color: var(--diary-text);
       background: #fff;
@@ -935,7 +925,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       gap: 6px;
       padding: 10px 14px;
       border: 1.5px dashed var(--diary-border);
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       color: var(--diary-text-dim);
       cursor: pointer;
       font-size: 14px;
@@ -949,7 +939,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .photo-preview {
       margin-top: 8px;
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       overflow: hidden;
       max-height: 180px;
     }
@@ -978,9 +968,9 @@ import AppHeader from '../components/common/AppHeader.astro';
       justify-content: center;
       gap: 4px;
       padding: 10px 16px;
-      background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
+      background: var(--color-navy);
       color: #fff;
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       font-size: 14px;
       font-weight: 600;
       transition: opacity 0.2s;
@@ -1000,7 +990,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       gap: 5px;
       padding: 14px 16px;
       border: 1.5px solid var(--diary-border);
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       background: #fff;
       color: var(--diary-text-dim);
       font-size: 13px;
@@ -1036,7 +1026,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       gap: 12px;
       padding: 12px 14px;
       border: 1px solid var(--diary-border);
-      border-radius: 12px;
+      border-radius: var(--diary-radius);
       background: #fff;
       cursor: pointer;
       transition: all 0.15s;
@@ -1118,21 +1108,17 @@ import AppHeader from '../components/common/AppHeader.astro';
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--diary-green), var(--diary-green-light));
+      background: var(--color-navy);
       color: #fff;
-      box-shadow: 0 4px 20px rgba(27, 67, 50, 0.35);
       font-size: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 90;
-      transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+      transition: background 0.15s;
     }
     .fab:hover {
-      transform: scale(1.08);
-      box-shadow: 0 6px 24px rgba(27, 67, 50, 0.4);
+      background: var(--color-navy-hover);
     }
     @media (min-width: 520px) {
       .fab {
@@ -1195,7 +1181,7 @@ import AppHeader from '../components/common/AppHeader.astro';
 
     /* ---- Overflows indicator ---- */
     .macro-fill.over {
-      background: linear-gradient(90deg, #ef4444, #f87171);
+      background: var(--color-high);
     }
 
     /* ---- Kcal emphasis in meal rows ---- */
