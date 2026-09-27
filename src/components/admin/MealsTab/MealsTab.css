@@ -74,8 +74,8 @@
 }
 
 .meal-kcal {
-  font-weight: 700;
-  color: var(--color-primary);
+  font-weight: 600;
+  color: var(--color-graphite);
   font-size: 16px;
   white-space: nowrap;
 }
@@ -102,7 +102,7 @@
   object-fit: cover;
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  background: var(--color-cream);
+  background: var(--color-mist);
 }
 
 /* Calendar Header */
@@ -121,8 +121,8 @@
 
 .meals-patient-title {
   font-size: 20px;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-weight: 600;
+  color: var(--color-graphite);
   margin: 0;
 }
 
@@ -148,7 +148,7 @@
 }
 
 .btn-icon {
-  background: var(--color-cream);
+  background: var(--color-mist);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   width: 36px;
@@ -164,8 +164,8 @@
 
 .btn-icon:hover:not(:disabled) {
   background: var(--color-white);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-navy);
+  color: var(--color-navy);
 }
 
 .btn-icon:disabled {
@@ -204,25 +204,22 @@
 }
 
 .meals-calendar-day.empty {
-  background: var(--color-cream);
+  background: var(--color-mist);
   opacity: 0.5;
   cursor: default;
   border-style: dashed;
 }
 
 .meals-calendar-day.has-data {
-  border-color: var(--color-secondary);
-  background: linear-gradient(135deg, #ffffff 0%, #fffef9 100%);
+  border-color: var(--color-range);
 }
 
 .meals-calendar-day.has-data:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.15);
-  transform: translateY(-2px);
+  border-color: var(--color-navy);
 }
 
 .meals-day-number {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   color: var(--color-text);
   margin-bottom: 8px;
@@ -237,9 +234,9 @@
 }
 
 .meals-day-kcal {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   margin-bottom: 4px;
 }
 
@@ -262,8 +259,8 @@
 }
 
 .meals-day-summary-total {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: white;
+  background: var(--color-mist);
+  color: var(--color-graphite);
   padding: 20px;
   border-radius: var(--radius);
   margin-bottom: 20px;
@@ -286,7 +283,7 @@
 
 .meals-day-total-value {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
   display: block;
 }
 
@@ -314,7 +311,7 @@
 }
 
 .meals-summary-value {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 18px;
 }
 
@@ -338,9 +335,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
-  color: var(--color-primary);
+  color: var(--color-graphite);
 }
 
 .meal-type-title i {
@@ -354,7 +351,7 @@
 
 .meal-entry {
   padding: 12px;
-  background: var(--color-cream);
+  background: var(--color-mist);
   border-radius: var(--radius-sm);
   margin-bottom: 12px;
 }
@@ -365,7 +362,7 @@
 
 .meal-entry-time {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-graphite);
   margin-bottom: 6px;
   font-size: 14px;
 }

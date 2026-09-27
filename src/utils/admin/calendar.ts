@@ -217,7 +217,7 @@ export function showDayDetails(dateStr: string): void {
     let html = '';
     
     if (holidayName) {
-        html += `<div class="booking-card" style="border-left-color:#3b82f6;background:#eff6ff;">
+        html += `<div class="booking-card" style="border-left:3px solid var(--color-slate);background:var(--color-white);">
             <div class="booking-details">
                 <div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${holidayName}</div>
             </div>
@@ -237,8 +237,8 @@ export function showDayDetails(dateStr: string): void {
             bookings.sort((a, b) => a.time.localeCompare(b.time));
             return `
                 <div class="bookings-group">
-                    <h4 class="group-title" style="color:${color};">
-                        <i class="ph ${icon}"></i>
+                    <h4 class="group-title">
+                        <i class="ph ${icon}" style="color:${color};"></i>
                         ${title} (${bookings.length})
                     </h4>
                     ${bookings.map(b => `
@@ -270,9 +270,9 @@ export function showDayDetails(dateStr: string): void {
             `;
         };
         
-        html += renderGroup(confirmedBookings, 'Apstiprinātie', 'ph-check-circle', '#22c55e');
-        html += renderGroup(pendingBookings, 'Gaida apstiprinājumu', 'ph-clock', '#facc15');
-        html += renderGroup(cancelledBookings, 'Atcelti', 'ph-x-circle', '#ef4444');
+        html += renderGroup(confirmedBookings, 'Apstiprinātie', 'ph-check-circle', 'var(--color-range)');
+        html += renderGroup(pendingBookings, 'Gaida apstiprinājumu', 'ph-clock', 'var(--color-high)');
+        html += renderGroup(cancelledBookings, 'Atcelti', 'ph-x-circle', 'var(--color-error)');
     }
     
     list.innerHTML = html;

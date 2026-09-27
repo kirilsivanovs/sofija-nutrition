@@ -97,7 +97,7 @@ export function renderVacationPeriods(periods: any[]): void {
     }
     
     list.innerHTML = periods.map(v => `
-        <div class="blocked-item" style="background:#eff6ff;">
+        <div class="blocked-item" style="background:var(--color-white);border-left:3px solid var(--color-slate);">
             <span>
                 <strong>${formatDate(v.startDate)}</strong> — <strong>${formatDate(v.endDate)}</strong>
                 ${v.reason ? '<span style="color:var(--color-text-light);margin-left:12px;">' + v.reason + '</span>' : ''}
