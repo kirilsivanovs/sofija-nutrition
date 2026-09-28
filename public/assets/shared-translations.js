@@ -33,12 +33,11 @@ const sharedTranslations = {
       selectedLabel: 'Izvēlēts',
       prevWeekLabel: 'Iepriekšējā nedēļa',
       nextWeekLabel: 'Nākamā nedēļa',
-      gridLabel: 'Kalendārs',
     },
 
     // Form
     form: {
-      serviceLabel: 'Pakalpojuma veids',
+      serviceLegend: 'Pakalpojums',
       formatLabel: 'Konsultācijas formāts',
       nameLabel: 'Jūsu vārds',
       emailLabel: 'E-pasts',
@@ -54,7 +53,9 @@ const sharedTranslations = {
 
     // Success/Error messages
     messages: {
-      summaryContext: 'Individuāla konsultācija, 60 min',
+      summarySelectService: 'Izvēlieties pakalpojumu',
+      summarySelectFormat: 'Izvēlieties formātu',
+      nextAvailableSlot: (dateLabel) => `Tuvākais brīvais laiks: ${dateLabel}`,
       successTitle: 'Rezervācija veiksmīga!',
       successText: 'Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.',
       bookingConfirmNote: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
@@ -177,12 +178,11 @@ const sharedTranslations = {
       selectedLabel: 'Selected',
       prevWeekLabel: 'Previous week',
       nextWeekLabel: 'Next week',
-      gridLabel: 'Calendar',
     },
 
     // Form
     form: {
-      serviceLabel: 'Service type',
+      serviceLegend: 'Service',
       formatLabel: 'Consultation format',
       nameLabel: 'Your name',
       emailLabel: 'Email',
@@ -198,7 +198,9 @@ const sharedTranslations = {
 
     // Success/Error messages
     messages: {
-      summaryContext: 'Individual consultation, 60 min',
+      summarySelectService: 'Select a service',
+      summarySelectFormat: 'Select a format',
+      nextAvailableSlot: (dateLabel) => `Next available slot: ${dateLabel}`,
       successTitle: 'Booking successful!',
       successText: 'We will contact you within 24 hours to confirm your appointment.',
       bookingConfirmNote: 'You will receive a confirmation by email after booking.',
@@ -321,12 +323,11 @@ const sharedTranslations = {
       selectedLabel: 'Выбрано',
       prevWeekLabel: 'Предыдущая неделя',
       nextWeekLabel: 'Следующая неделя',
-      gridLabel: 'Календарь',
     },
 
     // Form
     form: {
-      serviceLabel: 'Тип услуги',
+      serviceLegend: 'Услуга',
       formatLabel: 'Формат консультации',
       nameLabel: 'Ваше имя',
       emailLabel: 'Email',
@@ -342,7 +343,9 @@ const sharedTranslations = {
 
     // Success/Error messages
     messages: {
-      summaryContext: 'Индивидуальная консультация, 60 мин',
+      summarySelectService: 'Выберите услугу',
+      summarySelectFormat: 'Выберите формат',
+      nextAvailableSlot: (dateLabel) => `Ближайшее свободное время: ${dateLabel}`,
       successTitle: 'Запись успешна!',
       successText: 'Мы свяжемся с Вами в течение 24 часов для подтверждения визита.',
       bookingConfirmNote: 'После записи вы получите подтверждение по email.',

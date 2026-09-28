@@ -46,7 +46,19 @@ test.describe('Booking Flow', () => {
             '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
           },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -59,6 +71,7 @@ test.describe('Booking Flow', () => {
     const availableSlot = bookingSection.locator('.slot-btn').first();
     await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     // Summary panel should reflect the pick
     await expect(bookingSection.locator('.booking-summary-pick')).toBeVisible({ timeout: 5000 });
@@ -78,7 +91,19 @@ test.describe('Booking Flow', () => {
             '2027-06-03': ['09:00', '14:00', '15:00', '16:00'],
           },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -87,12 +112,12 @@ test.describe('Booking Flow', () => {
     await page.reload();
     await expect(bookingSection).toBeVisible();
 
-    const focusedSlot = bookingSection.locator('.slot-btn[tabindex="0"]');
+    const focusedSlot = bookingSection.locator('.slot-btn[tabindex="0"]:visible');
     await focusedSlot.focus();
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
 
-    const selectedSlot = bookingSection.locator('.slot-btn[aria-pressed="true"]');
+    const selectedSlot = bookingSection.locator('.slot-btn[aria-pressed="true"]:visible');
     await expect(selectedSlot).toBeVisible({ timeout: 5000 });
 
     await expect(bookingSection.locator('.booking-summary-pick')).toBeVisible({ timeout: 5000 });
@@ -114,7 +139,19 @@ test.describe('Booking Flow', () => {
             '2026-10-07': ['14:00', '15:00'],
           },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -160,6 +197,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     // Step 2: Reveal and fill the booking form
     const continueBtn = bookingSection.locator('.booking-continue-btn');
@@ -175,7 +213,10 @@ test.describe('Booking Flow', () => {
     await emailInput.fill('test@example.com');
     await phoneInput.fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await bookingSection.locator('#consentCheckbox').check();
 
     // Step 3: Submit booking
@@ -207,7 +248,19 @@ test.describe('Booking Flow', () => {
             '2027-06-03': ['09:00', '10:00'],
           },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -243,6 +296,7 @@ test.describe('Booking Flow', () => {
     const availableSlot = bookingSection.locator('.slot-btn').first();
     await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -258,7 +312,10 @@ test.describe('Booking Flow', () => {
     await emailInput.fill('test@example.com');
     await phoneInput.fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await consentCheckbox.check();
 
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
@@ -285,7 +342,19 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           slots: { '2026-10-05': ['09:00', '10:00'] },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -312,6 +381,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -324,7 +394,10 @@ test.describe('Booking Flow', () => {
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
     await bookingSection.locator('input[name="phone"]').fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
@@ -350,7 +423,19 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           slots: { '2026-10-05': ['09:00'] },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -374,6 +459,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -386,7 +472,10 @@ test.describe('Booking Flow', () => {
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
     await bookingSection.locator('input[name="phone"]').fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
@@ -410,7 +499,19 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           slots: { '2026-10-05': ['09:00'] },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -434,6 +535,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -446,7 +548,10 @@ test.describe('Booking Flow', () => {
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
     await bookingSection.locator('input[name="phone"]').fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
@@ -477,7 +582,19 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           slots: { '2026-10-05': ['09:00'] },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -497,6 +614,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -509,7 +627,10 @@ test.describe('Booking Flow', () => {
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
     await bookingSection.locator('input[name="phone"]').fill('20000000');
     await bookingSection.locator('#formatToggleOnline').click();
-    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await expect(bookingSection.locator('#formatToggleOnline')).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
@@ -540,7 +661,19 @@ test.describe('Booking Flow', () => {
         body: JSON.stringify({
           slots: { '2026-10-05': ['09:00', '10:00'] },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -555,6 +688,7 @@ test.describe('Booking Flow', () => {
       return;
     }
     await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
 
     const continueBtn = bookingSection.locator('.booking-continue-btn');
     await expect(continueBtn).toBeVisible({ timeout: 5000 });
@@ -570,6 +704,19 @@ test.describe('Booking Flow', () => {
       const nameInput = bookingSection.locator('input[name="name"]');
       await expect(nameInput).toBeVisible();
     }
+  });
+
+  test('picking the in-person format releases the online toggle', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    const formatToggleInPerson = bookingSection.locator('#formatToggleInPerson');
+    const formatToggleOnline = bookingSection.locator('#formatToggleOnline');
+
+    await formatToggleInPerson.click();
+
+    await expect(formatToggleInPerson).toHaveAttribute('aria-pressed', 'true');
+    await expect(formatToggleOnline).toHaveAttribute('aria-pressed', 'false');
   });
 });
 
@@ -595,7 +742,19 @@ test.describe('Booking calendar at 375px', () => {
             '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
           },
           booked: [],
-          serviceTypes: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
         }),
       });
     });
@@ -617,5 +776,49 @@ test.describe('Booking calendar at 375px', () => {
     const nextBtnRightEdge = nextBtnBox!.x + nextBtnBox!.width;
     const bookingBodyRightEdge = bookingBodyBox!.x + bookingBodyBox!.width;
     expect(nextBtnRightEdge).toBeLessThanOrEqual(bookingBodyRightEdge + 1);
+  });
+
+  test('picks a day-strip chip and a slot in the day detail at 375px', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          slots: {
+            '2026-10-05': ['09:00', '10:00'],
+            '2026-10-06': ['11:00', '14:00'],
+          },
+          booked: [],
+          serviceTypes: [
+            {
+              id: 'consultation',
+              duration: 60,
+              name: {
+                lv: 'Uztura konsultācija (60 min)',
+                ru: 'Консультация по питанию (60 мин)',
+                en: 'Nutrition Consultation (60 min)',
+              },
+              allowOnline: true,
+              allowInPerson: true,
+            },
+          ],
+        }),
+      });
+    });
+
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    const enabledChips = bookingSection.locator('.week-day-chip:visible[aria-disabled="false"]');
+    const targetChip = enabledChips.last();
+    await targetChip.click();
+    await expect(targetChip).toHaveAttribute('aria-selected', 'true');
+
+    const detailSlot = bookingSection.locator('.week-day-detail .slot-btn:visible').first();
+    await detailSlot.click();
+    await expect(detailSlot).toHaveAttribute('aria-pressed', 'true');
   });
 });

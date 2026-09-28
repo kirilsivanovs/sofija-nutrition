@@ -279,6 +279,8 @@ export interface DefaultService {
   id: string;
   duration: number;
   name: LocalizedString;
+  allowOnline: boolean;
+  allowInPerson: boolean;
 }
 
 // ============================================

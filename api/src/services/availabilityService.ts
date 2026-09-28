@@ -40,6 +40,8 @@ export interface ServiceType {
     ru: string;
     en: string;
   };
+  allowOnline: boolean;
+  allowInPerson: boolean;
 }
 
 export interface DateAvailability {
@@ -119,6 +121,8 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
             ru: entity.serviceName_RU as string,
             en: entity.serviceName_EN as string,
           },
+          allowOnline: entity.allowOnlineFormat !== false,
+          allowInPerson: entity.allowInPersonFormat !== false,
         });
       }
     }

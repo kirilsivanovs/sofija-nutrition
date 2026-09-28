@@ -10,6 +10,9 @@ import {
   getWeekStart,
   getWeekDates,
   getFirstAvailableWeekStart,
+  getNextAvailableDateAfter,
+  getLastAvailableWeekStart,
+  lowercaseFirst,
   formatWeekRange,
 } from '../src/scripts/booking/calendar-grid';
 
@@ -54,6 +57,39 @@ describe('getFirstAvailableWeekStart', () => {
     const today = new Date(2026, 8, 27); // 2026-09-27
     const result = getFirstAvailableWeekStart(['2026-01-19', '2026-10-05', '2026-10-01'], today);
     expect(result.getTime()).toEqual(getWeekStart(new Date(2026, 9, 1)).getTime());
+  });
+});
+
+describe('getNextAvailableDateAfter', () => {
+  it('returns the earliest available date after the given date', () => {
+    const result = getNextAvailableDateAfter(['2026-10-01', '2026-10-05', '2026-10-03'], '2026-10-01');
+    expect(result).toBe('2026-10-03');
+  });
+
+  it('returns null when nothing is available after the given date', () => {
+    const result = getNextAvailableDateAfter(['2026-10-01', '2026-10-02'], '2026-10-05');
+    expect(result).toBeNull();
+  });
+});
+
+describe('getLastAvailableWeekStart', () => {
+  it('returns the Monday of the week of the latest available date', () => {
+    const result = getLastAvailableWeekStart(['2026-10-01', '2026-10-14', '2026-10-10']);
+    expect(result?.getTime()).toEqual(getWeekStart(new Date(2026, 9, 14)).getTime());
+  });
+
+  it('returns null when there are no available dates', () => {
+    expect(getLastAvailableWeekStart([])).toBeNull();
+  });
+});
+
+describe('lowercaseFirst', () => {
+  it('lowercases the first character of a capitalised string', () => {
+    expect(lowercaseFirst('Klātienē')).toBe('klātienē');
+  });
+
+  it('returns the empty string unchanged', () => {
+    expect(lowercaseFirst('')).toBe('');
   });
 });
 

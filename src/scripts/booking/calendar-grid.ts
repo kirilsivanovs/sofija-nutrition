@@ -30,7 +30,7 @@ export function getWeekDates(weekStart: Date): Date[] {
   });
 }
 
-function toISODate(date: Date): string {
+export function toISODate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -57,4 +57,34 @@ export function getFirstAvailableWeekStart(availableDateStrings: string[], today
  */
 export function formatWeekRange(first: Date, last: Date, lang: string): string {
   return new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long' }).formatRange(first, last);
+}
+
+/**
+ * The earliest available date strictly after `afterDateStr`, or `null` when
+ * every available date is on or before it. Used to jump a patient out of an
+ * empty week to the next one that actually has a slot.
+ */
+export function getNextAvailableDateAfter(
+  availableDateStrings: string[],
+  afterDateStr: string
+): string | null {
+  const upcoming = availableDateStrings.filter((dateStr) => dateStr > afterDateStr).sort();
+  return upcoming.length > 0 ? upcoming[0] : null;
+}
+
+/**
+ * The Monday of the latest week that has an available date, so the week-nav
+ * "next" control can be disabled once there is nothing further to page to.
+ */
+export function getLastAvailableWeekStart(availableDateStrings: string[]): Date | null {
+  if (availableDateStrings.length === 0) {
+    return null;
+  }
+  const sorted = [...availableDateStrings].sort();
+  return getWeekStart(new Date(sorted[sorted.length - 1]));
+}
+
+/** Lowercases the first character only, leaving the rest of the string untouched. */
+export function lowercaseFirst(s: string): string {
+  return s.length > 0 ? s[0].toLowerCase() + s.slice(1) : s;
 }

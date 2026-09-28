@@ -11,10 +11,8 @@ export namespace sharedTranslations {
       let selectedLabel: string;
       let prevMonthLabel: string;
       let nextMonthLabel: string;
-      let gridLabel: string;
     }
     namespace form {
-      let serviceLabel: string;
       let formatLabel: string;
       let nameLabel: string;
       let emailLabel: string;
@@ -131,13 +129,9 @@ export namespace sharedTranslations {
       export { prevMonthLabel_1 as prevMonthLabel };
       let nextMonthLabel_1: string;
       export { nextMonthLabel_1 as nextMonthLabel };
-      let gridLabel_1: string;
-      export { gridLabel_1 as gridLabel };
     }
     export { calendar_1 as calendar };
     export namespace form_1 {
-      let serviceLabel_1: string;
-      export { serviceLabel_1 as serviceLabel };
       let formatLabel_1: string;
       export { formatLabel_1 as formatLabel };
       let nameLabel_1: string;
@@ -311,13 +305,9 @@ export namespace sharedTranslations {
       export { prevMonthLabel_2 as prevMonthLabel };
       let nextMonthLabel_2: string;
       export { nextMonthLabel_2 as nextMonthLabel };
-      let gridLabel_2: string;
-      export { gridLabel_2 as gridLabel };
     }
     export { calendar_2 as calendar };
     export namespace form_2 {
-      let serviceLabel_2: string;
-      export { serviceLabel_2 as serviceLabel };
       let formatLabel_2: string;
       export { formatLabel_2 as formatLabel };
       let nameLabel_2: string;

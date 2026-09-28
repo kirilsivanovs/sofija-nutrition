@@ -11,9 +11,9 @@ function initializeSeedData() {
     // Services table
     const servicesTable = new Map();
     const services = [
-        { partitionKey: 'SERVICE', rowKey: 'initial', serviceName_LV: 'Sākotnējā konsultācija', serviceName_EN: 'Initial Consultation', serviceName_RU: 'Первичная консультация', priceEUR: 75, durationMinutes: 60, isActive: true, allowOnlineFormat: true, allowInPersonFormat: true },
-        { partitionKey: 'SERVICE', rowKey: 'followup', serviceName_LV: 'Atkārtota konsultācija', serviceName_EN: 'Follow-up Consultation', serviceName_RU: 'Повторная консультация', priceEUR: 55, durationMinutes: 45, isActive: true, allowOnlineFormat: true, allowInPersonFormat: true },
-        { partitionKey: 'SERVICE', rowKey: 'free-consultation', serviceName_LV: 'Bezmaksas 15 min konsultācija', serviceName_EN: 'Free 15 min Consultation', serviceName_RU: 'Бесплатная 15 мин консультация', priceEUR: 0, durationMinutes: 15, isActive: true, allowOnlineFormat: true, allowInPersonFormat: false }
+        { partitionKey: 'SERVICE', rowKey: 'initial', serviceId: 'initial', serviceName_LV: 'Sākotnējā konsultācija', serviceName_EN: 'Initial Consultation', serviceName_RU: 'Первичная консультация', priceEUR: 75, durationMinutes: 60, isActive: true, allowOnlineFormat: true, allowInPersonFormat: true },
+        { partitionKey: 'SERVICE', rowKey: 'followup', serviceId: 'followup', serviceName_LV: 'Atkārtota konsultācija', serviceName_EN: 'Follow-up Consultation', serviceName_RU: 'Повторная консультация', priceEUR: 55, durationMinutes: 45, isActive: true, allowOnlineFormat: true, allowInPersonFormat: true },
+        { partitionKey: 'SERVICE', rowKey: 'free-consultation', serviceId: 'free-consultation', serviceName_LV: 'Bezmaksas 15 min konsultācija', serviceName_EN: 'Free 15 min Consultation', serviceName_RU: 'Бесплатная 15 мин консультация', priceEUR: 0, durationMinutes: 15, isActive: true, allowOnlineFormat: true, allowInPersonFormat: false }
     ];
     services.forEach(s => servicesTable.set(`${s.partitionKey}-${s.rowKey}`, s));
     mockTables.set('Services', servicesTable);

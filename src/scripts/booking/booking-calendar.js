@@ -10,6 +10,9 @@ import {
   getWeekStart,
   getWeekDates,
   getFirstAvailableWeekStart as computeFirstAvailableWeekStart,
+  getNextAvailableDateAfter,
+  getLastAvailableWeekStart,
+  lowercaseFirst,
   formatWeekRange,
 } from './calendar-grid';
 
@@ -42,7 +45,7 @@ function buildUITranslations(lang) {
     prevWeekLabel: t.calendar.prevWeekLabel,
     nextWeekLabel: t.calendar.nextWeekLabel,
     selectedLabel: t.calendar.selectedLabel,
-    serviceLabel: t.form.serviceLabel,
+    serviceLegend: t.form.serviceLegend,
     formatLabel: t.form.formatLabel,
     formatOnline: t.format.online,
     formatInPerson: t.format.inPerson,
@@ -55,7 +58,9 @@ function buildUITranslations(lang) {
     consentText: t.form.consentText,
     submitBtn: t.form.submitBtn,
     continueBtn: t.form.continueBtn,
-    summaryContext: t.messages.summaryContext,
+    summarySelectService: t.messages.summarySelectService,
+    summarySelectFormat: t.messages.summarySelectFormat,
+    nextAvailableSlot: t.messages.nextAvailableSlot,
     successTitle: t.messages.successTitle,
     successText: t.messages.successText,
     bookingConfirmNote: t.messages.bookingConfirmNote,
@@ -96,7 +101,7 @@ const fallbackTranslations = {
       'Novembris',
       'Decembris',
     ],
-    serviceLabel: 'Pakalpojuma veids',
+    serviceLegend: 'Pakalpojums',
     formatLabel: 'Konsultācijas formāts',
     formatOnline: 'Tiešsaistē',
     formatInPerson: 'Klātienē Rīgā',
@@ -110,7 +115,9 @@ const fallbackTranslations = {
       'Es piekrītu, ka mani personas dati tiek apstrādāti saskaņā ar <a href="/privacy-policy/" target="_blank" rel="noopener">privātuma politiku</a> un <a href="/terms/" target="_blank" rel="noopener">pakalpojumu noteikumiem</a>.',
     submitBtn: 'Apstiprināt rezervāciju',
     continueBtn: 'Turpināt pieteikšanos',
-    summaryContext: 'Individuāla konsultācija, 60 min',
+    summarySelectService: 'Izvēlieties pakalpojumu',
+    summarySelectFormat: 'Izvēlieties formātu',
+    nextAvailableSlot: (dateLabel) => `Tuvākais brīvais laiks: ${dateLabel}`,
     successTitle: 'Rezervācija veiksmīga!',
     successText: 'Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.',
     bookingConfirmNote: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
@@ -152,7 +159,7 @@ const fallbackTranslations = {
       'Ноябрь',
       'Декабрь',
     ],
-    serviceLabel: 'Тип услуги',
+    serviceLegend: 'Услуга',
     formatLabel: 'Формат консультации',
     formatOnline: 'Онлайн',
     formatInPerson: 'Очно в Риге',
@@ -166,7 +173,9 @@ const fallbackTranslations = {
       'Я соглашаюсь на обработку моих персональных данных в соответствии с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="/terms/" target="_blank" rel="noopener">условиями оказания услуг</a>.',
     submitBtn: 'Подтвердить запись',
     continueBtn: 'Продолжить оформление',
-    summaryContext: 'Индивидуальная консультация, 60 мин',
+    summarySelectService: 'Выберите услугу',
+    summarySelectFormat: 'Выберите формат',
+    nextAvailableSlot: (dateLabel) => `Ближайшее свободное время: ${dateLabel}`,
     successTitle: 'Запись успешна!',
     successText: 'Мы свяжемся с Вами в течение 24 часов для подтверждения визита.',
     bookingConfirmNote: 'После записи вы получите подтверждение по email.',
@@ -208,7 +217,7 @@ const fallbackTranslations = {
       'November',
       'December',
     ],
-    serviceLabel: 'Service type',
+    serviceLegend: 'Service',
     formatLabel: 'Consultation format',
     formatOnline: 'Online',
     formatInPerson: 'In person in Riga',
@@ -222,7 +231,9 @@ const fallbackTranslations = {
       'I agree that my personal data is processed in accordance with the <a href="/privacy-policy/" target="_blank" rel="noopener">privacy policy</a> and <a href="/terms/" target="_blank" rel="noopener">terms of service</a>.',
     submitBtn: 'Confirm booking',
     continueBtn: 'Continue to booking details',
-    summaryContext: 'Individual consultation, 60 min',
+    summarySelectService: 'Select a service',
+    summarySelectFormat: 'Select a format',
+    nextAvailableSlot: (dateLabel) => `Next available slot: ${dateLabel}`,
     successTitle: 'Booking successful!',
     successText: 'We will contact you within 24 hours to confirm your appointment.',
     bookingConfirmNote: 'You will receive a confirmation by email after booking.',
@@ -252,10 +263,11 @@ class BookingCalendar {
     this.selectedDate = null;
     this.selectedTime = null;
     this.selectedFormat = null;
+    this.selectedService = null;
+    this.selectedStripDate = null;
     this.focusedSlot = null;
     this._calendarHadFocus = false;
     this.availability = null;
-    this.serviceSettings = [];
     this.currentLang = options.lang || 'lv';
     this.onBookingComplete = options.onBookingComplete || (() => {});
 
@@ -370,11 +382,18 @@ class BookingCalendar {
   navigateToFirstAvailableWeek() {
     if (!this.availability || !this.availability.slots) return;
 
-    const availableDates = Object.keys(this.availability.slots).filter(
+    this.currentWeekStart = computeFirstAvailableWeekStart(
+      this.getAvailableDateStrings(),
+      new Date()
+    );
+  }
+
+  /** ISO dates (across the whole fetched horizon) that still have an open slot. */
+  getAvailableDateStrings() {
+    if (!this.availability || !this.availability.slots) return [];
+    return Object.keys(this.availability.slots).filter(
       (dateStr) => this.getAvailableSlots(dateStr).length > 0
     );
-
-    this.currentWeekStart = computeFirstAvailableWeekStart(availableDates, new Date());
   }
 
   t(key) {
@@ -393,6 +412,8 @@ class BookingCalendar {
     this.container.innerHTML = `
             <div class="booking-calendar">
                 <div class="booking-body">
+                    ${this.renderServiceControl()}
+
                     <div class="format-toggle" role="group" aria-label="${this.t('formatLabel')}">
                         <button type="button" class="format-toggle-option" id="formatToggleInPerson" aria-pressed="false">
                             ${this.t('formatInPerson')}
@@ -414,6 +435,8 @@ class BookingCalendar {
                                 </button>
                             </div>
                             <div class="week-grid" role="group" aria-labelledby="weekRangeLabel"></div>
+                            <div class="week-day-strip" role="tablist" aria-labelledby="weekRangeLabel"></div>
+                            <div class="week-day-detail"></div>
                         </div>
 
                         <div class="booking-summary" id="bookingSummary"></div>
@@ -424,34 +447,10 @@ class BookingCalendar {
                     <form class="booking-form" id="bookingForm" novalidate>
                         <div class="selected-datetime"></div>
 
+                        <input type="hidden" name="serviceType" id="serviceTypeInput" value="${this.selectedService || ''}">
+                        <input type="hidden" name="consultationFormat" id="consultationFormatInput" value="${this.selectedFormat || ''}">
+
                         <div class="booking-form-grid">
-                            <div class="form-group">
-                                <label for="serviceTypeSelect">${this.t('serviceLabel')}</label>
-                                <select name="serviceType" id="serviceTypeSelect">
-                                    ${this.renderServiceOptions()}
-                                </select>
-                            </div>
-
-                            <div class="form-group" id="formatGroup" role="radiogroup" aria-labelledby="formatGroupLabel" aria-required="true">
-                                <label id="formatGroupLabel">${this.t('formatLabel')}</label>
-                                <div class="format-options">
-                                    <label class="format-option">
-                                        <input type="radio" name="consultationFormat" value="online" id="formatOnline">
-                                        <span class="format-label">
-                                            <i class="ph ph-video-camera"></i>
-                                            ${this.t('formatOnline')}
-                                        </span>
-                                    </label>
-                                    <label class="format-option">
-                                        <input type="radio" name="consultationFormat" value="in-person" id="formatInPerson" checked>
-                                        <span class="format-label">
-                                            <i class="ph ph-map-pin"></i>
-                                            ${this.t('formatInPerson')}
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <label for="bookingName">${this.t('nameLabel')}</label>
                                 <input type="text" id="bookingName" name="name" placeholder="Anna" autocomplete="name" aria-required="true">
@@ -512,26 +511,78 @@ class BookingCalendar {
         `;
 
     this.renderWeek();
-    this.syncFormatToggle();
+    this.updateFormatOptions();
     this.updateSummary();
   }
 
-  renderServiceOptions() {
-    if (!this.availability?.serviceTypes) return '';
+  /**
+   * The service picker: segmented buttons for 2+ services, plain text (no
+   * control) for exactly one — auto-selecting it, since there is nothing to
+   * choose. Empty until availability has loaded.
+   */
+  renderServiceControl() {
+    const services = this.availability?.serviceTypes || [];
+    if (services.length === 0) return '';
 
-    return this.availability.serviceTypes
-      .map((service) => `<option value="${service.id}">${service.name[this.currentLang]}</option>`)
+    if (services.length === 1) {
+      if (!this.selectedService) this.selectedService = services[0].id;
+      return `<p class="service-single">${services[0].name[this.currentLang]}</p>`;
+    }
+
+    // No preselection: defaulting a returning patient to a first
+    // consultation would be wrong.
+    const buttons = services
+      .map((service) => {
+        const isSelected = this.selectedService === service.id;
+        return `<button type="button" class="service-option" data-service-id="${service.id}" aria-pressed="${isSelected}">${service.name[this.currentLang]}</button>`;
+      })
       .join('');
+
+    return `
+      <fieldset class="service-fieldset">
+        <legend>${this.t('serviceLegend')}</legend>
+        <div class="service-options" role="group">${buttons}</div>
+      </fieldset>
+    `;
+  }
+
+  /** Picks the service, mirroring `selectSlot`'s date+time pairing. */
+  selectService(serviceId) {
+    this.selectedService = serviceId;
+
+    this.container.querySelectorAll('.service-option').forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.serviceId === serviceId));
+    });
+
+    const serviceInput = this.container.querySelector('#serviceTypeInput');
+    if (serviceInput) serviceInput.value = serviceId;
+
+    this.updateFormatOptions();
+    this.updateSummary();
   }
 
   /** Per-day slot buttons for the week starting at `this.currentWeekStart`. */
   renderWeek() {
     const weekDates = getWeekDates(this.currentWeekStart);
 
-    // Update week range display
+    // Update week range display — 2 nowrap date spans, built as DOM nodes so a
+    // line only ever breaks between the two dates (text-wrap: balance in CSS).
     const rangeEl = this.container.querySelector('.week-range');
     if (rangeEl) {
-      rangeEl.textContent = formatWeekRange(weekDates[0], weekDates[6], this.currentLang);
+      rangeEl.textContent = '';
+      const dateFormat = new Intl.DateTimeFormat(this.currentLang, { day: 'numeric', month: 'long' });
+
+      const startSpan = document.createElement('span');
+      startSpan.className = 'week-range-part';
+      startSpan.textContent = `${dateFormat.format(weekDates[0])} –`;
+
+      const endSpan = document.createElement('span');
+      endSpan.className = 'week-range-part';
+      endSpan.textContent = dateFormat.format(weekDates[6]);
+
+      rangeEl.appendChild(startSpan);
+      rangeEl.appendChild(document.createTextNode(' '));
+      rangeEl.appendChild(endSpan);
     }
 
     // Disable "previous week" once we're at (or before) the first available week
@@ -541,6 +592,16 @@ class BookingCalendar {
       if (firstAvailableWeek) {
         prevBtn.disabled = this.currentWeekStart.getTime() <= firstAvailableWeek.getTime();
       }
+    }
+
+    // Disable "next week" once there is no later week with a slot, so there
+    // is no blind paging into an ever-empty future.
+    const nextBtn = this.container.querySelector('.week-nav-btn.next');
+    if (nextBtn) {
+      const lastAvailableWeek = getLastAvailableWeekStart(this.getAvailableDateStrings());
+      nextBtn.disabled = Boolean(
+        lastAvailableWeek && this.currentWeekStart.getTime() >= lastAvailableWeek.getTime()
+      );
     }
 
     const gridEl = this.container.querySelector('.week-grid');
@@ -593,10 +654,7 @@ class BookingCalendar {
 
     gridEl.innerHTML = weekDates.map((date, index) => dayHTML(date, index)).join('');
     if (weekIsEmpty) {
-      gridEl.insertAdjacentHTML(
-        'beforeend',
-        `<p class="week-empty">${this.t('noSlotsWeek')}</p>`
-      );
+      gridEl.appendChild(this.buildEmptyWeekEl());
     }
 
     // If nothing was focused (or the previous focus target is gone), default to
@@ -614,6 +672,163 @@ class BookingCalendar {
       focusedSlotEl?.focus();
       this._calendarHadFocus = true;
     }
+
+    this.renderDayStrip(weekDates, weekSlots, today, weekIsEmpty);
+  }
+
+  /**
+   * Narrow-card day strip: 7 chips (weekday over number), a dot marks a day
+   * with slots. Selecting a chip only changes which day's slots show below
+   * it — it is not a slot pick. Rendered alongside `.week-grid` (step 8's
+   * CSS switches which one is visible per card width).
+   */
+  renderDayStrip(weekDates, weekSlots, today, weekIsEmpty) {
+    const stripEl = this.container.querySelector('.week-day-strip');
+    const detailEl = this.container.querySelector('.week-day-detail');
+    if (!stripEl || !detailEl) return;
+
+    if (weekIsEmpty) {
+      stripEl.innerHTML = '';
+      detailEl.innerHTML = '';
+      detailEl.appendChild(this.buildEmptyWeekEl());
+      return;
+    }
+
+    const weekdayLabels = reorderWeekdaysMondayFirst(this.t('weekdays'));
+    const dateStrs = weekDates.map((date) => this.formatDateISO(date));
+
+    // Keep the previous selection if it still has slots this week, else fall
+    // back to the first day that does.
+    if (
+      !this.selectedStripDate ||
+      !dateStrs.includes(this.selectedStripDate) ||
+      weekSlots[dateStrs.indexOf(this.selectedStripDate)].length === 0
+    ) {
+      const firstAvailableIndex = weekSlots.findIndex((slots) => slots.length > 0);
+      this.selectedStripDate = firstAvailableIndex >= 0 ? dateStrs[firstAvailableIndex] : dateStrs[0];
+    }
+
+    stripEl.innerHTML = weekDates
+      .map((date, index) => {
+        const dateStr = dateStrs[index];
+        const isPast = date < today;
+        const isEmpty = weekSlots[index].length === 0;
+        const isDisabled = isPast || isEmpty;
+        const isSelected = dateStr === this.selectedStripDate;
+        return `<button type="button" class="week-day-chip${isSelected ? ' selected' : ''}" role="tab" data-date="${dateStr}" tabindex="${isSelected ? '0' : '-1'}" aria-selected="${isSelected}" aria-disabled="${isDisabled}">
+          <span class="week-day-chip-name">${weekdayLabels[index]}</span>
+          <span class="week-day-chip-number">${date.getDate()}</span>
+          ${!isDisabled ? '<span class="week-day-chip-dot" aria-hidden="true"></span>' : ''}
+        </button>`;
+      })
+      .join('');
+
+    this.renderDayDetail();
+  }
+
+  /** Switches which day's slots the strip shows, without re-rendering the whole strip (roving tabindex per the tablist pattern). */
+  selectStripDate(dateStr) {
+    this.selectedStripDate = dateStr;
+
+    const stripEl = this.container.querySelector('.week-day-strip');
+    if (stripEl) {
+      stripEl.querySelectorAll('.week-day-chip').forEach((chip) => {
+        const isSelected = chip.dataset.date === dateStr;
+        chip.classList.toggle('selected', isSelected);
+        chip.setAttribute('aria-selected', String(isSelected));
+        chip.setAttribute('tabindex', isSelected ? '0' : '-1');
+      });
+    }
+
+    this.renderDayDetail();
+  }
+
+  /** The selected strip day's full date heading and its own slot buttons. */
+  renderDayDetail() {
+    const detailEl = this.container.querySelector('.week-day-detail');
+    if (!detailEl || !this.selectedStripDate) return;
+
+    const date = new Date(this.selectedStripDate);
+    const dateLabel = new Intl.DateTimeFormat(this.currentLang, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    }).format(date);
+
+    const slots = this.getAvailableSlots(this.selectedStripDate);
+    const focusedKey = this.focusedSlot ? `${this.focusedSlot.date}|${this.focusedSlot.time}` : null;
+
+    const slotsHTML = slots
+      .map((time) => {
+        const isSelected = this.selectedDate === this.selectedStripDate && this.selectedTime === time;
+        const isFocused = focusedKey === `${this.selectedStripDate}|${time}`;
+        return `<button type="button" class="slot-btn${isSelected ? ' selected' : ''}" data-date="${this.selectedStripDate}" data-time="${time}" tabindex="${isFocused ? '0' : '-1'}" aria-pressed="${isSelected}" aria-label="${dateLabel}, ${time}">${time}</button>`;
+      })
+      .join('');
+
+    detailEl.innerHTML = `
+      <h4 class="week-day-detail-date">${dateLabel}</h4>
+      <div class="week-day-detail-slots">${slotsHTML}</div>
+    `;
+
+    // If nothing in this day matched the previously focused slot, default to
+    // the first slot so a keyboard user always lands on a focusable button.
+    if (!detailEl.querySelector('.slot-btn[tabindex="0"]')) {
+      const firstSlot = detailEl.querySelector('.slot-btn');
+      firstSlot?.setAttribute('tabindex', '0');
+    }
+  }
+
+  /** The empty-week jump: a Slate line plus a button to the next available date, or the fallback email if none remain in the fetched horizon. */
+  buildEmptyWeekEl() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'week-empty';
+
+    const line = document.createElement('p');
+    line.className = 'week-empty-line';
+    line.textContent = this.t('noSlotsWeek');
+    wrapper.appendChild(line);
+
+    const nextDate = getNextAvailableDateAfter(
+      this.getAvailableDateStrings(),
+      this.formatDateISO(getWeekDates(this.currentWeekStart)[6])
+    );
+
+    if (nextDate) {
+      const dateLabel = new Intl.DateTimeFormat(this.currentLang, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      }).format(new Date(nextDate));
+
+      const jumpBtn = document.createElement('button');
+      jumpBtn.type = 'button';
+      jumpBtn.className = 'week-empty-jump-btn';
+      jumpBtn.textContent = this.t('nextAvailableSlot')(dateLabel);
+      jumpBtn.addEventListener('click', () => this.jumpToDate(nextDate));
+      wrapper.appendChild(jumpBtn);
+    } else {
+      const emailLine = document.createElement('a');
+      emailLine.className = 'week-empty-email-link';
+      emailLine.href = 'mailto:info@sofijaivanova.lv';
+      emailLine.textContent = 'info@sofijaivanova.lv';
+      wrapper.appendChild(emailLine);
+    }
+
+    return wrapper;
+  }
+
+  /** Jumps to the week of `dateStr`, selects that day and focuses its first slot. */
+  jumpToDate(dateStr) {
+    this.currentWeekStart = getWeekStart(new Date(dateStr));
+    this.selectedStripDate = dateStr;
+    this._calendarHadFocus = true;
+    this.renderWeek();
+
+    const firstSlot = this.container.querySelector(
+      `.week-day-detail .slot-btn, .week-grid .slot-btn[data-date="${dateStr}"]`
+    );
+    firstSlot?.focus();
   }
 
   hasAvailableSlots(dateStr) {
@@ -692,29 +907,46 @@ class BookingCalendar {
   }
 
   /**
-   * Reflects the current pick (or a placeholder) in the summary panel:
-   * a pick/placeholder line, a continue button (disabled until picked),
-   * and a full-width note — same shape in both states.
+   * Line 1 (Graphite) names the chosen service + format once both are
+   * known. Line 2 is the date/time pick, or — while any of the three
+   * (service, format, slot) is still missing — a Slate prompt naming the
+   * first one. Continue needs all three.
    */
   updateSummary() {
     const summaryEl = this.container.querySelector('.booking-summary');
     if (!summaryEl) return;
 
     const formSection = this.container.querySelector('.booking-form-section');
-    const hasPick = Boolean(this.selectedDate && this.selectedTime);
+    const service = this.availability?.serviceTypes?.find((s) => s.id === this.selectedService);
+    const hasSlot = Boolean(this.selectedDate && this.selectedTime);
+    const canContinue = Boolean(service && this.selectedFormat && hasSlot);
 
-    const pickText = hasPick
-      ? `<strong>${this.t('selectedLabel')}:</strong> ${this.formatDateDisplay(this.selectedDate)}, ${this.selectedTime}`
-      : this.t('selectDate');
+    const contextLine = service && this.selectedFormat
+      ? `<p class="booking-summary-context">${service.name[this.currentLang]}, ${lowercaseFirst(
+          this.selectedFormat === 'online' ? this.t('formatOnline') : this.t('formatInPerson')
+        )}</p>`
+      : '';
+
+    let pickHTML;
+    if (hasSlot) {
+      pickHTML = `<p class="booking-summary-pick"><strong>${this.t('selectedLabel')}:</strong> ${this.formatDateDisplay(this.selectedDate)}, ${this.selectedTime}</p>`;
+    } else {
+      const prompt = !service
+        ? this.t('summarySelectService')
+        : !this.selectedFormat
+          ? this.t('summarySelectFormat')
+          : this.t('selectDate');
+      pickHTML = `<p class="booking-summary-prompt">${prompt}</p>`;
+    }
 
     summaryEl.innerHTML = `
-      <p class="booking-summary-context">${this.t('summaryContext')}</p>
-      <p class="booking-summary-pick">${pickText}</p>
-      <button type="button" class="booking-continue-btn"${hasPick ? '' : ' disabled'}>${this.t('continueBtn')}</button>
+      ${contextLine}
+      ${pickHTML}
+      <button type="button" class="booking-continue-btn"${canContinue ? '' : ' disabled'}>${this.t('continueBtn')}</button>
       <p class="booking-summary-note">${this.t('bookingConfirmNote')}</p>
     `;
 
-    if (!hasPick) {
+    if (!canContinue) {
       if (formSection) formSection.style.display = 'none';
       return;
     }
@@ -1092,7 +1324,6 @@ class BookingCalendar {
     const emailInput = form.querySelector('input[name="email"]');
     const phoneInput = form.querySelector('input[name="phone"]');
     const personalCodeInput = form.querySelector('input[name="personalCode"]');
-    const formatInput = form.querySelector('input[name="consultationFormat"]:checked');
     const consentInput = form.querySelector('input[name="consent"]');
 
     if (!this.validateAndShowError(nameInput)) isValid = false;
@@ -1100,36 +1331,9 @@ class BookingCalendar {
     if (phoneInput) this.validateAndShowError(phoneInput); // Phone is optional
     if (personalCodeInput && !this.validateAndShowError(personalCodeInput)) isValid = false; // Optional, but validate format if filled
 
-    // Validate radio buttons separately
-    if (!formatInput) {
-      const v = this.getValidationTranslations();
-      const formatGroup = form.querySelector('#formatGroup');
-      if (formatGroup) {
-        // Remove existing error
-        const existingError = formatGroup.querySelector('.field-error-message');
-        if (existingError) existingError.remove();
-
-        // Add error
-        const errorEl = document.createElement('div');
-        errorEl.className = 'field-error-message';
-        errorEl.id = 'formatGroup-error';
-        errorEl.setAttribute('role', 'alert');
-        errorEl.setAttribute('aria-live', 'polite');
-        errorEl.innerHTML = `<i class="ph ph-warning-circle"></i> ${v.formatRequired}`;
-        formatGroup.appendChild(errorEl);
-        formatGroup.setAttribute('aria-describedby', errorEl.id);
-        formatGroup.setAttribute('aria-invalid', 'true');
-      }
-      isValid = false;
-    } else {
-      const formatGroup = form.querySelector('#formatGroup');
-      if (formatGroup) {
-        const existingError = formatGroup.querySelector('.field-error-message');
-        if (existingError) existingError.remove();
-        formatGroup.removeAttribute('aria-describedby');
-        formatGroup.setAttribute('aria-invalid', 'false');
-      }
-    }
+    // Service and format are chosen before the form is reachable (the continue
+    // button stays disabled until both are picked), so there is nothing left
+    // to validate here beyond the hidden inputs already carrying the values.
 
     // Validate consent checkbox (mandatory under GDPR)
     if (consentInput) {
@@ -1256,67 +1460,33 @@ class BookingCalendar {
   }
 
 
+  /**
+   * Disables the format the selected service's `allowOnline`/`allowInPerson`
+   * rules out (from the payload's `serviceTypes`, not the stale
+   * `cgm-diagnostic` fallback), and drops a format the current selection no
+   * longer permits.
+   */
   updateFormatOptions() {
-    const serviceSelect = this.container.querySelector('#serviceTypeSelect');
-    if (!serviceSelect) return;
+    const service = this.availability?.serviceTypes?.find((s) => s.id === this.selectedService);
+    const allowOnline = service ? service.allowOnline : true;
+    const allowInPerson = service ? service.allowInPerson : true;
 
-    const serviceId = serviceSelect.value;
-    const formatOnline = this.container.querySelector('#formatOnline');
-    const formatInPerson = this.container.querySelector('#formatInPerson');
+    if (this.selectedFormat === 'online' && !allowOnline) this.selectedFormat = null;
+    if (this.selectedFormat === 'in-person' && !allowInPerson) this.selectedFormat = null;
 
-    // Найти настройки услуги из загруженных данных
-    const serviceSetting = this.serviceSettings?.find((s) => s.id === serviceId);
+    const formatInput = this.container.querySelector('#consultationFormatInput');
+    if (formatInput) formatInput.value = this.selectedFormat || '';
 
-    if (serviceSetting) {
-      // Использовать настройки из базы данных
-      if (!serviceSetting.allowOnline && serviceSetting.allowInPerson) {
-        // In-person only
-        if (formatOnline && formatInPerson) {
-          formatOnline.parentElement.style.display = 'none';
-          formatInPerson.checked = true;
-          this.selectedFormat = 'in-person';
-        }
-      } else if (serviceSetting.allowOnline && !serviceSetting.allowInPerson) {
-        // Только онлайн
-        if (formatOnline && formatInPerson) {
-          formatInPerson.parentElement.style.display = 'none';
-          formatOnline.checked = true;
-          this.selectedFormat = 'online';
-        }
-      } else {
-        // Оба формата доступны
-        if (formatOnline && formatInPerson) {
-          formatOnline.parentElement.style.display = 'flex';
-          formatInPerson.parentElement.style.display = 'flex';
-          if (!formatOnline.checked && !formatInPerson.checked) {
-            formatOnline.checked = true;
-            this.selectedFormat = 'online';
-          }
-        }
-      }
-    } else {
-      // Fallback to hardcoded list if settings not loaded
-      const inPersonOnly = ['cgm-diagnostic'];
-
-      if (inPersonOnly.includes(serviceId)) {
-        if (formatOnline && formatInPerson) {
-          formatOnline.parentElement.style.display = 'none';
-          formatInPerson.checked = true;
-          this.selectedFormat = 'in-person';
-        }
-      } else {
-        if (formatOnline && formatInPerson) {
-          formatOnline.parentElement.style.display = 'flex';
-          formatInPerson.parentElement.style.display = 'flex';
-          if (!formatOnline.checked && !formatInPerson.checked) {
-            formatOnline.checked = true;
-            this.selectedFormat = 'online';
-          }
-        }
-      }
+    const toggleInPerson = this.container.querySelector('#formatToggleInPerson');
+    const toggleOnline = this.container.querySelector('#formatToggleOnline');
+    if (toggleInPerson) {
+      toggleInPerson.disabled = !allowInPerson;
+      toggleInPerson.setAttribute('aria-pressed', String(this.selectedFormat === 'in-person'));
     }
-
-    this.syncFormatToggle();
+    if (toggleOnline) {
+      toggleOnline.disabled = !allowOnline;
+      toggleOnline.setAttribute('aria-pressed', String(this.selectedFormat === 'online'));
+    }
   }
 
   /**
@@ -1327,31 +1497,7 @@ class BookingCalendar {
   getFirstAvailableWeekStart() {
     if (!this.availability || !this.availability.slots) return null;
 
-    const availableDates = Object.keys(this.availability.slots).filter(
-      (dateStr) => this.getAvailableSlots(dateStr).length > 0
-    );
-
-    return computeFirstAvailableWeekStart(availableDates, new Date());
-  }
-
-  /**
-   * Mirrors the selected consultation format onto the toggle pills and
-   * disables the one the current service restriction rules out (step 6).
-   */
-  syncFormatToggle() {
-    const toggleInPerson = this.container.querySelector('#formatToggleInPerson');
-    const toggleOnline = this.container.querySelector('#formatToggleOnline');
-    const radioInPerson = this.container.querySelector('#formatInPerson');
-    const radioOnline = this.container.querySelector('#formatOnline');
-    if (!toggleInPerson || !toggleOnline) return;
-
-    const inPersonHidden = radioInPerson?.parentElement?.style.display === 'none';
-    const onlineHidden = radioOnline?.parentElement?.style.display === 'none';
-
-    toggleInPerson.disabled = inPersonHidden;
-    toggleOnline.disabled = onlineHidden;
-    toggleInPerson.setAttribute('aria-pressed', String(!!radioInPerson?.checked));
-    toggleOnline.setAttribute('aria-pressed', String(!!radioOnline?.checked));
+    return computeFirstAvailableWeekStart(this.getAvailableDateStrings(), new Date());
   }
 
   attachEventListeners() {
@@ -1376,18 +1522,22 @@ class BookingCalendar {
       this.renderWeek();
     });
 
-    // Slot selection - event delegation on the week grid (a slot pick is date+time together)
-    const weekGrid = this.container.querySelector('.week-grid');
-    if (weekGrid) {
+    // Slot selection - event delegation on a slot container (a slot pick is
+    // date+time together). Wired identically on `.week-grid` (wide card) and
+    // `.week-day-detail` (narrow card's day strip) since both can be the
+    // visible slot list depending on card width.
+    const attachSlotInteractions = (root) => {
+      if (!root) return;
+
       const handleSlotSelect = (e) => {
         const slotEl = e.target.closest('.slot-btn');
         if (slotEl) {
           this.selectSlot(slotEl.dataset.date, slotEl.dataset.time);
         }
       };
-      weekGrid.addEventListener('click', handleSlotSelect);
+      root.addEventListener('click', handleSlotSelect);
       // iOS Safari fix: touchend ensures tap registers reliably
-      weekGrid.addEventListener(
+      root.addEventListener(
         'touchend',
         (e) => {
           e.preventDefault();
@@ -1396,18 +1546,19 @@ class BookingCalendar {
         { passive: false }
       );
 
-      weekGrid.addEventListener('focusin', () => {
+      root.addEventListener('focusin', () => {
         this._calendarHadFocus = true;
       });
-      weekGrid.addEventListener('focusout', () => {
+      root.addEventListener('focusout', () => {
         this._calendarHadFocus = false;
       });
 
       // Flat roving tabindex: left/right move in DOM order (slot counts differ
       // per day, so this isn't a strict 2D grid); up/down target the same
-      // slot-index in the adjacent day column, falling back to its nearest slot.
-      weekGrid.addEventListener('keydown', (e) => {
-        const slots = Array.from(weekGrid.querySelectorAll('.slot-btn'));
+      // slot-index in the adjacent day column (only present in `.week-grid`),
+      // falling back to its nearest slot.
+      root.addEventListener('keydown', (e) => {
+        const slots = Array.from(root.querySelectorAll('.slot-btn'));
         const current = e.target.closest('.slot-btn');
         if (!current || slots.length === 0) return;
 
@@ -1420,22 +1571,24 @@ class BookingCalendar {
           target = slots[currentIndex + 1] || null;
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
           const currentDay = current.closest('.week-day');
-          const days = Array.from(weekGrid.querySelectorAll('.week-day'));
-          const currentDayIndex = days.indexOf(currentDay);
-          const slotIndexInDay = Array.from(currentDay.querySelectorAll('.slot-btn')).indexOf(
-            current
-          );
-          const step = e.key === 'ArrowUp' ? -1 : 1;
+          const days = Array.from(root.querySelectorAll('.week-day'));
+          if (currentDay && days.length > 0) {
+            const currentDayIndex = days.indexOf(currentDay);
+            const slotIndexInDay = Array.from(currentDay.querySelectorAll('.slot-btn')).indexOf(
+              current
+            );
+            const step = e.key === 'ArrowUp' ? -1 : 1;
 
-          for (
-            let dayIndex = currentDayIndex + step;
-            dayIndex >= 0 && dayIndex < days.length;
-            dayIndex += step
-          ) {
-            const daySlots = Array.from(days[dayIndex].querySelectorAll('.slot-btn'));
-            if (daySlots.length === 0) continue;
-            target = daySlots[Math.min(slotIndexInDay, daySlots.length - 1)];
-            break;
+            for (
+              let dayIndex = currentDayIndex + step;
+              dayIndex >= 0 && dayIndex < days.length;
+              dayIndex += step
+            ) {
+              const daySlots = Array.from(days[dayIndex].querySelectorAll('.slot-btn'));
+              if (daySlots.length === 0) continue;
+              target = daySlots[Math.min(slotIndexInDay, daySlots.length - 1)];
+              break;
+            }
           }
         }
 
@@ -1446,22 +1599,81 @@ class BookingCalendar {
         this.focusedSlot = { date: target.dataset.date, time: target.dataset.time };
         target.focus();
       });
+    };
+
+    attachSlotInteractions(this.container.querySelector('.week-grid'));
+    attachSlotInteractions(this.container.querySelector('.week-day-detail'));
+
+    // Day-strip chips - a `role="tablist"` (WAI-ARIA tabs pattern): click or
+    // arrow/Home/End picks which day's slots `.week-day-detail` shows, with
+    // roving tabindex. Disabled (empty/past) chips are skipped by the arrows.
+    const stripEl = this.container.querySelector('.week-day-strip');
+    if (stripEl) {
+      const isChipDisabled = (chip) => chip.getAttribute('aria-disabled') === 'true';
+
+      stripEl.addEventListener('click', (e) => {
+        const chip = e.target.closest('.week-day-chip');
+        if (chip && !isChipDisabled(chip)) {
+          this.selectStripDate(chip.dataset.date);
+        }
+      });
+
+      stripEl.addEventListener('keydown', (e) => {
+        const chips = Array.from(stripEl.querySelectorAll('.week-day-chip'));
+        const current = e.target.closest('.week-day-chip');
+        if (!current || chips.length === 0) return;
+
+        const enabledChips = chips.filter((chip) => !isChipDisabled(chip));
+        if (enabledChips.length === 0) return;
+
+        const currentIndex = chips.indexOf(current);
+        let target = null;
+
+        if (e.key === 'ArrowLeft') {
+          for (let i = currentIndex - 1; i >= 0; i--) {
+            if (!isChipDisabled(chips[i])) {
+              target = chips[i];
+              break;
+            }
+          }
+        } else if (e.key === 'ArrowRight') {
+          for (let i = currentIndex + 1; i < chips.length; i++) {
+            if (!isChipDisabled(chips[i])) {
+              target = chips[i];
+              break;
+            }
+          }
+        } else if (e.key === 'Home') {
+          target = enabledChips[0];
+        } else if (e.key === 'End') {
+          target = enabledChips[enabledChips.length - 1];
+        }
+
+        if (!target) return;
+        e.preventDefault();
+        this.selectStripDate(target.dataset.date);
+        target.focus();
+      });
     }
 
-    // Format toggle - mirrors onto the underlying radio and re-runs the
-    // service-restriction check (step 6): if the restriction disagrees with
-    // the toggle's pick, the button stays disabled rather than being overridden.
-    const wireFormatToggle = (toggleId, radioId, formatValue) => {
+    // Format toggle - a format the selected service excludes stays disabled
+    // (updateFormatOptions), so a click here only ever picks a permitted one.
+    const wireFormatToggle = (toggleId, formatValue) => {
       this.container.querySelector(`#${toggleId}`)?.addEventListener('click', () => {
-        const radio = this.container.querySelector(`#${radioId}`);
-        if (!radio || radio.parentElement.style.display === 'none') return;
-        radio.checked = true;
         this.selectedFormat = formatValue;
         this.updateFormatOptions();
+        this.updateSummary();
       });
     };
-    wireFormatToggle('formatToggleInPerson', 'formatInPerson', 'in-person');
-    wireFormatToggle('formatToggleOnline', 'formatOnline', 'online');
+    wireFormatToggle('formatToggleInPerson', 'in-person');
+    wireFormatToggle('formatToggleOnline', 'online');
+
+    // Service picker - picking a service refreshes the format restriction
+    // and, once all three (service, format, slot) are known, the summary.
+    this.container.querySelector('.service-options')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.service-option');
+      if (btn) this.selectService(btn.dataset.serviceId);
+    });
 
     // Form submission
     this.container.querySelector('#bookingForm')?.addEventListener('submit', (e) => {
@@ -1563,11 +1775,6 @@ class BookingCalendar {
         }
       });
     }
-
-    // Service type change - handle format restrictions
-    this.container.querySelector('#serviceTypeSelect')?.addEventListener('change', (e) => {
-      this.updateFormatOptions();
-    });
 
     // Close success modal
     const successModal = this.container.querySelector('.booking-success-modal');

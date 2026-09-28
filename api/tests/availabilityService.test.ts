@@ -8,6 +8,7 @@ import {
   DEFAULT_SCHEDULE,
   DEFAULT_SERVICES,
   dayNames,
+  getServiceSettings,
 } from '../src/services/availabilityService';
 
 describe('AvailabilityService', () => {
@@ -63,6 +64,31 @@ describe('AvailabilityService', () => {
         expect(typeof service.duration).toBe('number');
         expect(service.duration).toBeGreaterThan(0);
       });
+    });
+
+    it('should allow both formats for all default services', () => {
+      DEFAULT_SERVICES.forEach((service) => {
+        expect(service.allowOnline).toBe(true);
+        expect(service.allowInPerson).toBe(true);
+      });
+    });
+  });
+
+  describe('getServiceSettings', () => {
+    it('should read allowOnline and allowInPerson off each active service', async () => {
+      const services = await getServiceSettings();
+
+      const freeConsultation = services.find((s) => s.id === 'free-consultation');
+      expect(freeConsultation?.allowOnline).toBe(true);
+      expect(freeConsultation?.allowInPerson).toBe(false);
+    });
+
+    it('should default a service to both formats allowed when the flags are missing', async () => {
+      const services = await getServiceSettings();
+
+      const initial = services.find((s) => s.id === 'initial');
+      expect(initial?.allowOnline).toBe(true);
+      expect(initial?.allowInPerson).toBe(true);
     });
   });
 

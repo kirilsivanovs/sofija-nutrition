@@ -226,6 +226,8 @@ export const defaultServices: DefaultService[] = [
       ru: 'Консультация по питанию (60 мин)',
       en: 'Nutrition Consultation (60 min)',
     },
+    allowOnline: true,
+    allowInPerson: true,
   },
   {
     id: 'followup',
@@ -235,6 +237,8 @@ export const defaultServices: DefaultService[] = [
       ru: 'Повторный визит (30 мин)',
       en: 'Follow-up (30 min)',
     },
+    allowOnline: true,
+    allowInPerson: true,
   },
 ];
 

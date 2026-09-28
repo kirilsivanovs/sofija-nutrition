@@ -30,7 +30,6 @@ describe('Translation Coverage', () => {
 
         test('should have form translations', () => {
           expect(t.form).toBeDefined();
-          expect(t.form.serviceLabel).toBeDefined();
           expect(t.form.formatLabel).toBeDefined();
           expect(t.form.nameLabel).toBeDefined();
           expect(t.form.emailLabel).toBeDefined();
