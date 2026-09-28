@@ -64,7 +64,7 @@ describe('Translations Module', () => {
       // Key Latvian words that MUST have diacritics
       expect(translations.lv.pdfInvoice).toBe('RĒĶINS');
       expect(translations.lv.pdfName).toBe('Vārds');
-      expect(translations.lv.formatInPerson).toBe('Klātienē');
+      expect(translations.lv.formatInPerson).toBe('Klātienē Rīgā');
       expect(translations.lv.emailThankYou).toBe('Paldies par rezervāciju!');
       expect(translations.lv.pdfPaymentInfo).toBe('Maksājuma informācija');
       expect(translations.lv.pdfReference).toBe('Maksājuma mērķis');
@@ -131,7 +131,7 @@ describe('Translations Module', () => {
 
     test('Russian format labels should be in Cyrillic', () => {
       expect(translations.ru.formatOnline).toContain('Онлайн');
-      expect(translations.ru.formatInPerson).toBe('Очно');
+      expect(translations.ru.formatInPerson).toBe('Очно в Риге');
     });
   });
 
@@ -152,8 +152,8 @@ describe('Translations Module', () => {
     });
 
     test('English format labels should be correct', () => {
-      expect(translations.en.formatOnline).toBe('Online (Zoom/Google Meet)');
-      expect(translations.en.formatInPerson).toBe('In-person');
+      expect(translations.en.formatOnline).toBe('Online');
+      expect(translations.en.formatInPerson).toBe('In person in Riga');
     });
   });
 
@@ -209,10 +209,13 @@ describe('Translations Module', () => {
       expect(translations.ru.emailSubtitle).toContain('PhD');
     });
 
-    test('all format labels should mention Zoom/Google Meet for online', () => {
-      expect(translations.lv.formatOnline).toContain('Zoom');
-      expect(translations.en.formatOnline).toContain('Zoom');
-      expect(translations.ru.formatOnline).toContain('Zoom');
+    // "mentions Zoom/Google Meet" was dropped from the labels by 08c74fa; replaced with a property that still holds.
+    test('online and in-person format labels should be defined and distinct per language', () => {
+      ['lv', 'en', 'ru'].forEach((lang) => {
+        expect(translations[lang].formatOnline).toBeTruthy();
+        expect(translations[lang].formatInPerson).toBeTruthy();
+        expect(translations[lang].formatOnline).not.toBe(translations[lang].formatInPerson);
+      });
     });
 
     test('pdfNotProvided should be defined for all languages', () => {

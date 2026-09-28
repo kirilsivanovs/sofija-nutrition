@@ -5,6 +5,7 @@
 
 import config from '../config';
 import { escapeHtml } from '../utils/validation';
+import { translations } from '../translations';
 
 const { colors, branding } = config;
 
@@ -249,7 +250,7 @@ function adminDetailRow(
  * Generate admin notification email
  */
 export function generateAdminEmailHTML(booking: BookingEmailData, confirmUrl: string): string {
-  const formatLabel = booking.consultationFormat === 'online' ? 'Attālināti' : 'Klātienē';
+  const formatLabel = booking.consultationFormat === 'online' ? translations.lv.formatOnline : translations.lv.formatInPerson;
   const formatIcon = booking.consultationFormat === 'online' ? '💻' : '📍';
   const formatColor = booking.consultationFormat === 'online' ? '#2196F3' : '#4CAF50';
 

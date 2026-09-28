@@ -226,7 +226,7 @@ describe('Full Booking Scenario', () => {
       });
       const processed = processBooking(booking);
 
-      expect(processed.formatLabel).toBe('Attālināti (Zoom/Google Meet)');
+      expect(processed.formatLabel).toBe(translations.lv.formatOnline);
     });
 
     test('should set in-person format label in Latvian', () => {
@@ -236,7 +236,7 @@ describe('Full Booking Scenario', () => {
       });
       const processed = processBooking(booking);
 
-      expect(processed.formatLabel).toBe('Klātienē');
+      expect(processed.formatLabel).toBe(translations.lv.formatInPerson);
     });
 
     test('should fallback to Latvian for unknown language', () => {
@@ -495,7 +495,7 @@ describe('Complete Booking Flow Integration', () => {
 
     expect(processed.price).toBe(65);
     expect(processed.serviceName).toBe('Sākotnējā konsultācija');
-    expect(processed.formatLabel).toBe('Klātienē');
+    expect(processed.formatLabel).toBe(translations.lv.formatInPerson);
 
     // Step 5: Generate email subject
     const subject = translations.lv.emailSubject(bookingId);
@@ -536,7 +536,7 @@ describe('Complete Booking Flow Integration', () => {
 
     expect(processed.price).toBe(150);
     expect(processed.serviceName).toBe('3 Consultation Package');
-    expect(processed.formatLabel).toBe('Online (Zoom/Google Meet)');
+    expect(processed.formatLabel).toBe(translations.en.formatOnline);
 
     const subject = translations.en.emailSubject(bookingId);
     expect(subject).toContain('Booking Confirmation');

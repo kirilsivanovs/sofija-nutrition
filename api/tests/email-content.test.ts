@@ -101,25 +101,24 @@ describe('Email Content Generation', () => {
     describe('Format Labels', () => {
         test('Latvian online format', () => {
             const label = getFormatLabel('lv', 'online');
-            expect(label).toBe('Attālināti (Zoom/Google Meet)');
-            expect(label).toContain('ā');
+            expect(label).toBe(translations.lv.formatOnline);
         });
 
         test('Latvian in-person format', () => {
             const label = getFormatLabel('lv', 'in-person');
-            expect(label).toBe('Klātienē');
+            expect(label).toBe(translations.lv.formatInPerson);
             expect(label).toContain('ā');
             expect(label).toContain('ē');
         });
 
         test('English online format', () => {
             const label = getFormatLabel('en', 'online');
-            expect(label).toBe('Online (Zoom/Google Meet)');
+            expect(label).toBe(translations.en.formatOnline);
         });
 
         test('English in-person format', () => {
             const label = getFormatLabel('en', 'in-person');
-            expect(label).toBe('In-person');
+            expect(label).toBe(translations.en.formatInPerson);
         });
 
         test('Russian online format', () => {
@@ -129,7 +128,7 @@ describe('Email Content Generation', () => {
 
         test('Russian in-person format', () => {
             const label = getFormatLabel('ru', 'in-person');
-            expect(label).toBe('Очно');
+            expect(label).toBe(translations.ru.formatInPerson);
         });
     });
 });
