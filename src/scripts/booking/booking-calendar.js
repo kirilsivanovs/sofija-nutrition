@@ -10,6 +10,7 @@ import {
   getWeekStart,
   getWeekDates,
   getFirstAvailableWeekStart as computeFirstAvailableWeekStart,
+  formatWeekRange,
 } from './calendar-grid';
 
 // API is served from the same domain (SWA managed API)
@@ -40,7 +41,6 @@ function buildUITranslations(lang) {
     today: t.calendar.today,
     prevWeekLabel: t.calendar.prevWeekLabel,
     nextWeekLabel: t.calendar.nextWeekLabel,
-    gridLabel: t.calendar.gridLabel,
     selectedLabel: t.calendar.selectedLabel,
     serviceLabel: t.form.serviceLabel,
     formatLabel: t.form.formatLabel,
@@ -119,7 +119,6 @@ const fallbackTranslations = {
     today: 'Šodien',
     prevWeekLabel: 'Iepriekšējā nedēļa',
     nextWeekLabel: 'Nākamā nedēļa',
-    gridLabel: 'Kalendārs',
     // Validation messages
     validation: {
       nameRequired: 'Lūdzu, ievadiet savu vārdu',
@@ -176,7 +175,6 @@ const fallbackTranslations = {
     today: 'Сегодня',
     prevWeekLabel: 'Предыдущая неделя',
     nextWeekLabel: 'Следующая неделя',
-    gridLabel: 'Календарь',
     // Validation messages
     validation: {
       nameRequired: 'Пожалуйста, введите ваше имя',
@@ -233,7 +231,6 @@ const fallbackTranslations = {
     today: 'Today',
     prevWeekLabel: 'Previous week',
     nextWeekLabel: 'Next week',
-    gridLabel: 'Calendar',
     // Validation messages
     validation: {
       nameRequired: 'Please enter your name',
@@ -534,16 +531,7 @@ class BookingCalendar {
     // Update week range display
     const rangeEl = this.container.querySelector('.week-range');
     if (rangeEl) {
-      const first = weekDates[0];
-      const last = weekDates[6];
-      const dayMonth = (date) =>
-        new Intl.DateTimeFormat(this.currentLang, { day: 'numeric', month: 'long' }).format(date);
-      const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-      rangeEl.textContent = capitalizeFirst(
-        first.getMonth() === last.getMonth()
-          ? `${first.getDate()}.–${dayMonth(last)}`
-          : `${dayMonth(first)} – ${dayMonth(last)}`
-      );
+      rangeEl.textContent = formatWeekRange(weekDates[0], weekDates[6], this.currentLang);
     }
 
     // Disable "previous week" once we're at (or before) the first available week

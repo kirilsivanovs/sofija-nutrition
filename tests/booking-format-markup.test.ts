@@ -20,10 +20,9 @@ describe('booking format radio markup', () => {
     expect(radioBlocks!.length).toBeGreaterThan(0);
 
     for (const block of radioBlocks!) {
-      const inputTag = block.match(/<input type="radio" name="consultationFormat"[^>]*>/);
-      expect(inputTag).not.toBeNull();
-      expect(inputTag![0].endsWith('>')).toBe(true);
-      expect(block).toContain('<span class="format-label">');
+      expect(block).toMatch(
+        /<input type="radio" name="consultationFormat"[^<>]*>\s*<span class="format-label">/
+      );
     }
   });
 });

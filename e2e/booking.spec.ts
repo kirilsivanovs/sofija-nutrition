@@ -572,3 +572,50 @@ test.describe('Booking Flow', () => {
     }
   });
 });
+
+test.describe('Booking calendar at 375px', () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
+
+  test('keeps the next-week button inside the calendar at 375px', async ({ page }) => {
+    const bookingSection = page.locator('#bookingCalendar');
+    await expect(bookingSection).toBeVisible();
+
+    await page.route('**/api/availability**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          slots: {
+            '2026-10-05': ['09:00', '10:00', '11:00', '14:00', '15:00'],
+            '2026-10-06': ['09:00', '10:00', '11:00'],
+            '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
+          },
+          booked: [],
+          serviceTypes: [],
+        }),
+      });
+    });
+
+    // The calendar already fetched real availability on the initial page load;
+    // reload so this test's mocked response drives the render deterministically.
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    const nextBtn = bookingSection.locator('.week-nav-btn.next');
+    const bookingBody = bookingSection.locator('.booking-body');
+    await expect(nextBtn).toBeVisible();
+
+    const nextBtnBox = await nextBtn.boundingBox();
+    const bookingBodyBox = await bookingBody.boundingBox();
+    expect(nextBtnBox).not.toBeNull();
+    expect(bookingBodyBox).not.toBeNull();
+
+    const nextBtnRightEdge = nextBtnBox!.x + nextBtnBox!.width;
+    const bookingBodyRightEdge = bookingBodyBox!.x + bookingBodyBox!.width;
+    expect(nextBtnRightEdge).toBeLessThanOrEqual(bookingBodyRightEdge + 1);
+  });
+});

@@ -7,12 +7,10 @@ import { describe, it, expect } from '@jest/globals';
 import {
   mondayFirstIndex,
   reorderWeekdaysMondayFirst,
-  getLeadingBlanks,
-  getMonthGridDates,
-  getKeyTargetDate,
   getWeekStart,
   getWeekDates,
   getFirstAvailableWeekStart,
+  formatWeekRange,
 } from '../src/scripts/booking/calendar-grid';
 
 describe('reorderWeekdaysMondayFirst', () => {
@@ -24,82 +22,6 @@ describe('reorderWeekdaysMondayFirst', () => {
   it('maps Monday to the first column when reordering to Monday-first', () => {
     const sundayFirst = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     expect(reorderWeekdaysMondayFirst(sundayFirst)[0]).toBe('Mo');
-  });
-});
-
-describe('getLeadingBlanks', () => {
-  it('returns 0 leading blanks when the month starts on a Monday', () => {
-    // September 2025 starts on a Monday
-    expect(getLeadingBlanks(2025, 8)).toBe(0);
-  });
-
-  it('returns 6 leading blanks when the month starts on a Sunday', () => {
-    // June 2025 starts on a Sunday
-    expect(getLeadingBlanks(2025, 5)).toBe(6);
-  });
-});
-
-describe('getMonthGridDates', () => {
-  it('returns one date per day of the month after the leading blanks', () => {
-    const grid = getMonthGridDates(2025, 8); // September 2025, 30 days
-    const leadingBlanks = grid.filter((d) => d === null).length;
-    const dates = grid.filter((d): d is Date => d !== null);
-    expect(leadingBlanks).toBe(0);
-    expect(dates).toHaveLength(30);
-    expect(dates[0].getDate()).toBe(1);
-    expect(dates[29].getDate()).toBe(30);
-  });
-});
-
-describe('getKeyTargetDate', () => {
-  const wednesday = new Date(2025, 8, 10); // Sept 10, 2025 is a Wednesday
-
-  it('moves one day forward on ArrowRight', () => {
-    const result = getKeyTargetDate(wednesday, 'ArrowRight');
-    expect(result?.getDate()).toBe(11);
-  });
-
-  it('moves one day back on ArrowLeft', () => {
-    const result = getKeyTargetDate(wednesday, 'ArrowLeft');
-    expect(result?.getDate()).toBe(9);
-  });
-
-  it('moves one week forward on ArrowDown', () => {
-    const result = getKeyTargetDate(wednesday, 'ArrowDown');
-    expect(result?.getDate()).toBe(17);
-  });
-
-  it('moves one week back on ArrowUp', () => {
-    const result = getKeyTargetDate(wednesday, 'ArrowUp');
-    expect(result?.getDate()).toBe(3);
-  });
-
-  it('moves to the Monday of the current week on Home', () => {
-    const result = getKeyTargetDate(wednesday, 'Home');
-    expect(result?.getDate()).toBe(8);
-    expect(result?.getDay()).toBe(1);
-  });
-
-  it('moves to the Sunday of the current week on End', () => {
-    const result = getKeyTargetDate(wednesday, 'End');
-    expect(result?.getDate()).toBe(14);
-    expect(result?.getDay()).toBe(0);
-  });
-
-  it('moves to the same day one month earlier on PageUp', () => {
-    const result = getKeyTargetDate(wednesday, 'PageUp');
-    expect(result?.getMonth()).toBe(7);
-    expect(result?.getDate()).toBe(10);
-  });
-
-  it('moves to the same day one month later on PageDown', () => {
-    const result = getKeyTargetDate(wednesday, 'PageDown');
-    expect(result?.getMonth()).toBe(9);
-    expect(result?.getDate()).toBe(10);
-  });
-
-  it('returns null for a key that is not a navigation key', () => {
-    expect(getKeyTargetDate(wednesday, 'Tab')).toBeNull();
   });
 });
 
@@ -132,5 +54,53 @@ describe('getFirstAvailableWeekStart', () => {
     const today = new Date(2026, 8, 27); // 2026-09-27
     const result = getFirstAvailableWeekStart(['2026-01-19', '2026-10-05', '2026-10-01'], today);
     expect(result.getTime()).toEqual(getWeekStart(new Date(2026, 9, 1)).getTime());
+  });
+});
+
+describe('formatWeekRange', () => {
+  const monthNameCount = (label: string, months: string[]) =>
+    months.filter((month) => label.toLowerCase().includes(month.toLowerCase())).length;
+
+  it('names the month once when the week stays in one month', () => {
+    const first = new Date(2026, 9, 5); // 2026-10-05
+    const last = new Date(2026, 9, 11); // 2026-10-11
+
+    const lv = formatWeekRange(first, last, 'lv');
+    expect(monthNameCount(lv, ['oktobris', 'oktobra'])).toBe(1);
+
+    const ru = formatWeekRange(first, last, 'ru');
+    expect(monthNameCount(ru, ['октябр'])).toBe(1);
+
+    const en = formatWeekRange(first, last, 'en');
+    expect(monthNameCount(en, ['October'])).toBe(1);
+    expect(en).not.toMatch(/\d\.\s*[A-Z]/);
+  });
+
+  it('names both months when the week crosses a month', () => {
+    const first = new Date(2026, 8, 28); // 2026-09-28
+    const last = new Date(2026, 9, 4); // 2026-10-04
+
+    const lv = formatWeekRange(first, last, 'lv');
+    expect(monthNameCount(lv, ['septembris', 'septembra'])).toBe(1);
+    expect(monthNameCount(lv, ['oktobris', 'oktobra'])).toBe(1);
+
+    const ru = formatWeekRange(first, last, 'ru');
+    expect(monthNameCount(ru, ['сентябр'])).toBe(1);
+    expect(monthNameCount(ru, ['октябр'])).toBe(1);
+
+    const en = formatWeekRange(first, last, 'en');
+    expect(monthNameCount(en, ['September'])).toBe(1);
+    expect(monthNameCount(en, ['October'])).toBe(1);
+  });
+
+  it('keeps LV and RU month names lowercase', () => {
+    const first = new Date(2026, 9, 5);
+    const last = new Date(2026, 9, 11);
+
+    const lv = formatWeekRange(first, last, 'lv');
+    expect(lv).not.toMatch(/[A-ZĀČĒĢĪĶĻŅŠŪŽ]/);
+
+    const ru = formatWeekRange(first, last, 'ru');
+    expect(ru).not.toMatch(/[А-ЯЁ]/);
   });
 });
