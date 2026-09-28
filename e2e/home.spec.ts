@@ -44,6 +44,23 @@ test('shows the pre-footer CTA heading with JavaScript disabled', async ({ brows
   await context.close();
 });
 
+test('shows the hero title with JavaScript disabled', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('/');
+  const heroTitle = page.locator('#hero-title');
+  await expect(heroTitle).toBeVisible();
+  const { opacity, visibility } = await heroTitle.evaluate((el) => {
+    const style = getComputedStyle(el);
+    return { opacity: style.opacity, visibility: style.visibility };
+  });
+  expect(opacity).toBe('1');
+  expect(visibility).toBe('visible');
+  const text = await heroTitle.textContent();
+  expect(text?.trim()).not.toBe('');
+  await context.close();
+});
+
 test('renders a Phosphor icon without contacting an external CDN', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (r) => requests.push(r.url()));
