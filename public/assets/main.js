@@ -30,14 +30,6 @@
       hero_chart_caption:
         'Ilustratīvi, sintētiski dati, nevis pacientu mērījumi. Diapazons 3,9–7,8 mmol/L.',
 
-      // Trust Bar
-      trust_msc: 'MSc Dietoloģijā',
-      trust_msc_sub: 'Rīgas Stradiņa universitāte (RSU)',
-      trust_phd: 'Doktorante',
-      trust_phd_sub: 'Latvijas Universitāte (LU)',
-      trust_reg: 'Reģistrēta speciāliste',
-      trust_reg_sub: 'ārstniecības personu reģistrs',
-
       // For Whom
       whom_title: 'Konsultācija ir piemērota, ja Jūs',
       whom_1: 'Esat izmēģinājuši vairākas diētas, bet nekas nav palīdzējis ilgtermiņā',
@@ -47,40 +39,6 @@
       whom_5: 'Vēlaties uzlabot gremošanu un zarnu veselību',
       whom_6: 'Meklējat speciālistu, kas balstās uz zinātni, nevis modes tendencēm',
       whom_cta: 'Pieteikties konsultācijai',
-
-      // Services
-      services_tag: 'Pakalpojumi',
-      services_title: 'Kā es varu Jums palīdzēt',
-      services_desc:
-        'Katrs cilvēks ir unikāls — tāpēc mans darbs sākas ar Jūsu stāstu, nevis gatavu shēmu.',
-      srv_1_title: 'Individuāla konsultācija',
-      srv_1_desc:
-        'Sapratīsiet, kas tieši Jūsu uzturā nestrādā un ko mainīt, lai jau pirmajās nedēļās juttu atšķirību. Klātienē vai tiešsaistē, 60 min.',
-      srv_2_title: 'Personalizēts uztura plāns',
-      srv_2_desc:
-        'Saņemsiet konkrētu ēdienkarti, kas garšo, ir reāli iekļaujama Jūsu ikdienā un ņem vērā veselības mērķus. Nevis diēta — bet jauns ēšanas veids.',
-      srv_3_title: 'Metabolā veselība',
-      srv_3_desc:
-        'Stabilizēsiet cukura līmeni, uzlabosiet enerģiju un kontrolēsiet svaru bez galēju ierobežojumu. Īpaši aktuāli ar prediabētu vai insulīna rezistenci.',
-      srv_5_title: 'Zarnu veselība',
-      srv_5_desc:
-        'Atvadīsieties no vēdera uzpūšanās, diskomforta un nestabilas gremošanas. Uztura stratēģija, kas atjauno līdzsvaru zarnu traktā.',
-      srv_6_title: 'Ilgtermiņa atbalsts',
-      srv_6_desc:
-        'Rezultāts saglabājas, jo neesat viena. Follow-up vizītes, plāna korekcijas un atbalsts, kamēr jaunie paradumi kļūst par normu.',
-
-      // What You'll Get (Outcomes)
-      outcomes_tag: 'Rezultāts',
-      outcomes_title: 'Ko Jūs iegūsiet',
-      out_1_title: 'Individuāls uztura plāns',
-      out_1_desc:
-        'Nevis gatava shēma, bet personalizēts plāns, kas ņem vērā Jūsu veselību, garšas preferences un dzīvesveidu.',
-      out_2_title: 'Vairāk enerģijas un skaidrība',
-      out_2_desc:
-        'Pirmās izmaiņas jūtamas jau 2–3 nedēļās: labāks miegs, stabilāka enerģija dienā, skaidrāka domāšana.',
-      out_3_title: 'Ilgtspējīgi rezultāti',
-      out_3_desc:
-        'Bez jojo efekta. Iemācīsieties ēst pareizi sev — lai rezultāti saglabājas gadiem, ne tikai nedēļām.',
 
       // Pricing
       price_consult: 'Konsultācija (60 min)',
@@ -119,7 +77,7 @@
       q2_step4: 'Saņemat personalizētu uztura plānu un vienojamies par nākamo soli.',
       q3_title: 'Cik tas maksā?',
       q3_row1_t: 'Individuāla konsultācija',
-      q3_row1_d: '60 min, klātienē vai tiešsaistē, ar uztura plānu',
+      q3_row1_d: '60 min, ar personalizētu uztura plānu',
       q3_row1_v: 'no 65 €',
       q3_row2_t: 'Atkārtota vizīte',
       q3_row2_d: 'plāna pārskatīšana un korekcijas',
@@ -143,21 +101,10 @@
       q6_title: 'Kā pieteikties?',
 
       // About
-      about_tag: 'Par mani',
       about_lead:
         'Palīdzu cilvēkiem sakārtot uzturu, balstoties uz zinātni un personalizētu pieeju. Aktīvi piedalos pētniecības projektos un praksē izmantoju pierādījumos balstītas metodes.',
       about_text:
         'Mana pieeja apvieno akadēmiskās zināšanas un praktisku pieredzi. Katra konsultācija balstās uz pierādījumiem \u2014 ne modes diētām vai vispārīgiem padomiem. Pētniecībā fokusējos uz uztura lomu diabēta ārstēšanā un profilaksē.',
-      cred_2_title: 'Doktorante',
-      cred_2_loc: 'Latvijas Universitāte',
-      cred_3_title: 'MSc Dietoloģijā',
-      cred_3_loc: 'Rīgas Stradiņa universitāte',
-      clients_count: 'EASD 2025, Vīne',
-      clients_improved: 'starptautiska konference',
-      about_conf_title: 'EASD 2025, Vīne',
-      about_conf_sub: 'starptautiska konference',
-      reg_number_label: 'Reģistrācijas Nr.',
-
       // Science Gallery
       science_title: 'Zinātniskā darbība',
       science_subtitle:
@@ -200,13 +147,7 @@
       why_desc: 'Mana pieeja balstās pētniecībā un individuālos datos.',
 
       // Booking extra
-      booking_flexibility:
-        'Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un tiešsaistē.',
-
-      // Final CTA
-      final_cta_title: 'Gatavi sākt ceļu uz labāku veselību?',
-      final_cta_text: 'Pirmais solis ir vienkāršs — izvēlieties laiku, un es parūpēšos par pārējo.',
-      final_cta_btn: 'Rezervēt konsultāciju',
+      booking_flexibility: 'Pieteikšanās iespējama arī ārpus darba laika.',
 
       // Footer extra
       footer_contact_title: 'Kontakti',
@@ -222,7 +163,7 @@
       booking_subtitle:
         'Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.',
       booking_trust_compact_1: 'Konfidenciāli',
-      booking_trust_compact_2: 'Klātienē vai online',
+      booking_trust_compact_2: 'Elastīgs grafiks',
       booking_trust_compact_3: 'Atbilde 24h',
       booking_note: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
 
@@ -259,14 +200,6 @@
       hero_chart_caption:
         'Иллюстративные, синтетические данные, а не показатели пациентов. Диапазон 3,9–7,8 ммоль/л.',
 
-      // Trust Bar
-      trust_msc: 'MSc Диетология',
-      trust_msc_sub: 'Рижский университет Страдиня (RSU)',
-      trust_phd: 'Докторант',
-      trust_phd_sub: 'Латвийский университет (LU)',
-      trust_reg: 'Зарегистрированный специалист',
-      trust_reg_sub: 'реестр медработников',
-
       // For Whom
       whom_title: 'Консультация подойдёт, если Вы',
       whom_1: 'Перепробовали несколько диет, но ничего не помогло надолго',
@@ -276,40 +209,6 @@
       whom_5: 'Хотите улучшить пищеварение и здоровье кишечника',
       whom_6: 'Ищете специалиста, который опирается на науку, а не модные тренды',
       whom_cta: 'Записаться на консультацию',
-
-      // Services
-      services_tag: 'Услуги',
-      services_title: 'Как я могу Вам помочь',
-      services_desc:
-        'Каждый человек уникален — поэтому моя работа начинается с Вашей истории, а не с готовой схемы.',
-      srv_1_title: 'Индивидуальная консультация',
-      srv_1_desc:
-        'Поймёте, что именно в Вашем питании не работает и что изменить, чтобы уже в первые недели почувствовать разницу. Очно или онлайн, 60 мин.',
-      srv_2_title: 'Персонализированный план питания',
-      srv_2_desc:
-        'Получите конкретное меню, которое вкусное, реально вписывается в Вашу жизнь и учитывает цели здоровья. Не диета — а новый способ питания.',
-      srv_3_title: 'Метаболическое здоровье',
-      srv_3_desc:
-        'Стабилизируете сахар, улучшите энергию и возьмёте вес под контроль без крайних ограничений. Особенно актуально при предиабете или инсулинорезистентности.',
-      srv_5_title: 'Здоровье кишечника',
-      srv_5_desc:
-        'Избавитесь от вздутия, дискомфорта и нестабильного пищеварения. Стратегия питания, которая восстанавливает баланс в ЖКТ.',
-      srv_6_title: 'Долгосрочная поддержка',
-      srv_6_desc:
-        'Результат сохраняется, потому что Вы не одна. Follow-up визиты, корректировки плана и поддержка, пока новые привычки станут нормой.',
-
-      // What You'll Get (Outcomes)
-      outcomes_tag: 'Результат',
-      outcomes_title: 'Что Вы получите',
-      out_1_title: 'Индивидуальный план питания',
-      out_1_desc:
-        'Не готовая схема, а персонализированный план, который учитывает Ваше здоровье, вкусовые предпочтения и образ жизни.',
-      out_2_title: 'Больше энергии и ясность',
-      out_2_desc:
-        'Первые изменения ощутимы уже через 2–3 недели: лучше сон, стабильная энергия в течение дня, ясное мышление.',
-      out_3_title: 'Устойчивые результаты',
-      out_3_desc:
-        'Без эффекта йо-йо. Научитесь питаться правильно для себя — чтобы результат сохранялся годами, а не неделями.',
 
       // Pricing
       price_consult: 'Консультация (60 мин)',
@@ -349,7 +248,7 @@
       q3_title: 'Сколько это стоит?',
       q3_row1_t: 'Индивидуальная консультация',
       // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-      q3_row1_d: '60 мин, очно или онлайн, с планом питания',
+      q3_row1_d: '60 мин, с персонализированным планом питания',
       q3_row1_v: 'от 65 €',
       q3_row2_t: 'Повторный визит',
       // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
@@ -373,21 +272,10 @@
       q6_title: 'Как записаться?',
 
       // About
-      about_tag: 'Обо мне',
       about_lead:
         'Помогаю людям наладить питание на основе науки и персонализированного подхода. Активно участвую в исследовательских проектах и применяю доказательные методы в практике.',
       about_text:
         'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах \u2014 не модных диетах или общих советах. В исследованиях фокусируюсь на роли питания в лечении и профилактике диабета.',
-      cred_2_title: 'Докторант',
-      cred_2_loc: 'Латвийский Университет',
-      cred_3_title: 'MSc в диетологии',
-      cred_3_loc: 'Рижский Университет Страдиня',
-      clients_count: 'EASD 2025, Вена',
-      clients_improved: 'международная конференция',
-      about_conf_title: 'EASD 2025, Вена',
-      about_conf_sub: 'международная конференция',
-      reg_number_label: 'Рег. номер',
-
       // Science Gallery
       science_title: 'Научная деятельность',
       science_subtitle:
@@ -425,13 +313,7 @@
         'Никакой специальной подготовки не нужно. Если у Вас есть недавние анализы (биохимия крови, сахар, липиды) — возьмите с собой. Если нет — начнём с того, что есть, и спланируем остальное вместе.',
 
       // Booking extra
-      booking_flexibility:
-        'Запись возможна и вне рабочего времени. Консультации доступны очно в Риге и онлайн.',
-
-      // Final CTA
-      final_cta_title: 'Готовы начать путь к лучшему здоровью?',
-      final_cta_text: 'Первый шаг прост — выберите время, а я позабочусь об остальном.',
-      final_cta_btn: 'Записаться на консультацию',
+      booking_flexibility: 'Запись возможна и вне рабочего времени.',
 
       // Footer extra
       footer_contact_title: 'Контакты',
@@ -447,7 +329,7 @@
       booking_subtitle:
         'Выберите удобную дату и время. Доступность обновляется в реальном времени.',
       booking_trust_compact_1: 'Конфиденциально',
-      booking_trust_compact_2: 'Очно или онлайн',
+      booking_trust_compact_2: 'Гибкий график',
       booking_trust_compact_3: 'Ответ за 24ч',
       booking_note: 'После записи вы получите подтверждение по email.',
 
@@ -483,14 +365,6 @@
       // copy pending from Sofija: 7.8 caption wording
       hero_chart_caption: 'Illustrative, synthetic data, not patient measurements. Range 3.9–7.8 mmol/L.',
 
-      // Trust Bar
-      trust_msc: 'MSc Dietetics',
-      trust_msc_sub: 'Rīga Stradiņš University (RSU)',
-      trust_phd: 'Doctoral Student',
-      trust_phd_sub: 'University of Latvia (UL)',
-      trust_reg: 'Registered specialist',
-      trust_reg_sub: 'medical practitioners registry',
-
       // For Whom
       whom_title: 'A consultation is right for You if',
       whom_1: "You've tried several diets but nothing worked long-term",
@@ -500,40 +374,6 @@
       whom_5: 'You want to improve digestion and gut health',
       whom_6: "You're looking for a specialist who relies on science, not trends",
       whom_cta: 'Book a consultation',
-
-      // Services
-      services_tag: 'Services',
-      services_title: 'How I can help You',
-      services_desc:
-        "Every person is unique — that's why my work begins with your story, not a ready-made template.",
-      srv_1_title: 'Individual consultation',
-      srv_1_desc:
-        "Understand exactly what in your nutrition isn't working and what to change to feel the difference within weeks. In-person or online, 60 min.",
-      srv_2_title: 'Personalized meal plan',
-      srv_2_desc:
-        "Get a concrete meal plan that's delicious, realistically fits your life, and takes health goals into account. Not a diet — a new way of eating.",
-      srv_3_title: 'Metabolic health',
-      srv_3_desc:
-        'Stabilize blood sugar, boost energy, and take control of weight without extreme restrictions. Especially relevant for prediabetes or insulin resistance.',
-      srv_5_title: 'Gut health',
-      srv_5_desc:
-        'Say goodbye to bloating, discomfort, and unstable digestion. A nutrition strategy that restores balance in the GI tract.',
-      srv_6_title: 'Long-term support',
-      srv_6_desc:
-        "Results last because you're not alone. Follow-up visits, plan adjustments, and support until new habits become the norm.",
-
-      // What You'll Get (Outcomes)
-      outcomes_tag: 'Results',
-      outcomes_title: "What You'll get",
-      out_1_title: 'Individual nutrition plan',
-      out_1_desc:
-        'Not a generic template, but a personalized plan that considers your health, taste preferences, and lifestyle.',
-      out_2_title: 'More energy and clarity',
-      out_2_desc:
-        'First changes felt within 2–3 weeks: better sleep, stable energy throughout the day, clearer thinking.',
-      out_3_title: 'Sustainable results',
-      out_3_desc:
-        'No yo-yo effect. Learn to eat right for yourself — so results last years, not just weeks.',
 
       // Pricing
       price_consult: 'Consultation (60 min)',
@@ -572,7 +412,7 @@
       q3_title: 'How much does it cost?',
       q3_row1_t: 'Individual consultation',
       // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-      q3_row1_d: '60 min, in person or online, with a nutrition plan',
+      q3_row1_d: '60 min, with a personalized nutrition plan',
       q3_row1_v: 'from €65',
       q3_row2_t: 'Follow-up visit',
       // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
@@ -596,21 +436,10 @@
       q6_title: 'How do I book?',
 
       // About
-      about_tag: 'About Me',
       about_lead:
         'I help people improve nutrition through a science-based and personalized approach. I actively participate in research projects and apply evidence-based methods in practice.',
       about_text:
         'My approach combines academic knowledge and practical experience. Every consultation is evidence-based \u2014 not trendy diets or generic advice. My research focuses on the role of nutrition in diabetes treatment and prevention.',
-      cred_2_title: 'Doctoral Student',
-      cred_2_loc: 'University of Latvia',
-      cred_3_title: 'MSc in Dietetics',
-      cred_3_loc: 'Rīga Stradiņš University',
-      clients_count: 'EASD 2025, Vienna',
-      clients_improved: 'international conference',
-      about_conf_title: 'EASD 2025, Vienna',
-      about_conf_sub: 'international conference',
-      reg_number_label: 'Registration No.',
-
       // Science Gallery
       science_title: 'Scientific Activity',
       science_subtitle:
@@ -648,13 +477,7 @@
         "No special preparation needed. If you have recent lab results (blood biochemistry, sugar, lipids) — bring them along. If not — we'll start with what's available and plan the rest together.",
 
       // Booking extra
-      booking_flexibility:
-        'Booking available outside working hours as well. Consultations available in-person in Riga and online.',
-
-      // Final CTA
-      final_cta_title: 'Ready to start your journey to better health?',
-      final_cta_text: "The first step is simple — choose a time, and I'll take care of the rest.",
-      final_cta_btn: 'Book a consultation',
+      booking_flexibility: 'Booking available outside working hours as well.',
 
       // Footer extra
       footer_contact_title: 'Contact',
@@ -669,7 +492,7 @@
       booking_title: 'Book a Consultation',
       booking_subtitle: 'Choose a convenient date and time. Availability is updated in real time.',
       booking_trust_compact_1: 'Confidential',
-      booking_trust_compact_2: 'In-person or online',
+      booking_trust_compact_2: 'Flexible scheduling',
       booking_trust_compact_3: 'Reply within 24h',
       booking_note: 'You will receive an email confirmation after booking.',
 

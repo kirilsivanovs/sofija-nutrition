@@ -38,7 +38,9 @@ test('shows the pre-footer CTA heading with JavaScript disabled', async ({ brows
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /labāku veselību/i })).toBeVisible();
+  // Old final-CTA band is retired (SN-015.2); question 6's "Kā pieteikties?"
+  // is now the heading closest to the footer that needs no JS to render.
+  await expect(page.getByRole('heading', { name: /Kā pieteikties/i })).toBeVisible();
   await context.close();
 });
 
