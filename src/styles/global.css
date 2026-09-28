@@ -97,7 +97,6 @@ button,
 :focus-visible {
   outline: 3px solid var(--color-graphite);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 :focus:not(:focus-visible) {
@@ -163,8 +162,7 @@ button,
   font-size: 0.875rem;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+    color 0.2s ease;
 }
 
 .btn-chip:hover {
@@ -204,19 +202,19 @@ input[type='radio'] {
 
 /* Typography - responsive and readable */
 h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem); /* 32px - 56px */
+  font-size: clamp(2.125rem, 1.8rem + 1.35vw, 2.875rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem); /* 28px - 40px */
+  font-size: clamp(1.5rem, 1.35rem + 0.66vw, 1.875rem);
   line-height: 1.2;
   letter-spacing: -0.015em;
 }
 
 h3 {
-  font-size: clamp(1.5rem, 3vw, 2rem); /* 24px - 32px */
+  font-size: clamp(1.125rem, 1.07rem + 0.22vw, 1.25rem);
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
@@ -224,16 +222,27 @@ h3 {
 /* Font-weight only, layered so Tailwind utility classes (e.g. font-normal) can override it
    without affecting the always-winning size/line-height/letter-spacing rules above. */
 @layer base {
-  h1,
-  h2,
+  h1 {
+    font-weight: 300;
+  }
+
+  h2 {
+    font-weight: 400;
+  }
+
   h3 {
+    font-weight: 600;
+  }
+
+  h1 strong,
+  h1 b {
     font-weight: 600;
   }
 }
 
 p {
-  font-size: clamp(1rem, 2vw, 1.125rem); /* 16px - 18px */
-  line-height: 1.7;
+  font-size: clamp(1.0625rem, 1.035rem + 0.11vw, 1.125rem);
+  line-height: 1.6;
 }
 
 /* iOS Safari link detection fix */
