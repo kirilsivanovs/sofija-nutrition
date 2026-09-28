@@ -40,4 +40,66 @@ describe('landing i18n dictionary', () => {
       expect(keys.includes('footer_cookie_settings')).toBe(false);
     }
   });
+
+  it('uses one certified-title term across header, footer, credentials, meta and JSON-LD, per locale', () => {
+    const title = {
+      lv: 'Sertificēta uztura speciāliste, pētniece, doktorante',
+      ru: 'Сертифицированный специалист по питанию, исследователь, докторантка',
+      en: 'Certified nutrition specialist, researcher, doctoral candidate',
+    };
+    const retired = { lv: /dietoloģ/i, ru: /диетолог/i, en: /nutritionist/i };
+    const keys = [
+      'header_specialty',
+      'footer_subtitle',
+      'q4_cred',
+      'meta_title',
+      'meta_description',
+      'jsonld_business_description',
+      'jsonld_person_jobtitle',
+      'jsonld_person_description',
+      'jsonld_webpage_description',
+    ];
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      keys.forEach((k) => expect(translations[l][k as keyof typeof translations['lv']]).toContain(title[l]));
+      Object.values(translations[l]).forEach((v) => expect(retired[l].test(v)).toBe(false));
+    });
+  });
+
+  it('states "60 min" only in hero_fact and the price table, once each, per locale', () => {
+    const pattern = /\b60[\s-]?(min|minūtes|minūšu|минут|мин)/i;
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      const matches = Object.entries(translations[l])
+        .filter(([, v]) => pattern.test(v))
+        .map(([k]) => k)
+        .sort();
+      // jsonld_offer_description already stated "60 min"/equivalent before this task and is out of its scope
+      expect(matches).toEqual(['hero_fact', 'jsonld_offer_description', 'q3_row1_d']);
+    });
+  });
+
+  it('drops the filler opener from q1_intro across locales', () => {
+    expect(translations.lv.q1_intro).not.toContain('Visiem');
+    expect(translations.ru.q1_intro).not.toContain('Всем');
+    expect(translations.en.q1_intro).not.toContain('For anyone');
+  });
+
+  it('keeps Q5 to q5_p1 alone, with q5_p2 removed', () => {
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      expect('q5_p2' in translations[l]).toBe(false);
+      expect(translations[l].q5_p1.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('removes diabetes-prevention as a stated topic from meta and JSON-LD, per locale', () => {
+    const retiredTopic = { lv: 'diabēta profilakse', ru: 'профилактика диабета', en: 'diabetes prevention' };
+    const topicKeys = [
+      'meta_description',
+      'jsonld_business_description',
+      'jsonld_website_description',
+      'jsonld_webpage_description',
+    ] as const;
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      topicKeys.forEach((k) => expect(translations[l][k].toLowerCase()).not.toContain(retiredTopic[l]));
+    });
+  });
 });

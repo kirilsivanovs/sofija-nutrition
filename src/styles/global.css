@@ -704,6 +704,7 @@ i.ph {
 .site-footer__brand {
   display: flex;
   flex-direction: column;
+  flex-basis: 100%;
   gap: 2px;
   margin-right: auto;
 }

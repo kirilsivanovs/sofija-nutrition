@@ -76,7 +76,6 @@ export interface LandingDict {
   q4_cred: string;
   q5_title: string;
   q5_p1: string;
-  q5_p2: string;
   q6_title: string;
   booking_noscript: string;
 
@@ -102,7 +101,7 @@ export interface LandingDict {
 
 export const translations: Record<Locale, LandingDict> = {
   lv: {
-    header_specialty: 'uztura speciāliste, Rīga',
+    header_specialty: 'Sertificēta uztura speciāliste, pētniece, doktorante, Rīga',
     nav_services: 'Konsultācija',
     nav_about: 'Par mani',
     nav_price: 'Cenas',
@@ -138,8 +137,7 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_6: 'Kā pieteikties?',
     qindex_cta: 'Pieteikties',
     q1_title: 'Vai konsultācija ir piemērota man?',
-    q1_intro:
-      'Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā. Visbiežāk pie manis nāk ar šiem jautājumiem:',
+    q1_intro: 'Visbiežāk pie manis nāk ar šiem jautājumiem:',
     q1_row1_t: 'Metabolā veselība',
     q1_row1_d:
       'Prediabēts, insulīna rezistence, paaugstināts cukurs. Mērķis ir stabilāks glikozes līmenis un enerģija dienas laikā.',
@@ -156,8 +154,7 @@ export const translations: Record<Locale, LandingDict> = {
     q2_step1: 'Izvēlaties laiku kalendārā un saņemat apstiprinājumu e-pastā.',
     q2_step2:
       'Ja ir nesenas analīzes (bioķīmija, glikoze, lipīdi), paņemat tās līdzi. Ja nav, sāksim ar to, kas ir.',
-    q2_step3:
-      '60 minūšu saruna klātienē Rīgā vai video tiešsaistē par Jūsu ikdienu, ēšanu un mērķiem.',
+    q2_step3: 'Sarunā izrunājam Jūsu ikdienu, ēšanu un mērķus.',
     q2_step4: 'Saņemat personalizētu uztura plānu un vienojamies par nākamo soli.',
     q3_title: 'Cik tas maksā?',
     q3_row1_t: 'Individuāla konsultācija',
@@ -181,42 +178,40 @@ export const translations: Record<Locale, LandingDict> = {
     q4_talk2_text: '„Uztura loma slimību profilaksē”, Veselībpratības diena, P. Stradiņa KUS',
     q4_talk3_label: 'Stends',
     q4_talk3_text: 'Zinātnieku nakts',
-    // title wording ("sertificēta dietoloģe" vs "uztura speciāliste") pending Sofija
     q4_cred:
-      'Mg.sc.sal., Rīgas Stradiņa universitāte · Doktorantūra, Latvijas Universitāte · Ārstniecības personu reģistrs Nr. 75650061277',
+      'Sertificēta uztura speciāliste, pētniece, doktorante · Mg.sc.sal., Rīgas Stradiņa universitāte · Doktorantūra, Latvijas Universitāte · Ārstniecības personu reģistrs Nr. 75650061277',
     q5_title: 'Ar ko šī pieeja atšķiras?',
     q5_p1:
       'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas: katrs ieteikums ir pielāgots tieši Jūsu situācijai, analīzēm un ikdienai.',
-    q5_p2:
-      'Grafiks lapas augšā parāda iemeslu: viens un tas pats ēdiens dažādiem cilvēkiem iedarbojas atšķirīgi.',
     q6_title: 'Kā pieteikties?',
     booking_noscript:
       'Kalendāram nepieciešams JavaScript. Lūdzu, pieteikšanās rakstiet uz info@sofijaivanova.lv',
 
-    footer_subtitle: 'uztura speciāliste, Rīga',
+    footer_subtitle: 'Sertificēta uztura speciāliste, pētniece, doktorante, Rīga',
     footer_terms: 'Pakalpojumu noteikumi',
     footer_privacy: 'Privātuma politika',
 
     scrolltop_label: 'Atgriezties uz augšu',
 
-    meta_title: 'Dietoloģe Rīgā — Sofija Ivanova | Personalizētas Uztura Konsultācijas',
+    meta_title:
+      'Sertificēta uztura speciāliste, pētniece, doktorante Rīgā — Sofija Ivanova | Personalizētas Uztura Konsultācijas',
     meta_description:
-      'Sertificēta dietoloģe Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Diabēta profilakse, personalizēts uztura plāns, metabolā veselība. MSc uzturzinātnē, doktorante LU.',
+      'Sertificēta uztura speciāliste, pētniece, doktorante Rīgā. Individuālas uztura konsultācijas klātienē un tiešsaistē. Personalizēts uztura plāns, metabolā veselība.',
     jsonld_business_description:
-      'Sertificēta dietoloģe Rīgā. Personalizētas uztura konsultācijas, diabēta profilakse, metabolā veselība. Doktorante Latvijas Universitātē, pētniece.',
+      'Sertificēta uztura speciāliste, pētniece, doktorante Rīgā. Personalizētas uztura konsultācijas, metabolā veselība.',
     jsonld_offer_description: '60 min personalizēta uztura konsultācija klātienē vai tiešsaistē',
-    jsonld_person_jobtitle: 'Sertificēta dietoloģe, doktorante',
+    jsonld_person_jobtitle: 'Sertificēta uztura speciāliste, pētniece, doktorante',
     jsonld_person_description:
-      'Sertificēta dietoloģe (MSc Uzturzinātnē, RSU), doktorante Latvijas Universitātē. Pētniecība — uztura loma diabēta ārstēšanā un profilaksē, personalizēts uzturs.',
+      'Sertificēta uztura speciāliste, pētniece, doktorante (Mg.sc.sal., RSU). Pētniecība — uztura loma diabēta ārstēšanā un profilaksē, personalizēts uzturs.',
     jsonld_website_description:
-      'Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Diabēta profilakse, metabolā veselība, zarnu veselība.',
+      'Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Metabolā veselība, zarnu veselība.',
     jsonld_webpage_description:
-      'Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas, diabēta profilakse, metabolā veselība.',
+      'Sertificēta uztura speciāliste, pētniece, doktorante Rīgā. Individuālas uztura konsultācijas, metabolā veselība.',
     jsonld_breadcrumb_home: 'Sākums',
   },
   ru: {
     // proposed copy, pending Sofija's confirmation
-    header_specialty: 'специалист по питанию, Рига',
+    header_specialty: 'Сертифицированный специалист по питанию, исследователь, докторантка, Рига',
     nav_services: 'Консультация',
     nav_about: 'Обо мне',
     nav_price: 'Цены',
@@ -254,8 +249,7 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_6: 'Как записаться?',
     qindex_cta: 'Записаться',
     q1_title: 'Подходит ли мне консультация?',
-    q1_intro:
-      'Всем, кто хочет наладить питание научно обоснованным способом. Чаще всего ко мне обращаются с такими вопросами:',
+    q1_intro: 'Чаще всего ко мне обращаются с такими вопросами:',
     q1_row1_t: 'Метаболическое здоровье',
     q1_row1_d:
       'Предиабет, инсулинорезистентность, повышенный сахар. Цель — стабильный уровень глюкозы и энергия в течение дня.',
@@ -271,8 +265,7 @@ export const translations: Record<Locale, LandingDict> = {
     q2_step1: 'Выбираете время в календаре и получаете подтверждение по email.',
     q2_step2:
       'Если есть недавние анализы (биохимия, глюкоза, липиды), берёте их с собой. Если нет, начнём с того, что есть.',
-    q2_step3:
-      '60-минутный разговор очно в Риге или по видео онлайн о Вашем образе жизни, питании и целях.',
+    q2_step3: 'В разговоре обсуждаем Ваш образ жизни, питание и цели.',
     q2_step4: 'Получаете персонализированный план питания, договариваемся о следующем шаге.',
     q3_title: 'Сколько это стоит?',
     q3_row1_t: 'Индивидуальная консультация',
@@ -301,17 +294,15 @@ export const translations: Record<Locale, LandingDict> = {
     q4_talk3_label: 'Стенд',
     q4_talk3_text: 'Ночь учёных',
     q4_cred:
-      'Mg.sc.sal., Рижский университет Страдиня · Докторантура, Латвийский университет · Реестр медработников № 75650061277',
+      'Сертифицированный специалист по питанию, исследователь, докторантка · Mg.sc.sal., Рижский университет Страдиня · Докторантура, Латвийский университет · Реестр медработников № 75650061277',
     q5_title: 'Чем отличается этот подход?',
     q5_p1:
       'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет: каждая рекомендация адаптирована к Вашей ситуации, анализам и повседневной жизни.',
-    q5_p2:
-      'График вверху страницы показывает почему: одна и та же еда действует по-разному на разных людей.',
     q6_title: 'Как записаться?',
     booking_noscript:
       'Для календаря нужен JavaScript. Чтобы записаться, напишите на info@sofijaivanova.lv',
 
-    footer_subtitle: 'специалист по питанию, Рига',
+    footer_subtitle: 'Сертифицированный специалист по питанию, исследователь, докторантка, Рига',
     footer_terms: 'Условия оказания услуг',
     footer_privacy: 'Политика конфиденциальности',
 
@@ -319,32 +310,33 @@ export const translations: Record<Locale, LandingDict> = {
     scrolltop_label: 'Вернуться наверх',
 
     // copy pending from Sofija: faithful translation of the LV meta title
-    meta_title: 'Диетолог в Риге — Sofija Ivanova | Персонализированные консультации по питанию',
+    meta_title:
+      'Сертифицированный специалист по питанию, исследователь, докторантка в Риге — Sofija Ivanova | Персонализированные консультации по питанию',
     // copy pending from Sofija: faithful translation of the LV meta description
     meta_description:
-      'Сертифицированный диетолог в Риге. Индивидуальные консультации по питанию очно и онлайн. Профилактика диабета, персонализированный план питания, метаболическое здоровье. MSc в области нутрициологии, докторантура ЛУ.',
+      'Сертифицированный специалист по питанию, исследователь, докторантка в Риге. Индивидуальные консультации по питанию очно и онлайн. Персонализированный план питания, метаболическое здоровье.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD description
     jsonld_business_description:
-      'Сертифицированный диетолог в Риге. Персонализированные консультации по питанию, профилактика диабета, метаболическое здоровье. Докторантка Латвийского университета, исследователь.',
+      'Сертифицированный специалист по питанию, исследователь, докторантка в Риге. Персонализированные консультации по питанию, метаболическое здоровье.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD offer description
     jsonld_offer_description: '60-минутная персонализированная консультация по питанию очно или онлайн',
     // copy pending from Sofija: faithful translation of the LV JSON-LD job title
-    jsonld_person_jobtitle: 'Сертифицированный диетолог, докторантка',
+    jsonld_person_jobtitle: 'Сертифицированный специалист по питанию, исследователь, докторантка',
     // copy pending from Sofija: faithful translation of the LV JSON-LD person description
     jsonld_person_description:
-      'Сертифицированный диетолог (MSc в области нутрициологии, RSU), докторантка Латвийского университета. Исследования — роль питания в лечении и профилактике диабета, персонализированное питание.',
+      'Сертифицированный специалист по питанию, исследователь, докторантка (Mg.sc.sal., RSU). Исследования — роль питания в лечении и профилактике диабета, персонализированное питание.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD website description
     jsonld_website_description:
-      'Персонализированные консультации по питанию в Риге и онлайн. Профилактика диабета, метаболическое здоровье, здоровье кишечника.',
+      'Персонализированные консультации по питанию в Риге и онлайн. Метаболическое здоровье, здоровье кишечника.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD webpage description
     jsonld_webpage_description:
-      'Сертифицированный специалист по питанию в Риге. Индивидуальные консультации по питанию, профилактика диабета, метаболическое здоровье.',
+      'Сертифицированный специалист по питанию, исследователь, докторантка в Риге. Индивидуальные консультации по питанию, метаболическое здоровье.',
     // copy pending from Sofija: faithful translation of the LV breadcrumb label
     jsonld_breadcrumb_home: 'Главная',
   },
   en: {
     // proposed copy, pending Sofija's confirmation
-    header_specialty: 'nutrition specialist, Riga',
+    header_specialty: 'Certified nutrition specialist, researcher, doctoral candidate, Riga',
     nav_services: 'Consultation',
     nav_about: 'About',
     nav_price: 'Pricing',
@@ -382,8 +374,7 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_6: 'How do I book?',
     qindex_cta: 'Book now',
     q1_title: 'Is this consultation right for me?',
-    q1_intro:
-      'For anyone who wants to sort out their nutrition in a scientifically grounded way. Most often I hear these questions:',
+    q1_intro: 'Most often I hear these questions:',
     q1_row1_t: 'Metabolic health',
     q1_row1_d:
       'Prediabetes, insulin resistance, elevated blood sugar. The goal is a more stable glucose level and energy throughout the day.',
@@ -398,8 +389,7 @@ export const translations: Record<Locale, LandingDict> = {
     q2_step1: 'You choose a time in the calendar and get an email confirmation.',
     q2_step2:
       'If you have recent test results (biochemistry, glucose, lipids), bring them along. If not, we start with what you have.',
-    q2_step3:
-      'A 60-minute conversation, in person in Riga or by video online, about your daily life, eating and goals.',
+    q2_step3: 'In the conversation, we discuss your daily life, eating and goals.',
     q2_step4: 'You receive a personalized nutrition plan and agree on the next step.',
     q3_title: 'How much does it cost?',
     q3_row1_t: 'Individual consultation',
@@ -427,15 +417,14 @@ export const translations: Record<Locale, LandingDict> = {
     q4_talk3_label: 'Stand',
     q4_talk3_text: 'Researchers’ Night',
     q4_cred:
-      'Mg.sc.sal., Riga Stradins University · Doctoral studies, University of Latvia · Medical Persons Register No. 75650061277',
+      'Certified nutrition specialist, researcher, doctoral candidate · Mg.sc.sal., Riga Stradins University · Doctoral studies, University of Latvia · Medical Persons Register No. 75650061277',
     q5_title: 'How is this approach different?',
     q5_p1:
       'My approach is based on research and individual data. I do not prescribe generic diets: every recommendation is tailored to your situation, test results and daily life.',
-    q5_p2: 'The chart at the top of the page shows why: the same food affects different people differently.',
     q6_title: 'How do I book?',
     booking_noscript: 'The calendar needs JavaScript. To book, please email info@sofijaivanova.lv',
 
-    footer_subtitle: 'nutrition specialist, Riga',
+    footer_subtitle: 'Certified nutrition specialist, researcher, doctoral candidate, Riga',
     footer_terms: 'Terms of Service',
     footer_privacy: 'Privacy Policy',
 
@@ -443,26 +432,27 @@ export const translations: Record<Locale, LandingDict> = {
     scrolltop_label: 'Back to top',
 
     // copy pending from Sofija: faithful translation of the LV meta title
-    meta_title: 'Nutritionist in Riga — Sofija Ivanova | Personalized Nutrition Consultations',
+    meta_title:
+      'Certified nutrition specialist, researcher, doctoral candidate in Riga — Sofija Ivanova | Personalized Nutrition Consultations',
     // copy pending from Sofija: faithful translation of the LV meta description
     meta_description:
-      'Certified nutritionist in Riga. Individual nutrition consultations in person and online. Diabetes prevention, personalized nutrition plan, metabolic health. MSc in Nutrition Science, doctoral candidate at the University of Latvia.',
+      'Certified nutrition specialist, researcher, doctoral candidate in Riga. Individual nutrition consultations in person and online. Personalized nutrition plan, metabolic health.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD description
     jsonld_business_description:
-      'Certified nutritionist in Riga. Personalized nutrition consultations, diabetes prevention, metabolic health. Doctoral candidate at the University of Latvia, researcher.',
+      'Certified nutrition specialist, researcher, doctoral candidate in Riga. Personalized nutrition consultations, metabolic health.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD offer description
     jsonld_offer_description: '60-minute personalized nutrition consultation, in person or online',
     // copy pending from Sofija: faithful translation of the LV JSON-LD job title
-    jsonld_person_jobtitle: 'Certified nutritionist, doctoral candidate',
+    jsonld_person_jobtitle: 'Certified nutrition specialist, researcher, doctoral candidate',
     // copy pending from Sofija: faithful translation of the LV JSON-LD person description
     jsonld_person_description:
-      'Certified nutritionist (MSc in Nutrition Science, RSU), doctoral candidate at the University of Latvia. Research — the role of nutrition in diabetes treatment and prevention, personalized nutrition.',
+      'Certified nutrition specialist, researcher, doctoral candidate (Mg.sc.sal., RSU). Research — the role of nutrition in diabetes treatment and prevention, personalized nutrition.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD website description
     jsonld_website_description:
-      'Personalized nutrition consultations in Riga and online. Diabetes prevention, metabolic health, gut health.',
+      'Personalized nutrition consultations in Riga and online. Metabolic health, gut health.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD webpage description
     jsonld_webpage_description:
-      'Certified nutrition specialist in Riga. Individual nutrition consultations, diabetes prevention, metabolic health.',
+      'Certified nutrition specialist, researcher, doctoral candidate in Riga. Individual nutrition consultations, metabolic health.',
     // copy pending from Sofija: faithful translation of the LV breadcrumb label
     jsonld_breadcrumb_home: 'Home',
   },
