@@ -136,3 +136,29 @@ describe('landing colour roles', () => {
     expect(footerMarkup).toMatch(/nav_cabinet/);
   });
 });
+
+describe('landing decorative markers', () => {
+  it('removes the hero eyebrow and floating credential pill', () => {
+    expect(indexAstro).not.toMatch(/hero__eyebrow|hero__credential/);
+    expect(bookingCss).not.toMatch(/hero__eyebrow|hero__credential/);
+  });
+
+  it('removes the eyebrow tag above every section heading', () => {
+    expect(indexAstro).not.toMatch(/services_tag|outcomes_tag|about_tag|faq_tag/);
+  });
+
+  it('removes the arrow marker from the for-whom items', () => {
+    expect(indexAstro).not.toMatch(/whom-icon/);
+    expect(globalCss).not.toMatch(/\.whom-icon\s*{/);
+  });
+
+  it('collapses the booking trust chips into one text line with no divider or icon', () => {
+    expect(indexAstro).not.toMatch(/booking-trust-item|booking-trust-divider/);
+    expect(bookingCss).not.toMatch(/booking-trust-item|booking-trust-divider/);
+  });
+
+  it('removes the mobile-menu and footer gold lines', () => {
+    expect(globalCss).not.toMatch(/Subtle decorative gold line/);
+    expect(indexAstro).not.toMatch(/bg-secondary\/60/);
+  });
+});
