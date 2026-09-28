@@ -5,6 +5,7 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 import '../styles/booking.css';
 import '../styles/chart.css';
 import '../styles/question-body.css';
+import '../styles/cookie-consent.css';
 ---
 
 <Layout
@@ -348,6 +349,85 @@ import '../styles/question-body.css';
     </div>
   </footer>
 </main>
+
+<!-- Cookie consent dialog: native <dialog>, focus/Escape/restore handled by
+     showModal()/close() (same pattern as the booking success dialog). -->
+<dialog
+  id="cookie-consent-dialog"
+  class="cookie-dialog"
+  aria-labelledby="cookieTitle"
+  aria-describedby="cookieIntro"
+  tabindex="-1"
+  autofocus
+>
+  <h2 id="cookieTitle" data-i18n="cookie_title">Sīkdatņu izmantošana</h2>
+  <p id="cookieIntro" data-i18n="cookie_intro">
+    Mēs izmantojam sīkdatnes, lai uzlabotu jūsu pieredzi mūsu vietnē. Jūs varat izvēlēties, kuras
+    sīkdatnes pieņemt.
+  </p>
+  <a class="cookie-dialog__privacy-link" href="/privacy-policy" data-i18n="footer_privacy"
+    >Privātuma politika</a
+  >
+
+  <div class="cookie-dialog__categories">
+    <div class="cookie-dialog__row">
+      <input
+        type="checkbox"
+        id="consent-necessary"
+        checked
+        disabled
+        aria-describedby="consent-necessary-desc"
+      />
+      <label for="consent-necessary" data-i18n="cookie_necessary_label">Nepieciešamās sīkdatnes</label>
+      <p id="consent-necessary-desc" data-i18n="cookie_necessary_desc">
+        Šīs sīkdatnes ir nepieciešamas vietnes darbībai un nevar tikt atspējotas.
+      </p>
+    </div>
+
+    <div class="cookie-dialog__row">
+      <input type="checkbox" id="consent-analytics" aria-describedby="consent-analytics-desc" />
+      <label for="consent-analytics" data-i18n="cookie_analytics_label">Analītikas sīkdatnes</label>
+      <p id="consent-analytics-desc" data-i18n="cookie_analytics_desc">
+        Palīdz mums saprast, kā apmeklētāji izmanto vietni, lai to uzlabotu.
+      </p>
+    </div>
+
+    <div class="cookie-dialog__row">
+      <input type="checkbox" id="consent-marketing" aria-describedby="consent-marketing-desc" />
+      <label for="consent-marketing" data-i18n="cookie_marketing_label">Mārketinga sīkdatnes</label>
+      <p id="consent-marketing-desc" data-i18n="cookie_marketing_desc">
+        Izmanto, lai rādītu personalizētus piedāvājumus un reklāmas.
+      </p>
+    </div>
+  </div>
+
+  <div class="cookie-dialog__actions">
+    <button
+      type="button"
+      id="consent-reject-all"
+      class="cookie-dialog__btn"
+      data-i18n="cookie_reject"
+    >
+      Noraidīt visu
+    </button>
+    <button
+      type="button"
+      id="consent-accept-all"
+      class="cookie-dialog__btn"
+      data-i18n="cookie_accept"
+    >
+      Pieņemt visu
+    </button>
+    <button
+      type="button"
+      id="consent-accept-selected"
+      class="cookie-dialog__btn"
+      data-i18n="cookie_save"
+    >
+      Saglabāt izvēli
+    </button>
+  </div>
+</dialog>
 
 <!-- GDPR Cookie Consent (TypeScript) -->
 <script>

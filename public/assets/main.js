@@ -151,6 +151,21 @@
       footer_privacy: 'Privātuma politika',
       footer_cookie_settings: 'Sīkdatņu iestatījumi',
       nav_cabinet: 'Pacienta kabinets',
+      // Cookie consent dialog
+      cookie_title: 'Sīkdatņu izmantošana',
+      cookie_intro:
+        'Mēs izmantojam sīkdatnes, lai uzlabotu jūsu pieredzi mūsu vietnē. Jūs varat izvēlēties, kuras sīkdatnes pieņemt.',
+      cookie_necessary_label: 'Nepieciešamās sīkdatnes',
+      cookie_necessary_desc:
+        'Šīs sīkdatnes ir nepieciešamas vietnes darbībai un nevar tikt atspējotas.',
+      cookie_analytics_label: 'Analītikas sīkdatnes',
+      cookie_analytics_desc:
+        'Palīdz mums saprast, kā apmeklētāji izmanto vietni, lai to uzlabotu.',
+      cookie_marketing_label: 'Mārketinga sīkdatnes',
+      cookie_marketing_desc: 'Izmanto, lai rādītu personalizētus piedāvājumus un reklāmas.',
+      cookie_reject: 'Noraidīt visu',
+      cookie_accept: 'Pieņemt visu',
+      cookie_save: 'Saglabāt izvēli',
       // Booking
       contact_tag: 'Kontakti',
       booking_eyebrow: 'Individuāla konsultācija',
@@ -308,6 +323,21 @@
       footer_privacy: 'Политика конфиденциальности',
       footer_cookie_settings: 'Настройки cookie',
       nav_cabinet: 'Кабинет пациента',
+      // Cookie consent dialog
+      cookie_title: 'Использование файлов cookie',
+      cookie_intro:
+        'Мы используем файлы cookie, чтобы улучшить ваш опыт на нашем сайте. Вы можете выбрать, какие файлы cookie принять.',
+      cookie_necessary_label: 'Необходимые файлы cookie',
+      cookie_necessary_desc:
+        'Эти файлы cookie необходимы для работы сайта и не могут быть отключены.',
+      cookie_analytics_label: 'Аналитические файлы cookie',
+      cookie_analytics_desc:
+        'Помогают нам понять, как посетители используют сайт, чтобы его улучшить.',
+      cookie_marketing_label: 'Маркетинговые файлы cookie',
+      cookie_marketing_desc: 'Используются для показа персонализированных предложений и рекламы.',
+      cookie_reject: 'Отклонить всё',
+      cookie_accept: 'Принять всё',
+      cookie_save: 'Сохранить выбор',
       // Booking
       contact_tag: 'Контакты',
       booking_eyebrow: 'Индивидуальная консультация',
@@ -463,6 +493,20 @@
       footer_privacy: 'Privacy Policy',
       footer_cookie_settings: 'Cookie settings',
       nav_cabinet: 'Patient cabinet',
+      // Cookie consent dialog
+      cookie_title: 'Cookie usage',
+      cookie_intro:
+        'We use cookies to improve your experience on our website. You can choose which cookies to accept.',
+      cookie_necessary_label: 'Necessary cookies',
+      cookie_necessary_desc:
+        'These cookies are required for the website to function and cannot be disabled.',
+      cookie_analytics_label: 'Analytics cookies',
+      cookie_analytics_desc: 'Help us understand how visitors use the site so we can improve it.',
+      cookie_marketing_label: 'Marketing cookies',
+      cookie_marketing_desc: 'Used to show personalized offers and advertising.',
+      cookie_reject: 'Reject all',
+      cookie_accept: 'Accept all',
+      cookie_save: 'Save selection',
       // Booking
       contact_tag: 'Contact',
       booking_eyebrow: 'Personal Consultation',

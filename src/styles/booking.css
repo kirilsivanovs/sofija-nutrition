@@ -1218,7 +1218,7 @@ dialog.booking-success-modal[open] {
 }
 
 dialog.booking-success-modal::backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: color-mix(in srgb, var(--color-graphite) 50%, transparent);
 }
 
 .success-content {
@@ -1228,18 +1228,6 @@ dialog.booking-success-modal::backdrop {
   text-align: center;
   max-width: 400px;
   width: 100%;
-  animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .success-icon {

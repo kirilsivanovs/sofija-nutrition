@@ -500,13 +500,15 @@ class BookingCalendar {
                 </div>
             </div>
 
-            <dialog class="booking-success-modal" aria-labelledby="successTitle">
+            <dialog class="booking-success-modal" aria-labelledby="successTitle" aria-describedby="successBody">
                 <div class="success-content">
                     <div class="success-icon">
                         <i class="ph ph-check-circle"></i>
                     </div>
                     <h3 id="successTitle">${this.t('successTitle')}</h3>
-                    <p>${this.t('successText')}</p>
+                    <div id="successBody">
+                        <p>${this.t('successText')}</p>
+                    </div>
                     <button class="close-success-btn">${this.t('closeBtn')}</button>
                 </div>
             </dialog>
@@ -1233,9 +1235,11 @@ class BookingCalendar {
                     <i class="ph ph-check-circle"></i>
                 </div>
                 <h3 id="successTitle">${this.t('successTitle')}</h3>
-                ${detailsHtml}
-                ${invoiceInfo}
-                <p>${this.t('successText')}</p>
+                <div id="successBody">
+                    ${detailsHtml}
+                    ${invoiceInfo}
+                    <p>${this.t('successText')}</p>
+                </div>
                 <button class="close-success-btn">${this.t('closeBtn')}</button>
             `;
 
