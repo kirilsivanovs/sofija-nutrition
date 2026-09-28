@@ -120,6 +120,11 @@ describe('landing load/scroll motion', () => {
     expect(globalCss).not.toMatch(/@keyframes fadeInUp/);
     expect(globalCss).not.toMatch(/\.animate-fade-in-up/);
   });
+
+  it('removes the hero-doctor-cutout preload and never references aboutme in Layout.astro', () => {
+    expect(layoutAstro).not.toMatch(/hero-doctor-cutout/);
+    expect(layoutAstro).not.toMatch(/aboutme/);
+  });
 });
 
 describe('landing colour roles', () => {
