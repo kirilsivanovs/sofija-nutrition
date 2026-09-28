@@ -506,7 +506,13 @@ class CookieConsent {
     
     // Expose function to reopen settings
     (window as any).showCookieSettings = () => this.showBanner();
-    
+
+    // Footer trigger (no floating button — site-design's Never list bars
+    // floating elements that can cover page content).
+    document
+      .getElementById('footer-cookie-settings')
+      ?.addEventListener('click', () => this.showBanner());
+
     // Inject styles
     this.injectStyles();
   }

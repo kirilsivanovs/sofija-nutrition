@@ -605,174 +605,19 @@
 }
 
 /* =============================================
-   Booking Section Layout
+   Booking (Q6) — no separate section; the calendar sits directly in
+   #f-q6, flat (Mist lives on .booking-summary only, no panel-in-panel).
    ============================================= */
-.booking-section {
-  position: relative;
-  padding: 76px 0 98px;
-  background: var(--color-white);
-  overflow: hidden;
-  font-family: var(--font-sans);
-}
-
-.booking-shell {
-  position: relative;
-  z-index: 1;
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 0 40px;
-  display: grid;
-  gap: 34px;
-  align-items: start;
-}
-
-.booking-intro {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.booking-title {
-  font-family: var(--font-sans);
-  font-size: 36px;
-  font-weight: 500;
-  color: var(--color-graphite);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  font-optical-sizing: auto;
-  font-feature-settings:
-    'liga' 1,
-    'calt' 1;
-  text-rendering: optimizeLegibility;
-}
-
-.booking-subtitle {
-  font-size: 16px;
-  color: var(--color-slate);
-  max-width: 54ch;
-  line-height: 1.68;
-}
-
-.booking-trust-compact {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 14px 16px;
-  flex-wrap: wrap;
-}
-
-.booking-trust-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-graphite);
-  white-space: nowrap;
-}
-
-.booking-trust-item i {
-  color: var(--color-slate);
-  font-size: 16px;
-}
-
-.booking-trust-divider {
-  width: 1px;
-  height: 18px;
-  background: var(--color-line);
-  flex-shrink: 0;
-}
-
-.booking-card {
-  position: relative;
-  padding: 18px;
-  border-radius: var(--radius-sm);
-  background: var(--color-mist);
-  border: 1px solid var(--color-line);
-}
-
 .booking-calendar-wrapper {
   width: 100%;
 }
 
-.booking-note {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--color-slate);
-  text-align: center;
-}
-
-@media (min-width: 960px) {
-  .booking-shell {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: 44px;
-  }
-
-  .booking-title {
-    font-size: 42px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .booking-shell {
-    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .booking-section {
-    padding: 64px 0 84px;
-  }
-
-  .booking-shell {
-    padding: 0 20px;
-  }
-
-  .booking-title {
-    font-size: 30px;
-  }
-}
-
-@media (max-width: 640px) {
-  .booking-shell {
-    gap: 28px;
-  }
-
-  .booking-trust-compact {
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .booking-trust-divider {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .booking-section {
-    padding: 56px 0 76px;
-  }
-
-  .booking-card {
-    padding: 12px;
-    border-radius: var(--radius-sm);
-  }
-
-  .booking-title {
-    font-size: 28px;
-  }
-
-  .booking-subtitle {
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 360px) {
-  .booking-section {
-    padding: 52px 0 70px;
-  }
+.booking-noscript {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--color-mist);
+  color: var(--color-graphite);
+  font-size: 14px;
 }
 
 /* =============================================================================
@@ -787,11 +632,9 @@
    • Calendar grid uses minmax to prevent cell crushing
    ============================================================================= */
 
-/* Main Container - container query context */
+/* Main Container - container query context. Flat: no background/border of
+   its own — .booking-summary (Mist) is the only panel in this section. */
 .booking-calendar {
-  background: var(--color-white);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-line);
   font-family: var(--font-sans);
   container-type: inline-size;
   overflow: hidden;
@@ -801,7 +644,7 @@
 /* Body - toggle, week grid and summary panel. White, so only .booking-summary
    (Mist) reads as a distinct panel — no panel-in-panel. */
 .booking-body {
-  padding: clamp(14px, 3cqi, 24px);
+  padding: clamp(14px, 3cqi, 24px) 0;
   background: var(--color-white);
   min-width: 0;
   overflow: hidden;
@@ -862,7 +705,7 @@
 /* Book layout - week grid + summary panel */
 .booking-book {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(16px, 3cqi, 24px);
   min-width: 0;
 }
@@ -880,7 +723,8 @@
   font-size: clamp(15px, 3.2cqi, 18px);
   font-weight: 600;
   color: var(--color-graphite);
-  white-space: nowrap;
+  white-space: normal;
+  min-width: 0;
   text-align: center;
   flex: 1;
 }
@@ -979,8 +823,15 @@
 
 /* A day with no slots stays quiet — dimmed, no repeated message. The one
    concise empty-state (below) covers a fully booked-out week instead. */
-.week-day--empty {
+.week-day--empty .week-day-slots {
   opacity: 0.45;
+}
+
+/* Day letter/date stay Slate/Graphite at full contrast even when the day
+   has no slots — only the slot list itself dims. */
+.week-day--empty h4,
+.week-day--empty h4 b {
+  opacity: 1;
 }
 
 .week-empty {
@@ -1350,12 +1201,34 @@
    (mirrors mockup's .A-week 7col -> 4col wrap at its ~760px breakpoint) */
 @container (max-width: 480px) {
   .week-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 18px;
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .week-day {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
   }
 
   .week-day h4 {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-shrink: 0;
+    width: 4.5em;
+    margin: 0;
     overflow-wrap: break-word;
+  }
+
+  .week-day h4 b {
+    display: inline;
+  }
+
+  .week-day-slots {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
   }
 }
 

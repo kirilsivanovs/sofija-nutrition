@@ -167,3 +167,12 @@
     padding: 14px 12px 12px;
   }
 }
+
+@media (max-width: 480px) {
+  /* The SVG viewBox stays fixed while the rendered width shrinks to ~300px,
+     so the same font-size renders unreadably small. Scale it up to keep
+     axis ticks and labels legible at this width. */
+  .hero-chart__svg text {
+    font-size: 22px;
+  }
+}

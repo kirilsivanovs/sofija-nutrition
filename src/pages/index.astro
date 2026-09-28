@@ -249,10 +249,20 @@ import '../styles/question-body.css';
         </p>
       </section>
 
-      <!-- Q6: how to book — heading/intro only; row 3 (booking restyle) fills
-           everything inside #contact below this placeholder. -->
+      <!-- Q6: how to book — format toggle + week grid + summary panel
+           (booking-calendar.js render()), no separate booking section. -->
       <section class="question" id="f-q6">
         <h2 data-i18n="q6_title">Kā pieteikties?</h2>
+        <div id="contact">
+          <div id="bookingCalendar" class="booking-calendar-wrapper">
+            <noscript>
+              <p class="booking-noscript" data-i18n="booking_noscript">
+                Kalendāram nepieciešams JavaScript. Lūdzu, pieteikšanās rakstiet uz
+                info@sofijaivanova.lv
+              </p>
+            </noscript>
+          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -299,177 +309,45 @@ import '../styles/question-body.css';
     })();
   </script>
 
-  <!-- Contact Section -->
-  <section id="contact" class="booking-section">
-    <div class="booking-shell">
-      <!-- Left column: minimal context, no clutter -->
-      <div class="booking-intro">
-        <h2 class="booking-title" data-i18n="booking_title">Rezervējiet konsultāciju</h2>
-        <p class="booking-subtitle" data-i18n="booking_subtitle">
-          Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.
-        </p>
-
-        <!-- Compact trust line — replaces 3 big trust cards -->
-        <div class="booking-trust-compact">
-          <span class="booking-trust-item">
-            <i class="ph ph-shield-check"></i>
-            <span data-i18n="booking_trust_compact_1">Konfidenciāli</span>
-          </span>
-          <span class="booking-trust-divider"></span>
-          <span class="booking-trust-item">
-            <i class="ph ph-video-camera"></i>
-            <span data-i18n="booking_trust_compact_2">Klātienē vai online</span>
-          </span>
-          <span class="booking-trust-divider"></span>
-          <span class="booking-trust-item">
-            <i class="ph ph-clock"></i>
-            <span data-i18n="booking_trust_compact_3">Atbilde 24h</span>
-          </span>
-        </div>
+  <!-- Footer — minimal, single row: name+specialty, email, cabinet link,
+       legal links, social as plain text links (no tinted circles). -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__brand">
+        <span class="site-footer__name">Sofija Ivanova</span>
+        <span class="site-footer__specialty" data-i18n="footer_subtitle">
+          uztura speciāliste, Rīga
+        </span>
       </div>
 
-      <!-- Calendar card — hero of the section -->
-      <div class="booking-card">
-        <div id="bookingCalendar" class="booking-calendar-wrapper"></div>
-        <p class="booking-note" data-i18n="booking_note">
-          Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.
-        </p>
-      </div>
-    </div>
+      <nav class="site-footer__links">
+        <a href="mailto:info@sofijaivanova.lv">info@sofijaivanova.lv</a>
+        <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet" data-i18n="nav_cabinet"
+          >Pacienta kabinets</a
+        >
+        <a href="/terms" data-i18n="footer_terms">Pakalpojumu noteikumi</a>
+        <a href="/privacy-policy" data-i18n="footer_privacy">Privātuma politika</a>
+        <button type="button" id="footer-cookie-settings" data-i18n="footer_cookie_settings">
+          Sīkdatņu iestatījumi
+        </button>
+      </nav>
 
-    <!-- Flexibility note -->
-    <div class="booking-urgency">
-      <i class="ph ph-info"></i>
-      <span data-i18n="booking_flexibility"
-        >Pieteikšanās iespējama arī ārpus darba laika. Konsultācijas pieejamas klātienē Rīgā un
-        tiešsaistē.</span
-      >
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-white text-graphite border-t border-line py-12 relative">
-    <div class="max-w-6xl mx-auto px-4 md:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        <!-- Brand -->
-        <div class="text-center md:text-left">
-          <h3 class="text-xl font-semibold mb-1">Sofija Ivanova</h3>
-          <p class="text-slate text-sm" data-i18n="footer_subtitle">
-            Rīga
-          </p>
-        </div>
-
-        <!-- Contact Links -->
-        <div class="text-center">
-          <h4
-            class="text-sm text-slate mb-3"
-            data-i18n="footer_contact_title"
-          >
-            Kontakti
-          </h4>
-          <div class="flex flex-col items-center gap-2 text-sm">
-            <a
-              href="mailto:info@sofijaivanova.lv"
-              class="text-graphite hover:text-navy transition-colors"
-            >
-              <i class="ph ph-envelope-simple" aria-hidden="true"></i> info@sofijaivanova.lv
-            </a>
-            <a
-              href="/.auth/login/aad?post_login_redirect_uri=/cabinet"
-              class="text-graphite hover:text-navy transition-colors"
-            >
-              <i class="ph ph-user-circle" aria-hidden="true"></i>
-              <span data-i18n="nav_cabinet">Pacienta kabinets</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Social & Links -->
-        <div class="text-center md:text-right">
-          <h4
-            class="text-sm text-slate mb-3"
-            data-i18n="footer_follow_title"
-          >
-            Sekojiet
-          </h4>
-          <div class="flex justify-center md:justify-end gap-3">
-            <a
-              href="https://www.instagram.com/sofija.nutrition"
-              target="_blank"
-              rel="noopener"
-              class="footer-social-link"
-              aria-label="Instagram"
-            >
-              <i class="ph ph-instagram-logo"></i>
-            </a>
-            <a
-              href="https://www.facebook.com/sofijaivanova.nutrition"
-              target="_blank"
-              rel="noopener"
-              class="footer-social-link"
-              aria-label="Facebook"
-            >
-              <i class="ph ph-facebook-logo"></i>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/sofijaivanova"
-              target="_blank"
-              rel="noopener"
-              class="footer-social-link"
-              aria-label="LinkedIn"
-            >
-              <i class="ph ph-linkedin-logo"></i>
-            </a>
-          </div>
-        </div>
+      <div class="site-footer__social">
+        <a href="https://www.instagram.com/sofija.nutrition" target="_blank" rel="noopener"
+          >Instagram</a
+        >
+        <a href="https://www.facebook.com/sofijaivanova.nutrition" target="_blank" rel="noopener"
+          >Facebook</a
+        >
+        <a href="https://www.linkedin.com/in/sofijaivanova" target="_blank" rel="noopener"
+          >LinkedIn</a
+        >
       </div>
 
-      <div
-        class="border-t border-line pt-6 flex flex-col md:flex-row justify-between items-center gap-3"
-      >
-        <p class="text-slate text-sm">© 2026 Sofija Ivanova</p>
-        <div class="flex items-center gap-4">
-          <a
-            href="/terms"
-            class="text-slate text-sm hover:text-graphite transition-colors"
-            data-i18n="footer_terms">Pakalpojumu noteikumi</a
-          >
-          <a
-            href="/privacy-policy"
-            class="text-slate text-sm hover:text-graphite transition-colors"
-            data-i18n="footer_privacy">Privātuma politika</a
-          >
-        </div>
-      </div>
+      <p class="site-footer__copy">© 2026 Sofija Ivanova</p>
     </div>
   </footer>
 </main>
-
-<!-- Cookie Settings Button (fixed bottom-right) - Minimal Premium Design -->
-<button
-  onclick="window.showCookieSettings()"
-  class="cookie-settings-btn"
-  aria-label="Sīkdatņu iestatījumi"
->
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    <circle cx="12" cy="12" r="10"></circle>
-    <circle cx="8" cy="9" r="1.5" fill="currentColor"></circle>
-    <circle cx="15" cy="8" r="1" fill="currentColor"></circle>
-    <circle cx="10" cy="14" r="1" fill="currentColor"></circle>
-    <circle cx="16" cy="13" r="1.5" fill="currentColor"></circle>
-    <circle cx="12" cy="17" r="1" fill="currentColor"></circle>
-  </svg>
-  <span>Sīkdatnes</span>
-</button>
 
 <!-- GDPR Cookie Consent (TypeScript) -->
 <script>

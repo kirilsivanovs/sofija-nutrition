@@ -8,9 +8,9 @@
     lv: {
       // Navigation
       header_specialty: 'uztura speciāliste, Rīga',
-      nav_services: 'Pakalpojumi',
+      nav_services: 'Konsultācija',
       nav_about: 'Par mani',
-      nav_faq: 'BUJ',
+      nav_price: 'Cenas',
       nav_contact: 'Pieteikties',
       nav_cabinet: 'Pacienta kabinets',
 
@@ -146,41 +146,32 @@
       why_title: 'Zinātne, nevis modes diētas',
       why_desc: 'Mana pieeja balstās pētniecībā un individuālos datos.',
 
-      // Booking extra
-      booking_flexibility: 'Pieteikšanās iespējama arī ārpus darba laika.',
-
       // Footer extra
-      footer_contact_title: 'Kontakti',
-      footer_follow_title: 'Sekojiet',
       footer_terms: 'Pakalpojumu noteikumi',
       footer_privacy: 'Privātuma politika',
+      footer_cookie_settings: 'Sīkdatņu iestatījumi',
       nav_cabinet: 'Pacienta kabinets',
       // Booking
       contact_tag: 'Kontakti',
       booking_eyebrow: 'Individuāla konsultācija',
       booking_badge: 'Personiska pieeja',
-      booking_title: 'Rezervējiet konsultāciju',
-      booking_subtitle:
-        'Izvēlieties sev ērtu datumu un laiku. Pieejamība tiek atjaunināta reāllaikā.',
-      booking_trust_compact_1: 'Konfidenciāli',
-      booking_trust_compact_2: 'Elastīgs grafiks',
-      booking_trust_compact_3: 'Atbilde 24h',
-      booking_note: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
+      booking_noscript:
+        'Kalendāram nepieciešams JavaScript. Lūdzu, pieteikšanās rakstiet uz info@sofijaivanova.lv',
 
       // Footer
       footer_role: 'Uztura konsultācijas ar zinātnisku pieeju',
       footer_nav: 'Navigācija',
       footer_rights: '© 2026 Sofija Ivanova. Visas tiesības aizsargātas.',
-      footer_subtitle: 'Rīga · Reģ. Nr. 75650061277',
+      footer_subtitle: 'uztura speciāliste, Rīga',
       header_subtitle: 'Rīga · Zinātniska pieeja',
     },
     ru: {
       // Navigation
       // proposed copy, pending Sofija's confirmation
       header_specialty: 'специалист по питанию, Рига',
-      nav_services: 'Услуги',
+      nav_services: 'Консультация',
       nav_about: 'Обо мне',
-      nav_faq: 'ЧЗВ',
+      nav_price: 'Цены',
       nav_contact: 'Записаться',
       nav_cabinet: 'Кабинет пациента',
 
@@ -312,41 +303,32 @@
       faq_a6:
         'Никакой специальной подготовки не нужно. Если у Вас есть недавние анализы (биохимия крови, сахар, липиды) — возьмите с собой. Если нет — начнём с того, что есть, и спланируем остальное вместе.',
 
-      // Booking extra
-      booking_flexibility: 'Запись возможна и вне рабочего времени.',
-
       // Footer extra
-      footer_contact_title: 'Контакты',
-      footer_follow_title: 'Подписывайтесь',
       footer_terms: 'Условия оказания услуг',
       footer_privacy: 'Политика конфиденциальности',
+      footer_cookie_settings: 'Настройки cookie',
       nav_cabinet: 'Кабинет пациента',
       // Booking
       contact_tag: 'Контакты',
       booking_eyebrow: 'Индивидуальная консультация',
       booking_badge: 'Персональный подход',
-      booking_title: 'Запишитесь на консультацию',
-      booking_subtitle:
-        'Выберите удобную дату и время. Доступность обновляется в реальном времени.',
-      booking_trust_compact_1: 'Конфиденциально',
-      booking_trust_compact_2: 'Гибкий график',
-      booking_trust_compact_3: 'Ответ за 24ч',
-      booking_note: 'После записи вы получите подтверждение по email.',
+      booking_noscript:
+        'Для календаря нужен JavaScript. Чтобы записаться, напишите на info@sofijaivanova.lv',
 
       // Footer
       footer_role: 'Консультации по питанию с научным подходом',
       footer_nav: 'Навигация',
       footer_rights: '© 2026 Sofija Ivanova. Все права защищены.',
-      footer_subtitle: 'Рига · Рег. № 75650061277',
+      footer_subtitle: 'специалист по питанию, Рига',
       header_subtitle: 'Рига · Научный подход',
     },
     en: {
       // Navigation
       // proposed copy, pending Sofija's confirmation
       header_specialty: 'nutrition specialist, Riga',
-      nav_services: 'Services',
+      nav_services: 'Consultation',
       nav_about: 'About',
-      nav_faq: 'FAQ',
+      nav_price: 'Pricing',
       nav_contact: 'Contact',
       nav_cabinet: 'Patient Cabinet',
 
@@ -476,31 +458,23 @@
       faq_a6:
         "No special preparation needed. If you have recent lab results (blood biochemistry, sugar, lipids) — bring them along. If not — we'll start with what's available and plan the rest together.",
 
-      // Booking extra
-      booking_flexibility: 'Booking available outside working hours as well.',
-
       // Footer extra
-      footer_contact_title: 'Contact',
-      footer_follow_title: 'Follow',
       footer_terms: 'Terms of Service',
       footer_privacy: 'Privacy Policy',
+      footer_cookie_settings: 'Cookie settings',
       nav_cabinet: 'Patient cabinet',
       // Booking
       contact_tag: 'Contact',
       booking_eyebrow: 'Personal Consultation',
       booking_badge: 'Personalized Care',
-      booking_title: 'Book a Consultation',
-      booking_subtitle: 'Choose a convenient date and time. Availability is updated in real time.',
-      booking_trust_compact_1: 'Confidential',
-      booking_trust_compact_2: 'Flexible scheduling',
-      booking_trust_compact_3: 'Reply within 24h',
-      booking_note: 'You will receive an email confirmation after booking.',
+      booking_noscript:
+        'The calendar needs JavaScript. To book, please email info@sofijaivanova.lv',
 
       // Footer
       footer_role: 'Evidence-based nutrition consultations',
       footer_nav: 'Navigation',
       footer_rights: '© 2026 Sofija Ivanova. All rights reserved.',
-      footer_subtitle: 'Riga · Reg. No. 75650061277',
+      footer_subtitle: 'nutrition specialist, Riga',
       header_subtitle: 'Riga · Evidence-based approach',
     },
   };

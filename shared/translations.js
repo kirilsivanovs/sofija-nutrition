@@ -71,8 +71,8 @@ const sharedTranslations = {
 
     // Formats
     format: {
-      online: 'Attālināti (Zoom/Google Meet)',
-      inPerson: 'Klātienē',
+      online: 'Tiešsaistē',
+      inPerson: 'Klātienē Rīgā',
     },
 
     // Services
@@ -215,8 +215,8 @@ const sharedTranslations = {
 
     // Formats
     format: {
-      online: 'Online (Zoom/Google Meet)',
-      inPerson: 'In-person',
+      online: 'Online',
+      inPerson: 'In person in Riga',
     },
 
     // Services
@@ -359,8 +359,8 @@ const sharedTranslations = {
 
     // Formats
     format: {
-      online: 'Онлайн (Zoom/Google Meet)',
-      inPerson: 'Очно',
+      online: 'Онлайн',
+      inPerson: 'Очно в Риге',
     },
 
     // Services

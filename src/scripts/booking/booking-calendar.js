@@ -98,8 +98,8 @@ const fallbackTranslations = {
     ],
     serviceLabel: 'Pakalpojuma veids',
     formatLabel: 'Konsultācijas formāts',
-    formatOnline: 'Attālināti (Zoom/Google Meet)',
-    formatInPerson: 'Klātienē',
+    formatOnline: 'Tiešsaistē',
+    formatInPerson: 'Klātienē Rīgā',
     nameLabel: 'Jūsu vārds',
     emailLabel: 'E-pasts',
     phoneLabel: 'Telefons',
@@ -155,8 +155,8 @@ const fallbackTranslations = {
     ],
     serviceLabel: 'Тип услуги',
     formatLabel: 'Формат консультации',
-    formatOnline: 'Онлайн (Zoom/Google Meet)',
-    formatInPerson: 'Очно',
+    formatOnline: 'Онлайн',
+    formatInPerson: 'Очно в Риге',
     nameLabel: 'Ваше имя',
     emailLabel: 'Email',
     phoneLabel: 'Телефон',
@@ -212,8 +212,8 @@ const fallbackTranslations = {
     ],
     serviceLabel: 'Service type',
     formatLabel: 'Consultation format',
-    formatOnline: 'Online (Zoom/Google Meet)',
-    formatInPerson: 'In-person',
+    formatOnline: 'Online',
+    formatInPerson: 'In person in Riga',
     nameLabel: 'Your name',
     emailLabel: 'Email',
     phoneLabel: 'Phone',
@@ -273,10 +273,19 @@ class BookingCalendar {
   }
 
   async init() {
-    await this.loadAvailability();
-    this.navigateToFirstAvailableWeek();
+    // Render the toggle/week grid/summary immediately (with whatever
+    // availability we already have, none yet) so the calendar is never
+    // blank while the fetch is in flight — only loadAvailability's own
+    // failure (below) replaces this with a visible error message.
     this.render();
     this.attachEventListeners();
+
+    await this.loadAvailability();
+    if (this.apiAvailable) {
+      this.navigateToFirstAvailableWeek();
+      this.render();
+      this.attachEventListeners();
+    }
   }
 
   async loadAvailability() {
