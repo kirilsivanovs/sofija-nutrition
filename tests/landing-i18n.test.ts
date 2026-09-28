@@ -32,4 +32,12 @@ describe('landing i18n dictionary', () => {
     expect(translations.ru.glucose_unit).toBe('ммоль/л');
     expect(translations.en.glucose_unit).toBe('mmol/L');
   });
+
+  it('has no cookie consent keys in any locale when no consent is collected', () => {
+    for (const locale of ['lv', 'ru', 'en'] as const) {
+      const keys = Object.keys(translations[locale]);
+      expect(keys.some((key) => key.startsWith('cookie_'))).toBe(false);
+      expect(keys.includes('footer_cookie_settings')).toBe(false);
+    }
+  });
 });

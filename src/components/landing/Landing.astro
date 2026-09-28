@@ -7,7 +7,6 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import '../../styles/booking.css';
 import '../../styles/chart.css';
 import '../../styles/question-body.css';
-import '../../styles/cookie-consent.css';
 
 interface Props {
   locale: Locale;
@@ -324,9 +323,6 @@ const alternates = {
           <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet">{dict.nav_cabinet}</a>
           <a href="/terms">{dict.footer_terms}</a>
           <a href="/privacy-policy">{dict.footer_privacy}</a>
-          <button type="button" id="footer-cookie-settings">
-            {dict.footer_cookie_settings}
-          </button>
         </nav>
 
         <div class="site-footer__social">
@@ -339,66 +335,6 @@ const alternates = {
       </div>
     </footer>
   </main>
-
-  <!-- Cookie consent dialog: native <dialog>, focus/Escape/restore handled by
-       showModal()/close() (same pattern as the booking success dialog). -->
-  <dialog
-    id="cookie-consent-dialog"
-    class="cookie-dialog"
-    aria-labelledby="cookieTitle"
-    aria-describedby="cookieIntro"
-    tabindex="-1"
-    autofocus
-  >
-    <h2 id="cookieTitle">{dict.cookie_title}</h2>
-    <p id="cookieIntro">
-      {dict.cookie_intro}
-    </p>
-    <a class="cookie-dialog__privacy-link" href="/privacy-policy">{dict.footer_privacy}</a>
-
-    <div class="cookie-dialog__categories">
-      <div class="cookie-dialog__row">
-        <input type="checkbox" id="consent-necessary" checked disabled aria-describedby="consent-necessary-desc" />
-        <label for="consent-necessary">{dict.cookie_necessary_label}</label>
-        <p id="consent-necessary-desc">
-          {dict.cookie_necessary_desc}
-        </p>
-      </div>
-
-      <div class="cookie-dialog__row">
-        <input type="checkbox" id="consent-analytics" aria-describedby="consent-analytics-desc" />
-        <label for="consent-analytics">{dict.cookie_analytics_label}</label>
-        <p id="consent-analytics-desc">
-          {dict.cookie_analytics_desc}
-        </p>
-      </div>
-
-      <div class="cookie-dialog__row">
-        <input type="checkbox" id="consent-marketing" aria-describedby="consent-marketing-desc" />
-        <label for="consent-marketing">{dict.cookie_marketing_label}</label>
-        <p id="consent-marketing-desc">
-          {dict.cookie_marketing_desc}
-        </p>
-      </div>
-    </div>
-
-    <div class="cookie-dialog__actions">
-      <button type="button" id="consent-reject-all" class="cookie-dialog__btn">
-        {dict.cookie_reject}
-      </button>
-      <button type="button" id="consent-accept-all" class="cookie-dialog__btn">
-        {dict.cookie_accept}
-      </button>
-      <button type="button" id="consent-accept-selected" class="cookie-dialog__btn">
-        {dict.cookie_save}
-      </button>
-    </div>
-  </dialog>
-
-  <!-- GDPR Cookie Consent (TypeScript) -->
-  <script>
-    import '../../components/CookieConsent';
-  </script>
 
   <script>
     import '../../scripts/booking/booking-calendar.js';

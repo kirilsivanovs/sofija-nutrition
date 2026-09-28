@@ -8,16 +8,6 @@ import { expect, test } from '@playwright/test';
 test.describe('Booking Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Wait for cookie consent dialog to appear and dismiss it
-    const banner = page.locator('#cookie-consent-dialog');
-    const rejectBtn = page.locator('#consent-reject-all');
-    try {
-      await banner.waitFor({ state: 'visible', timeout: 5000 });
-      await rejectBtn.click();
-      await banner.waitFor({ state: 'hidden', timeout: 5000 });
-    } catch {
-      // Dialog may not appear if cookies already accepted
-    }
   });
 
   test('booking section is visible and week grid renders', async ({ page }) => {

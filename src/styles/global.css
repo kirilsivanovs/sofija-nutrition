@@ -728,7 +728,6 @@ i.ph {
 }
 
 .site-footer__links a,
-.site-footer__links button,
 .site-footer__social a {
   font-size: 13px;
   font-weight: 400;
@@ -742,7 +741,6 @@ i.ph {
 }
 
 .site-footer__links a:hover,
-.site-footer__links button:hover,
 .site-footer__social a:hover {
   color: var(--color-graphite);
 }
@@ -770,7 +768,6 @@ i.ph {
   .mobile-nav-menu,
   .scroll-to-top,
   #contact,
-  .cookie-consent,
   .site-footer__social,
   .btn-cta,
   .btn-primary {
