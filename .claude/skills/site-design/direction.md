@@ -1,6 +1,6 @@
 # Site direction (binding; revised 2026-09-26 by the user's pick in SN-036)
 
-Reason: the user picked SN-036 "Итог · A+D" over SN-034 (Lora/Inter, judged AI-generic). Mockup: https://claude.ai/artifact/TgJykR7fPrccNiJu2RHsrW, source `.claude/tasks/design/SN-036/notes/mockups/index.html` (`.F` rules).
+Reason: the user picked SN-036 "Итог · A+D" over SN-034. Mockup: https://claude.ai/artifact/TgJykR7fPrccNiJu2RHsrW, source `.claude/tasks/design/SN-036/notes/mockups/index.html` (`.F` rules).
 
 ## Brief
 - Sofija Ivanova: nutrition specialist in Riga, doctoral researcher on diabetes and CGM (not "Dr." until the defence; title "uztura speciāliste" vs "sertificēta dietoloģe" pending her confirmation).
@@ -17,15 +17,15 @@ Reason: the user picked SN-036 "Итог · A+D" over SN-034 (Lora/Inter, judged
 | Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
 | High | #B06A00 | chart segment above range only | graphic |
 
-Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Navy stays scarce (user, 2026-09-26: "too much of it everywhere"): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
+Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Navy stays scarce (user, 2026-09-26): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
 
 ## Type
 - Geologica only: 300 for H1 with the key phrase in 600; 400 body and H2; 600 buttons, labels, strong. Tabular figures in the chart and calendar.
-- Scale (desktop / phone): H1 46/34 lh 1.1; question H2 30/24 lh 1.2; body 18/17 lh 1.6; small 15, chart labels 11-13.
+- Scale (desktop / phone): H1 46/34 lh 1.1; H2 30/24 lh 1.2; H3 20/18 lh 1.3 at 600; prose `p` 18/17 lh 1.6; UI text 16; small 15; chart labels 11-13. (SN-038: H3 and UI text were unset.)
 - Sentence case. No eyebrows, no uppercase labels.
 
 ## Layout
-- Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer (SN-033, no burger). Sticky on desktop, static on phone; nothing hides on scroll.
+- Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer. Sticky on desktop, static on phone; nothing hides on scroll.
 - Locales (SN-016): LV `/`, RU `/ru/`, EN `/en/`, one layout; LV RU EN are links, current `aria-current="page"`.
 - Hero (5fr/7fr): thesis headline, lead, button, one format line; the glucose chart on the right.
 - Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, credentials, register number once), how the approach differs, how to book.
@@ -36,7 +36,7 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 The index marker moving to the current question (200ms ease-out colour/border); smooth scroll on index clicks. Both off under `prefers-reduced-motion`. Nothing else animates.
 
 ## The glucose-curve figure
-Hero only: AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (normal post-meal for people without diabetes; user's choice, caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
+Hero only: AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (post-meal normal without diabetes; caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
 
 ## References
 `.claude/tasks/design/SN-036/notes/references.md` (~30 sites, what was taken).
