@@ -114,8 +114,7 @@
   hyphenate-limit-chars: 10 4 4;
 }
 
-.question__scope {
-  font-size: 14px;
+.question .question__scope {
   color: var(--color-slate);
 }
 

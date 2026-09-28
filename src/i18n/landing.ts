@@ -178,7 +178,6 @@ export const translations: Record<Locale, LandingDict> = {
       'Paaugstināts holesterīns, glikoze vai insulīna rezistence, kad ārsts ieteicis mainīt uzturu.',
     q1_row4_t: 'Enerģija un gremošana',
     q1_row4_d: 'Nogurums, vēdera uzpūšanās un diskomforts pēc ēšanas.',
-    // copy pending from Sofija: exact wording of the practice's boundary line
     q1_scope:
       'Ja Jums vajadzīga steidzama medicīniska palīdzība, vispirms vērsieties pie sava ārsta.',
     // proposal for Sofija (2026-09-28)

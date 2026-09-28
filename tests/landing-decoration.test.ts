@@ -21,6 +21,11 @@ const layoutAstro = fs.readFileSync(
   'utf-8'
 );
 
+const questionBodyCss = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'styles', 'question-body.css'),
+  'utf-8'
+);
+
 describe('landing background decoration', () => {
   it('has no gradient background declarations in booking.css', () => {
     expect(bookingCss).not.toMatch(/(linear|radial)-gradient\(/);
@@ -128,6 +133,11 @@ describe('landing load/scroll motion', () => {
 });
 
 describe('landing colour roles', () => {
+  it('renders the Q1 boundary lines in Slate at the question body size when inside a question', () => {
+    expect(questionBodyCss).toMatch(/\.question \.question__scope\s*\{[^}]*color:\s*var\(--color-slate\)/);
+    expect(questionBodyCss).not.toMatch(/\.question__scope[^{]*\{[^}]*font-size/);
+  });
+
   it('has no var(--color-primary) or var(--color-secondary) left in booking.css', () => {
     expect(bookingCss).not.toMatch(/var\(--color-primary\)/);
     expect(bookingCss).not.toMatch(/var\(--color-secondary\)/);
