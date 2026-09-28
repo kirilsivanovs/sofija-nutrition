@@ -91,7 +91,7 @@
 
 .question__rows {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   gap: 6px 20px;
   margin: 16px 0;
 }
@@ -99,11 +99,19 @@
 .question__rows dt {
   font-weight: 600;
   color: var(--color-graphite);
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .question__rows dd {
   margin: 0 0 12px;
   color: var(--color-slate);
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  -webkit-hyphenate-limit-chars: 10 4 4;
+  hyphenate-limit-chars: 10 4 4;
 }
 
 .question__scope {
@@ -211,16 +219,16 @@
 }
 
 .question__talks li {
+  display: grid;
+  grid-template-columns: 4.5em 1fr;
+  column-gap: 8px;
   margin-bottom: 8px;
   font-size: 15px;
 }
 
 .question__talks span {
-  display: inline-block;
-  min-width: 60px;
   color: var(--color-slate);
   font-weight: 600;
-  margin-right: 8px;
 }
 
 .question__cred {

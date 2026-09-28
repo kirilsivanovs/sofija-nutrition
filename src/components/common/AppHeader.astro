@@ -8,16 +8,32 @@
  * - showBurger: boolean (show burger menu for mobile)
  * - showAuth: boolean (show login/logout)
  * - subtitle: string (header subtitle text)
+ * - locale: Locale (public variant only — drives nav labels and the language switcher)
  */
+
+import { t, type Locale } from '../../i18n/landing';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props {
   variant?: 'admin' | 'cabinet' | 'public';
   showBurger?: boolean;
   showAuth?: boolean;
   subtitle?: string;
+  locale?: Locale;
 }
 
-const { variant = 'public', showBurger = false, showAuth = true, subtitle = '' } = Astro.props;
+const {
+  variant = 'public',
+  showBurger = false,
+  showAuth = true,
+  subtitle = '',
+  locale = 'lv',
+} = Astro.props;
+const dict = t(locale);
+
+const localeLabels: Record<Locale, string> = { lv: 'LV, latviešu', ru: 'RU, русский', en: 'EN, English' };
+const localeCodes: Record<Locale, string> = { lv: 'LV', ru: 'RU', en: 'EN' };
+const locales: Locale[] = ['lv', 'ru', 'en'];
 
 // Generate unique IDs for mobile menu
 const mobileMenuId = `mobile-nav-menu-${variant}`;
@@ -56,29 +72,16 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
       )}
       <div class="app-logo-text">
         <span class="app-logo-name">Sofija Ivanova</span>
-        {subtitle &&
-          (variant === 'public' ? (
-            <span class="app-logo-sub" data-i18n="header_specialty">
-              {subtitle}
-            </span>
-          ) : (
-            <span class="app-logo-sub">{subtitle}</span>
-          ))}
+        {subtitle && <span class="app-logo-sub">{subtitle}</span>}
       </div>
     </a>
 
     {
       variant === 'public' && (
         <nav class="app-public-nav">
-          <a href="#f-q2" data-i18n="nav_services">
-            Konsultācija
-          </a>
-          <a href="#f-q3" data-i18n="nav_price">
-            Cenas
-          </a>
-          <a href="#about" data-i18n="nav_about">
-            Par mani
-          </a>
+          <a href="#f-q2">{dict.nav_services}</a>
+          <a href="#f-q3">{dict.nav_price}</a>
+          <a href="#about">{dict.nav_about}</a>
         </nav>
       )
     }
@@ -87,18 +90,22 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
       variant === 'public' && (
         <div class="app-public-actions">
           <div class="app-lang-switch">
-            <button class="lang-btn" data-lang="lv" aria-pressed="true">
-              LV
-            </button>
-            <button class="lang-btn" data-lang="ru" aria-pressed="false">
-              RU
-            </button>
-            <button class="lang-btn" data-lang="en" aria-pressed="false">
-              EN
-            </button>
+            {locales.map((code) => (
+              <a
+                class="lang-btn"
+                data-lang={code}
+                href={getRelativeLocaleUrl(code, '/')}
+                hreflang={code}
+                lang={code}
+                aria-label={localeLabels[code]}
+                aria-current={code === locale ? 'page' : undefined}
+              >
+                {localeCodes[code]}
+              </a>
+            ))}
           </div>
-          <a href="#contact" class="app-public-cta" data-i18n="nav_contact">
-            Pieteikties
+          <a href="#contact" class="app-public-cta">
+            {dict.nav_contact}
           </a>
         </div>
       )
@@ -167,7 +174,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
       position: static;
     }
 
-    .app-lang-switch button {
+    .app-lang-switch a {
       padding: 8px 10px;
       font-size: 13px;
       min-width: 40px;
@@ -259,6 +266,13 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1023px) {
+    .app-public-nav a {
+      padding: 12px;
+    }
   }
 
   .app-public-actions {
@@ -272,7 +286,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     gap: 4px;
   }
 
-  .app-lang-switch button {
+  .app-lang-switch a {
     background: transparent;
     border: none;
     padding: 8px 10px;
@@ -283,9 +297,13 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     color: var(--color-slate);
     cursor: pointer;
     border-bottom: 2px solid transparent;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .app-lang-switch button[aria-pressed='true'] {
+  .app-lang-switch a[aria-current='page'] {
     color: var(--color-graphite);
     font-weight: 600;
     border-bottom-color: var(--color-navy);

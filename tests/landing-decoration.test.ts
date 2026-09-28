@@ -12,7 +12,7 @@ const globalCss = fs.readFileSync(
 );
 
 const indexAstro = fs.readFileSync(
-  path.join(__dirname, '..', 'src', 'pages', 'index.astro'),
+  path.join(__dirname, '..', 'src', 'components', 'landing', 'Landing.astro'),
   'utf-8'
 );
 
@@ -103,6 +103,11 @@ describe('landing load/scroll motion', () => {
 
   it('no longer wires animations.css or animations.js into Layout.astro', () => {
     expect(layoutAstro).not.toMatch(/animations\.(css|js)/);
+  });
+
+  it('has no Latvian-only no-JS banner left in Layout.astro', () => {
+    expect(layoutAstro).not.toMatch(/<noscript>/);
+    expect(layoutAstro).not.toContain('Uztura speciāliste');
   });
 
   it('has no hero or booking-card entrance keyframes left in booking.css', () => {

@@ -56,8 +56,8 @@ describe('formatMmol', () => {
     expect(formatMmol(7.1, 'lv')).toBe('7,1 mmol/L');
   });
 
-  it('uses a comma decimal separator for ru', () => {
-    expect(formatMmol(10.1, 'ru')).toBe('10,1 mmol/L');
+  it('uses a comma decimal separator and the RU unit spelling for ru', () => {
+    expect(formatMmol(10.1, 'ru')).toBe('10,1 ммоль/л');
   });
 
   it('uses a dot decimal separator for en', () => {

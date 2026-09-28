@@ -9,6 +9,13 @@ export default defineConfig({
   site: 'https://sofijaivanova.lv',
   output: 'static',
   compressHTML: true,
+  i18n: {
+    defaultLocale: 'lv',
+    locales: ['lv', 'ru', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   fonts: [
     {
       provider: fontProviders.google(),

@@ -8,6 +8,8 @@
  * point, via two clipPaths (no gradient, per the site's design direction).
  */
 
+import { translations } from '../i18n/landing';
+
 export type GlucosePoint = [minute: number, mmol: number];
 
 export interface GlucoseChartColors {
@@ -145,10 +147,21 @@ export function formatTime(minutesFromStart: number, startHour = 7): string {
   return `${pad(hour)}:${pad(minute)}`;
 }
 
+/** The glucose unit label, per locale (RU spells it out; LV/EN keep "mmol/L"). */
+const GLUCOSE_UNIT: Record<string, string> = {
+  lv: translations.lv.glucose_unit,
+  ru: translations.ru.glucose_unit,
+  en: translations.en.glucose_unit,
+};
+
+function glucoseUnit(lang: string): string {
+  return GLUCOSE_UNIT[lang] ?? GLUCOSE_UNIT.lv;
+}
+
 /** LV/RU use a comma decimal separator; EN uses a dot. */
 export function formatMmol(value: number, lang: string): string {
   const text = value.toFixed(1);
-  return `${lang === 'en' ? text : text.replace('.', ',')} mmol/L`;
+  return `${lang === 'en' ? text : text.replace('.', ',')} ${glucoseUnit(lang)}`;
 }
 
 const BREAKFAST_LABEL: Record<string, string> = {
@@ -278,7 +291,7 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
   });
 
   const unitLabel = el('text', { x: CHART_RIGHT, y: CHART_TOP + 10, 'text-anchor': 'end' });
-  unitLabel.textContent = 'mmol/L';
+  unitLabel.textContent = glucoseUnit(currentLang());
 
   [0, 60, 120, 180, 240].forEach((minute) => {
     el('line', {
@@ -418,13 +431,4 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
   renderBreakfastLabel();
   set(POINTER_START_MINUTE);
   renderTimeInRange();
-
-  // The readout and figcaption re-render on a language switch (main.js's
-  // updateLanguage only touches [data-i18n] elements, never these computed ones).
-  const langObserver = new MutationObserver(() => {
-    renderBreakfastLabel();
-    set(currentMinute);
-    renderTimeInRange();
-  });
-  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 }

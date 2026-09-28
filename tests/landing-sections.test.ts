@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const indexAstro = fs.readFileSync(
-  path.join(__dirname, '..', 'src', 'pages', 'index.astro'),
+  path.join(__dirname, '..', 'src', 'components', 'landing', 'Landing.astro'),
   'utf-8'
 );
 
@@ -14,12 +14,12 @@ describe('landing question body', () => {
     expect(indexAstro).not.toMatch(/faq-item/);
   });
 
-  it('states the price only once, in question 3', () => {
-    expect((indexAstro.match(/65\s*€/g) || []).length).toBe(1);
+  it('renders the price value only once, in question 3', () => {
+    expect((indexAstro.match(/\{dict\.q3_row1_v\}/g) || []).length).toBe(1);
   });
 
-  it('states the register number only once, in question 4', () => {
-    expect((indexAstro.match(/75650061277/g) || []).length).toBe(1);
+  it('renders the register-number credential only once, in question 4', () => {
+    expect((indexAstro.match(/\{dict\.q4_cred\}/g) || []).length).toBe(1);
   });
 
   it('preserves the services, about and faq anchor ids for the header nav', () => {

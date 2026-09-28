@@ -4,14 +4,17 @@
  * Shows when user scrolls down, hides at the top
  * Universal component for all pages
  */
+import { t, type Locale } from '../../i18n/landing';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'lv' } = Astro.props;
+const dict = t(locale);
 ---
 
-<button
-  id="scroll-to-top"
-  class="scroll-to-top"
-  aria-label="Atgriezties uz augšu"
-  title="Atgriezties uz augšu"
->
+<button id="scroll-to-top" class="scroll-to-top" aria-label={dict.scrolltop_label}>
   <i class="ph ph-arrow-up"></i>
 </button>
 
@@ -25,21 +28,17 @@
     min-width: 48px;
     min-height: 48px;
     padding: 0;
-    border-radius: 50%;
+    border-radius: var(--radius-sm);
     background: var(--color-white);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     color: var(--color-graphite);
     border: 1px solid var(--color-slate);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     opacity: 0;
     visibility: hidden;
-    transform: scale(0.8);
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease;
     z-index: 999;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -49,18 +48,12 @@
   button.scroll-to-top.visible {
     opacity: 1;
     visibility: visible;
-    transform: scale(1);
   }
 
   button.scroll-to-top:hover {
     opacity: 1;
     background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     border-color: var(--color-graphite);
-  }
-
-  button.scroll-to-top:active {
-    transform: scale(0.95);
   }
 
   button.scroll-to-top i {

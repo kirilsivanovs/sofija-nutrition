@@ -1,0 +1,420 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AppHeader from '../common/AppHeader.astro';
+import ScrollToTop from '../common/ScrollToTop.astro';
+import { t, type Locale } from '../../i18n/landing';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import '../../styles/booking.css';
+import '../../styles/chart.css';
+import '../../styles/question-body.css';
+import '../../styles/cookie-consent.css';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const alternates = {
+  lv: getRelativeLocaleUrl('lv', '/'),
+  ru: getRelativeLocaleUrl('ru', '/'),
+  en: getRelativeLocaleUrl('en', '/'),
+};
+---
+
+<Layout
+  title={dict.meta_title}
+  description={dict.meta_description}
+  canonicalPath={Astro.url.pathname}
+  lang={locale}
+  alternates={alternates}
+>
+  <!-- Skip to Content (Accessibility) -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:bg-navy focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:outline-none"
+  >
+    Pāriet uz saturu
+  </a>
+
+  <AppHeader variant="public" showAuth={false} subtitle={dict.header_specialty} locale={locale} />
+
+  <!-- Scroll to Top Button -->
+  <ScrollToTop locale={locale} />
+  <!-- Hero Section -->
+  <main id="main-content">
+    <section id="hero" class="hero-chart" aria-labelledby="hero-title">
+      <div class="hero-chart__inner">
+        <div>
+          <h1 id="hero-title" class="hero-chart__title">
+            {dict.hero_title_lead} <strong>{dict.hero_title_key}</strong>
+          </h1>
+          <p class="hero-chart__lead">
+            {dict.hero_lead}
+          </p>
+          <a class="btn-cta btn-solid" href="#f-q6"
+            ><span>{dict.hero_cta}</span><i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+          <ul class="hero-chart__facts">
+            <li>{dict.hero_fact}</li>
+          </ul>
+        </div>
+
+        <figure class="hero-chart__chart">
+          <div class="hero-chart__chart-head">
+            <h2>{dict.hero_chart_heading}</h2>
+            <ul class="hero-chart__legend">
+              <li>
+                <i class="hero-chart__legend-mark hero-chart__legend-mark--a" aria-hidden="true"></i>
+                <span>{dict.hero_legend_a}</span>
+              </li>
+              <li>
+                <i class="hero-chart__legend-mark hero-chart__legend-mark--b" aria-hidden="true"></i>
+                <span>{dict.hero_legend_b}</span>
+              </li>
+            </ul>
+          </div>
+          <svg
+            id="hero-svg"
+            class="hero-chart__svg"
+            viewBox="0 0 640 352"
+            role="img"
+            tabindex="0"
+            aria-label={dict.hero_chart_aria_label}
+          ></svg>
+          <dl class="hero-chart__readout" aria-live="polite">
+            <div>
+              <dt>{dict.hero_readout_time}</dt>
+              <dd id="hero-t">08:30</dd>
+            </div>
+            <div>
+              <dt>{dict.hero_readout_a}</dt>
+              <dd id="hero-va">7,1 {dict.glucose_unit}</dd>
+            </div>
+            <div>
+              <dt>{dict.hero_readout_b}</dt>
+              <dd id="hero-vb">10,1 {dict.glucose_unit}</dd>
+            </div>
+          </dl>
+          <figcaption class="hero-chart__caption">
+            <span>{dict.hero_chart_caption}</span>
+            <!-- copy pending from Sofija: 7.8 caption wording -->
+            <span id="hero-tir"></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Six-question body (SN-015.2) — sticky index + questions, replaces the old
+         trust-metrics/for-whom/services/outcomes/about-badges/FAQ sections. #services
+         and #faq are kept as anchor ids on the wrapper (interim mapping for the frozen
+         header's nav, not a redesign of its copy). -->
+    <div class="F-body" id="faq">
+      <nav class="question-index" id="services" aria-label={dict.qindex_nav_label}>
+        <h2>{dict.qindex_title}</h2>
+        <ol id="question-index-list">
+          <li><a href="#f-q1">{dict.qindex_1}</a></li>
+          <li><a href="#f-q2">{dict.qindex_2}</a></li>
+          <li><a href="#f-q3">{dict.qindex_3}</a></li>
+          <li><a href="#about">{dict.qindex_4}</a></li>
+          <li><a href="#f-q5">{dict.qindex_5}</a></li>
+          <li><a href="#f-q6">{dict.qindex_6}</a></li>
+        </ol>
+        <a class="btn-cta btn-solid" href="#f-q6">{dict.qindex_cta}</a>
+      </nav>
+
+      <div class="question-list">
+        <!-- Q1: fit -->
+        <section class="question" id="f-q1">
+          <h2>{dict.q1_title}</h2>
+          <p>
+            {dict.q1_intro}
+          </p>
+          <dl class="question__rows">
+            <dt>{dict.q1_row1_t}</dt>
+            <dd>
+              {dict.q1_row1_d}
+            </dd>
+            <dt>{dict.q1_row2_t}</dt>
+            <dd>
+              {dict.q1_row2_d}
+            </dd>
+            <dt>{dict.q1_row3_t}</dt>
+            <dd>{dict.q1_row3_d}</dd>
+            <dt>{dict.q1_row4_t}</dt>
+            <dd>{dict.q1_row4_d}</dd>
+          </dl>
+          <!-- copy pending from Sofija: exact wording of the practice's boundary line -->
+          <p class="question__scope">
+            {dict.q1_scope}
+          </p>
+        </section>
+
+        <!-- Q2: first consultation — no photo, dropped 2026-09-26 -->
+        <section class="question" id="f-q2">
+          <h2>{dict.q2_title}</h2>
+          <ol class="question__steps">
+            <li>
+              {dict.q2_step1}
+            </li>
+            <li>
+              {dict.q2_step2}
+            </li>
+            <li>
+              {dict.q2_step3}
+            </li>
+            <li>
+              {dict.q2_step4}
+            </li>
+          </ol>
+        </section>
+
+        <!-- Q3: price — the site's only place price appears -->
+        <section class="question" id="f-q3">
+          <h2>{dict.q3_title}</h2>
+          <table class="question__price">
+            <tr>
+              <th>
+                <span>{dict.q3_row1_t}</span>
+                <small>{dict.q3_row1_d}</small>
+              </th>
+              <td>{dict.q3_row1_v}</td>
+            </tr>
+            <tr>
+              <th>
+                <span>{dict.q3_row2_t}</span>
+                <small>{dict.q3_row2_d}</small>
+              </th>
+              <!-- prices genuinely pending Sofija, don't invent numbers -->
+              <td class="question__pending">{dict.q3_pending}</td>
+            </tr>
+            <tr>
+              <th>
+                <span>{dict.q3_row3_t}</span>
+                <small>{dict.q3_row3_d}</small>
+              </th>
+              <td class="question__pending">{dict.q3_pending}</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- Q4: who is Sofija — the site's only place the register number appears -->
+        <section class="question question--research" id="about">
+          <h2>{dict.q4_title}</h2>
+          <div class="question__research">
+            <figure>
+              <div class="question__photo-crop">
+                <picture>
+                  <source type="image/webp" srcset="/assets/img/conference_EASD2025_Vienna-600w.webp" />
+                  <img
+                    src="/assets/img/conference_EASD2025_Vienna.jpg"
+                    alt={dict.about_photo_alt}
+                    decoding="async"
+                    width="1400"
+                    height="1054"
+                  />
+                </picture>
+              </div>
+            </figure>
+            <div>
+              <p>
+                {dict.about_lead}
+              </p>
+              <p>
+                {dict.about_text}
+              </p>
+              <ul class="question__talks">
+                <li><span>{dict.q4_talk1_label}</span>{dict.q4_talk1_text}</li>
+                <li>
+                  <span>{dict.q4_talk2_label}</span>{dict.q4_talk2_text}
+                </li>
+                <li><span>{dict.q4_talk3_label}</span>{dict.q4_talk3_text}</li>
+              </ul>
+              <!-- title wording ("sertificēta dietoloģe" vs "uztura speciāliste") pending Sofija -->
+              <p class="question__cred">
+                {dict.q4_cred}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q5: how it differs — text only, no CGM/sensor photo (dropped 2026-09-26) -->
+        <section class="question" id="f-q5">
+          <h2>{dict.q5_title}</h2>
+          <p>
+            {dict.q5_p1}
+          </p>
+          <p>
+            {dict.q5_p2}
+          </p>
+        </section>
+
+        <!-- Q6: how to book — format toggle + week grid + summary panel
+             (booking-calendar.js render()), no separate booking section. -->
+        <section class="question" id="f-q6">
+          <h2>{dict.q6_title}</h2>
+          <div id="contact">
+            <div id="bookingCalendar" class="booking-calendar-wrapper">
+              <noscript>
+                <p class="booking-noscript">
+                  {dict.booking_noscript}
+                </p>
+              </noscript>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Question index scrollspy (active link border) + smooth-scroll on click -->
+    <script is:inline>
+      (function () {
+        var links = document.querySelectorAll('#question-index-list a');
+        if (!links.length) return;
+        var byHash = {};
+        links.forEach(function (a) {
+          byHash[a.getAttribute('href')] = a;
+        });
+
+        var sections = document.querySelectorAll('.question');
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              var link = byHash['#' + entry.target.id];
+              if (!link) return;
+              if (entry.isIntersecting) {
+                links.forEach(function (a) {
+                  a.removeAttribute('aria-current');
+                });
+                link.setAttribute('aria-current', 'true');
+              }
+            });
+          },
+          { rootMargin: '-40% 0px -50% 0px' }
+        );
+        sections.forEach(function (s) {
+          observer.observe(s);
+        });
+
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        links.forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            var target = document.querySelector(a.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+          });
+        });
+      })();
+    </script>
+
+    <!-- Footer — minimal, single row: name+specialty, email, cabinet link,
+         legal links, social as plain text links (no tinted circles). -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__brand">
+          <span class="site-footer__name">Sofija Ivanova</span>
+          <span class="site-footer__specialty">
+            {dict.footer_subtitle}
+          </span>
+        </div>
+
+        <nav class="site-footer__links">
+          <a href="mailto:info@sofijaivanova.lv">info@sofijaivanova.lv</a>
+          <a href="/.auth/login/aad?post_login_redirect_uri=/cabinet">{dict.nav_cabinet}</a>
+          <a href="/terms">{dict.footer_terms}</a>
+          <a href="/privacy-policy">{dict.footer_privacy}</a>
+          <button type="button" id="footer-cookie-settings">
+            {dict.footer_cookie_settings}
+          </button>
+        </nav>
+
+        <div class="site-footer__social">
+          <a href="https://www.instagram.com/sofija.nutrition" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/sofijaivanova.nutrition" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.linkedin.com/in/sofijaivanova" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+
+        <p class="site-footer__copy">© 2026 Sofija Ivanova</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Cookie consent dialog: native <dialog>, focus/Escape/restore handled by
+       showModal()/close() (same pattern as the booking success dialog). -->
+  <dialog
+    id="cookie-consent-dialog"
+    class="cookie-dialog"
+    aria-labelledby="cookieTitle"
+    aria-describedby="cookieIntro"
+    tabindex="-1"
+    autofocus
+  >
+    <h2 id="cookieTitle">{dict.cookie_title}</h2>
+    <p id="cookieIntro">
+      {dict.cookie_intro}
+    </p>
+    <a class="cookie-dialog__privacy-link" href="/privacy-policy">{dict.footer_privacy}</a>
+
+    <div class="cookie-dialog__categories">
+      <div class="cookie-dialog__row">
+        <input type="checkbox" id="consent-necessary" checked disabled aria-describedby="consent-necessary-desc" />
+        <label for="consent-necessary">{dict.cookie_necessary_label}</label>
+        <p id="consent-necessary-desc">
+          {dict.cookie_necessary_desc}
+        </p>
+      </div>
+
+      <div class="cookie-dialog__row">
+        <input type="checkbox" id="consent-analytics" aria-describedby="consent-analytics-desc" />
+        <label for="consent-analytics">{dict.cookie_analytics_label}</label>
+        <p id="consent-analytics-desc">
+          {dict.cookie_analytics_desc}
+        </p>
+      </div>
+
+      <div class="cookie-dialog__row">
+        <input type="checkbox" id="consent-marketing" aria-describedby="consent-marketing-desc" />
+        <label for="consent-marketing">{dict.cookie_marketing_label}</label>
+        <p id="consent-marketing-desc">
+          {dict.cookie_marketing_desc}
+        </p>
+      </div>
+    </div>
+
+    <div class="cookie-dialog__actions">
+      <button type="button" id="consent-reject-all" class="cookie-dialog__btn">
+        {dict.cookie_reject}
+      </button>
+      <button type="button" id="consent-accept-all" class="cookie-dialog__btn">
+        {dict.cookie_accept}
+      </button>
+      <button type="button" id="consent-accept-selected" class="cookie-dialog__btn">
+        {dict.cookie_save}
+      </button>
+    </div>
+  </dialog>
+
+  <!-- GDPR Cookie Consent (TypeScript) -->
+  <script>
+    import '../../components/CookieConsent';
+  </script>
+
+  <script>
+    import '../../scripts/booking/booking-calendar.js';
+  </script>
+
+  <script define:vars={{ locale }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof BookingCalendar !== 'undefined' && document.getElementById('bookingCalendar')) {
+        new BookingCalendar('bookingCalendar', { lang: locale, onBookingComplete: () => {} });
+      }
+    });
+  </script>
+
+  <!-- Hero glucose-band chart (SN-015.1): synthetic/illustrative data only -->
+  <script>
+    import { initGlucoseChart, heroChartConfig } from '../../scripts/glucose-chart';
+    initGlucoseChart('hero', heroChartConfig);
+  </script>
+</Layout>

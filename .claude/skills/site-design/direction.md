@@ -1,6 +1,6 @@
 # Site direction (binding; revised 2026-09-26 by the user's pick in SN-036)
 
-Reason for revision: the user picked SN-036 "Итог · A+D" (base A, questions from D; photo logo on phone only) over the SN-034 Lora/Inter direction, which they judged AI-generic. Mockup: https://claude.ai/artifact/TgJykR7fPrccNiJu2RHsrW, source `.claude/tasks/design/SN-036/notes/mockups/index.html` (`.F` rules).
+Reason: the user picked SN-036 "Итог · A+D" over SN-034 (Lora/Inter, judged AI-generic). Mockup: https://claude.ai/artifact/TgJykR7fPrccNiJu2RHsrW, source `.claude/tasks/design/SN-036/notes/mockups/index.html` (`.F` rules).
 
 ## Brief
 - Sofija Ivanova: nutrition specialist in Riga, doctoral researcher on diabetes and CGM (not "Dr." until the defence; title "uztura speciāliste" vs "sertificēta dietoloģe" pending her confirmation).
@@ -26,6 +26,7 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 
 ## Layout
 - Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer (SN-033, no burger). Sticky on desktop, static on phone; nothing hides on scroll.
+- Locales (SN-016): LV `/`, RU `/ru/`, EN `/en/`, one layout; LV RU EN are links, current `aria-current="page"`.
 - Hero (5fr/7fr): thesis headline, lead, button, one format line; the glucose chart on the right.
 - Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, credentials, register number once), how the approach differs, how to book.
 - Booking: format toggle, A's week grid (Mon-first, Europe/Riga), summary panel with one button. Footer minimal.
@@ -38,4 +39,4 @@ The index marker moving to the current question (200ms ease-out colour/border); 
 Hero only: AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (normal post-meal for people without diabetes; user's choice, caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
 
 ## References
-`.claude/tasks/design/SN-036/notes/references.md` (~30 sites; what was taken per site).
+`.claude/tasks/design/SN-036/notes/references.md` (~30 sites, what was taken).

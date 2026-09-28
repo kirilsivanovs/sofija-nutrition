@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '@phosphor-icons/web/regular';
 import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
+import { t, type Locale } from '../i18n/landing';
 
 interface Props {
   title: string;
@@ -10,9 +11,12 @@ interface Props {
   canonicalPath?: string;
   ogTitle?: string;
   ogDescription?: string;
+  lang?: Locale;
+  alternates?: Partial<Record<Locale, string>>;
 }
 
 const SITE_URL = 'https://sofijaivanova.lv';
+const OG_LOCALES: Record<Locale, string> = { lv: 'lv_LV', ru: 'ru_LV', en: 'en_US' };
 
 const {
   title,
@@ -20,13 +24,152 @@ const {
   canonicalPath = '/',
   ogTitle = title,
   ogDescription = description,
+  lang = 'lv',
+  alternates,
 } = Astro.props;
 
 const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+const dict = t(lang);
+const otherLocales = (Object.keys(OG_LOCALES) as Locale[]).filter((l) => l !== lang);
+
+const businessPersonGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'MedicalBusiness',
+      '@id': 'https://sofijaivanova.lv/#business',
+      name: 'Sofija Ivanova — Uztura Speciāliste',
+      alternateName: ['Sofija Ivanova — Диетолог, Рига', 'Sofija Ivanova — Nutritionist, Riga'],
+      description: dict.jsonld_business_description,
+      url: 'https://sofijaivanova.lv',
+      image: 'https://sofijaivanova.lv/assets/img/sofija-crop-512.jpg',
+      email: 'info@sofijaivanova.lv',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Rīga',
+        addressRegion: 'Rīga',
+        addressCountry: 'LV',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 56.9496,
+        longitude: 24.1052,
+      },
+      areaServed: [
+        { '@type': 'City', name: 'Rīga' },
+        { '@type': 'Country', name: 'Latvija' },
+      ],
+      medicalSpecialty: 'Dietetics',
+      priceRange: '€€',
+      currenciesAccepted: 'EUR',
+      paymentAccepted: 'Cash, Bank Transfer',
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00',
+      },
+      sameAs: [
+        'https://www.instagram.com/sofija.nutrition',
+        'https://www.facebook.com/sofijaivanova.nutrition',
+        'https://www.linkedin.com/in/sofijaivanova',
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Uztura konsultāciju pakalpojumi',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'MedicalTherapy',
+              name: 'Individuāla uztura konsultācija',
+              alternateName: 'Индивидуальная консультация диетолога',
+              description: dict.jsonld_offer_description,
+            },
+            price: '65',
+            priceCurrency: 'EUR',
+            priceSpecification: {
+              '@type': 'PriceSpecification',
+              price: '65',
+              priceCurrency: 'EUR',
+              unitText: '60 min',
+            },
+            availability: 'https://schema.org/InStock',
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://sofijaivanova.lv/#person',
+      name: 'Sofija Ivanova',
+      jobTitle: dict.jsonld_person_jobtitle,
+      description: dict.jsonld_person_description,
+      url: 'https://sofijaivanova.lv',
+      image: 'https://sofijaivanova.lv/assets/img/sofija-crop-512.jpg',
+      alumniOf: [
+        {
+          '@type': 'EducationalOrganization',
+          name: 'Rīgas Stradiņa universitāte',
+          alternateName: 'RSU',
+        },
+        {
+          '@type': 'EducationalOrganization',
+          name: 'Latvijas Universitāte',
+          alternateName: 'LU',
+        },
+      ],
+      hasCredential: [
+        {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'degree',
+          name: 'MSc Uzturzinātnē',
+        },
+      ],
+      knowsAbout: ['Dietetics', 'Diabetes Prevention', 'Metabolic Health', 'Gut Health', 'Nutritional Science'],
+      sameAs: [
+        'https://www.instagram.com/sofija.nutrition',
+        'https://www.facebook.com/sofijaivanova.nutrition',
+        'https://www.linkedin.com/in/sofijaivanova',
+      ],
+      worksFor: { '@id': 'https://sofijaivanova.lv/#business' },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://sofijaivanova.lv/#website',
+      url: 'https://sofijaivanova.lv',
+      name: 'Sofija Ivanova — Uztura Speciāliste Rīgā',
+      description: dict.jsonld_website_description,
+      publisher: { '@id': 'https://sofijaivanova.lv/#person' },
+      inLanguage: ['lv', 'ru', 'en'],
+    },
+    {
+      '@type': 'WebPage',
+      '@id': 'https://sofijaivanova.lv/#webpage',
+      url: 'https://sofijaivanova.lv',
+      name: 'Sofija Ivanova | Uztura Speciāliste Rīgā | Personalizētas Uztura Konsultācijas',
+      isPartOf: { '@id': 'https://sofijaivanova.lv/#website' },
+      about: { '@id': 'https://sofijaivanova.lv/#person' },
+      description: dict.jsonld_webpage_description,
+      inLanguage: ['lv', 'ru', 'en'],
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: dict.jsonld_breadcrumb_home,
+            item: 'https://sofijaivanova.lv/',
+          },
+        ],
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
-<html lang="lv">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,11 +194,14 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Hreflang — single-URL multilingual page (LV primary, content in RU/EN via JS i18n) -->
-    <link rel="alternate" hreflang="lv" href={canonicalUrl} />
-    <link rel="alternate" hreflang="ru" href={canonicalUrl} />
-    <link rel="alternate" hreflang="en" href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+    <!-- Hreflang — per-locale routes; emitted only when alternates are provided (landing) -->
+    {
+      alternates &&
+        Object.entries(alternates).map(([localeCode, href]) => (
+          <link rel="alternate" hreflang={localeCode} href={`${SITE_URL}${href}`} />
+        ))
+    }
+    {alternates?.lv && <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${alternates.lv}`} />}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -66,9 +212,11 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <meta property="og:image:width" content="512" />
     <meta property="og:image:height" content="512" />
     <meta property="og:image:alt" content="Sofija Ivanova — uztura speciāliste Rīgā" />
-    <meta property="og:locale" content="lv_LV" />
-    <meta property="og:locale:alternate" content="ru_LV" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale" content={OG_LOCALES[lang]} />
+    {
+      alternates &&
+        otherLocales.map((l) => <meta property="og:locale:alternate" content={OG_LOCALES[l]} />)
+    }
     <meta property="og:site_name" content="Sofija Ivanova — Uztura Speciāliste" />
 
     <!-- Twitter -->
@@ -84,151 +232,7 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     <meta name="ICBM" content="56.9496, 24.1052" />
 
     <!-- Structured Data — MedicalBusiness + Person (combined graph) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "MedicalBusiness",
-            "@id": "https://sofijaivanova.lv/#business",
-            "name": "Sofija Ivanova — Uztura Speciāliste",
-            "alternateName": [
-              "Sofija Ivanova — Диетолог, Рига",
-              "Sofija Ivanova — Nutritionist, Riga"
-            ],
-            "description": "Sertificēta dietoloģe Rīgā. Personalizētas uztura konsultācijas, diabēta profilakse, metabolā veselība. Doktorante Latvijas Universitātē, pētniece.",
-            "url": "https://sofijaivanova.lv",
-            "image": "https://sofijaivanova.lv/assets/img/sofija-crop-512.jpg",
-            "email": "info@sofijaivanova.lv",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Rīga",
-              "addressRegion": "Rīga",
-              "addressCountry": "LV"
-            },
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": 56.9496,
-              "longitude": 24.1052
-            },
-            "areaServed": [
-              { "@type": "City", "name": "Rīga" },
-              { "@type": "Country", "name": "Latvija" }
-            ],
-            "medicalSpecialty": "Dietetics",
-            "priceRange": "€€",
-            "currenciesAccepted": "EUR",
-            "paymentAccepted": "Cash, Bank Transfer",
-            "openingHoursSpecification": {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              "opens": "09:00",
-              "closes": "18:00"
-            },
-            "sameAs": [
-              "https://www.instagram.com/sofija.nutrition",
-              "https://www.facebook.com/sofijaivanova.nutrition",
-              "https://www.linkedin.com/in/sofijaivanova"
-            ],
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Uztura konsultāciju pakalpojumi",
-              "itemListElement": [
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "MedicalTherapy",
-                    "name": "Individuāla uztura konsultācija",
-                    "alternateName": "Индивидуальная консультация диетолога",
-                    "description": "60 min personalizēta uztura konsultācija klātienē vai tiešsaistē"
-                  },
-                  "price": "65",
-                  "priceCurrency": "EUR",
-                  "priceSpecification": {
-                    "@type": "PriceSpecification",
-                    "price": "65",
-                    "priceCurrency": "EUR",
-                    "unitText": "60 min"
-                  },
-                  "availability": "https://schema.org/InStock"
-                }
-              ]
-            }
-          },
-          {
-            "@type": "Person",
-            "@id": "https://sofijaivanova.lv/#person",
-            "name": "Sofija Ivanova",
-            "jobTitle": "Sertificēta dietoloģe, doktorante",
-            "description": "Sertificēta dietoloģe (MSc Uzturzinātnē, RSU), doktorante Latvijas Universitātē. Pētniecība — uztura loma diabēta ārstēšanā un profilaksē, personalizēts uzturs.",
-            "url": "https://sofijaivanova.lv",
-            "image": "https://sofijaivanova.lv/assets/img/sofija-crop-512.jpg",
-            "alumniOf": [
-              {
-                "@type": "EducationalOrganization",
-                "name": "Rīgas Stradiņa universitāte",
-                "alternateName": "RSU"
-              },
-              {
-                "@type": "EducationalOrganization",
-                "name": "Latvijas Universitāte",
-                "alternateName": "LU"
-              }
-            ],
-            "hasCredential": [
-              {
-                "@type": "EducationalOccupationalCredential",
-                "credentialCategory": "degree",
-                "name": "MSc Uzturzinātnē"
-              }
-            ],
-            "knowsAbout": [
-              "Dietetics",
-              "Diabetes Prevention",
-              "Metabolic Health",
-              "Gut Health",
-              "Nutritional Science"
-            ],
-            "sameAs": [
-              "https://www.instagram.com/sofija.nutrition",
-              "https://www.facebook.com/sofijaivanova.nutrition",
-              "https://www.linkedin.com/in/sofijaivanova"
-            ],
-            "worksFor": { "@id": "https://sofijaivanova.lv/#business" }
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://sofijaivanova.lv/#website",
-            "url": "https://sofijaivanova.lv",
-            "name": "Sofija Ivanova — Uztura Speciāliste Rīgā",
-            "description": "Personalizētas uztura konsultācijas Rīgā un tiešsaistē. Diabēta profilakse, metabolā veselība, zarnu veselība.",
-            "publisher": { "@id": "https://sofijaivanova.lv/#person" },
-            "inLanguage": ["lv", "ru", "en"]
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://sofijaivanova.lv/#webpage",
-            "url": "https://sofijaivanova.lv",
-            "name": "Sofija Ivanova | Uztura Speciāliste Rīgā | Personalizētas Uztura Konsultācijas",
-            "isPartOf": { "@id": "https://sofijaivanova.lv/#website" },
-            "about": { "@id": "https://sofijaivanova.lv/#person" },
-            "description": "Sertificēta uztura speciāliste Rīgā. Individuālas uztura konsultācijas, diabēta profilakse, metabolā veselība.",
-            "inLanguage": ["lv", "ru", "en"],
-            "breadcrumb": {
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Sākums",
-                  "item": "https://sofijaivanova.lv/"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(businessPersonGraph)} />
 
     <!-- Structured Data — FAQPage (Google rich results) -->
     <script type="application/ld+json">
@@ -296,24 +300,9 @@ const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
   </head>
   <body class="font-sans text-gray-800 bg-white antialiased">
-    <noscript>
-      <div
-        style="background:var(--color-graphite);color:var(--color-white);padding:1rem;text-align:center;font-family:sans-serif;"
-      >
-        <p><strong>Sofija Ivanova</strong> — Uztura speciāliste</p>
-        <p>
-          Tālrunis: <a href="tel:+37120223399" style="color:var(--color-white)">+371 2022 3399</a> | E-pasts: <a
-            href="mailto:info@sofijaivanova.lv"
-            style="color:var(--color-white)">info@sofijaivanova.lv</a
-          >
-        </p>
-      </div>
-    </noscript>
-
     <slot />
 
     <!-- Shared translations -->
     <script is:inline src="/assets/shared-translations.js"></script>
-    <script defer is:inline src="/assets/main.js"></script>
   </body>
 </html>
