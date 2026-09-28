@@ -343,100 +343,6 @@
 }
 
 /* =============================================
-   SERVICES GRID
-   ============================================= */
-
-.services-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
-
-.services-grid .service-card {
-  flex: 0 1 calc((100% - 40px) / 3);
-  min-width: 280px;
-}
-
-.service-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  padding: 30px 26px;
-  border-radius: var(--radius-sm);
-  background: var(--color-mist);
-  border: 1px solid rgba(27, 67, 50, 0.09);
-  transition: border-color 0.3s ease;
-  overflow: hidden;
-}
-
-.service-card:hover {
-  border-color: rgba(27, 67, 50, 0.18);
-}
-
-.service-title {
-  font-family: var(--font-sans);
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-graphite);
-  margin-bottom: 10px;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  font-optical-sizing: auto;
-  font-feature-settings:
-    'liga' 1,
-    'calt' 1;
-  text-rendering: optimizeLegibility;
-}
-
-.service-card--featured .service-title {
-  color: #fff;
-}
-
-.service-desc {
-  font-size: 15px;
-  line-height: 1.68;
-  color: var(--color-slate);
-  margin-top: auto;
-}
-
-.service-card--featured .service-desc {
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.service-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.9px;
-  margin-bottom: 16px;
-}
-
-.service-tag--unique {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-}
-
-#services .text-center.mb-12,
-#faq .text-center.mb-12 {
-  margin-bottom: 2.75rem;
-}
-
-@media (min-width: 768px) {
-  #services .text-center.mb-12,
-  #faq .text-center.mb-12 {
-    margin-bottom: 3.5rem;
-  }
-}
-
-/* =============================================
    FAQ
    ============================================= */
 
@@ -517,33 +423,6 @@
 /* =============================================
    RESPONSIVE — Trust, Services, FAQ
    ============================================= */
-
-@media (max-width: 960px) {
-  .services-grid .service-card {
-    flex: 0 1 calc((100% - 16px) / 2);
-    min-width: 240px;
-  }
-
-  .services-grid {
-    gap: 16px;
-  }
-}
-
-@media (max-width: 640px) {
-  .services-grid .service-card {
-    flex: 1 1 100%;
-    min-width: 0;
-  }
-
-  .services-grid {
-    gap: 16px;
-  }
-
-  .service-card {
-    padding: 24px 20px;
-    border-radius: var(--radius-sm);
-  }
-}
 
 @media (max-width: 480px) {
   .faq-question {

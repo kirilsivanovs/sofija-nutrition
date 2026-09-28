@@ -47,7 +47,7 @@ function ruleBody(css: string, selector: string): string {
 
 describe('landing card chrome', () => {
   it('removes hover-lift transform and shadow from card and button hover states', () => {
-    const bookingHoverSelectors = ['.service-card:hover', '.trust-metric:hover'];
+    const bookingHoverSelectors = ['.trust-metric:hover'];
     const globalHoverSelectors = [
       '.outcome-card:hover',
       '.whom-item:hover',

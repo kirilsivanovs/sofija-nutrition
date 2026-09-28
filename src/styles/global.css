@@ -833,8 +833,7 @@ i.ph {
   }
 
   /* Prevent page breaks inside key elements */
-  .faq-item,
-  .service-card {
+  .faq-item {
     page-break-inside: avoid;
   }
 
