@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Stop / SubagentStop hook: append one line of token usage per event to
+ * Stop / SubagentStop hook: append one line of token usage per event (more
+ * than one for a main-session `Stop` whose pass touched several tickets) to
  * .claude/metrics/usage.jsonl, so the cost of a route can be judged from data
  * rather than from /usage percentages that cannot be grouped by ticket.
  *
@@ -23,7 +24,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const METRICS = path.join(__dirname, "..", "metrics");
+// USAGE_METRICS_DIR overrides the metrics folder for a test run, so a test
+// never writes into the real usage.jsonl; unset, this is unchanged.
+const METRICS = process.env.USAGE_METRICS_DIR || path.join(__dirname, "..", "metrics");
 const LOG = path.join(METRICS, "usage.jsonl");
 const ERRORS = path.join(METRICS, "errors.log");
 const STATE = path.join(METRICS, ".state");
@@ -67,6 +70,9 @@ function run(input) {
     return;
   }
   if (!transcript || !fs.existsSync(transcript)) {
+    // Internal harness agents (SubagentStop with no transcript of their own)
+    // fire routinely and are not an error; a missing main transcript is.
+    if (event === "SubagentStop") return;
     throw new Error(`${event}: transcript not found: ${transcript}`);
   }
 
@@ -74,40 +80,60 @@ function run(input) {
   const stateFile = path.join(STATE, safeName(stateKey) + ".json");
   const state = readState(stateFile);
 
-  const { lines, nextOffset } = readNewLines(transcript, state.offset);
-  const pass = sum(lines, state);
+  // The ticket is fixed by the first human message of the transcript for a
+  // sub-agent (it only ever works one ticket); the main session instead
+  // tracks the most recent ticket key typed, per turn, carried in `state.ticket`.
+  if (scope === "subagent" && !state.ticket) state.ticket = firstUserTicket(transcript);
 
-  // The ticket is fixed by the first human message of the transcript; the main
-  // session falls back to the newest key typed in this turn.
-  if (!state.ticket) state.ticket = scope === "subagent" ? firstUserTicket(transcript) : null;
-  const ticket = scope === "subagent" ? state.ticket : pass.ticket || state.ticket || null;
-  if (scope === "main" && pass.ticket) state.ticket = pass.ticket;
+  const { lines, nextOffset } = readNewLines(transcript, state.offset);
+  const pass = sum(lines, state, scope === "main");
 
   state.offset = nextOffset;
   state.lastMsgId = pass.lastMsgId;
   state.lastOutput = pass.lastOutput;
+  if (pass.finalTicket) {
+    state.ticket = pass.finalTicket;
+  } else if (scope === "main" && !state.ticket) {
+    // Defensive fallback: the transcript's own JSONL record shapes are not a
+    // documented contract, so if per-turn detection above found nothing at
+    // all, fall back to the first ticket ever typed rather than leaving every
+    // row on this ticket unattributed.
+    state.ticket = firstUserTicket(transcript);
+  }
 
-  if (pass.turns > 0 || pass.tokens.output > 0) {
+  // A pass can span several tickets (main session only); one row per ticket
+  // segment so cost never books against the wrong one.
+  for (const seg of pass.segments) {
+    const ticket = scope === "subagent" ? state.ticket : seg.ticket || state.ticket || null;
     const line = {
       ts: new Date().toISOString(),
       session_id: input.session_id || null,
       scope,
       agent_type: scope === "subagent" ? input.agent_type || null : input.agent_type || "main",
       agent_id: scope === "subagent" ? input.agent_id || null : undefined,
-      model: [...pass.models].join(",") || null,
+      model: [...seg.models].join(",") || null,
       ticket,
-      turns: pass.turns,
-      tool_calls: pass.toolCalls,
-      tokens: pass.tokens,
-      est_usd: round(pass.usd),
+      command: seg.command || null,
+      turns: seg.turns,
+      tool_calls: seg.toolIds.size,
+      tokens: seg.tokens,
+      est_usd: round(seg.usd),
       prices_checked: PRICES_CHECKED,
       route: ROUTE,
     };
-    if (pass.unpriced.size) line.unpriced_models = [...pass.unpriced];
+    if (seg.unpriced.size) line.unpriced_models = [...seg.unpriced];
     fs.appendFileSync(LOG, JSON.stringify(line) + "\n", "utf8");
   }
 
   fs.writeFileSync(stateFile, JSON.stringify(state), "utf8");
+}
+
+/** The slash command name of the most recent invocation in a chunk of text, without its `/`. */
+function extractCommand(text) {
+  let m = /<command-name>\s*\/?([^<\s]+)/.exec(text);
+  if (m) return m[1];
+  m = /(?:^|\n)\s*\/([a-zA-Z][\w-]*)\b/.exec(text);
+  return m ? m[1] : null;
 }
 
 /** Complete lines from `offset` on; a trailing partial line is left for the next pass. */
@@ -130,17 +156,38 @@ function readNewLines(file, offset) {
   }
 }
 
-function sum(lines, state) {
-  const tokens = { input: 0, cache_write_5m: 0, cache_write_1h: 0, cache_read: 0, output: 0 };
-  const models = new Set();
-  const unpriced = new Set();
-  const toolIds = new Set();
-  const seen = new Map(); // message.id -> output counted so far
-  let usd = 0;
-  let turns = 0;
-  let ticket = null;
+/**
+ * Sums usage into one or more segments. `segmentByTicket` (main session only)
+ * starts a new segment whenever a human message names a different ticket than
+ * the one currently in effect, so a pass that works several tickets books each
+ * one's cost separately; a sub-agent never switches ticket mid-run, so it
+ * always gets a single segment carrying `state.ticket`.
+ */
+function sum(lines, state, segmentByTicket) {
+  const segments = [];
+  const seen = new Map(); // message.id -> output counted so far, global across segments
+  let currentTicket = state.ticket || null;
+  let currentCommand = null;
   let lastMsgId = state.lastMsgId || null;
   let lastOutput = state.lastOutput || 0;
+
+  function newSegment(ticket) {
+    return {
+      ticket,
+      command: currentCommand,
+      tokens: { input: 0, cache_write_5m: 0, cache_write_1h: 0, cache_read: 0, output: 0 },
+      models: new Set(),
+      unpriced: new Set(),
+      toolIds: new Set(),
+      usd: 0,
+      turns: 0,
+    };
+  }
+
+  let seg = newSegment(currentTicket);
+  const flush = () => {
+    if (seg.turns > 0 || seg.tokens.output > 0) segments.push(seg);
+  };
 
   for (const l of lines) {
     if (!l) continue;
@@ -152,8 +199,17 @@ function sum(lines, state) {
     }
 
     if (r.type === "user" && r.message) {
-      const k = humanText(r.message.content).match(TICKET);
-      if (k) ticket = k[0];
+      const text = humanText(r.message.content);
+      const k = text.match(TICKET);
+      const cmd = extractCommand(text);
+      if (cmd) currentCommand = cmd;
+      if (segmentByTicket && k && k[0] !== currentTicket) {
+        flush();
+        currentTicket = k[0];
+        seg = newSegment(currentTicket);
+      } else if (cmd) {
+        seg.command = currentCommand;
+      }
       continue;
     }
     if (r.type !== "assistant" || !r.message || !r.message.usage) continue;
@@ -163,7 +219,7 @@ function sum(lines, state) {
     if (model === "<synthetic>") continue;
 
     for (const c of m.content || []) {
-      if (c && c.type === "tool_use" && c.id) toolIds.add(c.id);
+      if (c && c.type === "tool_use" && c.id) seg.toolIds.add(c.id);
     }
 
     const u = m.usage;
@@ -181,8 +237,8 @@ function sum(lines, state) {
     } else {
       counted = 0;
       seen.set(id, 0);
-      turns++;
-      models.add(model);
+      seg.turns++;
+      seg.models.add(model);
       const cc = u.cache_creation;
       const write = u.cache_creation_input_tokens || 0;
       // Without the split the TTL is unknown; the API default is 5 minutes.
@@ -194,24 +250,26 @@ function sum(lines, state) {
         cache_write_1h: w1h,
         cache_read: u.cache_read_input_tokens || 0,
       };
-      for (const f of Object.keys(part)) tokens[f] += part[f];
+      for (const f of Object.keys(part)) seg.tokens[f] += part[f];
       if (price) {
-        for (const f of Object.keys(part)) usd += (part[f] * price[f]) / 1e6;
+        for (const f of Object.keys(part)) seg.usd += (part[f] * price[f]) / 1e6;
       } else {
-        unpriced.add(model);
+        seg.unpriced.add(model);
       }
     }
 
     if (out > counted) {
-      tokens.output += out - counted;
-      if (price) usd += ((out - counted) * price.output) / 1e6;
+      seg.tokens.output += out - counted;
+      if (price) seg.usd += ((out - counted) * price.output) / 1e6;
       seen.set(id, out);
     }
     lastMsgId = id;
     lastOutput = seen.get(id);
   }
 
-  return { tokens, models, unpriced, usd, turns, toolCalls: toolIds.size, ticket, lastMsgId, lastOutput };
+  flush();
+
+  return { segments, finalTicket: currentTicket, lastMsgId, lastOutput };
 }
 
 /** Text a person typed: string content or text blocks, never tool results. */

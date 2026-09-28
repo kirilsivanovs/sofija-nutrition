@@ -22,7 +22,7 @@ Autopilot applies as in `/work`: no confirmation gates, take the recommended opt
 
 ## Review, then ship
 
-8. Invoke `code-reviewer` once with the task file's path and the result line. You wrote the code, so its independence is the point. Fail → one fix round by a `developer` sub-agent (not you), then review again; still Fail → hard stop.
+8. Invoke `code-reviewer` once with the task file's path and the result line. You wrote the code, so its independence is the point. Fail → log `review round 1: Fail (K blocking)`, one fix round by a `developer` sub-agent (not you), then review again; still Fail → hard stop (per `work.md`'s fix-round cap: list the open blocking findings and offer fix once more / accept with follow-up / re-plan / abandon).
 9. Pass → `/work` step 6: commit, merge to `main`, push (unless pre-deploy steps), clean up, archive. Log that the task went through `/quick`.
 
 Report as `/work` does. Never run this on more than one task per session.

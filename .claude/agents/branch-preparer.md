@@ -9,7 +9,7 @@ color: yellow
 omitClaudeMd: true
 ---
 
-You are off the route: `/work` cuts branches with `.claude/scripts/prepare-branch.ps1`, which implements the same steps, and runs you only when the script cannot be used or the user asks (`/orchestrate force branch-preparer <ID>`). Keep the two in step when either changes.
+You are off the route: `/work` cuts branches with `.claude/scripts/prepare-branch.ps1`, which implements the same steps, and runs you only when the script cannot be used or the user asks for you by name. Keep the two in step when either changes.
 
 You create one branch. Nothing else.
 

@@ -8,7 +8,7 @@ Claude Code re-sends the **entire conversation with every request**, and every t
 
 | Multiplier | Effect |
 |---|---|
-| Cache misses | after an idle gap longer than the cache lifetime (1h on a subscription, 5 min on usage credits), **or after a model change mid-session** (an effort change too, except on Opus 5.5 and Fable 5.1), the next request re-writes the full context at cache-write price |
+| Cache misses | after an idle gap longer than the cache lifetime (1h on a subscription, 5 min on usage credits), **or after a model change mid-session** (a session-level effort change too, on every model — see below), the next request re-writes the full context at cache-write price |
 | High effort | effort shapes all output — text, tool calls and thinking — and output is the expensive direction |
 | Opus instead of Sonnet | 2× on input, output and cache writes; the same price on cache reads |
 
@@ -23,15 +23,15 @@ Claude Code re-sends the **entire conversation with every request**, and every t
 
 In a long session most tokens are cache reads, which cost the same on Opus 5.5 and Sonnet 5. So the size of the context and the stability of the cache matter more than which of the two runs it. When the price table changes, update the map in `hooks/usage-log.js` too.
 
-### Never switch model mid-session
+### Never switch model or effort mid-session
 
-Each model has its own cache, so a switch re-writes the whole conversation. Commands carry no model or effort; `.claude/settings.json` sets them once (`sonnet`, `medium`). Want Opus for a deep ad-hoc session? Pick it **at the start**. Sub-agents are unaffected: each starts its own context, so their `model:` is free.
+Each model has its own cache, so a switch re-writes the whole conversation. Effort is no safer: a **session-level** change — the only kind exposed here, and the only kind Claude Code makes — restarts the cache on every model, Opus 5.5 and Fable 5.1 included. The API docs' one exception is narrower: a **per-message** effort change (a beta `output_config` on a single message) preserves the cache, on Fable 5.1, Mythos 5.1, Opus 5.5 and Opus 5 — an API capability this setup does not use. Commands carry no model or effort; `.claude/settings.json` sets them once (`sonnet`, `medium`). Want Opus for a deep ad-hoc session? Pick it **at the start**. Sub-agents are unaffected: each starts its own context, so their `model:` is free.
 
 ## What this setup changes
 
 **The board is the memory, not the chat.** `.claude/tasks/<category>/<ID>/` holds the description, analysis, plan, branch, sub-tasks and log, so you can clear between tasks and lose nothing. State lives in `status:`, and the whole board is read with **one** `grep` over the frontmatter.
 
-**The board is local.** There is no tracker to sync with: `/new` creates a task, `/work` archives it once its commit is on `main`. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
+**The board is local.** There is no tracker to sync with: `/work` files a new task from a title and archives it once its commit is on `main`. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
 
 **Thinking happens once, at the top.** `analyzer` (opus) establishes the requirement, the root cause and the shape, and for S/M tasks writes the steps too. `developer` (sonnet, low effort) executes them instead of re-deriving anything.
 
@@ -56,7 +56,7 @@ Each model has its own cache, so a switch re-writes the whole conversation. Comm
 | `developer` | sonnet | low | follows an explicit plan; the bulk of all spend |
 | `code-reviewer` | sonnet | high | small input (a diff and a test result), last thing before a commit — don't starve it |
 | `tester` | sonnet | medium | off the route; for browser scenarios (booking, language switch, keyboard access) |
-| `architect` | opus | high | off the route; only via `/orchestrate force architect` for decisions that outlive the task (patient record model, auth boundary) |
+| `architect` | opus | high | off the route; only via a plain-language override (e.g. "needs architect") for decisions that outlive the task (patient record model, auth boundary) |
 
 ## No gates, but hard stops
 
@@ -75,8 +75,8 @@ The user chose autopilot: `/work` runs every stage back to back and takes the re
 ## Working rules
 
 1. **One task, one session.** Clear when you switch to unrelated work.
-2. **Never implement in the router session.** The exception is `/quick`, chosen by you, in a fresh session, for an S task.
-3. **Ask with `/find`, not with greps.**
+2. **Never implement in the router session.** `/work` costs less.
+3. **Ask a search question by handing it to the built-in `Explore` agent**, not with greps in this session.
 4. **Be specific.** "Escape meal item names in `MealsTab.ts`" reads two files. "Make the admin safer" reads fifty.
 5. **Stop early.** Escape the moment a run heads the wrong way.
 6. **Watch the MCP surface.** Tool definitions ship with every request; this project needs no Jira, Confluence or Slack servers — disable them for this folder from an interactive `claude` terminal (`/mcp`).

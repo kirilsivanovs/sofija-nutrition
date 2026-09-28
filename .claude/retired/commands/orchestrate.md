@@ -19,7 +19,7 @@ Append an item to an existing **recurring** task (copy fixes, translation gaps, 
 
 ## `force <stage> <task-id>`
 
-Run a specific stage against a task whose `status` would have routed elsewhere — `analyzer`, `architect`, `dev-planner`, `designer`, `branch-preparer`, `developer`, `tester`, `code-reviewer`. `tester` is for a browser scenario the plan names, or when the user asks; its pass moves `testing` → `review`. Use this for re-planning, re-diagnosing a bug whose stated cause turned out wrong, or overriding the `architectural` flag.
+Run a specific stage against a task whose `status` would have routed elsewhere — `analyzer`, `architect`, `dev-planner`, `designer`, `branch-preparer`, `developer`, `tester`, `code-reviewer`. `tester` is for a browser scenario the plan names, or when the user asks; its pass moves `testing` → `review`, and its fail still counts toward `work.md`'s fix-round cap for that task. Use this for re-planning, re-diagnosing a bug whose stated cause turned out wrong, or overriding the `architectural` flag.
 
 Say in one line which stage the normal route would have chosen and why you are overriding it, then invoke that one agent and report as `/work` does.
 

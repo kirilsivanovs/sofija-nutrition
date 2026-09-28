@@ -9,7 +9,7 @@ The first token of `$ARGUMENTS` is the task id; everything after it (and anythin
 
 ## Where it goes
 
-1. Find `.claude/tasks/<category>/<ID>/task.md`. Not on the board → say so and offer `/new`; don't create an id here.
+1. Find `.claude/tasks/<category>/<ID>/task.md` (a bare `Glob .claude/tasks/*/<ID>/task.md` if you don't know the category yet). Not on the board and `$ARGUMENTS` looks like an id someone already assigned → say so and stop, don't invent one. Given a title instead of an id → file it the way `/work`'s "Find or create the task" does (`.claude/commands/work.md`), then continue with step 2 below.
 2. Append to its `## Inputs` section. Never overwrite what is there; it is append-only and dated.
 
 ## How to file it

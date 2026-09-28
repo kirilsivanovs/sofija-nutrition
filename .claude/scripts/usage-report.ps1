@@ -78,4 +78,5 @@ function Write-Table {
 
 Write-Table 'By ticket' { if ($_.ticket) { $_.ticket } else { '(none)' } }
 Write-Table 'By agent type' { if ($_.agent_type) { $_.agent_type } else { '(unknown)' } }
+Write-Table 'By command' { if ($_.command) { $_.command } else { '(none)' } }
 Write-Output (Get-Summary $rows 'TOTAL' | Format-Table -AutoSize | Out-String -Width 200)

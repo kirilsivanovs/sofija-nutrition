@@ -38,3 +38,9 @@ It holds **only token counts and identifiers** — no prompt text, no code, no d
 A transcript is read from a byte offset stored in `.state/<scope>-<id>.json`, so each API message is counted once, including when a sub-agent is resumed. One message is spread over several transcript records with the same `message.id`; it is counted once, with its final output count. The files in `.state/` are bookkeeping only and can be deleted — the next event then recounts that transcript from the start.
 
 Hook failures never reach the session; they go to `errors.log` here.
+
+## Outcomes and the retro loop
+
+`outcomes.jsonl` is appended by `.claude/scripts/log-outcome.ps1`, called by `/work` after each `code-reviewer`/`tester` verdict and on close/reopen: `{ts,ticket,size,stage,round,verdict,blocking,tests}`, plus a bare `{ts,ticket,verdict:"reopened"}` when an archived task comes back. It holds only identifiers and counts, never prompt text or code.
+
+The `retro` skill (`.claude/skills/retro/SKILL.md`) reads this file plus `usage-report.ps1`'s output, at most once every 7 days, and writes up to 3 proposals to `proposals/<date>.md`. `changelog.md` records every proposal actually applied (date, task, one clause); `scouting-seen.md` records doc/blog URLs its web-scouting pass already opened, so later runs don't re-fetch them.

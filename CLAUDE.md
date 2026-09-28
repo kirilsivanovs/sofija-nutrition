@@ -36,7 +36,7 @@ Three frontend suites are excluded in `jest.config.cjs` as broken (`booking-stat
 - Never render untrusted data with `innerHTML`; use `textContent` or an escaping helper. Never build an OData filter by string concatenation; use `odata\`\`` or `sanitizeODataValue`.
 - Auth: the caller's identity comes only from the SWA client principal, never from a query parameter or body field. No bypass for "local" or "test" callers in production code paths.
 - UI work follows the `site-design` skill; anything touching patient data follows the `patient-data` skill.
-- Commits and pushes happen only in `/work` step 6 (or `/quick`), after verification and review pass. Outside that, never commit or push unless asked.
+- Commits and pushes happen only in `/work` step 6, after verification and review pass. Outside that, never commit or push unless asked.
 
 ## Patient data and secrets
 
@@ -61,29 +61,22 @@ Diary entries, measurements, complaints and consultation notes are health data (
 - Never paste build/test output into the reply — report the failing assertion and `file:line`.
 - Work is tracked in `.claude/tasks/` (see its README). It is the memory between sessions and it is local only (gitignored).
 - A task file stays **within 12 KB** (a hook enforces it). `## Log` is one line per event.
-- Delegate to a sub-agent; do not implement in the main session (except `/quick`).
+- Delegate to a sub-agent; do not implement in the main session.
 
 ## Commands
 
 | | |
 |---|---|
-| `/new "<title>"` | create a task on the board (`SN-NNN`), optionally with a pasted description |
+| `/work [ID\|category\|"<title>"]` | the only pipeline command: files a new task if given a title instead of an id, else takes that task (or the most urgent one in `design`, `functional`, `security`, `devops`, `maintenance`, or overall) to `done` on autopilot |
 | `/brief <ID> ...` | give a task what you already know — links, a pasted conversation, screenshots |
-| `/work [ID\|category]` | take that task (or the most urgent one in `design`, `functional`, `security`, `devops`, `maintenance`) to done. `/next` is the same thing |
-| `/board` | where every task stands |
-| `/find "..."` | where is X / how does Y work — changes nothing |
-| `/test <ID>` | run that task's tests — no agent, the cheapest command |
-| `/review <ID>` | review its diff now, out of turn |
-| `/quick <ID>` | opt-in fast lane for a size-S task, in a fresh session |
-| `/close <ID>` | archive a task finished outside `/work` (`/work` closes its own tasks) |
 
-`/orchestrate` covers the rare cases: forcing a stage, recurring-task items, adopting hand-started work, board checks.
+Everything `/new`, `/close`, `/orchestrate`, `/board`, `/find`, `/next`, `/test`, `/review` and `/quick` used to cover is folded into `/work` (`.claude/commands/work.md`); the retired files are kept, inert, under `.claude/retired/` for reference.
 
 ## The pipeline
 
 `/work` takes a task from its `status` to `done` on autopilot: analysis, plan, branch, implementation, verification, review, commit, fast-forward merge into `main`, push, archive. `.claude/commands/work.md` holds the route, the fix rounds and the hard stops. **There are no pull requests: pushing `main` deploys production** (frontend after CI passes; API immediately until SN-006 gates it).
 
-- Plain language maps to the matching command: a bare id or "давай возьмём SN-012" is `/work SN-012`, "давай дизайн" is `/work design`, "продолжай" is `/work`, "что там по задачам" is `/board`, "заведи задачу …" is `/new`, "где в коде..." is `/find`. Say which command you took it as. A bare "yes" after a gate authorises the stage just described.
+- Plain language maps to `/work`: a bare id or "давай возьмём SN-012" is `/work SN-012`, "давай дизайн" is `/work design`, "продолжай" is `/work` with no id, "заведи задачу …" is `/work "<title>"`, "передумай"/"re-analyze" on a named task forces that one stage (`work.md`, "Plain-language stage overrides"). Say which you took it as. A bare "yes" after a gate authorises the stage just described.
 - No pull requests. Never force-push, `reset --hard` or rewrite pushed history.
 - One task at a time: a single `/work` session, in this checkout. No parallel sessions, no worktree slots.
 - Never isolate a writing agent in a worktree (`isolation: worktree`, or `claude --bg`): worktrees don't carry the uncommitted edits each seam builds on.
