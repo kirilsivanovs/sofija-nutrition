@@ -1,24 +1,24 @@
 /**
- * Hero + glucose chart (SN-015.1).
- * Container 1160px per direction.md; 5fr/7fr split collapsing to one column
+ * Landing hero (thesis + credentials) and the glucose-chart figure in Q4.
+ * Container 1160px per direction.md; 7fr/5fr split collapsing to one column
  * on phone. No shadows, no gradients; radius 4px throughout (direction.md).
  */
 
-.hero-chart {
+.landing-hero {
   border-bottom: 1px solid var(--color-line);
 }
 
-.hero-chart__inner {
+.landing-hero__inner {
   max-width: 1160px;
   margin: 0 auto;
   padding: 72px 40px 64px;
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 7fr 5fr;
   gap: 56px;
   align-items: start;
 }
 
-.hero-chart__title {
+.landing-hero__title {
   font-family: var(--font-sans);
   font-weight: 300;
   font-size: 46px;
@@ -27,11 +27,11 @@
   margin: 0 0 20px;
 }
 
-.hero-chart__title strong {
+.landing-hero__title strong {
   font-weight: 600;
 }
 
-.hero-chart__lead {
+.landing-hero__lead {
   font-size: 18px;
   line-height: 1.6;
   color: var(--color-graphite);
@@ -39,7 +39,7 @@
   margin: 0 0 28px;
 }
 
-.hero-chart__facts {
+.landing-hero__facts {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -50,14 +50,14 @@
   color: var(--color-slate);
 }
 
-.hero-chart__chart {
-  margin: 0;
+.glucose-fig {
+  margin: 16px 0 0;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   padding: 20px 20px 16px;
 }
 
-.hero-chart__chart-head {
+.glucose-fig__head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -66,14 +66,14 @@
   margin-bottom: 8px;
 }
 
-.hero-chart__chart-head h2 {
+.glucose-fig__head h3 {
   font-size: 15px;
   font-weight: 600;
   color: var(--color-graphite);
   margin: 0;
 }
 
-.hero-chart__legend {
+.glucose-fig__legend {
   display: flex;
   gap: 16px;
   list-style: none;
@@ -83,7 +83,7 @@
   color: var(--color-slate);
 }
 
-.hero-chart__legend-mark {
+.glucose-fig__mark {
   display: inline-block;
   width: 18px;
   height: 0;
@@ -92,15 +92,15 @@
   margin-right: 6px;
 }
 
-.hero-chart__legend-mark--a {
+.glucose-fig__mark--a {
   border-color: var(--color-range);
 }
 
-.hero-chart__legend-mark--b {
+.glucose-fig__mark--b {
   border-color: var(--color-navy);
 }
 
-.hero-chart__svg {
+.glucose-fig__svg {
   width: 100%;
   height: auto;
   display: block;
@@ -108,18 +108,18 @@
   cursor: crosshair;
 }
 
-.hero-chart__svg text {
+.glucose-fig__svg text {
   font: 400 11px var(--font-sans);
   fill: var(--color-slate);
   font-variant-numeric: tabular-nums;
 }
 
-.hero-chart__svg:focus-visible {
+.glucose-fig__svg:focus-visible {
   outline: 2px solid var(--color-range);
   outline-offset: 3px;
 }
 
-.hero-chart__readout {
+.glucose-fig__readout {
   display: grid;
   grid-template-columns: repeat(3, auto);
   justify-content: start;
@@ -130,40 +130,68 @@
   border-top: 1px solid var(--color-line);
 }
 
-.hero-chart__readout dt {
+.glucose-fig__readout dt {
   color: var(--color-slate);
   font-size: 12px;
 }
 
-.hero-chart__readout dd {
+.glucose-fig__readout dd {
   margin: 0;
   font-weight: 600;
   color: var(--color-graphite);
   font-variant-numeric: tabular-nums;
 }
 
-.hero-chart__caption {
+.glucose-fig__caption {
   font-size: 12px;
   color: var(--color-slate);
   margin-top: 12px;
 }
 
+.hero-cred {
+  border-top: 2px solid var(--color-range);
+  padding-top: 20px;
+}
+
+.hero-cred h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-slate);
+  margin: 0 0 6px;
+}
+
+.hero-cred dl {
+  margin: 0;
+}
+
+.hero-cred dt {
+  font-size: 14px;
+  color: var(--color-slate);
+}
+
+.hero-cred dd {
+  margin: 2px 0 14px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-graphite);
+}
+
 @media (max-width: 760px) {
-  .hero-chart__inner {
+  .landing-hero__inner {
     grid-template-columns: 1fr;
     gap: 28px;
     padding: 36px 20px 40px;
   }
 
-  .hero-chart__title {
+  .landing-hero__title {
     font-size: 34px;
   }
 
-  .hero-chart__lead {
+  .landing-hero__lead {
     font-size: 17px;
   }
 
-  .hero-chart__chart {
+  .glucose-fig {
     padding: 14px 12px 12px;
   }
 }
@@ -172,7 +200,7 @@
   /* The SVG viewBox stays fixed while the rendered width shrinks to ~300px,
      so the same font-size renders unreadably small. Scale it up to keep
      axis ticks and labels legible at this width. */
-  .hero-chart__svg text {
+  .glucose-fig__svg text {
     font-size: 22px;
   }
 }

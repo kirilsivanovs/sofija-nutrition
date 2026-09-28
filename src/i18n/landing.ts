@@ -18,6 +18,15 @@ export interface LandingDict {
   hero_lead: string;
   hero_cta: string;
   hero_fact: string;
+  cred_heading: string;
+  cred_degree_t: string;
+  cred_degree_d: string;
+  cred_phd_t: string;
+  cred_phd_d: string;
+  cred_project_t: string;
+  cred_project_d: string;
+  cred_register_t: string;
+  cred_register_d: string;
   hero_chart_heading: string;
   hero_chart_aria_label: string;
   hero_legend_a: string;
@@ -49,20 +58,17 @@ export interface LandingDict {
   q1_row4_t: string;
   q1_row4_d: string;
   q1_scope: string;
+  q1_refer: string;
   q2_title: string;
   q2_step1: string;
   q2_step2: string;
   q2_step3: string;
   q2_step4: string;
+  q2_step5: string;
   q3_title: string;
   q3_row1_t: string;
   q3_row1_d: string;
   q3_row1_v: string;
-  q3_row2_t: string;
-  q3_row2_d: string;
-  q3_pending: string;
-  q3_row3_t: string;
-  q3_row3_d: string;
   q4_title: string;
   about_lead: string;
   about_text: string;
@@ -73,9 +79,21 @@ export interface LandingDict {
   q4_talk2_text: string;
   q4_talk3_label: string;
   q4_talk3_text: string;
-  q4_cred: string;
   q5_title: string;
   q5_p1: string;
+  plate_intro: string;
+  plate_heading: string;
+  plate_aria: string;
+  plate_veg_t: string;
+  plate_veg_d: string;
+  plate_grain_t: string;
+  plate_grain_d: string;
+  plate_protein_t: string;
+  plate_protein_d: string;
+  plate_extra: string;
+  plate_source: string;
+  plate_adapt: string;
+  chart_intro: string;
   q6_title: string;
   booking_noscript: string;
 
@@ -108,12 +126,23 @@ export const translations: Record<Locale, LandingDict> = {
     nav_contact: 'Pieteikties',
     nav_cabinet: 'Pacienta kabinets',
 
-    hero_title_lead: 'Vienas un tās pašas brokastis.',
-    hero_title_key: 'Divas dažādas glikozes līknes.',
+    // proposed copy, pending Sofija's confirmation (hero, credentials, Q1 rows, plate)
+    hero_title_lead: 'Uztura speciāliste un pētniece.',
+    hero_title_key: 'Konsultācijas, kas balstās pierādījumos.',
     hero_lead:
-      'Tāpēc es nesāku ar gatavu ēdienkarti. Pirmajā konsultācijā apskatām Jūsu analīzes, ikdienu un ēšanas paradumus, un plānu veidojam no tiem.',
+      'Konsultēju par ikdienas uzturu, svaru, gremošanu un analīžu rādītājiem. Nesāku ar gatavu ēdienkarti: pirmajā konsultācijā apskatām Jūsu analīzes, ikdienu un ēšanas paradumus, un plānu veidojam no tiem.',
     hero_cta: 'Pieteikties konsultācijai',
-    hero_fact: '60 minūtes, klātienē Rīgā vai tiešsaistē',
+    // proposal for Sofija (2026-09-28)
+    hero_fact: '60 minūtes, klātienē Rīgā vai tiešsaistē · latviski, krieviski vai angliski',
+    cred_heading: 'Izglītība un pētniecība',
+    cred_degree_t: 'Maģistra grāds',
+    cred_degree_d: 'Mg.sc.sal., Rīgas Stradiņa universitāte',
+    cred_phd_t: 'Doktorantūra',
+    cred_phd_d: 'Latvijas Universitāte, Klīniskās un personalizētās medicīnas katedra',
+    cred_project_t: 'Pētniecība',
+    cred_project_d: 'Projekts PRAESIDIUM, Latvijas Universitāte',
+    cred_register_t: 'Reģistrs',
+    cred_register_d: 'Ārstniecības personu reģistrs Nr. 75650061277',
     hero_chart_heading: 'Glikoze pēc brokastīm, 07:00–11:00',
     hero_chart_aria_label:
       'Divu cilvēku glikozes līknes pēc vienādām brokastīm. A paliek diapazonā 3,9–7,8 mmol/L, B uz laiku pārsniedz 7,8 mmol/L.',
@@ -132,43 +161,44 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_1: 'Vai konsultācija ir piemērota man?',
     qindex_2: 'Kā notiek pirmā konsultācija?',
     qindex_3: 'Cik tas maksā?',
-    qindex_4: 'Kas ir Sofija Ivanova?',
+    qindex_4: 'Ko Sofija pēta?',
     qindex_5: 'Ar ko šī pieeja atšķiras?',
     qindex_6: 'Kā pieteikties?',
     qindex_cta: 'Pieteikties',
     q1_title: 'Vai konsultācija ir piemērota man?',
     q1_intro: 'Visbiežāk pie manis nāk ar šiem jautājumiem:',
-    q1_row1_t: 'Metabolā veselība',
+    q1_row1_t: 'Ikdienas uzturs',
     q1_row1_d:
-      'Prediabēts, insulīna rezistence, paaugstināts cukurs. Mērķis ir stabilāks glikozes līmenis un enerģija dienas laikā.',
+      'Kā ēst regulāri un sabalansēti: ēdienreižu sastāvs, porcijas un ritms, kas iederas Jūsu dienā.',
     q1_row2_t: 'Svars',
     q1_row2_d:
       'Svara kontrole bez striktiem ierobežojumiem, arī tad, ja vairākas diētas nav palīdzējušas ilgtermiņā.',
-    q1_row3_t: 'Enerģija',
-    q1_row3_d: 'Hronisks nogurums un enerģijas trūkums.',
-    q1_row4_t: 'Gremošana',
-    q1_row4_d: 'Vēdera uzpūšanās, diskomforts un nestabila gremošana.',
+    q1_row3_t: 'Analīžu rādītāji',
+    q1_row3_d:
+      'Paaugstināts holesterīns, glikoze vai insulīna rezistence, kad ārsts ieteicis mainīt uzturu.',
+    q1_row4_t: 'Enerģija un gremošana',
+    q1_row4_d: 'Nogurums, vēdera uzpūšanās un diskomforts pēc ēšanas.',
     // copy pending from Sofija: exact wording of the practice's boundary line
-    q1_scope: 'Ja Jums vajadzīga steidzama medicīniska palīdzība, vispirms vērsieties pie sava ārsta.',
+    q1_scope:
+      'Ja Jums vajadzīga steidzama medicīniska palīdzība, vispirms vērsieties pie sava ārsta.',
+    // proposal for Sofija (2026-09-28)
+    q1_refer:
+      'Uztura konsultācija neaizstāj ārsta diagnozi un ārstēšanu. Ja jautājums ir ārpus manas kompetences, piemēram, ēšanas traucējumi, es to pateikšu un ieteikšu, pie kā vērsties.',
     q2_title: 'Kā notiek pirmā konsultācija?',
     q2_step1: 'Izvēlaties laiku kalendārā un saņemat apstiprinājumu e-pastā.',
     q2_step2:
       'Ja ir nesenas analīzes (bioķīmija, glikoze, lipīdi), paņemat tās līdzi. Ja nav, sāksim ar to, kas ir.',
     q2_step3: 'Sarunā izrunājam Jūsu ikdienu, ēšanu un mērķus.',
     q2_step4: 'Saņemat personalizētu uztura plānu un vienojamies par nākamo soli.',
+    // proposal for Sofija (2026-09-28)
+    q2_step5:
+      'Starp vizītēm ēdienreizes varat pierakstīt pacienta kabinetā. Es tās redzu, un nākamajā vizītē pārrunājam, kas izdevās un ko mainīt.',
     q3_title: 'Cik tas maksā?',
     q3_row1_t: 'Individuāla konsultācija',
     q3_row1_d: '60 min, ar personalizētu uztura plānu',
     q3_row1_v: 'no 65 €',
-    q3_row2_t: 'Atkārtota vizīte',
-    q3_row2_d: 'plāna pārskatīšana un korekcijas',
-    // prices genuinely pending Sofija, don't invent numbers
-    q3_pending: 'cenu precizē Sofija',
-    q3_row3_t: 'Ilgtermiņa pakete',
-    q3_row3_d: 'vairākas vizītes par izdevīgāku cenu',
-    q4_title: 'Kas ir Sofija Ivanova?',
-    about_lead:
-      'Esmu doktorante Latvijas Universitātes Klīniskās un personalizētās medicīnas katedrā. Pētu uztura lomu diabēta ārstēšanā un profilaksē.',
+    q4_title: 'Ko Sofija pēta?',
+    about_lead: 'Doktorantūrā pētu uztura lomu diabēta ārstēšanā un profilaksē.',
     about_text:
       'Latvijas Universitātē strādāju projektā PRAESIDIUM, kas pēta, kā prognozēt un novērst paaugstinātu glikozes līmeni tukšā dūšā.',
     about_photo_alt: 'Sofija Ivanova uzstājas EASD 2025 kongresā Vīnē',
@@ -178,11 +208,29 @@ export const translations: Record<Locale, LandingDict> = {
     q4_talk2_text: '„Uztura loma slimību profilaksē”, Veselībpratības diena, P. Stradiņa KUS',
     q4_talk3_label: 'Stends',
     q4_talk3_text: 'Zinātnieku nakts',
-    q4_cred:
-      'Sertificēta uztura speciāliste, pētniece, doktorante · Mg.sc.sal., Rīgas Stradiņa universitāte · Doktorantūra, Latvijas Universitāte · Ārstniecības personu reģistrs Nr. 75650061277',
     q5_title: 'Ar ko šī pieeja atšķiras?',
+    // proposal for Sofija (2026-09-28)
     q5_p1:
-      'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas: katrs ieteikums ir pielāgots tieši Jūsu situācijai, analīzēm un ikdienai.',
+      'Ieteikumus balstu uztura vadlīnijās un publicētos pētījumos, nevis modes diētās vai kāda viena pieredzē. Ja kādam apgalvojumam pierādījumu vēl nav pietiekami, es to pasaku atklāti.',
+    plate_intro:
+      'Sākumpunkts ir vispārpieņemti uztura principi. Viens no uzskatāmākajiem ir šķīvja modelis:',
+    plate_heading: 'Šķīvja princips',
+    plate_aria:
+      'Šķīvis: puse dārzeņi un augļi, ceturtdaļa pilngraudu produkti, ceturtdaļa olbaltumvielu avoti.',
+    plate_veg_t: 'Dārzeņi un augļi',
+    plate_veg_d: 'Vairāk dārzeņu nekā augļu, dažādās krāsās. Kartupeļi šeit neskaitās.',
+    plate_grain_t: 'Pilngraudu produkti',
+    plate_grain_d: 'Griķi, auzas, pilngraudu maize, brūnie rīsi; mazāk rafinētu graudu produktu.',
+    plate_protein_t: 'Olbaltumvielas',
+    plate_protein_d:
+      'Zivis, pākšaugi, mājputni, olas, rieksti; mazāk sarkanās un pārstrādātās gaļas.',
+    plate_extra: 'Klāt: augu eļļas un ūdens, tēja vai kafija bez cukura.',
+    plate_source: 'Avots: Harvard T.H. Chan School of Public Health, „Healthy Eating Plate”.',
+    // proposal for Sofija (2026-09-28)
+    plate_adapt:
+      'Konsultācijā šo modeli pielāgojam Jūsu analīzēm, garšai, dienas ritmam un tam, ko reāli var pagatavot mājās.',
+    chart_intro:
+      'Viens no jautājumiem, ar ko strādā šī pētniecības joma: kāpēc viena un tā pati maltīte dažādiem cilvēkiem iedarbojas atšķirīgi. Piemērs:',
     q6_title: 'Kā pieteikties?',
     booking_noscript:
       'Kalendāram nepieciešams JavaScript. Lūdzu, pieteikšanās rakstiet uz info@sofijaivanova.lv',
@@ -218,12 +266,22 @@ export const translations: Record<Locale, LandingDict> = {
     nav_contact: 'Записаться',
     nav_cabinet: 'Кабинет пациента',
 
-    hero_title_lead: 'Один и тот же завтрак.',
-    hero_title_key: 'Две разные кривые глюкозы.',
+    hero_title_lead: 'Специалист по питанию и исследователь.',
+    hero_title_key: 'Консультации, основанные на доказательствах.',
     hero_lead:
-      'Поэтому я не начинаю с готового меню. На первой консультации мы смотрим Ваши анализы, повседневные привычки и питание, и уже на их основе строим план.',
+      'Консультирую по повседневному питанию, весу, пищеварению и показателям анализов. Я не начинаю с готового меню: на первой консультации мы смотрим Ваши анализы, образ жизни и привычки питания и уже на их основе строим план.',
     hero_cta: 'Записаться на консультацию',
-    hero_fact: '60 минут, очно в Риге или онлайн',
+    // proposal for Sofija (2026-09-28)
+    hero_fact: '60 минут, очно в Риге или онлайн · на латышском, русском или английском',
+    cred_heading: 'Образование и исследования',
+    cred_degree_t: 'Степень магистра',
+    cred_degree_d: 'Mg.sc.sal., Рижский университет Страдиня',
+    cred_phd_t: 'Докторантура',
+    cred_phd_d: 'Латвийский университет, кафедра клинической и персонализированной медицины',
+    cred_project_t: 'Исследования',
+    cred_project_d: 'Проект PRAESIDIUM, Латвийский университет',
+    cred_register_t: 'Реестр',
+    cred_register_d: 'Реестр медработников № 75650061277',
     hero_chart_heading: 'Глюкоза после завтрака, 07:00–11:00',
     // copy pending from Sofija: faithful translation of the LV chart aria-label
     hero_chart_aria_label:
@@ -244,46 +302,46 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_1: 'Подходит ли мне консультация?',
     qindex_2: 'Как проходит первая консультация?',
     qindex_3: 'Сколько это стоит?',
-    qindex_4: 'Кто такая Sofija Ivanova?',
+    qindex_4: 'Что исследует София?',
     qindex_5: 'Чем отличается этот подход?',
     qindex_6: 'Как записаться?',
     qindex_cta: 'Записаться',
     q1_title: 'Подходит ли мне консультация?',
     q1_intro: 'Чаще всего ко мне обращаются с такими вопросами:',
-    q1_row1_t: 'Метаболическое здоровье',
+    q1_row1_t: 'Повседневное питание',
     q1_row1_d:
-      'Предиабет, инсулинорезистентность, повышенный сахар. Цель — стабильный уровень глюкозы и энергия в течение дня.',
+      'Как питаться регулярно и сбалансированно: состав приёмов пищи, порции и ритм, которые вписываются в Ваш день.',
     q1_row2_t: 'Вес',
     q1_row2_d:
       'Контроль веса без строгих ограничений, даже если несколько диет не помогли надолго.',
-    q1_row3_t: 'Энергия',
-    q1_row3_d: 'Хроническая усталость и нехватка энергии.',
-    q1_row4_t: 'Пищеварение',
-    q1_row4_d: 'Вздутие живота, дискомфорт и нестабильное пищеварение.',
-    q1_scope: 'Если Вам нужна срочная медицинская помощь, в первую очередь обратитесь к своему врачу.',
+    q1_row3_t: 'Показатели анализов',
+    q1_row3_d:
+      'Повышенный холестерин, глюкоза или инсулинорезистентность, когда врач рекомендовал изменить питание.',
+    q1_row4_t: 'Энергия и пищеварение',
+    q1_row4_d: 'Усталость, вздутие и дискомфорт после еды.',
+    q1_scope:
+      'Если Вам нужна срочная медицинская помощь, в первую очередь обратитесь к своему врачу.',
+    // proposal for Sofija (2026-09-28)
+    q1_refer:
+      'Консультация по питанию не заменяет диагноз и лечение у врача. Если вопрос выходит за рамки моей компетенции, например расстройства пищевого поведения, я скажу об этом и подскажу, к кому обратиться.',
     q2_title: 'Как проходит первая консультация?',
     q2_step1: 'Выбираете время в календаре и получаете подтверждение по email.',
     q2_step2:
       'Если есть недавние анализы (биохимия, глюкоза, липиды), берёте их с собой. Если нет, начнём с того, что есть.',
     q2_step3: 'В разговоре обсуждаем Ваш образ жизни, питание и цели.',
     q2_step4: 'Получаете персонализированный план питания, договариваемся о следующем шаге.',
+    // proposal for Sofija (2026-09-28)
+    q2_step5:
+      'Между визитами приёмы пищи можно записывать в кабинете пациента. Я их вижу, и на следующем визите обсуждаем, что получилось и что изменить.',
     q3_title: 'Сколько это стоит?',
     q3_row1_t: 'Индивидуальная консультация',
     // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
     q3_row1_d: '60 мин, с персонализированным планом питания',
     q3_row1_v: 'от 65 €',
-    q3_row2_t: 'Повторный визит',
-    // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-    q3_row2_d: 'пересмотр плана и корректировки',
-    q3_pending: 'цену уточняет София',
-    q3_row3_t: 'Долгосрочный пакет',
-    // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-    q3_row3_d: 'несколько визитов по более выгодной цене',
-    q4_title: 'Кто такая Sofija Ivanova?',
-    about_lead:
-      'Помогаю людям наладить питание на основе науки и персонализированного подхода. Активно участвую в исследовательских проектах и применяю доказательные методы в практике.',
+    q4_title: 'Что исследует София?',
+    about_lead: 'В докторантуре исследую роль питания в лечении и профилактике диабета.',
     about_text:
-      'Мой подход сочетает академические знания и практический опыт. Каждая консультация основана на доказательствах — не модных диетах или общих советах. В исследованиях фокусируюсь на роли питания в лечении и профилактике диабета.',
+      'В Латвийском университете работаю в проекте PRAESIDIUM, который изучает, как прогнозировать и предотвращать повышенный уровень глюкозы натощак.',
     // copy pending from Sofija: faithful translation of the LV photo alt text
     about_photo_alt: 'Sofija Ivanova выступает на конгрессе EASD 2025 в Вене',
     q4_talk1_label: '2025',
@@ -293,11 +351,29 @@ export const translations: Record<Locale, LandingDict> = {
       '«Роль питания в профилактике заболеваний», День здоровой грамотности, КУБ им. П. Страдиня',
     q4_talk3_label: 'Стенд',
     q4_talk3_text: 'Ночь учёных',
-    q4_cred:
-      'Сертифицированный специалист по питанию, исследователь, докторантка · Mg.sc.sal., Рижский университет Страдиня · Докторантура, Латвийский университет · Реестр медработников № 75650061277',
     q5_title: 'Чем отличается этот подход?',
+    // proposal for Sofija (2026-09-28)
     q5_p1:
-      'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет: каждая рекомендация адаптирована к Вашей ситуации, анализам и повседневной жизни.',
+      'Рекомендации основываю на руководствах по питанию и опубликованных исследованиях, а не на модных диетах или чьём-то личном опыте. Если доказательств для какого-то утверждения пока недостаточно, я говорю об этом прямо.',
+    plate_intro:
+      'Отправная точка — общепринятые принципы питания. Один из самых наглядных — модель тарелки:',
+    plate_heading: 'Принцип тарелки',
+    plate_aria:
+      'Тарелка: половина — овощи и фрукты, четверть — цельнозерновые продукты, четверть — источники белка.',
+    plate_veg_t: 'Овощи и фрукты',
+    plate_veg_d: 'Овощей больше, чем фруктов, и разных цветов. Картофель сюда не относится.',
+    plate_grain_t: 'Цельнозерновые продукты',
+    plate_grain_d:
+      'Гречка, овсянка, цельнозерновой хлеб, бурый рис; меньше рафинированных круп и муки.',
+    plate_protein_t: 'Белок',
+    plate_protein_d: 'Рыба, бобовые, птица, яйца, орехи; меньше красного и переработанного мяса.',
+    plate_extra: 'Дополнительно: растительные масла и вода, чай или кофе без сахара.',
+    plate_source: 'Источник: Harvard T.H. Chan School of Public Health, «Healthy Eating Plate».',
+    // proposal for Sofija (2026-09-28)
+    plate_adapt:
+      'На консультации эту модель подстраиваем под Ваши анализы, вкусы, ритм дня и то, что реально приготовить дома.',
+    chart_intro:
+      'Один из вопросов, которыми занимается эта область исследований: почему один и тот же приём пищи действует на разных людей по-разному. Пример:',
     q6_title: 'Как записаться?',
     booking_noscript:
       'Для календаря нужен JavaScript. Чтобы записаться, напишите на info@sofijaivanova.lv',
@@ -319,7 +395,8 @@ export const translations: Record<Locale, LandingDict> = {
     jsonld_business_description:
       'Сертифицированный специалист по питанию, исследователь, докторантка в Риге. Персонализированные консультации по питанию, метаболическое здоровье.',
     // copy pending from Sofija: faithful translation of the LV JSON-LD offer description
-    jsonld_offer_description: '60-минутная персонализированная консультация по питанию очно или онлайн',
+    jsonld_offer_description:
+      '60-минутная персонализированная консультация по питанию очно или онлайн',
     // copy pending from Sofija: faithful translation of the LV JSON-LD job title
     jsonld_person_jobtitle: 'Сертифицированный специалист по питанию, исследователь, докторантка',
     // copy pending from Sofija: faithful translation of the LV JSON-LD person description
@@ -344,12 +421,22 @@ export const translations: Record<Locale, LandingDict> = {
     nav_contact: 'Book',
     nav_cabinet: 'Patient Cabinet',
 
-    hero_title_lead: 'Same breakfast.',
-    hero_title_key: 'Two different glucose curves.',
+    hero_title_lead: 'Nutrition specialist and researcher.',
+    hero_title_key: 'Consultations grounded in evidence.',
     hero_lead:
-      "That's why I don't start with a ready-made meal plan. In the first consultation we look at your test results, daily routine and eating habits, and build the plan from there.",
+      "I advise on everyday eating, weight, digestion and test results. I don't start with a ready-made meal plan: in the first consultation we look at your test results, daily routine and eating habits, and build the plan from there.",
     hero_cta: 'Book a consultation',
-    hero_fact: '60 minutes, in person in Riga or online',
+    // proposal for Sofija (2026-09-28)
+    hero_fact: '60 minutes, in person in Riga or online · in Latvian, Russian or English',
+    cred_heading: 'Education and research',
+    cred_degree_t: "Master's degree",
+    cred_degree_d: 'Mg.sc.sal., Riga Stradins University',
+    cred_phd_t: 'Doctoral studies',
+    cred_phd_d: 'University of Latvia, Department of Clinical and Personalised Medicine',
+    cred_project_t: 'Research',
+    cred_project_d: 'PRAESIDIUM project, University of Latvia',
+    cred_register_t: 'Register',
+    cred_register_d: 'Medical Persons Register No. 75650061277',
     hero_chart_heading: 'Glucose after breakfast, 07:00–11:00',
     // copy pending from Sofija: faithful translation of the LV chart aria-label
     hero_chart_aria_label:
@@ -360,7 +447,8 @@ export const translations: Record<Locale, LandingDict> = {
     hero_readout_a: 'Person A',
     hero_readout_b: 'Person B',
     // copy pending from Sofija: 7.8 caption wording
-    hero_chart_caption: 'Illustrative, synthetic data, not patient measurements. Range 3.9–7.8 mmol/L.',
+    hero_chart_caption:
+      'Illustrative, synthetic data, not patient measurements. Range 3.9–7.8 mmol/L.',
     glucose_unit: 'mmol/L',
 
     // proposed copy, pending Sofija's confirmation
@@ -369,58 +457,77 @@ export const translations: Record<Locale, LandingDict> = {
     qindex_1: 'Is this consultation right for me?',
     qindex_2: 'How does the first consultation work?',
     qindex_3: 'How much does it cost?',
-    qindex_4: 'Who is Sofija Ivanova?',
+    qindex_4: 'What does Sofija research?',
     qindex_5: 'How is this approach different?',
     qindex_6: 'How do I book?',
     qindex_cta: 'Book now',
     q1_title: 'Is this consultation right for me?',
     q1_intro: 'Most often I hear these questions:',
-    q1_row1_t: 'Metabolic health',
+    q1_row1_t: 'Everyday eating',
     q1_row1_d:
-      'Prediabetes, insulin resistance, elevated blood sugar. The goal is a more stable glucose level and energy throughout the day.',
+      'How to eat regularly and in balance: meal composition, portions and a rhythm that fits your day.',
     q1_row2_t: 'Weight',
-    q1_row2_d: 'Weight control without strict restrictions, even if several diets have not helped long-term.',
-    q1_row3_t: 'Energy',
-    q1_row3_d: 'Chronic fatigue and low energy.',
-    q1_row4_t: 'Digestion',
-    q1_row4_d: 'Bloating, discomfort and unstable digestion.',
+    q1_row2_d:
+      'Weight control without strict restrictions, even if several diets have not helped long-term.',
+    q1_row3_t: 'Test results',
+    q1_row3_d:
+      'Raised cholesterol, glucose or insulin resistance, when your doctor has advised changing your diet.',
+    q1_row4_t: 'Energy and digestion',
+    q1_row4_d: 'Fatigue, bloating and discomfort after meals.',
     q1_scope: 'If you need urgent medical care, please contact your doctor first.',
+    // proposal for Sofija (2026-09-28)
+    q1_refer:
+      "A nutrition consultation does not replace a doctor's diagnosis and treatment. If a question is outside my competence, eating disorders for example, I will say so and suggest who to see.",
     q2_title: 'How does the first consultation work?',
     q2_step1: 'You choose a time in the calendar and get an email confirmation.',
     q2_step2:
       'If you have recent test results (biochemistry, glucose, lipids), bring them along. If not, we start with what you have.',
     q2_step3: 'In the conversation, we discuss your daily life, eating and goals.',
     q2_step4: 'You receive a personalized nutrition plan and agree on the next step.',
+    // proposal for Sofija (2026-09-28)
+    q2_step5:
+      'Between visits you can log your meals in the patient cabinet. I see them, and at the next visit we go over what worked and what to change.',
     q3_title: 'How much does it cost?',
     q3_row1_t: 'Individual consultation',
     // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
     q3_row1_d: '60 min, with a personalized nutrition plan',
     q3_row1_v: 'from €65',
-    q3_row2_t: 'Follow-up visit',
-    // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-    q3_row2_d: 'plan review and adjustments',
-    q3_pending: 'price to be confirmed by Sofija',
-    q3_row3_t: 'Long-term package',
-    // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
-    q3_row3_d: 'multiple visits at a better price',
-    q4_title: 'Who is Sofija Ivanova?',
+    q4_title: 'What does Sofija research?',
     about_lead:
-      'I help people improve nutrition through a science-based and personalized approach. I actively participate in research projects and apply evidence-based methods in practice.',
+      'In my doctoral studies I research the role of nutrition in treating and preventing diabetes.',
     about_text:
-      'My approach combines academic knowledge and practical experience. Every consultation is evidence-based — not trendy diets or generic advice. My research focuses on the role of nutrition in diabetes treatment and prevention.',
+      'At the University of Latvia I work on the PRAESIDIUM project, which studies how to predict and prevent raised fasting glucose.',
     // copy pending from Sofija: faithful translation of the LV photo alt text
     about_photo_alt: 'Sofija Ivanova speaking at the EASD 2025 Congress in Vienna',
     q4_talk1_label: '2025',
     q4_talk1_text: 'EASD Congress, Vienna',
     q4_talk2_label: 'Lecture',
-    q4_talk2_text: '"The role of nutrition in disease prevention", Health Literacy Day, P. Stradins CUH',
+    q4_talk2_text:
+      '"The role of nutrition in disease prevention", Health Literacy Day, P. Stradins CUH',
     q4_talk3_label: 'Stand',
     q4_talk3_text: 'Researchers’ Night',
-    q4_cred:
-      'Certified nutrition specialist, researcher, doctoral candidate · Mg.sc.sal., Riga Stradins University · Doctoral studies, University of Latvia · Medical Persons Register No. 75650061277',
     q5_title: 'How is this approach different?',
+    // proposal for Sofija (2026-09-28)
     q5_p1:
-      'My approach is based on research and individual data. I do not prescribe generic diets: every recommendation is tailored to your situation, test results and daily life.',
+      "I base recommendations on dietary guidelines and published research, not on trendy diets or one person's experience. Where the evidence for a claim is still thin, I say so openly.",
+    plate_intro:
+      'The starting point is established nutrition principles. One of the clearest is the plate model:',
+    plate_heading: 'The plate principle',
+    plate_aria:
+      'A plate: half vegetables and fruit, a quarter whole grains, a quarter protein sources.',
+    plate_veg_t: 'Vegetables and fruit',
+    plate_veg_d: "More vegetables than fruit, in different colours. Potatoes don't count here.",
+    plate_grain_t: 'Whole grains',
+    plate_grain_d: 'Buckwheat, oats, wholegrain bread, brown rice; fewer refined grains.',
+    plate_protein_t: 'Protein',
+    plate_protein_d: 'Fish, legumes, poultry, eggs, nuts; less red and processed meat.',
+    plate_extra: 'Alongside: plant oils, and water, tea or coffee without sugar.',
+    plate_source: 'Source: Harvard T.H. Chan School of Public Health, "Healthy Eating Plate".',
+    // proposal for Sofija (2026-09-28)
+    plate_adapt:
+      'In the consultation we adapt this model to your test results, tastes, daily rhythm and what you can realistically cook at home.',
+    chart_intro:
+      'One of the questions this research field works on: why the same meal acts differently in different people. An example:',
     q6_title: 'How do I book?',
     booking_noscript: 'The calendar needs JavaScript. To book, please email info@sofijaivanova.lv',
 

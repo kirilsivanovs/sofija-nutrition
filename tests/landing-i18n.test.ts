@@ -19,8 +19,6 @@ describe('landing i18n dictionary', () => {
 
   it('keeps the existing pending-copy wording unchanged', () => {
     expect(translations.lv.hero_chart_caption).toContain('Ilustratīvi');
-    expect(translations.lv.q3_pending).toBe('cenu precizē Sofija');
-    expect(translations.en.q3_pending).toBe('price to be confirmed by Sofija');
   });
 
   it('matches the booking CTA meaning for the EN nav contact link', () => {
@@ -51,7 +49,6 @@ describe('landing i18n dictionary', () => {
     const keys = [
       'header_specialty',
       'footer_subtitle',
-      'q4_cred',
       'meta_title',
       'meta_description',
       'jsonld_business_description',
@@ -81,6 +78,12 @@ describe('landing i18n dictionary', () => {
     expect(translations.lv.q1_intro).not.toContain('Visiem');
     expect(translations.ru.q1_intro).not.toContain('Всем');
     expect(translations.en.q1_intro).not.toContain('For anyone');
+  });
+
+  it('cites a named source for the plate model in every locale', () => {
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      expect(translations[l].plate_source).toContain('Harvard T.H. Chan School of Public Health');
+    });
   });
 
   it('keeps Q5 to q5_p1 alone, with q5_p2 removed', () => {

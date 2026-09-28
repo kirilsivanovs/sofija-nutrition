@@ -23,8 +23,27 @@ describe('landing question body', () => {
     expect((indexAstro.match(/\{dict\.q3_row1_v\}/g) || []).length).toBe(1);
   });
 
-  it('renders the register-number credential only once, in question 4', () => {
-    expect((indexAstro.match(/\{dict\.q4_cred\}/g) || []).length).toBe(1);
+  it('renders the register-number credential only once, in the hero', () => {
+    expect((indexAstro.match(/\{dict\.cred_register_d\}/g) || []).length).toBe(1);
+    expect(indexAstro.indexOf('{dict.cred_register_d}')).toBeLessThan(indexAstro.indexOf('id="f-q1"'));
+  });
+
+  it('shows credentials, not the glucose chart, in the hero', () => {
+    const hero = indexAstro.slice(indexAstro.indexOf('id="hero"'), indexAstro.indexOf('id="f-q1"'));
+    expect(hero).toMatch(/class="hero-cred"/);
+    expect(hero).not.toMatch(/hero-svg/);
+  });
+
+  it('keeps one figure per question: the glucose chart in question 4, the plate in question 5', () => {
+    const q4 = indexAstro.slice(indexAstro.indexOf('id="about"'), indexAstro.indexOf('id="f-q5"'));
+    const q5 = indexAstro.slice(indexAstro.indexOf('id="f-q5"'), indexAstro.indexOf('id="f-q6"'));
+    expect(q4).toMatch(/id="hero-svg"/);
+    expect(q5).toMatch(/class="plate"/);
+    expect(q5).not.toMatch(/hero-svg/);
+  });
+
+  it('shows no price row without a number in question 3', () => {
+    expect(indexAstro).not.toMatch(/question__pending|q3_pending/);
   });
 
   it('preserves the services, about and faq anchor ids for the header nav', () => {

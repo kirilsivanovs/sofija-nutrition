@@ -5,7 +5,7 @@ Reason: the user picked SN-036 "Итог · A+D" over SN-034. Mockup: https://cl
 ## Brief
 - Sofija Ivanova: nutrition specialist in Riga, doctoral researcher on diabetes and CGM (not "Dr." until the defence; title "uztura speciāliste" vs "sertificēta dietoloģe" pending her confirmation).
 - Visitors: adults concerned about weight, energy, glucose or digestion, in LV, RU or EN, on phone and desktop.
-- They must see why individual advice matters (the chart), get their questions answered in order, and book without hunting.
+- They must first see that she is formally qualified and does research (education, doctorate, register), then get their questions answered in order, and book without hunting. The practice is for everyone, not only glucose or diabetes (user, 2026-09-28).
 
 ## Palette
 | Name | Hex | Role | Contrast on White |
@@ -27,8 +27,8 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 ## Layout
 - Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer. Sticky on desktop, static on phone; nothing hides on scroll.
 - Locales (SN-016): LV `/`, RU `/ru/`, EN `/en/`, one layout; LV RU EN are links, current `aria-current="page"`.
-- Hero (5fr/7fr): thesis headline, lead, button, one format line; the glucose chart on the right.
-- Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, credentials, register number once), how the approach differs, how to book.
+- Hero (7fr/5fr): thesis headline, lead, button, one format line; on the right a typographic "education and research" panel (degree, doctorate, project, register number once; the title is already in the header, not repeated). No photo in the hero: the current photos are not good enough to build on (user, 2026-09-28).
+- Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, the glucose chart; credentials stay in the hero), how the approach differs (plate model with its source, then how it is individualised), how to book. One figure per question: the glucose chart in "what Sofija researches", the plate in "how it differs". Price rows without a number are not shown.
 - Booking: format toggle, A's week grid (Mon-first, Europe/Riga), summary panel with one button. Footer minimal.
 - Container 1160px, 40px/20px side padding; sections split by a Line border, not fills. Radius 4px on buttons, slots, panels; photos square. Phone: single column, index static above the questions.
 
@@ -36,7 +36,7 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 The index marker moving to the current question (200ms ease-out colour/border); smooth scroll on index clicks. Both off under `prefers-reduced-motion`. Nothing else animates.
 
 ## The glucose-curve figure
-Hero only: AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (post-meal normal without diabetes; caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
+In "what Sofija researches" (Q4) only, as an example of her field (moved out of the hero 2026-09-28): AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (post-meal normal without diabetes; caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
 
 ## References
 `.claude/tasks/design/SN-036/notes/references.md` (~30 sites, what was taken).

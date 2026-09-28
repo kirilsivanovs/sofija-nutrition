@@ -42,65 +42,36 @@ const alternates = {
   <ScrollToTop locale={locale} />
   <!-- Hero Section -->
   <main id="main-content">
-    <section id="hero" class="hero-chart" aria-labelledby="hero-title">
-      <div class="hero-chart__inner">
+    <section id="hero" class="landing-hero" aria-labelledby="hero-title">
+      <div class="landing-hero__inner">
         <div>
-          <h1 id="hero-title" class="hero-chart__title">
+          <h1 id="hero-title" class="landing-hero__title">
             {dict.hero_title_lead} <strong>{dict.hero_title_key}</strong>
           </h1>
-          <p class="hero-chart__lead">
+          <p class="landing-hero__lead">
             {dict.hero_lead}
           </p>
           <a class="btn-cta btn-solid" href="#f-q6"
             ><span>{dict.hero_cta}</span><i class="ph ph-arrow-right" aria-hidden="true"></i
           ></a>
-          <ul class="hero-chart__facts">
+          <ul class="landing-hero__facts">
             <li>{dict.hero_fact}</li>
           </ul>
         </div>
 
-        <figure class="hero-chart__chart">
-          <div class="hero-chart__chart-head">
-            <h2>{dict.hero_chart_heading}</h2>
-            <ul class="hero-chart__legend">
-              <li>
-                <i class="hero-chart__legend-mark hero-chart__legend-mark--a" aria-hidden="true"></i>
-                <span>{dict.hero_legend_a}</span>
-              </li>
-              <li>
-                <i class="hero-chart__legend-mark hero-chart__legend-mark--b" aria-hidden="true"></i>
-                <span>{dict.hero_legend_b}</span>
-              </li>
-            </ul>
-          </div>
-          <svg
-            id="hero-svg"
-            class="hero-chart__svg"
-            viewBox="0 0 640 352"
-            role="img"
-            tabindex="0"
-            aria-label={dict.hero_chart_aria_label}
-          ></svg>
-          <dl class="hero-chart__readout" aria-live="polite">
-            <div>
-              <dt>{dict.hero_readout_time}</dt>
-              <dd id="hero-t">08:30</dd>
-            </div>
-            <div>
-              <dt>{dict.hero_readout_a}</dt>
-              <dd id="hero-va">7,1 {dict.glucose_unit}</dd>
-            </div>
-            <div>
-              <dt>{dict.hero_readout_b}</dt>
-              <dd id="hero-vb">10,1 {dict.glucose_unit}</dd>
-            </div>
+        <aside class="hero-cred" aria-labelledby="hero-cred-title">
+          <h2 id="hero-cred-title">{dict.cred_heading}</h2>
+          <dl>
+            <dt>{dict.cred_degree_t}</dt>
+            <dd>{dict.cred_degree_d}</dd>
+            <dt>{dict.cred_phd_t}</dt>
+            <dd>{dict.cred_phd_d}</dd>
+            <dt>{dict.cred_project_t}</dt>
+            <dd>{dict.cred_project_d}</dd>
+            <dt>{dict.cred_register_t}</dt>
+            <dd>{dict.cred_register_d}</dd>
           </dl>
-          <figcaption class="hero-chart__caption">
-            <span>{dict.hero_chart_caption}</span>
-            <!-- copy pending from Sofija: 7.8 caption wording -->
-            <span id="hero-tir"></span>
-          </figcaption>
-        </figure>
+        </aside>
       </div>
     </section>
 
@@ -147,6 +118,8 @@ const alternates = {
           <p class="question__scope">
             {dict.q1_scope}
           </p>
+          <!-- proposal for Sofija: where her competence ends and she refers on -->
+          <p class="question__scope">{dict.q1_refer}</p>
         </section>
 
         <!-- Q2: first consultation — no photo, dropped 2026-09-26 -->
@@ -165,6 +138,8 @@ const alternates = {
             <li>
               {dict.q2_step4}
             </li>
+            <!-- proposal for Sofija: the cabinet food diary between visits -->
+            <li>{dict.q2_step5}</li>
           </ol>
         </section>
 
@@ -179,25 +154,11 @@ const alternates = {
               </th>
               <td>{dict.q3_row1_v}</td>
             </tr>
-            <tr>
-              <th>
-                <span>{dict.q3_row2_t}</span>
-                <small>{dict.q3_row2_d}</small>
-              </th>
-              <!-- prices genuinely pending Sofija, don't invent numbers -->
-              <td class="question__pending">{dict.q3_pending}</td>
-            </tr>
-            <tr>
-              <th>
-                <span>{dict.q3_row3_t}</span>
-                <small>{dict.q3_row3_d}</small>
-              </th>
-              <td class="question__pending">{dict.q3_pending}</td>
-            </tr>
+            <!-- follow-up and package rows return once Sofija sets their prices; don't invent numbers -->
           </table>
         </section>
 
-        <!-- Q4: who is Sofija — the site's only place the register number appears -->
+        <!-- Q4: Sofija's research, with the glucose chart as its example; credentials and the register number sit in the hero only -->
         <section class="question question--research" id="about">
           <h2>{dict.q4_title}</h2>
           <div class="question__research">
@@ -229,19 +190,86 @@ const alternates = {
                 </li>
                 <li><span>{dict.q4_talk3_label}</span>{dict.q4_talk3_text}</li>
               </ul>
-              <p class="question__cred">
-                {dict.q4_cred}
-              </p>
             </div>
           </div>
+          <p>{dict.chart_intro}</p>
+          <figure class="glucose-fig">
+            <div class="glucose-fig__head">
+              <h3>{dict.hero_chart_heading}</h3>
+              <ul class="glucose-fig__legend">
+                <li>
+                  <i class="glucose-fig__mark glucose-fig__mark--a" aria-hidden="true"></i>
+                  <span>{dict.hero_legend_a}</span>
+                </li>
+                <li>
+                  <i class="glucose-fig__mark glucose-fig__mark--b" aria-hidden="true"></i>
+                  <span>{dict.hero_legend_b}</span>
+                </li>
+              </ul>
+            </div>
+            <svg
+              id="hero-svg"
+              class="glucose-fig__svg"
+              viewBox="0 0 640 352"
+              role="img"
+              tabindex="0"
+              aria-label={dict.hero_chart_aria_label}
+            ></svg>
+            <dl class="glucose-fig__readout" aria-live="polite">
+              <div>
+                <dt>{dict.hero_readout_time}</dt>
+                <dd id="hero-t">08:30</dd>
+              </div>
+              <div>
+                <dt>{dict.hero_readout_a}</dt>
+                <dd id="hero-va">7,1 {dict.glucose_unit}</dd>
+              </div>
+              <div>
+                <dt>{dict.hero_readout_b}</dt>
+                <dd id="hero-vb">10,1 {dict.glucose_unit}</dd>
+              </div>
+            </dl>
+            <figcaption class="glucose-fig__caption">
+              <span>{dict.hero_chart_caption}</span>
+              <!-- copy pending from Sofija: 7.8 caption wording -->
+              <span id="hero-tir"></span>
+            </figcaption>
+          </figure>
         </section>
 
-        <!-- Q5: how it differs — text only, no CGM/sensor photo (dropped 2026-09-26) -->
+        <!-- Q5: the plate model as the evidence baseline, then how it is individualised -->
         <section class="question" id="f-q5">
           <h2>{dict.q5_title}</h2>
           <p>
             {dict.q5_p1}
           </p>
+          <p>{dict.plate_intro}</p>
+          <figure class="plate">
+            <svg class="plate__svg" viewBox="0 0 220 220" role="img" aria-label={dict.plate_aria}>
+              <circle class="plate__rim" cx="110" cy="110" r="106"></circle>
+              <path class="plate__veg" d="M110 18 A92 92 0 0 1 110 202 Z"></path>
+              <path class="plate__grain" d="M110 110 L110 18 A92 92 0 0 0 18 110 Z"></path>
+              <path class="plate__protein" d="M110 110 L18 110 A92 92 0 0 0 110 202 Z"></path>
+              <text x="156" y="118">½</text>
+              <text x="70" y="80">¼</text>
+              <text x="70" y="156">¼</text>
+            </svg>
+            <div>
+              <h3>{dict.plate_heading}</h3>
+              <dl class="plate__parts">
+                <dt><i class="plate__swatch plate__swatch--veg" aria-hidden="true"></i>½ · {dict.plate_veg_t}</dt>
+                <dd>{dict.plate_veg_d}</dd>
+                <dt><i class="plate__swatch plate__swatch--grain" aria-hidden="true"></i>¼ · {dict.plate_grain_t}</dt>
+                <dd>{dict.plate_grain_d}</dd>
+                <dt><i class="plate__swatch plate__swatch--protein" aria-hidden="true"></i>¼ · {dict.plate_protein_t}</dt>
+                <dd>{dict.plate_protein_d}</dd>
+              </dl>
+              <p class="plate__extra">{dict.plate_extra}</p>
+              <figcaption>{dict.plate_source}</figcaption>
+            </div>
+          </figure>
+          <!-- proposal for Sofija: how the model becomes her plan -->
+          <p>{dict.plate_adapt}</p>
         </section>
 
         <!-- Q6: how to book — format toggle + week grid + summary panel
@@ -344,7 +372,7 @@ const alternates = {
     });
   </script>
 
-  <!-- Hero glucose-band chart (SN-015.1): synthetic/illustrative data only -->
+  <!-- Glucose-band chart in Q4: synthetic/illustrative data only -->
   <script>
     import { initGlucoseChart, heroChartConfig } from '../../scripts/glucose-chart';
     initGlucoseChart('hero', heroChartConfig);

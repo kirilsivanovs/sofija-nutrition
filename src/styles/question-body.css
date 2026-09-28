@@ -182,12 +182,6 @@
   text-align: right;
 }
 
-.question__pending {
-  font-size: 15px;
-  color: var(--color-slate);
-  font-weight: 400;
-}
-
 .question--research .question__research {
   display: grid;
   grid-template-columns: 1fr;
@@ -231,12 +225,131 @@
   font-weight: 600;
 }
 
-.question__cred {
-  font-size: 14px;
+/* Plate model in Q5: segment tints come from the chart's own colours, never Navy. */
+.plate {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+  margin: 8px 0 28px;
+  padding: 24px 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.plate__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.plate__rim {
+  fill: var(--color-white);
+  stroke: var(--color-line);
+  stroke-width: 2;
+}
+
+.plate__veg {
+  fill: color-mix(in srgb, var(--color-range) 26%, white);
+}
+
+.plate__grain {
+  fill: color-mix(in srgb, var(--color-high) 24%, white);
+}
+
+.plate__protein {
+  fill: color-mix(in srgb, var(--color-slate) 22%, white);
+}
+
+.plate__veg,
+.plate__grain,
+.plate__protein {
+  stroke: var(--color-white);
+  stroke-width: 3;
+}
+
+.plate__svg text {
+  font: 600 22px var(--font-sans);
+  fill: var(--color-graphite);
+  text-anchor: middle;
+}
+
+.plate h3 {
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.plate__parts {
+  margin: 0;
+}
+
+.plate__parts dt {
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.plate__parts dd {
+  margin: 2px 0 0 22px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.plate__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 10px;
+  vertical-align: -1px;
+}
+
+.plate__swatch--veg {
+  background: color-mix(in srgb, var(--color-range) 26%, white);
+  outline: 1px solid var(--color-range);
+}
+
+.plate__swatch--grain {
+  background: color-mix(in srgb, var(--color-high) 24%, white);
+  outline: 1px solid var(--color-high);
+}
+
+.plate__swatch--protein {
+  background: color-mix(in srgb, var(--color-slate) 22%, white);
+  outline: 1px solid var(--color-slate);
+}
+
+.plate .plate__extra {
+  font-size: 16px;
+  margin: 16px 0 0;
+}
+
+.plate figcaption {
+  font-size: 13px;
   color: var(--color-slate);
+  margin-top: 12px;
+}
+
+/* The chart keeps its own compact sizes inside a question. */
+.question .glucose-fig__legend li {
+  font-size: 13px;
+}
+
+.question .glucose-fig__readout dd {
+  font-size: 14px;
 }
 
 @media (max-width: 760px) {
+  .plate {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .plate__svg {
+    max-width: 180px;
+  }
+
   .F-body {
     grid-template-columns: 1fr;
     padding: 40px 20px 56px;
