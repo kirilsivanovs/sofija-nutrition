@@ -13,6 +13,7 @@ const sharedTranslations = {
       selectDate: 'Izvēlieties datumu',
       selectTime: 'Pieejamie laiki',
       noSlots: 'Šajā dienā nav pieejamu laiku',
+      noSlotsWeek: 'Šajā nedēļā nav brīvu laiku',
       weekdays: ['Sv', 'P', 'O', 'T', 'C', 'Pk', 'S'],
       months: [
         'Janvāris',
@@ -30,8 +31,8 @@ const sharedTranslations = {
       ],
       today: 'Šodien',
       selectedLabel: 'Izvēlēts',
-      prevMonthLabel: 'Iepriekšējais mēnesis',
-      nextMonthLabel: 'Nākamais mēnesis',
+      prevWeekLabel: 'Iepriekšējā nedēļa',
+      nextWeekLabel: 'Nākamā nedēļa',
       gridLabel: 'Kalendārs',
     },
 
@@ -48,12 +49,15 @@ const sharedTranslations = {
       consentText:
         'Es piekrītu, ka mani personas dati tiek apstrādāti saskaņā ar <a href="/privacy-policy/" target="_blank" rel="noopener">privātuma politiku</a> un <a href="/terms/" target="_blank" rel="noopener">pakalpojumu noteikumiem</a>.',
       submitBtn: 'Apstiprināt rezervāciju',
+      continueBtn: 'Turpināt pieteikšanos',
     },
 
     // Success/Error messages
     messages: {
+      summaryContext: 'Individuāla konsultācija, 60 min',
       successTitle: 'Rezervācija veiksmīga!',
       successText: 'Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.',
+      bookingConfirmNote: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
       closeBtn: 'Aizvērt',
       errorTitle: 'Sistēma īslaicīgi nepieejama',
       errorMessage: 'Lūdzu, mēģiniet vēlāk vai sazinieties pa e-pastu:',
@@ -153,6 +157,7 @@ const sharedTranslations = {
       selectDate: 'Select a date',
       selectTime: 'Available times',
       noSlots: 'No available slots on this day',
+      noSlotsWeek: 'No available slots this week',
       weekdays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
       months: [
         'January',
@@ -170,8 +175,8 @@ const sharedTranslations = {
       ],
       today: 'Today',
       selectedLabel: 'Selected',
-      prevMonthLabel: 'Previous month',
-      nextMonthLabel: 'Next month',
+      prevWeekLabel: 'Previous week',
+      nextWeekLabel: 'Next week',
       gridLabel: 'Calendar',
     },
 
@@ -188,12 +193,15 @@ const sharedTranslations = {
       consentText:
         'I agree that my personal data is processed in accordance with the <a href="/privacy-policy/" target="_blank" rel="noopener">privacy policy</a> and <a href="/terms/" target="_blank" rel="noopener">terms of service</a>.',
       submitBtn: 'Confirm booking',
+      continueBtn: 'Continue to booking details',
     },
 
     // Success/Error messages
     messages: {
+      summaryContext: 'Individual consultation, 60 min',
       successTitle: 'Booking successful!',
       successText: 'We will contact you within 24 hours to confirm your appointment.',
+      bookingConfirmNote: 'You will receive a confirmation by email after booking.',
       closeBtn: 'Close',
       errorTitle: 'System temporarily unavailable',
       errorMessage: 'Please try again later or contact us via email:',
@@ -293,6 +301,7 @@ const sharedTranslations = {
       selectDate: 'Выберите дату',
       selectTime: 'Доступное время',
       noSlots: 'В этот день нет свободного времени',
+      noSlotsWeek: 'На этой неделе нет свободного времени',
       weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
       months: [
         'Январь',
@@ -310,8 +319,8 @@ const sharedTranslations = {
       ],
       today: 'Сегодня',
       selectedLabel: 'Выбрано',
-      prevMonthLabel: 'Предыдущий месяц',
-      nextMonthLabel: 'Следующий месяц',
+      prevWeekLabel: 'Предыдущая неделя',
+      nextWeekLabel: 'Следующая неделя',
       gridLabel: 'Календарь',
     },
 
@@ -328,12 +337,15 @@ const sharedTranslations = {
       consentText:
         'Я соглашаюсь на обработку моих персональных данных в соответствии с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="/terms/" target="_blank" rel="noopener">условиями оказания услуг</a>.',
       submitBtn: 'Подтвердить запись',
+      continueBtn: 'Продолжить оформление',
     },
 
     // Success/Error messages
     messages: {
+      summaryContext: 'Индивидуальная консультация, 60 мин',
       successTitle: 'Запись успешна!',
       successText: 'Мы свяжемся с Вами в течение 24 часов для подтверждения визита.',
+      bookingConfirmNote: 'После записи вы получите подтверждение по email.',
       closeBtn: 'Закрыть',
       errorTitle: 'Система временно недоступна',
       errorMessage: 'Пожалуйста, попробуйте позже или напишите нам:',

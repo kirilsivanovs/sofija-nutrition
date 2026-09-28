@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 /**
  * E2E Tests for Booking Flow
- * Tests the critical booking path: select date → select time → fill form → submit
+ * Tests the critical booking path: select a slot (date + time together) → fill form → submit
  */
 
 test.describe('Booking Flow', () => {
@@ -20,30 +20,27 @@ test.describe('Booking Flow', () => {
     }
   });
 
-  test('booking section is visible and calendar renders', async ({ page }) => {
+  test('booking section is visible and week grid renders', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    // Calendar should have month navigation
-    await expect(bookingSection.locator('.calendar-nav')).toBeVisible();
+    // Week grid replaces the old month calendar
+    await expect(bookingSection.locator('.week-grid')).toBeVisible();
   });
 
-  test('can navigate to next month in calendar', async ({ page }) => {
+  test('can navigate to next week in the grid', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    // Find and click next month button
-    const nextBtn = bookingSection
-      .locator('button:has(i.ph-caret-right), .calendar-next-btn, [aria-label*="next"]')
-      .first();
+    const nextBtn = bookingSection.locator('.week-nav-btn.next');
     if (await nextBtn.isVisible()) {
       await nextBtn.click();
-      // Calendar should still be visible after navigation
-      await expect(bookingSection).toBeVisible();
+      // Week grid should still be visible after navigation
+      await expect(bookingSection.locator('.week-grid')).toBeVisible();
     }
   });
 
-  test('can select an available date and see time slots', async ({ page }) => {
+  test('can select an available slot', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
@@ -53,29 +50,31 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: {
-            '2026-05-18': ['09:00', '10:00', '11:00', '14:00', '15:00'],
-            '2026-05-19': ['09:00', '10:00', '11:00'],
-            '2026-05-20': ['09:00', '14:00', '15:00', '16:00'],
+          slots: {
+            '2026-10-05': ['09:00', '10:00', '11:00', '14:00', '15:00'],
+            '2026-10-06': ['09:00', '10:00', '11:00'],
+            '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
           },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
 
-    // Click on an available date (weekday)
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (await availableDay.isVisible()) {
-      await availableDay.click();
+    // The calendar already fetched real availability on the initial page load;
+    // reload so this test's mocked response drives the render deterministically.
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
 
-      // Time slots should appear
-      const timeSlots = bookingSection.locator('.time-slot, .time-btn, [class*="time"]');
-      await expect(timeSlots.first()).toBeVisible({ timeout: 5000 });
-    }
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
+    await availableSlot.click();
+
+    // Summary panel should reflect the pick
+    await expect(bookingSection.locator('.booking-summary-pick')).toBeVisible({ timeout: 5000 });
   });
 
-  test('can select a date using only the keyboard', async ({ page }) => {
+  test('can select a slot using only the keyboard', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
@@ -98,16 +97,15 @@ test.describe('Booking Flow', () => {
     await page.reload();
     await expect(bookingSection).toBeVisible();
 
-    const focusedCell = bookingSection.locator('[role="gridcell"][tabindex="0"]');
-    await focusedCell.focus();
+    const focusedSlot = bookingSection.locator('.slot-btn[tabindex="0"]');
+    await focusedSlot.focus();
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
 
-    const selectedCell = bookingSection.locator('[role="gridcell"][aria-selected="true"]');
-    await expect(selectedCell).toBeVisible({ timeout: 5000 });
+    const selectedSlot = bookingSection.locator('.slot-btn[aria-pressed="true"]');
+    await expect(selectedSlot).toBeVisible({ timeout: 5000 });
 
-    const timeSlots = bookingSection.locator('.time-slot, .time-btn, [class*="time"]');
-    await expect(timeSlots.first()).toBeVisible({ timeout: 5000 });
+    await expect(bookingSection.locator('.booking-summary-pick')).toBeVisible({ timeout: 5000 });
   });
 
   test('full booking flow with mocked API', async ({ page }) => {
@@ -120,11 +118,13 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: {
-            '2026-05-18': ['09:00', '10:00', '11:00', '14:00'],
-            '2026-05-19': ['09:00', '10:00'],
-            '2026-05-20': ['14:00', '15:00'],
+          slots: {
+            '2026-10-05': ['09:00', '10:00', '11:00', '14:00'],
+            '2026-10-06': ['09:00', '10:00'],
+            '2026-10-07': ['14:00', '15:00'],
           },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
@@ -160,22 +160,22 @@ test.describe('Booking Flow', () => {
       });
     });
 
-    // Step 1: Select a date
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Step 1: Select a slot (date + time together)
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    // Step 2: Select a time slot
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    // Step 2: Reveal and fill the booking form
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
-    // Step 3: Fill the booking form
     const nameInput = bookingSection.locator('input[name="name"]');
     const emailInput = bookingSection.locator('input[name="email"]');
     const phoneInput = bookingSection.locator('input[name="phone"]');
@@ -183,21 +183,25 @@ test.describe('Booking Flow', () => {
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test User');
     await emailInput.fill('test@example.com');
-    await phoneInput.fill('+37120000000');
+    await phoneInput.fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await bookingSection.locator('#consentCheckbox').check();
 
-    // Step 4: Submit booking
+    // Step 3: Submit booking
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
     await expect(submitBtn).toBeVisible();
     await submitBtn.click();
 
-    // Step 5: Verify success state
+    // Step 4: Verify success state
     const successMessage = page
       .locator('[class*="success"], [class*="modal"]')
-      .filter({ hasText: /TEST-12345|veiksmīga|success/i });
+      .filter({ hasText: /TEST-12345|veiksmīga|success/i })
+      .first();
     await expect(successMessage).toBeVisible({ timeout: 10000 });
   });
 
-  test('closes the success dialog on Escape and returns focus to the calendar', async ({
+  test('closes the success dialog on Escape and returns focus to the week grid', async ({
     page,
   }) => {
     const bookingSection = page.locator('#bookingCalendar');
@@ -246,15 +250,13 @@ test.describe('Booking Flow', () => {
     await page.reload();
     await expect(bookingSection).toBeVisible();
 
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    await expect(availableDay).toBeVisible({ timeout: 5000 });
-    await availableDay.click();
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('button.time-slot').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     const nameInput = bookingSection.locator('input[name="name"]');
     const emailInput = bookingSection.locator('input[name="email"]');
@@ -264,7 +266,9 @@ test.describe('Booking Flow', () => {
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test User');
     await emailInput.fill('test@example.com');
-    await phoneInput.fill('+37120000000');
+    await phoneInput.fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
     await consentCheckbox.check();
 
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
@@ -276,7 +280,7 @@ test.describe('Booking Flow', () => {
 
     await page.keyboard.press('Escape');
     await expect(successDialog).toBeHidden();
-    await expect(page.locator('[role="gridcell"]:focus')).toBeVisible();
+    await expect(bookingSection.locator('.slot-btn:focus')).toBeVisible();
   });
 
   test('shows error when slot is already taken (409)', async ({ page }) => {
@@ -289,9 +293,9 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: {
-            '2026-05-18': ['09:00', '10:00'],
-          },
+          slots: { '2026-10-05': ['09:00', '10:00'] },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
@@ -308,25 +312,30 @@ test.describe('Booking Flow', () => {
       });
     });
 
-    // Select date and time
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Select a slot
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     // Fill form
     const nameInput = bookingSection.locator('input[name="name"]');
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test User');
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
+    await bookingSection.locator('input[name="phone"]').fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
@@ -349,7 +358,9 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00'] },
+          slots: { '2026-10-05': ['09:00'] },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
@@ -363,32 +374,37 @@ test.describe('Booking Flow', () => {
       });
     });
 
-    // Select date and time
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Select a slot
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     // Fill minimal form
     const nameInput = bookingSection.locator('input[name="name"]');
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test');
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
+    await bookingSection.locator('input[name="phone"]').fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
     await submitBtn.click();
 
     // Should show rate limit error
-    const errorMessage = page.locator('[class*="error"], [class*="modal"]');
+    const errorMessage = page.locator('.booking-error-toast');
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
@@ -402,7 +418,9 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00'] },
+          slots: { '2026-10-05': ['09:00'] },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
@@ -416,25 +434,30 @@ test.describe('Booking Flow', () => {
       });
     });
 
-    // Select date and time
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Select a slot
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     // Fill minimal form
     const nameInput = bookingSection.locator('input[name="name"]');
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test');
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
+    await bookingSection.locator('input[name="phone"]').fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
@@ -443,11 +466,12 @@ test.describe('Booking Flow', () => {
     // Must never show a fabricated success modal
     const successModal = page
       .locator('[class*="success"], [class*="modal"]')
-      .filter({ hasText: /INV-|veiksmīga|success/i });
+      .filter({ hasText: /INV-|veiksmīga|success/i })
+      .first();
     await expect(successModal).not.toBeVisible({ timeout: 5000 });
 
     // Must show the generic error instead
-    const errorMessage = page.locator('[class*="error"], [class*="modal"]');
+    const errorMessage = page.locator('.booking-error-toast');
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
@@ -461,7 +485,9 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00'] },
+          slots: { '2026-10-05': ['09:00'] },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
@@ -471,25 +497,30 @@ test.describe('Booking Flow', () => {
       await route.abort();
     });
 
-    // Select date and time
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Select a slot
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     // Fill minimal form
     const nameInput = bookingSection.locator('input[name="name"]');
     await expect(nameInput).toBeVisible({ timeout: 5000 });
     await nameInput.fill('Test');
     await bookingSection.locator('input[name="email"]').fill('test@example.com');
+    await bookingSection.locator('input[name="phone"]').fill('20000000');
+    await bookingSection.locator('#formatToggleOnline').click();
+    await expect(bookingSection.locator('#formatOnline')).toBeChecked();
+    await bookingSection.locator('#consentCheckbox').check();
 
     // Submit
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');
@@ -498,11 +529,12 @@ test.describe('Booking Flow', () => {
     // Must never show a fabricated success modal
     const successModal = page
       .locator('[class*="success"], [class*="modal"]')
-      .filter({ hasText: /INV-|veiksmīga|success/i });
+      .filter({ hasText: /INV-|veiksmīga|success/i })
+      .first();
     await expect(successModal).not.toBeVisible({ timeout: 5000 });
 
     // Must show the generic error instead
-    const errorMessage = page.locator('[class*="error"], [class*="modal"]');
+    const errorMessage = page.locator('.booking-error-toast');
     await expect(errorMessage).toBeVisible({ timeout: 10000 });
   });
 
@@ -516,24 +548,27 @@ test.describe('Booking Flow', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          availableDates: { '2026-05-18': ['09:00', '10:00'] },
+          slots: { '2026-10-05': ['09:00', '10:00'] },
+          booked: [],
+          serviceTypes: [],
         }),
       });
     });
 
-    // Select date and time
-    const availableDay = bookingSection
-      .locator('[role="gridcell"]:not([aria-disabled="true"])')
-      .first();
-    if (!(await availableDay.isVisible())) {
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    // Select a slot
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    if (!(await availableSlot.isVisible())) {
       test.skip();
       return;
     }
-    await availableDay.click();
+    await availableSlot.click();
 
-    const timeSlot = bookingSection.locator('.time-slot, .time-btn, [class*="time-slot"]').first();
-    await expect(timeSlot).toBeVisible({ timeout: 5000 });
-    await timeSlot.click();
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
 
     // Try to submit without filling required fields
     const submitBtn = bookingSection.locator('.booking-submit-btn, button[type="submit"]');

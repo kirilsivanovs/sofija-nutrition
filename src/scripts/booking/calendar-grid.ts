@@ -18,6 +18,42 @@ export function getLeadingBlanks(year: number, month: number): number {
   return mondayFirstIndex(new Date(year, month, 1).getDay());
 }
 
+/** The Monday of `date`'s week (local time, time-of-day stripped). */
+export function getWeekStart(date: Date): Date {
+  const offset = mondayFirstIndex(date.getDay());
+  const monday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  monday.setDate(monday.getDate() - offset);
+  return monday;
+}
+
+/** The 7 dates Mon..Sun starting at `weekStart` (itself a Monday). */
+export function getWeekDates(weekStart: Date): Date[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    return d;
+  });
+}
+
+function toISODate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * The Monday of the earliest week (today or later) that has an available date,
+ * falling back to today's week when every available date is in the past.
+ * `availableDateStrings` are ISO (`YYYY-MM-DD`) dates already filtered for
+ * actual open slots by the caller (booked appointments, buffer time).
+ */
+export function getFirstAvailableWeekStart(availableDateStrings: string[], today: Date): Date {
+  const todayStr = toISODate(today);
+  const upcoming = availableDateStrings.filter((dateStr) => dateStr >= todayStr).sort();
+  return upcoming.length > 0 ? getWeekStart(new Date(upcoming[0])) : getWeekStart(today);
+}
+
 /** One `Date` per day of the month, preceded by the Monday-first leading blanks (`null`). */
 export function getMonthGridDates(year: number, month: number): (Date | null)[] {
   const leadingBlanks = getLeadingBlanks(year, month);

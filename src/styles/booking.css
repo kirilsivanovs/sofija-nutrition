@@ -855,123 +855,20 @@
 .booking-calendar {
   background: var(--color-white);
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(27, 67, 50, 0.12);
+  border: 1px solid var(--color-line);
   font-family: var(--font-sans);
   container-type: inline-size;
   overflow: hidden;
   width: 100%;
 }
 
-/* Header */
-.booking-header {
-  position: relative;
-  background: var(--color-graphite);
-  color: white;
-  padding: clamp(14px, 3cqi, 24px) clamp(16px, 4cqi, 28px);
-  overflow: hidden;
-}
-
-.booking-header h3 {
-  font-family: var(--font-sans);
-  font-size: clamp(18px, 4cqi, 26px);
-  margin: 0;
-  font-weight: 600;
-  position: relative;
-  z-index: 1;
-}
-
-/* Body Grid - mobile first: stacked */
+/* Body - toggle, week grid and summary panel. White, so only .booking-summary
+   (Mist) reads as a distinct panel — no panel-in-panel. */
 .booking-body {
-  display: grid;
-  grid-template-columns: 1fr;
-  min-width: 0;
-}
-
-/* Left Side - Calendar */
-.booking-left {
   padding: clamp(14px, 3cqi, 24px);
-  border-bottom: 1px solid rgba(27, 67, 50, 0.12);
-  background: var(--color-mist);
+  background: var(--color-white);
   min-width: 0;
   overflow: hidden;
-}
-
-/* Calendar Navigation */
-.calendar-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: clamp(10px, 2cqi, 16px);
-  gap: 8px;
-}
-
-.calendar-month-year {
-  font-family: var(--font-sans);
-  font-size: clamp(16px, 3.5cqi, 21px);
-  font-weight: 600;
-  color: var(--color-graphite);
-  white-space: nowrap;
-  text-align: center;
-  flex: 1;
-}
-
-.cal-nav-btn {
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(27, 67, 50, 0.15);
-  background: white;
-  border-radius: 999px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  color: var(--color-text);
-  flex-shrink: 0;
-}
-
-.cal-nav-btn:hover {
-  background: var(--color-mist);
-  border-color: var(--color-graphite);
-  color: var(--color-graphite);
-  transform: translateY(-1px);
-}
-
-.cal-nav-btn:disabled {
-  transform: none;
-}
-
-/* Calendar Grid */
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: clamp(1px, 0.5cqi, 4px);
-  margin-bottom: clamp(4px, 1cqi, 8px);
-}
-
-.weekday {
-  text-align: center;
-  font-size: clamp(9px, 2cqi, 12px);
-  font-weight: 600;
-  color: var(--color-slate);
-  padding: clamp(4px, 1cqi, 8px) 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.calendar-days {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1px, 0.5cqi, 4px);
-}
-
-.week {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: inherit;
 }
 
 .sr-only {
@@ -982,151 +879,238 @@
   clip-path: inset(50%);
 }
 
-.day {
-  aspect-ratio: 1;
+/* Format toggle - 2 pills above the week grid */
+.format-toggle {
+  display: inline-flex;
+  border: 1px solid rgba(27, 67, 50, 0.15);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: clamp(12px, 2.5cqi, 20px);
+}
+
+.format-toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  min-height: 44px;
+  border: none;
+  background: var(--color-mist);
+  color: var(--color-slate);
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 2.5cqi, 14px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.format-toggle-option:hover:not([aria-pressed='true']):not(:disabled) {
+  background: var(--color-white);
+  color: var(--color-graphite);
+}
+
+.format-toggle-option[aria-pressed='true'] {
+  background: var(--color-navy);
+  color: white;
+}
+
+.format-toggle-option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.format-toggle-option:not(:last-child) {
+  border-right: 1px solid rgba(27, 67, 50, 0.15);
+}
+
+/* Book layout - week grid + summary panel */
+.booking-book {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 3cqi, 24px);
+  min-width: 0;
+}
+
+.week-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: clamp(10px, 2cqi, 16px);
+  gap: 8px;
+}
+
+.week-range {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 3.2cqi, 18px);
+  font-weight: 600;
+  color: var(--color-graphite);
+  white-space: nowrap;
+  text-align: center;
+  flex: 1;
+}
+
+.week-nav-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-line);
+  background: white;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(12px, 2.8cqi, 14px);
-  border-radius: clamp(8px, 2cqi, 12px);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  font-weight: 500;
-  min-height: 0;
-  min-width: 0;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.9);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  color: var(--color-text);
+  flex-shrink: 0;
 }
 
-.day:focus-visible {
+.week-nav-btn:hover {
+  background: var(--color-mist);
+  border-color: var(--color-graphite);
+  color: var(--color-graphite);
+}
+
+.week-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(6px, 1.5cqi, 12px);
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.week-day h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(10px, 2cqi, 12px);
+  color: var(--color-slate);
+  line-height: 1.3;
+}
+
+.week-day h4 b {
+  display: block;
+  font-weight: 600;
+  color: var(--color-graphite);
+  font-size: clamp(14px, 3cqi, 17px);
+}
+
+.week-day-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slot-btn {
+  font: 600 clamp(12px, 2.5cqi, 14px) / 1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  padding: 10px 4px;
+  border: 1px solid rgba(27, 67, 50, 0.14);
+  background: white;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.slot-btn:hover {
+  border-color: var(--color-navy);
+  color: var(--color-navy);
+}
+
+.slot-btn:focus-visible {
   outline: 2px solid var(--color-graphite);
   outline-offset: 2px;
 }
 
-.day.empty {
-  cursor: default;
-  background: transparent;
-}
-.day.past {
-  color: #c5c9c6;
-  cursor: not-allowed;
-  background: transparent;
-}
-.day.unavailable {
-  color: #b1b7b4;
-  cursor: not-allowed;
-  background: rgba(245, 246, 244, 0.6);
-}
-
-.day.today {
-  border: 2px solid var(--color-range);
-  background: rgba(255, 255, 255, 0.95);
-}
-
-.day.available {
-  background: rgba(45, 106, 79, 0.12);
-  color: var(--color-graphite);
-  border-color: rgba(45, 106, 79, 0.2);
-}
-
-.day.available:hover {
-  background: var(--color-navy);
-  color: white;
-  transform: translateY(-1px);
-}
-
-.day.selected {
-  background: var(--color-navy);
-  color: white;
-  border-color: var(--color-navy);
-}
-
-.day.available::after {
-  content: '';
-  position: absolute;
-  bottom: clamp(2px, 0.5cqi, 4px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(3px, 0.8cqi, 5px);
-  height: clamp(3px, 0.8cqi, 5px);
-  background: var(--color-range);
-  border-radius: 50%;
-}
-
-.day.selected::after {
-  background: var(--color-range);
-}
-
-/* Right Side - Time Slots */
-.booking-right {
-  padding: clamp(14px, 3cqi, 24px);
-  background: var(--color-mist);
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.time-section h4 {
-  font-family: var(--font-sans);
-  font-size: clamp(16px, 3cqi, 18px);
-  color: var(--color-graphite);
-  margin: 0 0 12px 0;
-  font-weight: 600;
-}
-
-/* Time Slots - 2 cols, constrained */
-.time-slots {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(6px, 1.2cqi, 10px);
-  margin-bottom: 16px;
-}
-
-.time-slot {
-  padding: 10px 6px;
-  border: 1px solid rgba(27, 67, 50, 0.14);
-  background: white;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: clamp(13px, 2.5cqi, 14px);
-  font-weight: 500;
-  transition: all 0.2s ease;
-  color: var(--color-text);
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
-  text-align: center;
-}
-
-.time-slot:hover {
-  border-color: var(--color-navy);
-  color: var(--color-navy);
-  transform: translateY(-1px);
-}
-
-.time-slot.selected {
+.slot-btn[aria-pressed='true'] {
   background: var(--color-navy);
   border-color: var(--color-navy);
   color: white;
 }
 
-.no-date-selected,
-.no-slots {
+/* A day with no slots stays quiet — dimmed, no repeated message. The one
+   concise empty-state (below) covers a fully booked-out week instead. */
+.week-day--empty {
+  opacity: 0.45;
+}
+
+.week-empty {
   grid-column: 1 / -1;
+  color: var(--color-slate);
+  font-size: clamp(12px, 2.4cqi, 14px);
+  margin: 4px 0 0;
   text-align: center;
+}
+
+/* Summary panel — context line, pick/placeholder line, continue button
+   pushed right, full-width note below (mockup's .A-sum shape). */
+.booking-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  background: var(--color-mist);
+  border-radius: var(--radius-sm);
+  padding: clamp(14px, 3cqi, 20px);
+}
+
+.booking-summary-context {
+  margin: 0;
   color: var(--color-slate);
   font-size: 14px;
-  padding: clamp(16px, 3cqi, 24px) 16px;
+  flex-basis: 100%;
+}
+
+.booking-summary-pick {
+  margin: 0;
+  color: var(--color-graphite);
+}
+
+.booking-continue-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 24px;
+  margin-left: auto;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-navy);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.booking-continue-btn:hover {
+  background: var(--color-navy-hover);
+}
+
+.booking-continue-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.booking-summary-note {
+  margin: 0;
+  flex-basis: 100%;
+  color: var(--color-slate);
+  font-size: 14px;
 }
 
 /* =============================================================================
@@ -1424,20 +1408,23 @@
 
 /* =============================================================================
    CONTAINER QUERIES - respond to card width, not viewport
-   Split point at 580px ensures calendar grid has room for 7 columns + time panel
    ============================================================================= */
 
-/* Wide card: 2-column body */
+/* Narrow card: week grid collapses so day columns don't crush the "no slots" text
+   (mirrors mockup's .A-week 7col -> 4col wrap at its ~760px breakpoint) */
+@container (max-width: 480px) {
+  .week-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 18px;
+  }
+
+  .week-day h4 {
+    overflow-wrap: break-word;
+  }
+}
+
+/* Wide card: format options go row-wise, form grid becomes 2-col */
 @container (min-width: 580px) {
-  .booking-body {
-    grid-template-columns: minmax(240px, 1.1fr) minmax(200px, 0.9fr);
-  }
-
-  .booking-left {
-    border-bottom: none;
-    border-right: 1px solid rgba(27, 67, 50, 0.12);
-  }
-
   .format-options {
     flex-direction: row;
   }
@@ -1450,17 +1437,6 @@
   .booking-form-grid .form-group-full,
   .booking-form-grid .form-consent {
     grid-column: 1 / -1;
-  }
-}
-
-/* Extra wide card: 3-col time slots, bigger day cells */
-@container (min-width: 800px) {
-  .time-slots {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .day {
-    min-height: 44px;
   }
 }
 

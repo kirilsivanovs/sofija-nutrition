@@ -10,6 +10,9 @@ import {
   getLeadingBlanks,
   getMonthGridDates,
   getKeyTargetDate,
+  getWeekStart,
+  getWeekDates,
+  getFirstAvailableWeekStart,
 } from '../src/scripts/booking/calendar-grid';
 
 describe('reorderWeekdaysMondayFirst', () => {
@@ -97,5 +100,37 @@ describe('getKeyTargetDate', () => {
 
   it('returns null for a key that is not a navigation key', () => {
     expect(getKeyTargetDate(wednesday, 'Tab')).toBeNull();
+  });
+});
+
+describe('week grid', () => {
+  it('returns the Monday of the current week for getWeekStart', () => {
+    const wednesday = new Date(2025, 8, 10); // Sept 10, 2025 is a Wednesday
+    const result = getWeekStart(wednesday);
+    expect(result.getDay()).toBe(1);
+    expect(result.getDate()).toBe(8);
+  });
+
+  it('returns 7 consecutive dates from getWeekDates', () => {
+    const monday = new Date(2025, 8, 8);
+    const dates = getWeekDates(monday);
+    expect(dates).toHaveLength(7);
+    expect(dates[0].getDate()).toBe(8);
+    expect(dates[6].getDate()).toBe(14);
+    expect(dates[6].getDay()).toBe(0);
+  });
+});
+
+describe('getFirstAvailableWeekStart', () => {
+  it('falls back to the current week when every available date is in the past', () => {
+    const today = new Date(2026, 8, 27); // 2026-09-27
+    const result = getFirstAvailableWeekStart(['2026-01-19', '2026-01-20'], today);
+    expect(result.getTime()).toEqual(getWeekStart(today).getTime());
+  });
+
+  it('picks the week of the earliest available date on or after today', () => {
+    const today = new Date(2026, 8, 27); // 2026-09-27
+    const result = getFirstAvailableWeekStart(['2026-01-19', '2026-10-05', '2026-10-01'], today);
+    expect(result.getTime()).toEqual(getWeekStart(new Date(2026, 9, 1)).getTime());
   });
 });

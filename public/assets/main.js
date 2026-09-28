@@ -86,6 +86,62 @@
       price_consult: 'Konsultācija (60 min)',
       price_consult_val: 'no 65 €',
 
+      // Six-question body (SN-015.2)
+      qindex_title: 'Jautājumi šajā lapā',
+      qindex_1: 'Vai konsultācija ir piemērota man?',
+      qindex_2: 'Kā notiek pirmā konsultācija?',
+      qindex_3: 'Cik tas maksā?',
+      qindex_4: 'Kas ir Sofija Ivanova?',
+      qindex_5: 'Ar ko šī pieeja atšķiras?',
+      qindex_6: 'Kā pieteikties?',
+      qindex_cta: 'Pieteikties',
+      q1_title: 'Vai konsultācija ir piemērota man?',
+      q1_intro:
+        'Visiem, kas vēlas sakārtot uzturu zinātniski pamatotā veidā. Visbiežāk pie manis nāk ar šiem jautājumiem:',
+      q1_row1_t: 'Metabolā veselība',
+      q1_row1_d:
+        'Prediabēts, insulīna rezistence, paaugstināts cukurs. Mērķis ir stabilāks glikozes līmenis un enerģija dienas laikā.',
+      q1_row2_t: 'Svars',
+      q1_row2_d:
+        'Svara kontrole bez striktiem ierobežojumiem, arī tad, ja vairākas diētas nav palīdzējušas ilgtermiņā.',
+      q1_row3_t: 'Enerģija',
+      q1_row3_d: 'Hronisks nogurums un enerģijas trūkums.',
+      q1_row4_t: 'Gremošana',
+      q1_row4_d: 'Vēdera uzpūšanās, diskomforts un nestabila gremošana.',
+      // copy pending from Sofija: exact wording of the practice's boundary line
+      q1_scope: 'Ja Jums vajadzīga steidzama medicīniska palīdzība, vispirms vērsieties pie sava ārsta.',
+      q2_title: 'Kā notiek pirmā konsultācija?',
+      q2_step1: 'Izvēlaties laiku kalendārā un saņemat apstiprinājumu e-pastā.',
+      q2_step2:
+        'Ja ir nesenas analīzes (bioķīmija, glikoze, lipīdi), paņemat tās līdzi. Ja nav, sāksim ar to, kas ir.',
+      q2_step3:
+        '60 minūšu saruna klātienē Rīgā vai video tiešsaistē par Jūsu ikdienu, ēšanu un mērķiem.',
+      q2_step4: 'Saņemat personalizētu uztura plānu un vienojamies par nākamo soli.',
+      q3_title: 'Cik tas maksā?',
+      q3_row1_t: 'Individuāla konsultācija',
+      q3_row1_d: '60 min, klātienē vai tiešsaistē, ar uztura plānu',
+      q3_row1_v: 'no 65 €',
+      q3_row2_t: 'Atkārtota vizīte',
+      q3_row2_d: 'plāna pārskatīšana un korekcijas',
+      q3_row3_t: 'Ilgtermiņa pakete',
+      q3_row3_d: 'vairākas vizītes par izdevīgāku cenu',
+      // prices genuinely pending Sofija, don't invent numbers
+      q3_pending: 'cenu precizē Sofija',
+      q4_title: 'Kas ir Sofija Ivanova?',
+      q4_talk1: '<span>2025</span>EASD kongress, Vīne',
+      q4_talk2:
+        '<span>Lekcija</span>„Uztura loma slimību profilaksē”, Veselībpratības diena, P. Stradiņa KUS',
+      q4_talk3: '<span>Stends</span>Zinātnieku nakts',
+      // title wording ("sertificēta dietoloģe" vs "uztura speciāliste") pending Sofija
+      q4_cred:
+        'Mg.sc.sal., Rīgas Stradiņa universitāte · Doktorantūra, Latvijas Universitāte · Ārstniecības personu reģistrs Nr. 75650061277',
+      q5_title: 'Ar ko šī pieeja atšķiras?',
+      q5_p1:
+        'Mana pieeja balstās pētniecībā un individuālos datos. Neizrakstu vispārīgas diētas: katrs ieteikums ir pielāgots tieši Jūsu situācijai, analīzēm un ikdienai.',
+      q5_p2:
+        'Grafiks lapas augšā parāda iemeslu: viens un tas pats ēdiens dažādiem cilvēkiem iedarbojas atšķirīgi.',
+      q6_title: 'Kā pieteikties?',
+
       // About
       about_tag: 'Par mani',
       about_lead:
@@ -259,6 +315,63 @@
       price_consult: 'Консультация (60 мин)',
       price_consult_val: 'от 65 €',
 
+      // Six-question body (SN-015.2)
+      // proposed copy, pending Sofija's confirmation
+      qindex_title: 'Вопросы на этой странице',
+      qindex_1: 'Подходит ли мне консультация?',
+      qindex_2: 'Как проходит первая консультация?',
+      qindex_3: 'Сколько это стоит?',
+      qindex_4: 'Кто такая Sofija Ivanova?',
+      qindex_5: 'Чем отличается этот подход?',
+      qindex_6: 'Как записаться?',
+      qindex_cta: 'Записаться',
+      q1_title: 'Подходит ли мне консультация?',
+      q1_intro:
+        'Всем, кто хочет наладить питание научно обоснованным способом. Чаще всего ко мне обращаются с такими вопросами:',
+      q1_row1_t: 'Метаболическое здоровье',
+      q1_row1_d:
+        'Предиабет, инсулинорезистентность, повышенный сахар. Цель — стабильный уровень глюкозы и энергия в течение дня.',
+      q1_row2_t: 'Вес',
+      q1_row2_d:
+        'Контроль веса без строгих ограничений, даже если несколько диет не помогли надолго.',
+      q1_row3_t: 'Энергия',
+      q1_row3_d: 'Хроническая усталость и нехватка энергии.',
+      q1_row4_t: 'Пищеварение',
+      q1_row4_d: 'Вздутие живота, дискомфорт и нестабильное пищеварение.',
+      q1_scope: 'Если Вам нужна срочная медицинская помощь, в первую очередь обратитесь к своему врачу.',
+      q2_title: 'Как проходит первая консультация?',
+      q2_step1: 'Выбираете время в календаре и получаете подтверждение по email.',
+      q2_step2:
+        'Если есть недавние анализы (биохимия, глюкоза, липиды), берёте их с собой. Если нет, начнём с того, что есть.',
+      q2_step3:
+        '60-минутный разговор очно в Риге или по видео онлайн о Вашем образе жизни, питании и целях.',
+      q2_step4: 'Получаете персонализированный план питания, договариваемся о следующем шаге.',
+      q3_title: 'Сколько это стоит?',
+      q3_row1_t: 'Индивидуальная консультация',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row1_d: '60 мин, очно или онлайн, с планом питания',
+      q3_row1_v: 'от 65 €',
+      q3_row2_t: 'Повторный визит',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row2_d: 'пересмотр плана и корректировки',
+      q3_row3_t: 'Долгосрочный пакет',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row3_d: 'несколько визитов по более выгодной цене',
+      q3_pending: 'цену уточняет София',
+      q4_title: 'Кто такая Sofija Ivanova?',
+      q4_talk1: '<span>2025</span>Конгресс EASD, Вена',
+      q4_talk2:
+        '<span>Лекция</span>«Роль питания в профилактике заболеваний», День здоровой грамотности, КУБ им. П. Страдиня',
+      q4_talk3: '<span>Стенд</span>Ночь учёных',
+      q4_cred:
+        'Mg.sc.sal., Рижский университет Страдиня · Докторантура, Латвийский университет · Реестр медработников № 75650061277',
+      q5_title: 'Чем отличается этот подход?',
+      q5_p1:
+        'Мой подход основан на исследованиях и индивидуальных данных. Не назначаю общих диет: каждая рекомендация адаптирована к Вашей ситуации, анализам и повседневной жизни.',
+      q5_p2:
+        'График вверху страницы показывает почему: одна и та же еда действует по-разному на разных людей.',
+      q6_title: 'Как записаться?',
+
       // About
       about_tag: 'Обо мне',
       about_lead:
@@ -425,6 +538,62 @@
       // Pricing
       price_consult: 'Consultation (60 min)',
       price_consult_val: 'from €65',
+
+      // Six-question body (SN-015.2)
+      // proposed copy, pending Sofija's confirmation
+      qindex_title: 'Questions on this page',
+      qindex_1: 'Is this consultation right for me?',
+      qindex_2: 'How does the first consultation work?',
+      qindex_3: 'How much does it cost?',
+      qindex_4: 'Who is Sofija Ivanova?',
+      qindex_5: 'How is this approach different?',
+      qindex_6: 'How do I book?',
+      qindex_cta: 'Book now',
+      q1_title: 'Is this consultation right for me?',
+      q1_intro:
+        'For anyone who wants to sort out their nutrition in a scientifically grounded way. Most often I hear these questions:',
+      q1_row1_t: 'Metabolic health',
+      q1_row1_d:
+        'Prediabetes, insulin resistance, elevated blood sugar. The goal is a more stable glucose level and energy throughout the day.',
+      q1_row2_t: 'Weight',
+      q1_row2_d: 'Weight control without strict restrictions, even if several diets have not helped long-term.',
+      q1_row3_t: 'Energy',
+      q1_row3_d: 'Chronic fatigue and low energy.',
+      q1_row4_t: 'Digestion',
+      q1_row4_d: 'Bloating, discomfort and unstable digestion.',
+      q1_scope: 'If you need urgent medical care, please contact your doctor first.',
+      q2_title: 'How does the first consultation work?',
+      q2_step1: 'You choose a time in the calendar and get an email confirmation.',
+      q2_step2:
+        'If you have recent test results (biochemistry, glucose, lipids), bring them along. If not, we start with what you have.',
+      q2_step3:
+        'A 60-minute conversation, in person in Riga or by video online, about your daily life, eating and goals.',
+      q2_step4: 'You receive a personalized nutrition plan and agree on the next step.',
+      q3_title: 'How much does it cost?',
+      q3_row1_t: 'Individual consultation',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row1_d: '60 min, in person or online, with a nutrition plan',
+      q3_row1_v: 'from €65',
+      q3_row2_t: 'Follow-up visit',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row2_d: 'plan review and adjustments',
+      q3_row3_t: 'Long-term package',
+      // copy pending from Sofija: direct translation of LV factual line, not yet confirmed
+      q3_row3_d: 'multiple visits at a better price',
+      q3_pending: 'price to be confirmed by Sofija',
+      q4_title: 'Who is Sofija Ivanova?',
+      q4_talk1: '<span>2025</span>EASD Congress, Vienna',
+      q4_talk2:
+        '<span>Lecture</span>"The role of nutrition in disease prevention", Health Literacy Day, P. Stradins CUH',
+      q4_talk3: '<span>Stand</span>Researchers’ Night',
+      q4_cred:
+        'Mg.sc.sal., Riga Stradins University · Doctoral studies, University of Latvia · Medical Persons Register No. 75650061277',
+      q5_title: 'How is this approach different?',
+      q5_p1:
+        'My approach is based on research and individual data. I do not prescribe generic diets: every recommendation is tailored to your situation, test results and daily life.',
+      q5_p2:
+        'The chart at the top of the page shows why: the same food affects different people differently.',
+      q6_title: 'How do I book?',
 
       // About
       about_tag: 'About Me',
