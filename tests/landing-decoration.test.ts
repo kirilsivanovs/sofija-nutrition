@@ -172,3 +172,17 @@ describe('landing decorative markers', () => {
     expect(indexAstro).not.toMatch(/bg-secondary\/60/);
   });
 });
+
+describe('old hero section', () => {
+  it('removes the old hero section entirely from booking.css', () => {
+    expect(bookingCss).not.toMatch(/\.hero__[\w-]+|\.hero\b(?!-)/);
+  });
+
+  it('has no box-shadow or transform on the base .btn-cta and .btn-solid rules', () => {
+    for (const selector of ['.btn-cta', '.btn-solid']) {
+      const body = ruleBody(globalCss, selector);
+      expect(body).not.toBe('');
+      expect(body).not.toMatch(/box-shadow|transform/);
+    }
+  });
+});

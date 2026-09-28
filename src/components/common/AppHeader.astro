@@ -161,8 +161,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   .app-header {
     background: var(--color-white);
     border-bottom: 1px solid var(--color-line);
-    /* Horizontal spacing lives on .app-header-inner (matches .hero__inner);
-       keep only vertical padding here. */
+    /* Horizontal spacing lives on .app-header-inner; keep only vertical padding here. */
     padding: 14px 0;
     position: sticky;
     top: 0;
@@ -190,8 +189,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   }
 
   .app-header-inner {
-    /* Matches .hero__inner (src/styles/booking.css) so the header and hero
-       content columns share one left edge at every viewport width. */
+    /* Horizontal max-width and inset for the header's content row. */
     max-width: min(1280px, 96vw);
     margin: 0 auto;
     padding: 0 20px;
