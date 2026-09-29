@@ -1,7 +1,7 @@
 /**
  * Landing hero (thesis + credentials) and the glucose-chart figure in Q4.
  * Container 1160px per direction.md; 7fr/5fr split collapsing to one column
- * on phone. No shadows, no gradients; radius 4px throughout (direction.md).
+ * below 1024px. No shadows, no gradients; radius 4px throughout (direction.md).
  */
 
 .landing-hero {
@@ -21,7 +21,8 @@
 .landing-hero__title {
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 46px;
+  font-size: clamp(34px, calc(24px + 2.2vw), 46px);
+  text-wrap: balance;
   line-height: 1.1;
   color: var(--color-graphite);
   margin: 0 0 20px;
@@ -176,6 +177,21 @@
   color: var(--color-graphite);
 }
 
+@media (max-width: 1023px) {
+  .landing-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-cred dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+    column-gap: 40px;
+  }
+}
+
 @media (max-width: 760px) {
   .landing-hero__inner {
     grid-template-columns: 1fr;
@@ -183,8 +199,8 @@
     padding: 36px 20px 40px;
   }
 
-  .landing-hero__title {
-    font-size: 34px;
+  .hero-cred dl {
+    display: block;
   }
 
   .landing-hero__lead {

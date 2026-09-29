@@ -21,13 +21,13 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 
 ## Type
 - Geologica only: 300 for H1 with the key phrase in 600; 400 body and H2; 600 buttons, labels, strong. Tabular figures in the chart and calendar.
-- Scale (desktop / phone): H1 46/34 lh 1.1; H2 30/24 lh 1.2; H3 20/18 lh 1.3 at 600; prose `p` 18/17 lh 1.6; UI text 16; small 15; chart labels 11-13. (SN-038: H3 and UI text were unset.)
+- Scale (desktop / phone): H1 clamp(34px, 24px + 2.2vw, 46px) lh 1.1, balanced (SN-051); H2 30/24 lh 1.2; H3 20/18 lh 1.3 at 600; prose `p` 18/17 lh 1.6; UI text 16; small 15; chart labels 11-13. (SN-038: H3 and UI text were unset.)
 - Sentence case. No eyebrows, no uppercase labels.
 
 ## Layout
 - Header: no mark. Desktop: the name "Sofija Ivanova" (Geologica 600) over "uztura speciāliste, Rīga" (Slate), three links, LV RU EN, one Navy button. Phone: no burger; links and button hide, and a 44px portrait crop joins the name (photo logo; "Dr." badge cropped out; replace after the shoot); LV RU EN stay at every width; "Pacienta kabinets" moves to the footer. Sticky on desktop, static on phone; nothing hides on scroll.
 - Locales (SN-016): LV `/`, RU `/ru/`, EN `/en/`, one layout; LV RU EN are links, current `aria-current="page"`.
-- Hero (7fr/5fr): thesis headline, lead, button, one format line; on the right a typographic "education and research" panel (degree, doctorate, project, register number once; the title is already in the header, not repeated). No photo in the hero: the current photos are not good enough to build on (user, 2026-09-28).
+- Hero (7fr/5fr from 1024px, one column below: SN-051, 6-line H1 at 768): thesis headline, lead, button, one format line; on the right a typographic "education and research" panel (degree, doctorate, project, register number once; the title is already in the header, not repeated). No photo in the hero: the current photos are not good enough to build on (user, 2026-09-28).
 - Body (4fr/8fr): sticky question index (scrollspy, Range marker) beside six questions: fit (rows + "see your doctor first" boundary), first consultation (4 real steps, numbered), price (table; each price stated once), who is Sofija (EASD photo, research, talks, the glucose chart; credentials stay in the hero), how the approach differs (plate model with its source, then how it is individualised), how to book. One figure per question: the glucose chart in "what Sofija researches", the plate in "how it differs". Price rows without a number are not shown.
 - Booking: format toggle, A's week grid (Mon-first, Europe/Riga), summary panel with one button. Footer minimal.
 - Container 1160px, 40px/20px side padding; sections split by a Line border, not fills. Radius 4px on buttons, slots, panels; photos square. Phone: single column, index static above the questions.

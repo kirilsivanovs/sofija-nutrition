@@ -21,7 +21,12 @@ const layoutAstro = fs.readFileSync(
   'utf-8'
 );
 
-const questionBodyCss = fs.readFileSync(
+const chartCss = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'styles', 'chart.css'),
+  'utf-8'
+);
+
+const questionBodyCss =fs.readFileSync(
   path.join(__dirname, '..', 'src', 'styles', 'question-body.css'),
   'utf-8'
 );
@@ -194,5 +199,46 @@ describe('old hero section', () => {
       expect(body).not.toBe('');
       expect(body).not.toMatch(/box-shadow|transform/);
     }
+  });
+});
+
+
+function mediaBlock(css: string, query: string): string {
+  const start = css.indexOf(`@media (${query}) {`);
+  if (start === -1) return '';
+  const open = css.indexOf('{', start);
+  let depth = 0;
+  for (let i = open; i < css.length; i++) {
+    if (css[i] === '{') depth++;
+    if (css[i] === '}' && --depth === 0) return css.slice(open + 1, i);
+  }
+  return '';
+}
+
+describe('landing hero headline', () => {
+  const tabletBlock = mediaBlock(chartCss, 'max-width: 1023px');
+  const phoneBlock = mediaBlock(chartCss, 'max-width: 760px');
+
+  it('collapses the hero grid to one column below 1024px', () => {
+    expect(ruleBody(tabletBlock, '.landing-hero__inner')).toMatch(/grid-template-columns:\s*1fr\s*;/);
+    expect(ruleBody(chartCss, '.landing-hero__inner')).toMatch(/grid-template-columns:\s*7fr 5fr/);
+  });
+
+  it('sizes the hero title with a clamp that tops out at 46px and balances the wrap', () => {
+    const title = ruleBody(chartCss, '.landing-hero__title');
+    expect(title).toMatch(/clamp\(34px,\s*calc\(24px \+ 2\.2vw\),\s*46px\)/);
+    expect(title).toMatch(/text-wrap:\s*balance/);
+  });
+
+  it('drops the fixed 34px title override from the phone block', () => {
+    expect(phoneBlock).not.toMatch(/\.landing-hero__title/);
+  });
+
+  it('lays the credentials out in two columns on tablet only', () => {
+    const tabletDl = ruleBody(tabletBlock, '.hero-cred dl');
+    expect(tabletDl).toMatch(/grid-template-columns:\s*1fr 1fr/);
+    expect(tabletDl).toMatch(/grid-auto-flow:\s*column/);
+    expect(ruleBody(phoneBlock, '.hero-cred dl')).toMatch(/display:\s*block/);
+    expect(chartCss.indexOf('max-width: 1023px')).toBeLessThan(chartCss.indexOf('max-width: 760px'));
   });
 });
