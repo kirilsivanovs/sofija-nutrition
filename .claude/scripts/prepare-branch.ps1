@@ -3,7 +3,7 @@
     Creates the branch for a task in this repo, off the real default branch.
 
 .DESCRIPTION
-    The scripted form of .claude/agents/branch-preparer.md, run by /work at gate 2.
+    Run by /work when it cuts the task branch (exit 2 is a hard stop).
     Refuses a dirty working tree, detects the default branch from origin/HEAD
     (falling back to whichever single one of origin/main / origin/master exists),
     fetches, then checks out the branch if it already exists locally or creates it

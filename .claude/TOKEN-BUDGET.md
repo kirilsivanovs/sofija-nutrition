@@ -49,14 +49,14 @@ Each model has its own cache, so a switch re-writes the whole conversation. Effo
 
 | Stage | Model | Effort | Why |
 |---|---|---|---|
-| `analyzer` | **opus** | high | the one deep stage; 20 tool calls (26 with the S/M plan). Downgraded to sonnet by `/work` when the task already names the failing `file:line` and is not security or patient data |
+| `analyzer` (analysis) | **opus** | high | the deep stage; 20 tool calls (26 with the S/M plan). Downgraded to sonnet by `/work` when the task already names the failing `file:line` and is not security or patient data |
 | `analyzer` top-up | sonnet | low | folding late input into an existing analysis |
-| `dev-planner` | sonnet | high | `size: L` only; its output is consumed literally by a `developer`, so it self-verifies paths and test filters |
-| `prepare-branch.ps1` | — | — | a script the router runs before `developer`; `branch-preparer` (haiku) is the fallback |
+| `analyzer` plan mode | sonnet (Agent override) | high | `size: L` and `design/` tasks; its output is consumed literally by a `developer`, so it self-verifies paths and test filters |
+| `analyzer` design mode | opus | high | `architectural: true` only (or the "needs architect" override); decisions that outlive the task (patient record model, auth boundary) |
+| `prepare-branch.ps1` | — | — | a script the router runs before `developer`; exit 2 is a hard stop, no fallback agent |
 | `developer` | sonnet | medium | follows an explicit plan; the bulk of all spend |
 | `code-reviewer` | sonnet (opus for security / patient-data diffs) | high | small input (a diff and a test result), last thing before a commit — don't starve it |
 | `tester` | sonnet | medium | off the route; for browser scenarios (booking, language switch, keyboard access) |
-| `architect` | opus | high | off the route; only via a plain-language override (e.g. "needs architect") for decisions that outlive the task (patient record model, auth boundary) |
 
 ## No gates, but hard stops
 

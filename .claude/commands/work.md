@@ -58,19 +58,21 @@ Run these in order from wherever `status` puts the task. After each stage, write
 | # | `status` | Stage | Moves to |
 |---|---|---|---|
 | 1 | `new` | `analyzer` (opus) | `planned` (S/M, with its plan) or `analyzed` (L) |
-| 2 | `analyzed` | `dev-planner` (`architect` first if `architectural: true`) | `planned` |
+| 2 | `analyzed` | `analyzer` plan mode (Agent `model: "sonnet"`), preceded by `analyzer` design mode (opus) if `architectural: true` | `planned` |
 | 3 | `planned` | cut the branch (you) | `branched` |
 | 4 | `branched` / `in-progress` | `developer` | `testing` |
 | 5 | `testing` | verification (you) → `code-reviewer` | `review` |
 | 6 | `review` | fix rounds if needed, then commit → merge → push → close (you) | `done` |
 
+`analyzer` has modes: pass the mode as the prompt's first line (`Mode: plan` / `Mode: design`); no mode line means the analysis pass.
+
 Pass a sub-agent the task file's path and nothing else, unless it needs what the file cannot carry (failures or findings for `developer`, the verification result for `code-reviewer`, new inputs for a top-up). Never give a writing agent `isolation: worktree`.
 
-**A task under `.claude/tasks/design/`** takes a longer route at steps 1–2: `analyzer` (never writes `## Plan` for a `design/` task, sets `status: analyzed`) → `designer` in `direction` mode (writes `## Design direction`) → `dev-planner` → cut the branch. This costs a second opus pass (`designer` runs at `model: opus`, `effort: high`); say so in one line when you take it.
+**A task under `.claude/tasks/design/`** takes a longer route at steps 1–2: `analyzer` (never writes `## Plan` for a `design/` task, sets `status: analyzed`) → `designer` in `direction` mode (writes `## Design direction`) → `analyzer` in `Mode: plan` (sonnet) → cut the branch. This costs a second opus pass (`designer` runs at `model: opus`, `effort: high`); say so in one line when you take it.
 
 **Downgrade `analyzer` to sonnet** (Agent `model: "sonnet"`) when the task already names the failing function with its `file:line` and is local to one area; `kind: security` or anything touching patient data stays on opus.
 
-**`architectural: true`** → run `architect` (opus) once, then `dev-planner`. Say that the task pays for a second opus pass and why.
+**`architectural: true`** → run `analyzer` in `Mode: design` (opus) once, then `Mode: plan`. Say that the task pays for a second opus pass and why.
 
 **New input after the analysis** (newest `## Inputs` entry newer than the analyzer's last `analyzed`/`planned` log line, before a branch exists) → run `analyzer` as a top-up on sonnet first.
 
@@ -93,7 +95,7 @@ A task under `.claude/tasks/design/` → before `developer` starts, invoke `test
 - Invoke `code-reviewer` with the task file's path and that result line.
 - Invoke `code-reviewer` with Agent `model: "opus"` instead when the task is `kind: security` or the diff touches patient data; otherwise its frontmatter model (sonnet) stays.
 - Verification pass and verdict **Pass** or **Pass with notes** → `status: review` and go to step 6. Notes are logged in one line and not fixed. Log it: `& .\.claude\scripts\log-outcome.ps1 -Ticket <ID> -Size <size> -Stage code-reviewer -Round <N> -Verdict pass -Tests pass`.
-- Verification fail, or verdict **Fail** → a **fix round**: log one `## Log` line, `review round N: <verdict> (K blocking)`, and `& .\.claude\scripts\log-outcome.ps1 -Ticket <ID> -Size <size> -Stage code-reviewer -Round <N> -Verdict fail -Blocking <K> -Tests fail`, then invoke `developer` with the failures and findings verbatim, and verify and review again. `code-reviewer` and `tester` rejections count together toward the same cap, per task or sub-task. At most **two** rounds; still failing with blocking findings open after the second → the one hard stop that asks (see Hard stops): list the open blocking findings and offer fix once more (explicit override) / accept with a follow-up task (file it the way "Find or create the task" does) / re-plan via `dev-planner` / abandon.
+- Verification fail, or verdict **Fail** → a **fix round**: log one `## Log` line, `review round N: <verdict> (K blocking)`, and `& .\.claude\scripts\log-outcome.ps1 -Ticket <ID> -Size <size> -Stage code-reviewer -Round <N> -Verdict fail -Blocking <K> -Tests fail`, then invoke `developer` with the failures and findings verbatim, and verify and review again. `code-reviewer` and `tester` rejections count together toward the same cap, per task or sub-task. At most **two** rounds; still failing with blocking findings open after the second → the one hard stop that asks (see Hard stops): list the open blocking findings and offer fix once more (explicit override) / accept with a follow-up task (file it the way "Find or create the task" does) / re-plan via `analyzer` plan mode / abandon.
 - `tester` runs automatically, after `code-reviewer` passes, when the plan names a browser scenario, and **always** for a task under `.claude/tasks/design/` (its design check, `.claude/agents/tester.md`). Its fail, including any failed design-checklist item, counts as a verification fail and as a round toward the same cap as `code-reviewer`. "Could not verify" on a design task is not a pass: fix what blocked it or hard-stop.
 - Design task passed → in the final report give the screenshot folder (`.claude/tasks/design/<ID>/notes/screenshots/<task-id>/`) so the user can compare `before-*` and `after-*`.
 - Design task passed `tester` → invoke `designer` in `visual review` mode. `done` → continue to step 6. A refinement list → pass it verbatim to `developer`, then run verification (this section) and `code-reviewer` again, then `tester` again. At most **2 refinement rounds**, separate from and after the fix rounds above; still not `done` after 2 → log the remaining refinements as a new task (per "Find or create the task") and continue to step 6 — this is not a hard stop. List the refinement rounds taken in the final report.
@@ -112,7 +114,7 @@ Never force-push, never `reset --hard`, never rewrite pushed history, never push
 
 ## Plain-language stage overrides
 
-Phrases after the id run one specific stage instead of the routed one, then continue the normal route from the resulting status, reporting as this file always does — say in one line which stage the route would have picked and why you're overriding it. "Re-analyze" → `analyzer` (a full re-run, not a top-up — say the previous run was wrong, since a second one on the same task means the first was). "Re-plan" → `dev-planner`. "Design direction again" / "redo the design" → `designer`. "Re-branch" / "cut the branch again" → `prepare-branch.ps1`. "Send back to developer" / "re-implement" → `developer` with the open findings. "Re-review" → `code-reviewer` out of turn. "Needs architect" → `architect` (opus; say what the analysis left unsettled and why a person can't answer it faster — clear `architectural: true` afterwards whichever way it's resolved). "Tester" / "check it in the browser" → `tester`.
+Phrases after the id run one specific stage instead of the routed one, then continue the normal route from the resulting status, reporting as this file always does — say in one line which stage the route would have picked and why you're overriding it. "Re-analyze" → `analyzer` (a full re-run, not a top-up — say the previous run was wrong, since a second one on the same task means the first was). "Re-plan" → `analyzer` in `Mode: plan`. "Design direction again" / "redo the design" → `designer`. "Re-branch" / "cut the branch again" → `prepare-branch.ps1`. "Send back to developer" / "re-implement" → `developer` with the open findings. "Re-review" → `code-reviewer` out of turn. "Needs architect" → `analyzer` in `Mode: design` (opus; say what the analysis left unsettled and why a person can't answer it faster — clear `architectural: true` afterwards whichever way it's resolved). "Tester" / "check it in the browser" → `tester`.
 
 "Add `<item>` to `<recurring task>`" appends one unchecked bullet to that task's `## Pending batch` (never `## Current batch`), updates `updated:`, no sub-agent — refuse if the task isn't `recurring: true`.
 
@@ -122,12 +124,12 @@ Phrases after the id run one specific stage instead of the routed one, then cont
 
 The only places `/work` stops before `done`:
 
-- `analyzer` or `architect` blocked on a question only the user or Sofija can answer (copy, prices, policy, a production fact) — report the question and who has it.
+- `analyzer` (any mode) blocked on a question only the user or Sofija can answer (copy, prices, policy, a production fact) — report the question and who has it.
 - Uncommitted changes that don't belong to this task.
 - Still failing (code-reviewer or tester) after two fix rounds, blocking findings still open — the one hard stop that closes with `AskUserQuestion` instead of just reporting: fix once more / accept with follow-up / re-plan / abandon.
 - A rebase conflict.
 - Pre-deploy manual steps (step 6.4).
-- A stage truncated twice (the task needs a smaller split — force `dev-planner`, see "Plain-language stage overrides").
+- A stage truncated twice (the task needs a smaller split — force plan mode, see "Plain-language stage overrides").
 - Anything the plan says needs a secret value, a data repair, or an Azure/GitHub change outside the `CLAUDE.md` rule — the user does those.
 
 At a hard stop: say what stopped, what is already done (commit hashes, branch, status), and the one thing that unblocks it. Leave the board in an honest state.
