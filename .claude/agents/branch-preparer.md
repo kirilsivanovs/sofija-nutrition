@@ -3,7 +3,6 @@ name: branch-preparer
 description: Off-route fallback for .claude/scripts/prepare-branch.ps1. Creates the task's branch off the repo's real default branch and records it in the task. Mechanical — no judgment, no code.
 tools: Read, Edit, PowerShell
 model: haiku
-effort: low
 maxTurns: 20
 color: yellow
 omitClaudeMd: true

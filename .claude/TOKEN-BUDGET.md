@@ -33,7 +33,7 @@ Each model has its own cache, so a switch re-writes the whole conversation. Effo
 
 **The board is local.** There is no tracker to sync with: `/work` files a new task from a title and archives it once its commit is on `main`. `.claude/tasks/` is gitignored because the repo is public and task files describe unfixed vulnerabilities.
 
-**Thinking happens once, at the top.** `analyzer` (opus) establishes the requirement, the root cause and the shape, and for S/M tasks writes the steps too. `developer` (sonnet, low effort) executes them instead of re-deriving anything.
+**Thinking happens once, at the top.** `analyzer` (opus) establishes the requirement, the root cause and the shape, and for S/M tasks writes the steps too. `developer` (sonnet, medium effort) executes them instead of re-deriving anything.
 
 **Sub-agents pay their own context.** An agent can burn 40k tokens exploring and return 20 lines; only the 20 lines enter your session. Every agent has an explicit return budget for that reason.
 
@@ -51,10 +51,10 @@ Each model has its own cache, so a switch re-writes the whole conversation. Effo
 |---|---|---|---|
 | `analyzer` | **opus** | high | the one deep stage; 20 tool calls (26 with the S/M plan). Downgraded to sonnet by `/work` when the task already names the failing `file:line` and is not security or patient data |
 | `analyzer` top-up | sonnet | low | folding late input into an existing analysis |
-| `dev-planner` | sonnet | high | `size: L` only; its output is consumed literally by a low-effort agent, so it self-verifies paths and test filters |
+| `dev-planner` | sonnet | high | `size: L` only; its output is consumed literally by a `developer`, so it self-verifies paths and test filters |
 | `prepare-branch.ps1` | — | — | a script the router runs before `developer`; `branch-preparer` (haiku) is the fallback |
-| `developer` | sonnet | low | follows an explicit plan; the bulk of all spend |
-| `code-reviewer` | sonnet | high | small input (a diff and a test result), last thing before a commit — don't starve it |
+| `developer` | sonnet | medium | follows an explicit plan; the bulk of all spend |
+| `code-reviewer` | sonnet (opus for security / patient-data diffs) | high | small input (a diff and a test result), last thing before a commit — don't starve it |
 | `tester` | sonnet | medium | off the route; for browser scenarios (booking, language switch, keyboard access) |
 | `architect` | opus | high | off the route; only via a plain-language override (e.g. "needs architect") for decisions that outlive the task (patient record model, auth boundary) |
 
@@ -68,7 +68,7 @@ The user chose autopilot: `/work` runs every stage back to back and takes the re
 
 ## Watch the meter, and clear before it matters
 
-- After a `/work` run, if context is past ~150k, `/work` says a fresh session is cheaper for the next task.
+- After a `/work` run that closed a task, or past ~150k context, `/work` suggests `/clear` before the next task.
 - `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=20` is the backstop for a session nobody cleared.
 - `usage-log.js` appends one line per sub-agent run and per main turn to `.claude/metrics/usage.jsonl` (token counts only, keyed by `SN-NNN`). `.\.claude\scripts\usage-report.ps1 [-Ticket SN-012] [-Since 2026-10-01]` sums it by task and agent type.
 

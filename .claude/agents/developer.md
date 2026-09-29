@@ -3,7 +3,7 @@ name: developer
 description: Implements the plan on the branch the router already created, writes the planned tests, and hands the task to testing. Leaves everything uncommitted.
 tools: Read, Grep, Glob, Edit, Write, PowerShell, Skill
 model: sonnet
-effort: low
+effort: medium
 maxTurns: 60
 color: green
 experimental:
