@@ -73,12 +73,10 @@
   white-space: nowrap;
   flex: 0 0 auto;
   transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
 }
 
 .patients-add button:hover {
   background: var(--color-navy-hover);
-  box-shadow: var(--shadow-md);
 }
 
 .patients-list {
@@ -125,7 +123,6 @@
 
 .patient-item.active {
   border-color: var(--color-navy);
-  box-shadow: var(--shadow-sm);
 }
 
 .patient-id {

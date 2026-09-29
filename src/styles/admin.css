@@ -4,9 +4,6 @@
 :root {
   --color-text: var(--color-graphite);
   --color-bg: var(--color-white);
-  --shadow-sm: 0 1px 2px 0 rgba(17, 24, 39, 0.06);
-  --shadow-md: 0 6px 12px -4px rgba(17, 24, 39, 0.12);
-  --shadow-lg: 0 16px 30px -12px rgba(17, 24, 39, 0.18);
   --radius: var(--radius-sm);
 }
 
@@ -139,11 +136,9 @@
 }
 
 .admin-logo-sub {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--color-slate);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .admin-user {
@@ -173,9 +168,9 @@
 }
 
 .admin-logout:hover {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
+  background: var(--color-mist);
+  color: var(--color-graphite);
+  border-color: var(--color-line);
 }
 
 /* Desktop Navigation */
@@ -305,8 +300,7 @@
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+    color 0.2s ease;
   color: var(--color-text);
 }
 
@@ -335,14 +329,11 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-primary:hover {
   background: var(--color-navy-hover);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-primary.btn-sm {
@@ -350,7 +341,8 @@
   font-size: 15px;
 }
 
-.btn-secondary {
+.btn-secondary,
+.btn-info {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -366,11 +358,11 @@
   cursor: pointer;
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color 0.2s ease;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.btn-info:hover {
   background: var(--color-mist);
   border-color: var(--color-navy);
 }
@@ -381,41 +373,19 @@
   gap: 8px;
   padding: 12px 20px;
   min-height: 44px;
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background: var(--color-white);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-danger:hover {
-  background: #fee2e2;
-}
-
-.btn-info {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: #eff6ff;
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-info:hover {
-  background: #dbeafe;
+  background: var(--color-mist);
 }
 
 .btn-close {
@@ -433,8 +403,8 @@
 }
 
 .btn-close:hover {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--color-mist);
+  color: var(--color-graphite);
 }
 
 .btn-close i {
@@ -459,26 +429,26 @@
   max-width: 400px;
   background: var(--color-white);
   border-radius: var(--radius-sm);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--color-slate);
+  border-left: 3px solid var(--color-slate);
   padding: 16px 20px;
   display: flex;
   align-items: flex-start;
   gap: 12px;
   animation: slideIn 0.3s ease-out;
-  border-left: 4px solid var(--color-navy);
 }
 
 .toast.success {
-  border-left-color: #22c55e;
+  border-left-color: var(--color-range);
 }
 .toast.error {
-  border-left-color: #ef4444;
+  border-left-color: var(--color-error);
 }
 .toast.warning {
-  border-left-color: #f59e0b;
+  border-left-color: var(--color-high);
 }
 .toast.info {
-  border-left-color: #3b82f6;
+  border-left-color: var(--color-slate);
 }
 
 .toast-icon {
@@ -488,16 +458,16 @@
 }
 
 .toast.success .toast-icon {
-  color: #22c55e;
+  color: var(--color-range);
 }
 .toast.error .toast-icon {
-  color: #ef4444;
+  color: var(--color-error);
 }
 .toast.warning .toast-icon {
-  color: #f59e0b;
+  color: var(--color-high);
 }
 .toast.info .toast-icon {
-  color: #3b82f6;
+  color: var(--color-slate);
 }
 
 .toast-content {
@@ -569,14 +539,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: color-mix(in srgb, var(--color-graphite) 50%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
   opacity: 0;
   transition: opacity 0.2s ease-out;
-  backdrop-filter: blur(4px);
 }
 
 .confirm-overlay.show {
@@ -585,8 +554,8 @@
 
 .confirm-dialog {
   background: var(--color-white);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 440px;
   width: 90%;
   transform: scale(0.9) translateY(-20px);
@@ -670,9 +639,8 @@
 .date-picker-popup {
   position: absolute;
   background: var(--color-white);
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--color-slate);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
   padding: 16px;
   z-index: 9999;
   min-width: 300px;
@@ -777,7 +745,6 @@
 .card {
   background: var(--color-white);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-line);
   padding: 28px;
   margin-bottom: 24px;
@@ -868,29 +835,21 @@
 }
 
 .legend-available {
-  background: #ffffff;
+  background: var(--color-white);
   border: 1px solid var(--color-line);
 }
-.legend-booked {
-  background: #f0fdf4;
-  border-left: 3px solid #4ade80;
-}
 .legend-weekend {
-  background: #fff1f2;
-  border: 1px solid #fecaca;
-}
-.legend-holiday {
-  background: #fee2e2;
-  border-left: 3px solid #f87171;
+  background: var(--color-mist);
+  border: 1px solid var(--color-line);
 }
 .legend-confirmed {
-  background: #22c55e;
+  background: var(--color-range);
 }
 .legend-pending {
-  background: #facc15;
+  background: var(--color-high);
 }
 .legend-cancelled {
-  background: #ef4444;
+  background: var(--color-error);
 }
 
 /* Calendar */
@@ -901,7 +860,7 @@
 .calendar-card {
   background: var(--color-white);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-line);
   overflow: hidden;
   padding: 0;
 }
@@ -922,7 +881,6 @@
   .calendar-day-name {
     padding: 10px 4px;
     font-size: 12px;
-    letter-spacing: 0;
   }
 }
 
@@ -939,8 +897,6 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--color-graphite);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .calendar-day-name.weekend {
@@ -960,7 +916,6 @@
   min-height: 110px;
   padding: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
   font-size: 14px;
   position: relative;
   background: var(--color-white);
@@ -972,46 +927,32 @@
 }
 
 .calendar-cell:hover {
-  box-shadow: inset 0 0 0 3px var(--color-navy);
-  z-index: 10;
-  transform: scale(1.02);
+  outline: 1px solid var(--color-slate);
+  outline-offset: -1px;
 }
 
 .calendar-cell.selected {
-  box-shadow: inset 0 0 0 4px var(--color-navy);
-  z-index: 11;
-  transform: scale(1.02);
+  outline: 2px solid var(--color-navy);
+  outline-offset: -2px;
 }
 
 .calendar-cell.empty {
-  background: #f9fafb;
+  background: var(--color-white);
   cursor: default;
   min-height: 0;
 }
 
 .calendar-cell.empty:hover {
-  box-shadow: none;
-  transform: none;
+  outline: none;
 }
 
-/* Доступные дни - белый фон */
-.calendar-wrapper .calendar-card .calendar-grid .calendar-cell.available {
-  background-color: #ffffff;
-}
-
-/* Дни с записями - светло-зеленый */
-.calendar-wrapper .calendar-card .calendar-grid .calendar-cell.booked {
-  background-color: #f0fdf4;
-}
-
-/* Недоступные дни (выходные, нерабочие) - светло-красный фон */
+/* Non-bookable days are Mist */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.weekend {
-  background-color: #fff1f2;
+  background-color: var(--color-mist);
 }
 
-/* Праздники и блокированные - красный фон */
 .calendar-wrapper .calendar-card .calendar-grid .calendar-cell.holiday {
-  background-color: #fee2e2;
+  background-color: var(--color-mist);
 }
 
 .calendar-cell .day-number {
@@ -1035,8 +976,8 @@
 }
 
 .calendar-cell .holiday-name {
-  font-size: 12px;
-  color: #dc2626;
+  font-size: 13px;
+  color: var(--color-slate);
   font-weight: 600;
   line-height: 1.3;
 }
@@ -1064,10 +1005,7 @@
   gap: 3px;
   font-size: 12px;
   font-weight: 600;
-  padding: 3px 6px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--color-graphite);
 }
 
 .calendar-cell .booking-dot span {
@@ -1075,43 +1013,19 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.5),
-    0 1px 2px rgba(0, 0, 0, 0.3);
   display: block;
 }
 
-/* Зеленый кружок - активные записи */
-.calendar-cell .booking-dot.confirmed {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: #22c55e;
-  color: #166534;
-}
-
 .calendar-cell .booking-dot.confirmed span {
-  background: #22c55e;
-}
-
-/* Красный кружок - отмененные */
-.calendar-cell .booking-dot.cancelled {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
-  color: #991b1b;
+  background: var(--color-range);
 }
 
 .calendar-cell .booking-dot.cancelled span {
-  background: #ef4444;
-}
-
-/* Желтый кружок - ждут оплаты */
-.calendar-cell .booking-dot.pending {
-  background: rgba(250, 204, 21, 0.15);
-  border-color: #facc15;
-  color: #854d0e;
+  background: var(--color-error);
 }
 
 .calendar-cell .booking-dot.pending span {
-  background: #facc15;
+  background: var(--color-high);
 }
 
 .calendar-cell .booking-count {
@@ -1135,7 +1049,7 @@
 .day-details-card {
   background: var(--color-white);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-line);
   overflow: hidden;
 }
 
@@ -1186,22 +1100,20 @@
 
 .booking-card {
   background: var(--color-white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   padding: 16px;
   border: 1px solid var(--color-line);
-  border-left: 4px solid var(--color-line);
-  box-shadow: var(--shadow-sm);
+  border-left: 3px solid var(--color-line);
 }
 
 .booking-card.pending {
-  border-left-color: #facc15;
+  border-left-color: var(--color-high);
 }
 .booking-card.confirmed {
-  border-left-color: #22c55e;
+  border-left-color: var(--color-range);
 }
 .booking-card.cancelled {
-  border-left-color: #f87171;
-  opacity: 0.7;
+  border-left-color: var(--color-error);
 }
 
 .booking-header {
@@ -1234,27 +1146,32 @@
 }
 
 .booking-status {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
+  color: var(--color-graphite);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   width: fit-content;
 }
 
-.booking-status.pending {
-  background: #fef3c7;
-  color: #b45309;
+.booking-status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-line);
+  flex-shrink: 0;
 }
-.booking-status.confirmed {
-  background: #dcfce7;
-  color: #15803d;
+
+.booking-status.pending::before {
+  background: var(--color-high);
 }
-.booking-status.cancelled {
-  background: #fee2e2;
-  color: #dc2626;
+.booking-status.confirmed::before {
+  background: var(--color-range);
+}
+.booking-status.cancelled::before {
+  background: var(--color-error);
 }
 
 .booking-time {
@@ -1457,7 +1374,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: #fef2f2;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   font-size: 15px;
 }
@@ -1483,7 +1401,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: #eff6ff;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   font-size: 15px;
   flex-wrap: wrap;
@@ -1534,12 +1453,12 @@
   background: var(--color-mist);
 }
 
-.data-table tr.row-selected {
-  background: #dbeafe;
+.data-table tr.row-selected td {
+  background: var(--color-mist);
 }
 
-.data-table tr.row-selected td {
-  background: #dbeafe;
+.data-table tr.row-selected td:first-child {
+  border-left: 3px solid var(--color-navy);
 }
 
 .table-footer {
@@ -1600,7 +1519,6 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
   background: var(--color-white);
-  box-shadow: var(--shadow-sm);
 }
 
 .meal-card-header {
@@ -1852,8 +1770,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--color-graphite) 60%, transparent);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -1878,7 +1795,7 @@
   width: 100%;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-line);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -1953,7 +1870,7 @@
 .meals-summary-row:last-child {
   margin-bottom: 0;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-top: 1px solid var(--color-line);
 }
 
 .meals-summary-label {
@@ -2045,7 +1962,7 @@
 .status-card {
   background: var(--color-white);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-line);
   padding: 24px;
   margin-bottom: 24px;
 }
@@ -2076,7 +1993,6 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-mist);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2087,16 +2003,13 @@
 }
 
 .status-badge.healthy {
-  background: #dcfce7;
-  color: #16a34a;
+  color: var(--color-range);
 }
 .status-badge.degraded {
-  background: #fef3c7;
-  color: #ca8a04;
+  color: var(--color-high);
 }
 .status-badge.unhealthy {
-  background: #fee2e2;
-  color: #dc2626;
+  color: var(--color-error);
 }
 
 .status-stats {
@@ -2120,20 +2033,18 @@
 }
 
 .stat-value.stat-healthy {
-  color: #16a34a;
+  color: var(--color-range);
 }
 .stat-value.stat-degraded {
-  color: #ca8a04;
+  color: var(--color-high);
 }
 .stat-value.stat-unhealthy {
-  color: #dc2626;
+  color: var(--color-error);
 }
 
 .stat-label {
   font-size: 12px;
   color: var(--color-slate);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .section-divider {
@@ -2155,8 +2066,7 @@
     font-size: 18px;
   }
   .admin-logo-sub {
-    font-size: 9px;
-    letter-spacing: 1.5px;
+    font-size: 12px;
   }
   .admin-logout span {
     display: none;
@@ -2183,10 +2093,6 @@
   }
   .calendar-cell .day-time {
     font-size: 10px;
-  }
-  .calendar-cell .booking-dot {
-    width: 6px;
-    height: 6px;
   }
 }
 

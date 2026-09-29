@@ -17,7 +17,7 @@ Reason: the user picked SN-036 "Итог · A+D" over SN-034. Mockup: https://cl
 | Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
 | High | #B06A00 | chart segment above range only | graphic |
 
-Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Navy stays scarce (user, 2026-09-26): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
+Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Admin calendar (SN-041, no rule covered day states): bookable White, non-bookable Mist, reason as Slate text. Navy stays scarce (user, 2026-09-26): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
 
 ## Type
 - Geologica only: 300 for H1 with the key phrase in 600; 400 body and H2; 600 buttons, labels, strong. Tabular figures in the chart and calendar.
