@@ -165,32 +165,63 @@ import AppHeader from '../components/common/AppHeader.astro';
   </main>
 
   <!-- ============ ADD FOOD BOTTOM SHEET ============ -->
-  <div id="sheet-overlay" class="sheet-overlay hidden"></div>
-  <div id="add-sheet" class="add-sheet hidden">
-    <div class="sheet-handle"></div>
+  <dialog id="add-sheet" class="add-sheet" aria-labelledby="sheet-title">
     <div class="sheet-header">
       <h3 id="sheet-title">Pievienot ēdienu</h3>
       <button id="sheet-close" class="sheet-close" aria-label="Aizvērt">
-        <i class="ph ph-x"></i>
+        <i class="ph ph-x" aria-hidden="true"></i>
       </button>
     </div>
 
     <div class="sheet-body">
       <!-- Tabs: Manual / Favorites / Recent -->
-      <div class="sheet-tabs">
-        <button class="sheet-tab active" data-sheet-tab="manual">
-          <i class="ph ph-pencil-simple"></i> Ievadīt
+      <div class="sheet-tabs" role="tablist" aria-labelledby="sheet-title">
+        <button
+          type="button"
+          class="sheet-tab"
+          role="tab"
+          id="sheet-tab-manual"
+          aria-controls="sheet-panel-manual"
+          aria-selected="true"
+          tabindex="0"
+          data-sheet-tab="manual"
+        >
+          <i class="ph ph-pencil-simple" aria-hidden="true"></i> Ievadīt
         </button>
-        <button class="sheet-tab" data-sheet-tab="favorites">
-          <i class="ph ph-star"></i> Favorīti
+        <button
+          type="button"
+          class="sheet-tab"
+          role="tab"
+          id="sheet-tab-favorites"
+          aria-controls="sheet-panel-favorites"
+          aria-selected="false"
+          tabindex="-1"
+          data-sheet-tab="favorites"
+        >
+          <i class="ph ph-star" aria-hidden="true"></i> Favorīti
         </button>
-        <button class="sheet-tab" data-sheet-tab="recent">
-          <i class="ph ph-clock-counter-clockwise"></i> Nesen
+        <button
+          type="button"
+          class="sheet-tab"
+          role="tab"
+          id="sheet-tab-recent"
+          aria-controls="sheet-panel-recent"
+          aria-selected="false"
+          tabindex="-1"
+          data-sheet-tab="recent"
+        >
+          <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i> Nesen
         </button>
       </div>
 
       <!-- Tab: Manual entry -->
-      <div class="sheet-panel" data-sheet-panel="manual">
+      <div
+        class="sheet-panel"
+        role="tabpanel"
+        id="sheet-panel-manual"
+        aria-labelledby="sheet-tab-manual"
+        data-sheet-panel="manual"
+      >
         <form id="add-food-form" class="add-food-form">
           <div class="form-group">
             <label for="food-name">Ēdiena nosaukums</label>
@@ -230,8 +261,8 @@ import AppHeader from '../components/common/AppHeader.astro';
           <!-- Photo -->
           <div class="form-group">
             <label class="photo-label">
-              <i class="ph ph-camera"></i> Pievienot foto
-              <input id="food-photo" type="file" accept="image/*" class="photo-input" />
+              <i class="ph ph-camera" aria-hidden="true"></i> Pievienot foto
+              <input id="food-photo" type="file" accept="image/*" class="sr-only" />
             </label>
             <div id="photo-preview" class="photo-preview hidden"></div>
           </div>
@@ -239,10 +270,16 @@ import AppHeader from '../components/common/AppHeader.astro';
       </div>
 
       <!-- Tab: Favorites -->
-      <div class="sheet-panel hidden" data-sheet-panel="favorites">
+      <div
+        class="sheet-panel hidden"
+        role="tabpanel"
+        id="sheet-panel-favorites"
+        aria-labelledby="sheet-tab-favorites"
+        data-sheet-panel="favorites"
+      >
         <div id="fav-list" class="food-chip-list"></div>
         <div id="fav-empty" class="sheet-empty hidden">
-          <i class="ph ph-star"></i>
+          <i class="ph ph-star" aria-hidden="true"></i>
           <p>Nav favorītu. Pievienojiet ēdienu un nospiediet ★</p>
         </div>
         <div class="fav-footer">
@@ -251,15 +288,21 @@ import AppHeader from '../components/common/AppHeader.astro';
       </div>
 
       <!-- Tab: Recent -->
-      <div class="sheet-panel hidden" data-sheet-panel="recent">
+      <div
+        class="sheet-panel hidden"
+        role="tabpanel"
+        id="sheet-panel-recent"
+        aria-labelledby="sheet-tab-recent"
+        data-sheet-panel="recent"
+      >
         <div id="recent-list" class="food-chip-list"></div>
         <div id="recent-empty" class="sheet-empty hidden">
-          <i class="ph ph-clock-counter-clockwise"></i>
+          <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
           <p>Pagaidām nav iepriekšējo ēdienu.</p>
         </div>
       </div>
 
-      <div id="sheet-status" class="sheet-status"></div>
+      <div id="sheet-status" class="sheet-status" role="status"></div>
     </div><!-- .sheet-body -->
 
     <!-- Action buttons — always visible at bottom -->
@@ -270,13 +313,13 @@ import AppHeader from '../components/common/AppHeader.astro';
         id="save-and-fav"
         title="Saglabāt un pievienot favorītiem"
       >
-        <i class="ph ph-star"></i> + Favorīts
+        <i class="ph ph-star" aria-hidden="true"></i> + Favorīts
       </button>
       <button type="button" class="btn-primary-sm" id="submit-food-btn">
-        <i class="ph ph-plus"></i> Pievienot
+        <i class="ph ph-plus" aria-hidden="true"></i> Pievienot
       </button>
     </div>
-  </div>
+  </dialog>
 
   <!-- ============ FAB (Mobile add button) ============ -->
   <button id="fab-add" class="fab hidden" aria-label="Pievienot maltīti">
@@ -355,7 +398,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       color: var(--diary-green);
       font-size: 20px;
       border-radius: var(--diary-radius);
-      transition: background 0.15s;
     }
     .day-nav-btn:hover {
       background: var(--diary-warm);
@@ -367,7 +409,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       gap: 2px;
       padding: 8px 28px;
       border-radius: var(--diary-radius);
-      transition: background 0.15s;
     }
     .day-nav-date:hover {
       background: var(--diary-warm);
@@ -424,7 +465,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       stroke-linecap: round;
       stroke-dasharray: 326.73;
       stroke-dashoffset: 326.73;
-      transition: stroke-dashoffset 0.8s ease;
     }
     .ring-text {
       position: absolute;
@@ -490,7 +530,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       height: 100%;
       background: var(--diary-green);
       border-radius: 4px;
-      transition: width 0.6s ease;
       width: 0;
       max-width: 100%;
     }
@@ -527,7 +566,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .meal-section-title h3 {
       margin: 0;
-      font-family: var(--font-sans, 'Inter', sans-serif);
+      font-family: var(--font-sans);
       font-size: 15px;
       font-weight: 600;
       color: var(--diary-text);
@@ -561,7 +600,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border: 1.5px solid var(--diary-text-dim);
       color: var(--diary-green);
       font-size: 14px;
-      transition: all 0.2s;
     }
     .meal-add-btn:hover {
       background: var(--color-navy);
@@ -583,7 +621,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       padding: 10px 12px 10px 16px;
       border-top: 1px solid var(--diary-border);
       gap: 10px;
-      transition: background 0.15s;
     }
     .meal-item-row:hover {
       background: var(--diary-warm);
@@ -632,9 +669,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       color: var(--diary-text-dim);
       font-size: 15px;
-      transition:
-        color 0.2s,
-        background 0.2s;
     }
     .meal-item-delete:hover {
       color: var(--color-error);
@@ -650,9 +684,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       color: var(--diary-text-dim);
       font-size: 15px;
-      transition:
-        color 0.2s,
-        background 0.2s;
     }
     .meal-item-edit:hover {
       color: var(--diary-green);
@@ -736,62 +767,43 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
 
     /* ---- Centered Modal ---- */
-    .sheet-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 100;
-      opacity: 0;
-      transition: opacity 0.25s;
-      backdrop-filter: blur(4px);
-    }
-    .sheet-overlay.visible {
-      opacity: 1;
-    }
     .add-sheet {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      z-index: 101;
       background: #fff;
+      border: none;
       border-radius: var(--diary-radius);
-      width: calc(100% - 32px);
-      max-width: var(--diary-max-w);
+      padding: 0;
+      margin: auto;
+      overflow: hidden;
+      color: inherit;
+      width: min(var(--diary-max-w), 100% - 32px);
+      max-width: none;
       max-height: 85dvh;
+    }
+    .add-sheet[open] {
       display: flex;
       flex-direction: column;
-      transform: translate(-50%, -50%) scale(0.95);
-      opacity: 0;
-      transition:
-        transform 0.25s cubic-bezier(0.32, 0.72, 0, 1),
-        opacity 0.25s;
-      padding: 0 20px;
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(0, 0, 0, 0.05);
     }
-    .add-sheet.visible {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
+    .add-sheet::backdrop {
+      background: color-mix(in srgb, var(--color-graphite) 40%, transparent);
     }
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      border-radius: 2px;
-      background: #d1d5db;
-      margin: 12px auto 4px;
-      flex-shrink: 0;
+    body:has(.add-sheet[open]) {
+      overflow: hidden;
+    }
+    .sheet-header,
+    .sheet-body,
+    .form-actions {
+      padding-inline: 20px;
     }
     .sheet-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 0 12px;
+      padding-block: 8px 12px;
       flex-shrink: 0;
     }
     .sheet-header h3 {
       margin: 0;
-      font-family: var(--font-sans, 'Inter', sans-serif);
+      font-family: var(--font-sans);
       font-size: 17px;
       font-weight: 600;
       color: var(--diary-text);
@@ -800,17 +812,16 @@ import AppHeader from '../components/common/AppHeader.astro';
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 34px;
-      height: 34px;
-      min-width: 34px;
-      min-height: 34px;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
       padding: 0;
-      flex: 0 0 34px;
-      background: var(--diary-warm);
-      border-radius: 50%;
+      flex: 0 0 44px;
+      background: transparent;
+      border-radius: var(--diary-radius);
       color: var(--diary-text-dim);
       font-size: 16px;
-      transition: background 0.15s;
     }
     .sheet-close:hover {
       background: var(--diary-border);
@@ -842,13 +853,12 @@ import AppHeader from '../components/common/AppHeader.astro';
       gap: 5px;
       padding: 10px 8px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--diary-text-dim);
       border-radius: var(--diary-radius);
       border: 1px solid transparent;
-      transition: all 0.2s;
     }
-    .sheet-tab.active {
+    .sheet-tab[aria-selected='true'] {
       background: #fff;
       color: var(--diary-green);
       border-color: var(--diary-text-dim);
@@ -870,7 +880,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .form-group label {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--diary-text-dim);
     }
     .form-group input[type='text'],
@@ -881,8 +891,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       font-size: 14px;
       color: var(--diary-text);
       background: #fff;
-      transition: border-color 0.2s;
-      font-family: var(--font-sans, 'Inter', sans-serif);
+      font-family: var(--font-sans);
       width: 100%;
     }
     .form-group input:focus {
@@ -903,6 +912,7 @@ import AppHeader from '../components/common/AppHeader.astro';
 
     /* Photo */
     .form-group .photo-label {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -912,13 +922,13 @@ import AppHeader from '../components/common/AppHeader.astro';
       color: var(--diary-text-dim);
       cursor: pointer;
       font-size: 14px;
-      transition: border-color 0.2s;
     }
     .form-group .photo-label:hover {
       border-color: var(--diary-green);
     }
-    .photo-input {
-      display: none;
+    .form-group .photo-label:has(input:focus-visible) {
+      outline: 2px solid var(--diary-green);
+      outline-offset: 1px;
     }
     .photo-preview {
       margin-top: 8px;
@@ -938,7 +948,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       display: flex;
       gap: 10px;
       align-items: center;
-      padding: 12px 0 16px;
+      padding-block: 12px 16px;
       background: #fff;
       flex-shrink: 0;
       border-top: 1px solid var(--diary-border);
@@ -956,7 +966,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       font-size: 14px;
       font-weight: 600;
-      transition: opacity 0.2s;
       cursor: pointer;
     }
     .btn-primary-sm:hover {
@@ -977,8 +986,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       background: #fff;
       color: var(--diary-text-dim);
       font-size: 13px;
-      font-weight: 500;
-      transition: all 0.2s;
+      font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
     }
@@ -1012,7 +1020,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       background: #fff;
       cursor: pointer;
-      transition: all 0.15s;
     }
     .food-chip:hover {
       background: var(--diary-warm);
@@ -1024,7 +1031,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .food-chip-name {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--diary-text);
     }
     .food-chip-detail {
@@ -1090,7 +1097,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       right: 24px;
       width: 54px;
       height: 54px;
-      border-radius: 50%;
+      border-radius: var(--diary-radius);
       background: var(--color-navy);
       color: #fff;
       font-size: 22px;
@@ -1098,7 +1105,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       align-items: center;
       justify-content: center;
       z-index: 90;
-      transition: background 0.15s;
     }
     .fab:hover {
       background: var(--color-navy-hover);
@@ -1137,29 +1143,6 @@ import AppHeader from '../components/common/AppHeader.astro';
         grid-template-columns: 1fr 1fr 1fr;
         gap: 8px;
       }
-    }
-
-    /* Animation */
-    @keyframes sheetSlideUp {
-      from {
-        transform: translateY(100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .meal-item-row {
-      animation: fadeIn 0.25s ease;
     }
 
     /* ---- Overflows indicator ---- */
@@ -1550,6 +1533,10 @@ import AppHeader from '../components/common/AppHeader.astro';
     // ---- Water Tracker (removed) ----
 
     // ---- Bottom Sheet ----
+    const sheet = $('#add-sheet');
+    let sheetOpener = null;
+    let sheetOpenerMealType = null;
+
     function openSheet(mealType, editData) {
       activeSheetMealType = mealType;
       const labels = {
@@ -1572,7 +1559,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         $('#food-carbs').value = editData.carbs || '';
         const submitBtn = $('#submit-food-btn');
         if (submitBtn) {
-          submitBtn.innerHTML = '<i class="ph ph-check"></i> Saglabāt';
+          submitBtn.innerHTML = '<i class="ph ph-check" aria-hidden="true"></i> Saglabāt';
         }
       } else {
         editingMealId = null;
@@ -1581,51 +1568,73 @@ import AppHeader from '../components/common/AppHeader.astro';
         resetAddForm();
         const submitBtn = $('#submit-food-btn');
         if (submitBtn) {
-          submitBtn.innerHTML = '<i class="ph ph-plus"></i> Pievienot';
+          submitBtn.innerHTML = '<i class="ph ph-plus" aria-hidden="true"></i> Pievienot';
         }
       }
-      switchSheetTab('manual');
-      showSheet(true);
-    }
-
-    function showSheet(show) {
-      const overlay = $('#sheet-overlay');
-      const sheet = $('#add-sheet');
-      if (show) {
-        overlay.classList.remove('hidden');
-        sheet.classList.remove('hidden');
-        requestAnimationFrame(() => {
-          overlay.classList.add('visible');
-          sheet.classList.add('visible');
-        });
-        document.body.style.overflow = 'hidden';
-      } else {
-        overlay.classList.remove('visible');
-        sheet.classList.remove('visible');
-        setTimeout(() => {
-          overlay.classList.add('hidden');
-          sheet.classList.add('hidden');
-          document.body.style.overflow = '';
-        }, 300);
-      }
+      sheetOpener = document.activeElement;
+      sheetOpenerMealType = mealType;
+      sheet.showModal();
     }
 
     function closeSheet() {
-      editingMealId = null;
-      editingMealDate = null;
-      showSheet(false);
+      sheet.close();
     }
 
-    $('#sheet-overlay')?.addEventListener('click', closeSheet);
+    // Every close path (Escape, button, backdrop, save) ends here.
+    sheet.addEventListener('close', () => {
+      editingMealId = null;
+      editingMealDate = null;
+      // The opener may be hidden or re-rendered after saving (e.g. the empty-day button).
+      sheetOpener?.focus();
+      if (document.activeElement !== sheetOpener) {
+        document.querySelector(`[data-add-meal="${sheetOpenerMealType}"]`)?.focus();
+      }
+      sheetOpener = null;
+    });
+
     $('#sheet-close')?.addEventListener('click', closeSheet);
+
+    // A drag that starts inside the dialog (text selection) must not close it on release over the backdrop.
+    let pointerStartedOnBackdrop = false;
+    sheet.addEventListener('pointerdown', (e) => {
+      pointerStartedOnBackdrop = e.target === sheet && isOutsideDialog(e);
+    });
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet && pointerStartedOnBackdrop && isOutsideDialog(e)) closeSheet();
+    });
+
+    function isOutsideDialog(e) {
+      const box = sheet.getBoundingClientRect();
+      return e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom;
+    }
 
     // Sheet tabs
     function switchSheetTab(tab) {
-      $$('.sheet-tab').forEach((t) => t.classList.toggle('active', t.dataset.sheetTab === tab));
+      $$('.sheet-tab').forEach((t) => {
+        const selected = t.dataset.sheetTab === tab;
+        t.setAttribute('aria-selected', String(selected));
+        t.tabIndex = selected ? 0 : -1;
+      });
       $$('.sheet-panel').forEach((p) => p.classList.toggle('hidden', p.dataset.sheetPanel !== tab));
       if (tab === 'favorites') renderFavoritesList();
       if (tab === 'recent') renderRecentList();
     }
+
+    $('.sheet-tabs')?.addEventListener('keydown', (e) => {
+      const tabs = Array.from($$('.sheet-tab'));
+      const current = tabs.indexOf(document.activeElement);
+      if (current === -1) return;
+      const target = {
+        ArrowRight: (current + 1) % tabs.length,
+        ArrowLeft: (current - 1 + tabs.length) % tabs.length,
+        Home: 0,
+        End: tabs.length - 1,
+      }[e.key];
+      if (target === undefined) return;
+      e.preventDefault();
+      switchSheetTab(tabs[target].dataset.sheetTab);
+      tabs[target].focus();
+    });
 
     document.addEventListener('click', (e) => {
       const tab = e.target.closest('.sheet-tab');
@@ -1876,7 +1885,7 @@ import AppHeader from '../components/common/AppHeader.astro';
                         <div class="food-chip-detail">${escapeHtml(f.weight)}g · Obv. ${escapeHtml(f.protein)}g · Tauki ${escapeHtml(f.fat)}g · Ogh. ${escapeHtml(f.carbs)}g</div>
                     </div>
                     <span class="food-chip-kcal">${escapeHtml(f.calories)} kcal</span>
-                    <button class="food-chip-del" data-fav-del="${escapeHtml(f.name)}" aria-label="Noņemt"><i class="ph ph-x"></i></button>
+                    <button class="food-chip-del" data-fav-del="${escapeHtml(f.name)}" aria-label="Noņemt"><i class="ph ph-x" aria-hidden="true"></i></button>
                 </div>
             `
         )
@@ -1968,11 +1977,6 @@ import AppHeader from '../components/common/AppHeader.astro';
       $('#food-fat').value = item.fat || 0;
       $('#food-carbs').value = item.carbs || 0;
     }
-
-    // ---- Keyboard shortcut: Escape to close sheet ----
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeSheet();
-    });
 
     // ---- Re-check auth with debounce (Safari logout sync) ----
     let authCheckTimeout = null;
