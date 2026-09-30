@@ -57,25 +57,41 @@ function ruleBody(css: string, selector: string): string {
 
 describe('landing card chrome', () => {
   it('removes hover-lift transform and shadow from card and button hover states', () => {
-    const bookingHoverSelectors = ['.trust-metric:hover'];
     const globalHoverSelectors = [
       '.outcome-card:hover',
       '.whom-item:hover',
       '.cert-badge:hover',
-      '.footer-social-link:hover',
-      '.btn-cta:hover',
+      '.site-footer__social a:hover',
       '.btn-solid:hover',
       '.btn-outline:hover',
       '.btn-light:hover',
     ];
 
-    for (const selector of bookingHoverSelectors) {
-      expect(ruleBody(bookingCss, selector)).not.toMatch(/translateY|box-shadow/);
-    }
-
     for (const selector of globalHoverSelectors) {
-      expect(ruleBody(globalCss, selector)).not.toMatch(/translateY|box-shadow/);
+      const body = ruleBody(globalCss, selector);
+      expect(body).not.toBe('');
+      expect(body).not.toMatch(/translateY|box-shadow/);
     }
+  });
+
+  it('left-aligns the empty-week line and widens the continue button on phone', () => {
+    const wideCardBlock = containerBlock(bookingCss, 'min-width: 560px');
+    const rules: Array<[string, string, RegExp[]]> = [
+      ['.week-empty', bookingCss, [/align-items:\s*flex-start/, /text-align:\s*left/]],
+      ['.week-empty-email-link', bookingCss, [/text-decoration:\s*underline/, /font-size:\s*15px/, /margin-top:\s*-8px\s*;/]],
+      ['.week-empty-email-link:focus-visible', bookingCss, [/outline-offset:\s*-3px/]],
+      ['.booking-summary-note', bookingCss, [/text-wrap:\s*pretty/]],
+      ['.week-day-strip:empty', bookingCss, [/display:\s*none/]],
+      ['.booking-continue-btn', bookingCss, [/flex-basis:\s*100%/, /margin-left:\s*0\s*;/]],
+      ['.booking-continue-btn', wideCardBlock, [/flex-basis:\s*auto/, /margin-left:\s*auto/]],
+    ];
+
+    for (const [selector, source, expected] of rules) {
+      const body = ruleBody(source, selector);
+      expect(body).not.toBe('');
+      for (const pattern of expected) expect(body).toMatch(pattern);
+    }
+    expect(ruleBody(bookingCss, '.week-empty-email-link')).not.toMatch(/margin:/);
   });
 
   it('uses only the 8px/12px radius scale for cards and buttons', () => {
@@ -203,8 +219,16 @@ describe('old hero section', () => {
 });
 
 
+function containerBlock(css: string, query: string): string {
+  return atRuleBlock(css, `@container (${query}) {`);
+}
+
 function mediaBlock(css: string, query: string): string {
-  const start = css.indexOf(`@media (${query}) {`);
+  return atRuleBlock(css, `@media (${query}) {`);
+}
+
+function atRuleBlock(css: string, header: string): string {
+  const start = css.indexOf(header);
   if (start === -1) return '';
   const open = css.indexOf('{', start);
   let depth = 0;
@@ -275,6 +299,11 @@ describe('question body rules', () => {
     const h2 = ruleBody(questionBodyCss, '.question h2');
     expect(h2).toMatch(/text-wrap:\s*balance/);
     expect(h2).toMatch(/letter-spacing:\s*-\.01em/);
-    expect(ruleBody(questionBodyCss, '.question p')).toMatch(/margin:\s*0 0 16px/);
+    expect(ruleBody(questionBodyCss, ':where(.question) p')).toMatch(/margin:\s*0 0 16px/);
+  });
+
+  it('keeps the question paragraph rules at element specificity so the booking p rules win', () => {
+    expect(questionBodyCss).not.toMatch(/(^|[\s,}])\.question p\b/m);
+    expect(questionBodyCss).toMatch(/:where\(\.question\) p,\s*\.question dd/);
   });
 });
