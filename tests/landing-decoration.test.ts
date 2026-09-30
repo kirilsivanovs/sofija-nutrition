@@ -242,3 +242,39 @@ describe('landing hero headline', () => {
     expect(chartCss.indexOf('max-width: 1023px')).toBeLessThan(chartCss.indexOf('max-width: 760px'));
   });
 });
+
+describe('question body rules', () => {
+  const mobileCss = questionBodyCss.slice(questionBodyCss.indexOf('@media (max-width: 760px)'));
+
+  it('rules the Q1 definition rows like the steps and price table', () => {
+    const rows = ruleBody(questionBodyCss, '.question__rows');
+    expect(rows).not.toBe('');
+    expect(rows).toMatch(/grid-template-columns:\s*minmax\(180px,\s*1fr\)\s*2fr/);
+    expect(rows).toMatch(/gap:\s*0;/);
+    expect(rows).toMatch(/border-top:\s*1px solid var\(--color-line\)/);
+    const cells = ruleBody(questionBodyCss, '.question__rows dd');
+    expect(cells).toMatch(/padding:\s*16px 0/);
+    expect(cells).toMatch(/border-bottom:\s*1px solid var\(--color-line\)/);
+    expect(questionBodyCss).toMatch(/\.question__rows dd \{[^}]*color:\s*var\(--color-graphite\)/);
+    expect(mobileCss).toMatch(/\.question__rows\s*{\s*grid-template-columns:\s*1fr/);
+    const mobileDt = ruleBody(mobileCss, '.question__rows dt');
+    expect(mobileDt).toMatch(/border-bottom:\s*0/);
+    expect(mobileDt).toMatch(/padding-bottom:\s*2px/);
+    expect(ruleBody(mobileCss, '.question__rows dd')).toMatch(/padding-top:\s*0/);
+  });
+
+  it('top-aligns the price and keeps it on one line', () => {
+    const cells = ruleBody(questionBodyCss, '.question__price td');
+    expect(cells).toMatch(/vertical-align:\s*top/);
+    expect(questionBodyCss).toMatch(/\.question__price td \{[^}]*white-space:\s*nowrap/);
+    expect(questionBodyCss).toMatch(/\.question__price td \{[^}]*padding-left:\s*24px/);
+    expect(ruleBody(questionBodyCss, '.question__price th small')).toMatch(/font-size:\s*15px/);
+  });
+
+  it('balances the question headings and spaces paragraphs 16px', () => {
+    const h2 = ruleBody(questionBodyCss, '.question h2');
+    expect(h2).toMatch(/text-wrap:\s*balance/);
+    expect(h2).toMatch(/letter-spacing:\s*-\.01em/);
+    expect(ruleBody(questionBodyCss, '.question p')).toMatch(/margin:\s*0 0 16px/);
+  });
+});

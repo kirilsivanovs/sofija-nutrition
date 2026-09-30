@@ -74,13 +74,15 @@
   line-height: 1.2;
   color: var(--color-graphite);
   margin: 0 0 24px;
+  text-wrap: balance;
+  letter-spacing: -.01em;
 }
 
 .question p {
   font-size: 18px;
   line-height: 1.6;
   color: var(--color-graphite);
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   max-width: 62ch;
 }
 
@@ -91,22 +93,30 @@
 
 .question__rows {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: 6px 20px;
-  margin: 16px 0;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: 0;
+  margin: 0 0 20px;
+  border-top: 1px solid var(--color-line);
+}
+
+.question__rows dt,
+.question__rows dd {
+  margin: 0;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-line);
 }
 
 .question__rows dt {
   font-weight: 600;
   color: var(--color-graphite);
+  padding-right: 24px;
   overflow-wrap: break-word;
   -webkit-hyphens: auto;
   hyphens: auto;
 }
 
 .question__rows dd {
-  margin: 0 0 12px;
-  color: var(--color-slate);
+  color: var(--color-graphite);
   overflow-wrap: break-word;
   -webkit-hyphens: auto;
   hyphens: auto;
@@ -123,7 +133,6 @@
   counter-reset: step;
   margin: 0;
   padding: 0;
-  max-width: 62ch;
 }
 
 .question__steps li {
@@ -161,6 +170,7 @@
   padding: 14px 0;
   border-top: 1px solid var(--color-line);
   font-weight: 400;
+  vertical-align: top;
 }
 
 .question__price th {
@@ -169,13 +179,15 @@
 
 .question__price th small {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--color-slate);
   margin-top: 4px;
 }
 
 .question__price td {
+  white-space: nowrap;
+  padding-left: 24px;
   font-weight: 600;
   color: var(--color-graphite);
   text-align: right;
@@ -340,6 +352,20 @@
 }
 
 @media (max-width: 760px) {
+  .question__rows {
+    grid-template-columns: 1fr;
+  }
+
+  .question__rows dt {
+    border-bottom: 0;
+    padding-right: 0;
+    padding-bottom: 2px;
+  }
+
+  .question__rows dd {
+    padding-top: 0;
+  }
+
   .plate {
     grid-template-columns: 1fr;
     gap: 20px;

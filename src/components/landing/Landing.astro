@@ -289,45 +289,9 @@ const alternates = {
     </div>
 
     <!-- Question index scrollspy (active link border) + smooth-scroll on click -->
-    <script is:inline>
-      (function () {
-        var links = document.querySelectorAll('#question-index-list a');
-        if (!links.length) return;
-        var byHash = {};
-        links.forEach(function (a) {
-          byHash[a.getAttribute('href')] = a;
-        });
-
-        var sections = document.querySelectorAll('.question');
-        var observer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              var link = byHash['#' + entry.target.id];
-              if (!link) return;
-              if (entry.isIntersecting) {
-                links.forEach(function (a) {
-                  a.removeAttribute('aria-current');
-                });
-                link.setAttribute('aria-current', 'true');
-              }
-            });
-          },
-          { rootMargin: '-40% 0px -50% 0px' }
-        );
-        sections.forEach(function (s) {
-          observer.observe(s);
-        });
-
-        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        links.forEach(function (a) {
-          a.addEventListener('click', function (e) {
-            var target = document.querySelector(a.getAttribute('href'));
-            if (!target) return;
-            e.preventDefault();
-            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-          });
-        });
-      })();
+    <script>
+      import { initQuestionIndex } from '../../scripts/question-index';
+      initQuestionIndex();
     </script>
 
     <!-- Footer — minimal, single row: name+specialty, email, cabinet link,
