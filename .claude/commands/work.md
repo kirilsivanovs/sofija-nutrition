@@ -48,7 +48,7 @@ git status --short
 
 - Untracked `_design-backup/` and `.vscode/mcp.json` are known local clutter; ignore them everywhere below and never stage them.
 - A branch for this id exists but `status` < `branched` → **adopt** it, no sub-agent: `git branch --list "<id-lowercased>-*"` (or the branch the user names), record it in `branch`, but do not advance `status` past what the file earns (empty `## Plan` → leave `status`; plan written and branch exists → `status: branched`). Leave every uncommitted change exactly where it is — never stash, reset, commit or switch branches. Append one dated `## Log` line naming the branch and that it was created outside the pipeline. Then continue.
-- Uncommitted changes to tracked files on a branch that is not this task's → **hard stop**. Never stash, discard, reset or carry them across.
+- Uncommitted changes to tracked files on a branch that is not this task's → **hard stop**. Never stash, discard, reset or carry them across. **Exception:** if every changed path is under `.claude/` (agents, skills, commands, scripts; never `.claude/tasks/`), they are pipeline config edits, not foreign work: leave them where they are and carry on. Step 3 and step 6.1 say how they travel.
 - `branch` names a branch that no longer exists → cut it again.
 
 ## The route
@@ -84,7 +84,7 @@ Name: `<id-lowercased>-<short-slug-of-title>`. A sub-task uses its parent's bran
 & .\.claude\scripts\prepare-branch.ps1 -Id <ID> -Name <name> [-Base <branch>]
 ```
 
-Exit 2 → report the reason exactly; a dirty tree is a hard stop. Then record `branch`, `status: branched`, one `## Log` line.
+Exit 2 → report the reason exactly; a dirty tree is a hard stop, except when every changed path is under `.claude/` (see Reality check): then cut the branch with `git switch -c <name>` from the current branch instead, which carries those edits, and say so in the `## Log` line. Then record `branch`, `status: branched`, one `## Log` line.
 
 A task under `.claude/tasks/design/` → before `developer` starts, invoke `tester` with the task path and **baseline**, so `before-*` screenshots of the unchanged pages exist. A failed baseline (dev server won't start) is logged in one line and does not stop the task.
 
@@ -102,13 +102,13 @@ A task under `.claude/tasks/design/` → before `developer` starts, invoke `test
 
 ### 6. Commit, merge, push, close
 
-1. **Commit on the task branch.** Stage exactly the files `developer` reported and `git status` shows as changed — never `git add -A`, never the known clutter, never anything under `.claude/tasks/`. One commit, Conventional Commits style matching the history (`fix(api): …`, `feat: …`, `chore: …`), subject in English, the task id in the body (`Task: SN-012`), then the `Co-Authored-By` trailer for the model running this session.
+1. **Commit on the task branch.** First, if tracked `.claude/` config edits were carried over (never `.claude/tasks/`), commit them on their own: `chore(claude): <what changed>`, same trailer. Then stage exactly the files `developer` reported and `git status` shows as changed — never `git add -A`, never the known clutter, never anything under `.claude/tasks/`. One commit, Conventional Commits style matching the history (`fix(api): …`, `feat: …`, `chore: …`), subject in English, the task id in the body (`Task: SN-012`), then the `Co-Authored-By` trailer for the model running this session.
 2. **Update main.** `git fetch origin --prune`, `git checkout main`, `git merge --ff-only origin/main`.
 3. **Merge.** `git merge --ff-only <branch>`. Not fast-forward (main moved) → `git checkout <branch>`, `git rebase main`, re-run verification, then merge again. A rebase conflict → `git rebase --abort` and hard stop.
 4. **Pre-deploy steps.** If the plan's **Production / manual steps** include anything needed *before* the code reaches production, run the ones the Azure/GitHub rule in `CLAUDE.md` allows yourself (one line per command). If any step needs a secret value or falls outside that rule, stop here: the commit is on local `main`, not pushed. Report those steps; the user says "пушь" when done. Steps that come *after* deploy don't stop the push; list them in the final report.
 5. **Push.** `git push origin main`.
 6. **Wait for CI, then Deploy.** `$sha = git rev-parse HEAD`. Poll `gh run list --commit $sha --json databaseId,status,conclusion,event --limit 10` (or `gh run watch <databaseId> --exit-status` once the `CI` row's `databaseId` is known) until the `CI` row is `status: completed`. `conclusion` != `success` → report it, do not say the change is deployed, leave the task open (or file a follow-up per "Find or create the task") and stop here — skip the rest of this step. `conclusion: success` → `Deploy` fires via `workflow_run`; poll `gh run list --workflow=deploy.yml --json databaseId,status,conclusion,headSha,event --limit 5` for the row whose `headSha` matches `$sha`, wait for `status: completed` the same way. Report both conclusions in the progress line; only say the change is deployed when `Deploy`'s `conclusion` is `success`.
-7. **Clean up.** `git branch -d <branch>` (it is merged, so `-d` succeeds; if it refuses, leave it and say so). Set `status: done` (and on sub-tasks), one `## Log` line with the commit hash and the CI/Deploy conclusions, move the folder from `.claude/tasks/<category>/<ID>/` to `.claude/tasks/_archive/<category>/<ID>/` (create the category folder if missing), and `& .\.claude\scripts\log-outcome.ps1 -Ticket <ID> -Size <size> -Verdict pass`.
+7. **Clean up.** `git branch -d <branch>` (it is merged, so `-d` succeeds; if it refuses, leave it and say so). Set `status: done` (and on sub-tasks), one `## Log` line with the commit hash and the CI/Deploy conclusions, move the folder from `.claude/tasks/<category>/<ID>/` to `.claude/tasks/_archive/<category>/<ID>/` (create the category folder if missing; if `mv` fails with "Permission denied" because Windows holds the folder open, use `cp -r` then `rm -rf` and check the source folder is gone), and `& .\.claude\scripts\log-outcome.ps1 -Ticket <ID> -Size <size> -Verdict pass`.
 
 Never force-push, never `reset --hard`, never rewrite pushed history, never push a branch other than `main` unless the user asks.
 
