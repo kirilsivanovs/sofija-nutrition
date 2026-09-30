@@ -4,6 +4,7 @@
 
 import { formatDate, formatTime } from './formatters';
 import { SERVICE_NAMES } from './constants';
+import { escapeHtml } from '../escapeHtml';
 
 // Calendar state
 let currentDate = new Date();
@@ -90,6 +91,57 @@ export function getStatusText(status: string): string {
     }
 }
 
+/** Screen-reader label: date, non-zero counts and the cell's reason text. Never names. */
+function buildDayLabel(
+    dateStr: string,
+    counts: { confirmed: number; pending: number; cancelled: number },
+    reasonText: string
+): string {
+    const parts = [formatDate(dateStr)];
+    if (counts.confirmed > 0) parts.push(`apstiprināti: ${counts.confirmed}`);
+    if (counts.pending > 0) parts.push(`gaida: ${counts.pending}`);
+    if (counts.cancelled > 0) parts.push(`atcelti: ${counts.cancelled}`);
+    if (reasonText) parts.push(reasonText);
+    return parts.join(', ');
+}
+
+const ARROW_KEY_STEPS: Record<string, number> = {
+    ArrowLeft: -1,
+    ArrowRight: 1,
+    ArrowUp: -7,
+    ArrowDown: 7,
+};
+
+const DAY_BUTTON_SELECTOR = 'button.calendar-cell[data-date]';
+
+/** Delegated click and arrow-key handling; call once, the grid element outlives re-renders. */
+export function attachCalendarGridHandlers(grid: HTMLElement | null): void {
+    if (!grid) return;
+
+    grid.addEventListener('click', (event) => {
+        const cell = (event.target as Element).closest(DAY_BUTTON_SELECTOR);
+        const dateStr = cell?.getAttribute('data-date');
+        if (dateStr) showDayDetails(dateStr);
+    });
+
+    grid.addEventListener('keydown', (event) => {
+        const step = ARROW_KEY_STEPS[event.key];
+        if (step === undefined || event.ctrlKey || event.altKey || event.metaKey) return;
+
+        const cell = (event.target as Element).closest(DAY_BUTTON_SELECTOR);
+        if (!cell) return;
+
+        const cells = Array.from(grid.querySelectorAll<HTMLElement>(DAY_BUTTON_SELECTOR));
+        const target = cells[cells.indexOf(cell as HTMLElement) + step];
+        event.preventDefault();
+        if (!target) return;
+
+        cells.forEach(c => c.setAttribute('tabindex', '-1'));
+        target.setAttribute('tabindex', '0');
+        target.focus();
+    });
+}
+
 /**
  * Render calendar grid
  */
@@ -117,8 +169,12 @@ export function renderCalendar(): void {
     
     console.log('📅 Rendering calendar:', { year, month: month + 1, totalBookings: allBookings.length, scheduleLoaded: !!schedule });
     
+    // Roving tabindex: one Tab stop, today if visible, else day 1
+    const monthPrefix = `${year}-${String(month + 1).padStart(2, '0')}-`;
+    const tabStopDate = todayStr.startsWith(monthPrefix) ? todayStr : `${monthPrefix}01`;
+
     let html = '';
-    
+
     // Empty cells before month start
     for (let i = 0; i < startDay; i++) {
         html += '<div class="calendar-cell empty"></div>';
@@ -156,19 +212,25 @@ export function renderCalendar(): void {
             cellClass += ' available';
         }
         
-        html += `<div class="${cellClass}" onclick="showDayDetails('${dateStr}')" title="${formatDate(dateStr)}">
-            <div class="day-number ${isToday ? 'today' : ''}">${day}</div>
-            ${isHoliday ? `<div class="holiday-name">${isHoliday}</div>` : ''}
-            ${isVacation && !isHoliday ? '<div class="holiday-name">Atvaļinājums</div>' : ''}
-            ${isBlocked && !isHoliday && !isVacation ? '<div class="holiday-name">Bloķēts</div>' : ''}
-            ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<div class="day-time"><i class="ph ph-clock"></i>${formatTime(daySchedule.start)}–${formatTime(daySchedule.end)}</div>` : ''}
-            ${totalCount > 0 ? `<div class="booking-count">${totalCount}</div>` : ''}
-            ${(pending > 0 || confirmed > 0 || cancelled > 0) ? `<div class="booking-dots">
-                ${confirmed > 0 ? `<div class="booking-dot confirmed"><span></span>${confirmed}</div>` : ''}
-                ${pending > 0 ? `<div class="booking-dot pending"><span></span>${pending}</div>` : ''}
-                ${cancelled > 0 ? `<div class="booking-dot cancelled"><span></span>${cancelled}</div>` : ''}
-            </div>` : ''}
-        </div>`;
+        const reasonText = isHoliday
+            ? String(isHoliday)
+            : isVacation ? 'Atvaļinājums' : isBlocked ? 'Bloķēts' : '';
+        const label = buildDayLabel(dateStr, { confirmed, pending, cancelled }, reasonText);
+        const tabStop = dateStr === tabStopDate ? '0' : '-1';
+
+        html += `<button type="button" class="${cellClass}" data-date="${dateStr}" aria-pressed="false" aria-label="${escapeHtml(label)}" tabindex="${tabStop}"${isToday ? ' aria-current="date"' : ''}>
+            <span class="day-number ${isToday ? 'today' : ''}">${day}</span>
+            ${isHoliday ? `<span class="holiday-name">${isHoliday}</span>` : ''}
+            ${isVacation && !isHoliday ? '<span class="holiday-name">Atvaļinājums</span>' : ''}
+            ${isBlocked && !isHoliday && !isVacation ? '<span class="holiday-name">Bloķēts</span>' : ''}
+            ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<span class="day-time"><i class="ph ph-clock"></i>${formatTime(daySchedule.start)}–${formatTime(daySchedule.end)}</span>` : ''}
+            ${totalCount > 0 ? `<span class="booking-count">${totalCount}</span>` : ''}
+            ${(pending > 0 || confirmed > 0 || cancelled > 0) ? `<span class="booking-dots">
+                ${confirmed > 0 ? `<span class="booking-dot confirmed"><span></span>${confirmed}</span>` : ''}
+                ${pending > 0 ? `<span class="booking-dot pending"><span></span>${pending}</span>` : ''}
+                ${cancelled > 0 ? `<span class="booking-dot cancelled"><span></span>${cancelled}</span>` : ''}
+            </span>` : ''}
+        </button>`;
     }
     
     // Empty cells after month end
@@ -192,14 +254,15 @@ export function showDayDetails(dateStr: string): void {
         cell.classList.remove('selected');
     });
     
-    // Add selected class to clicked day
-    const allCells = document.querySelectorAll('.calendar-cell');
-    allCells.forEach(cell => {
-        const cellDateMatch = cell.getAttribute('onclick')?.match(/showDayDetails\('([^']+)'\)/);
-        if (cellDateMatch && cellDateMatch[1] === dateStr) {
-            cell.classList.add('selected');
-        }
+    document.querySelectorAll('.calendar-cell[aria-pressed="true"]').forEach(cell => {
+        cell.setAttribute('aria-pressed', 'false');
     });
+
+    const selectedCell = document.querySelector(`.calendar-cell[data-date="${dateStr}"]`);
+    if (selectedCell) {
+        selectedCell.classList.add('selected');
+        selectedCell.setAttribute('aria-pressed', 'true');
+    }
     
     const details = document.getElementById('day-details');
     const title = document.getElementById('day-details-title');

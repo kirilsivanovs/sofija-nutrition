@@ -916,6 +916,14 @@
   min-height: 110px;
   padding: 10px;
   cursor: pointer;
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
   font-size: 14px;
   position: relative;
   background: var(--color-white);
@@ -934,6 +942,25 @@
 .calendar-cell.selected {
   outline: 2px solid var(--color-navy);
   outline-offset: -2px;
+}
+
+/* Inner ring: the card clips an outside outline */
+.calendar-cell:focus-visible {
+  outline: none;
+}
+
+.calendar-cell.selected:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: -2px;
+}
+
+.calendar-cell:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 2px solid var(--color-graphite);
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 .calendar-cell.empty {
@@ -2087,6 +2114,9 @@
     min-height: 70px;
     padding: 4px;
     font-size: 11px;
+  }
+  .calendar-cell:focus-visible::after {
+    inset: 2px;
   }
   .calendar-cell .day-number {
     font-size: 13px;

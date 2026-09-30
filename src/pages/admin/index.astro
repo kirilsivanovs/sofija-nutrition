@@ -134,7 +134,6 @@ import '../../styles/admin.css';
     declare global {
       interface Window {
         getAuthHeaders: () => Record<string, string>;
-        showDayDetails: (dateStr: string) => void;
         confirmBooking: (id: string) => Promise<void>;
         cancelBooking: (id: string) => Promise<void>;
         removeVacation: (id: string) => Promise<void>;

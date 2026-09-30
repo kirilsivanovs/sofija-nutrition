@@ -4,6 +4,7 @@ import type { VacationPeriod } from '../../utils/types';
 import {
   renderCalendar,
   showDayDetails,
+  attachCalendarGridHandlers,
   setCalendarData,
   getCurrentDate,
   setCurrentDate,
@@ -79,6 +80,8 @@ export class CalendarViewController {
       refreshBookingsBtn.addEventListener('click', () => this.loadCalendar());
     }
 
+    attachCalendarGridHandlers(document.getElementById('calendar-grid'));
+
     if (closeDayDetailsBtn) {
       closeDayDetailsBtn.addEventListener('click', () => {
         const dayDetails = document.getElementById('day-details');
@@ -88,8 +91,7 @@ export class CalendarViewController {
   }
 
   private exposeGlobalMethods(): void {
-    // Expose methods to window for onclick handlers
-    (window as any).showDayDetails = showDayDetails;
+    // Expose methods to window for the booking cards' onclick handlers
     (window as any).confirmBooking = this.confirmBooking.bind(this);
     (window as any).cancelBooking = this.cancelBooking.bind(this);
   }
