@@ -39,12 +39,20 @@ describe('landing i18n dictionary', () => {
     }
   });
 
+  const title = {
+    lv: 'Sertificēta uztura speciāliste, pētniece, doktorante',
+    ru: 'Сертифицированный специалист по питанию, исследователь, докторантка',
+    en: 'Certified nutrition specialist, researcher, doctoral candidate',
+  };
+
+  it('shows the bare credentials title, without a city, in the header and footer, per locale', () => {
+    (['lv', 'ru', 'en'] as const).forEach((l) => {
+      expect(translations[l].header_specialty).toBe(title[l]);
+      expect(translations[l].footer_subtitle).toBe(title[l]);
+    });
+  });
+
   it('uses one certified-title term across header, footer, credentials, meta and JSON-LD, per locale', () => {
-    const title = {
-      lv: 'Sertificēta uztura speciāliste, pētniece, doktorante',
-      ru: 'Сертифицированный специалист по питанию, исследователь, докторантка',
-      en: 'Certified nutrition specialist, researcher, doctoral candidate',
-    };
     const retired = { lv: /dietoloģ/i, ru: /диетолог/i, en: /nutritionist/i };
     const keys = [
       'header_specialty',

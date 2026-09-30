@@ -119,7 +119,7 @@ export interface LandingDict {
 
 export const translations: Record<Locale, LandingDict> = {
   lv: {
-    header_specialty: 'Sertificēta uztura speciāliste, pētniece, doktorante, Rīga',
+    header_specialty: 'Sertificēta uztura speciāliste, pētniece, doktorante',
     nav_services: 'Konsultācija',
     nav_about: 'Par mani',
     nav_price: 'Cenas',
@@ -234,7 +234,7 @@ export const translations: Record<Locale, LandingDict> = {
     booking_noscript:
       'Kalendāram nepieciešams JavaScript. Lūdzu, pieteikšanās rakstiet uz info@sofijaivanova.lv',
 
-    footer_subtitle: 'Sertificēta uztura speciāliste, pētniece, doktorante, Rīga',
+    footer_subtitle: 'Sertificēta uztura speciāliste, pētniece, doktorante',
     footer_terms: 'Pakalpojumu noteikumi',
     footer_privacy: 'Privātuma politika',
 
@@ -258,7 +258,7 @@ export const translations: Record<Locale, LandingDict> = {
   },
   ru: {
     // proposed copy, pending Sofija's confirmation
-    header_specialty: 'Сертифицированный специалист по питанию, исследователь, докторантка, Рига',
+    header_specialty: 'Сертифицированный специалист по питанию, исследователь, докторантка',
     nav_services: 'Консультация',
     nav_about: 'Обо мне',
     nav_price: 'Цены',
@@ -377,7 +377,7 @@ export const translations: Record<Locale, LandingDict> = {
     booking_noscript:
       'Для календаря нужен JavaScript. Чтобы записаться, напишите на info@sofijaivanova.lv',
 
-    footer_subtitle: 'Сертифицированный специалист по питанию, исследователь, докторантка, Рига',
+    footer_subtitle: 'Сертифицированный специалист по питанию, исследователь, докторантка',
     footer_terms: 'Условия оказания услуг',
     footer_privacy: 'Политика конфиденциальности',
 
@@ -412,7 +412,7 @@ export const translations: Record<Locale, LandingDict> = {
   },
   en: {
     // proposed copy, pending Sofija's confirmation
-    header_specialty: 'Certified nutrition specialist, researcher, doctoral candidate, Riga',
+    header_specialty: 'Certified nutrition specialist, researcher, doctoral candidate',
     nav_services: 'Consultation',
     nav_about: 'About',
     nav_price: 'Pricing',
@@ -530,7 +530,7 @@ export const translations: Record<Locale, LandingDict> = {
     q6_title: 'How do I book?',
     booking_noscript: 'The calendar needs JavaScript. To book, please email info@sofijaivanova.lv',
 
-    footer_subtitle: 'Certified nutrition specialist, researcher, doctoral candidate, Riga',
+    footer_subtitle: 'Certified nutrition specialist, researcher, doctoral candidate',
     footer_terms: 'Terms of Service',
     footer_privacy: 'Privacy Policy',
 
