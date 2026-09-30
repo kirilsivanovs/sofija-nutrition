@@ -82,3 +82,50 @@ test('a direct link to #faq scrolls the FAQ section into view', async ({ page })
   await page.goto('/#faq');
   await expect(page.locator('#faq')).toBeInViewport();
 });
+
+test('aligns the header logo, hero title and footer brand on one left edge at every width', async ({
+  page,
+}) => {
+  for (const path of ['/', '/ru/', '/en/']) {
+    for (const width of [375, 764, 1024, 1280, 1600]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(path);
+      const logoSelector = width > 760 ? '.app-logo-name' : '.app-logo-crop';
+      const logo = await page.locator(logoSelector).first().boundingBox();
+      const title = await page.locator('.landing-hero__title').first().boundingBox();
+      const brand = await page.locator('.site-footer__brand').first().boundingBox();
+      const firstLink = await page.locator('.site-footer__links a').first().boundingBox();
+      expect(Math.abs(logo!.x - title!.x), `${path} @${width} logo/title`).toBeLessThanOrEqual(1);
+      expect(Math.abs(brand!.x - title!.x), `${path} @${width} brand/title`).toBeLessThanOrEqual(1);
+      // the link box carries 4px of padding before its text
+      expect(Math.abs(firstLink!.x + 4 - title!.x), `${path} @${width} link/title`).toBeLessThanOrEqual(1);
+    }
+  }
+});
+
+test('aligns the header actions with the hero credentials panel on the right edge at desktop widths', async ({
+  page,
+}) => {
+  for (const width of [1024, 1280, 1600]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    const actions = await page.locator('.app-public-actions').first().boundingBox();
+    const cred = await page.locator('.hero-cred').first().boundingBox();
+    expect(
+      Math.abs(actions!.x + actions!.width - (cred!.x + cred!.width)),
+      `@${width}`,
+    ).toBeLessThanOrEqual(1);
+  }
+});
+
+test('hides the Russian header subtitle and keeps a one-row header below 1160px', async ({
+  page,
+}) => {
+  for (const width of [1024, 1100]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/ru/');
+    await expect(page.locator('.app-header--public .app-logo-sub')).toBeHidden();
+    const inner = await page.locator('.app-header--public .app-header-inner').boundingBox();
+    expect(inner!.height, `@${width}`).toBeLessThanOrEqual(60);
+  }
+});

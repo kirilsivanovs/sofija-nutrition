@@ -188,6 +188,12 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     }
   }
 
+  @media (max-width: 1159px) {
+    .app-header--public:lang(ru) .app-logo-sub {
+      display: none;
+    }
+  }
+
   .app-header-inner {
     /* Horizontal max-width and inset for the header's content row. */
     max-width: min(1280px, 96vw);
@@ -212,12 +218,29 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     }
   }
 
+  /* Public variant follows the landing page container (1160px, 40px/20px). */
+  .app-header--public .app-header-inner {
+    max-width: 1160px;
+    padding: 0 40px;
+  }
+
+  @media (max-width: 760px) {
+    .app-header--public .app-header-inner {
+      padding: 0 20px;
+    }
+  }
+
   /* Logo Styles */
   .app-logo {
     display: flex;
     align-items: center;
     gap: 14px;
     text-decoration: none;
+  }
+
+  /* offsets the global link padding so the visible logo sits on the shared edge */
+  .app-header--public .app-logo {
+    margin-inline-start: -4px;
   }
 
   .app-logo-crop {

@@ -693,20 +693,19 @@ i.ph {
 }
 
 .site-footer__inner {
-  /* Matches .app-header-inner (AppHeader.astro) so the footer's side
-     margins line up with the header's at every viewport width. */
-  max-width: min(1280px, 96vw);
+  /* Matches the landing container (1160px, 40px/20px). */
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 24px;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 760px) {
   .site-footer__inner {
-    padding: 0 clamp(18px, 3vw, 42px);
+    padding: 0 20px;
   }
 }
 
@@ -735,6 +734,8 @@ i.ph {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 16px;
+  /* offsets the 4px link padding so the first link text sits on the shared edge */
+  margin-inline: -4px;
 }
 
 .site-footer__links a,
