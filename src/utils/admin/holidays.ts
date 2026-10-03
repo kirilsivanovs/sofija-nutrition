@@ -3,6 +3,7 @@
  */
 
 import { formatDate } from './formatters';
+import { escapeHtml } from '../escapeHtml';
 
 /**
  * Load and render holidays for selected year
@@ -22,8 +23,8 @@ export async function loadHolidays(apiBase: string): Promise<void> {
         if (data.holidays && data.holidays.length > 0) {
             list.innerHTML = data.holidays.map((h: any) => `
                 <div class="holiday-item">
-                    <span class="holiday-date">${formatDate(h.date)}</span>
-                    <span>${h.name}</span>
+                    <span class="holiday-date">${escapeHtml(formatDate(h.date))}</span>
+                    <span>${escapeHtml(h.name)}</span>
                 </div>
             `).join('');
         } else {

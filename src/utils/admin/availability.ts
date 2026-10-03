@@ -4,6 +4,7 @@
 
 import { formatDate, formatTime, formatDateReverse, initializeDateInputs } from './formatters';
 import { showToast, showConfirm } from './notifications';
+import { escapeHtml } from '../escapeHtml';
 
 // Day configuration
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -76,8 +77,8 @@ export function loadAvailabilityForm(apiBase: string, onLoadCallback?: () => voi
                     if (endInput) endInput.value = config.end || '17:00';
                 });
             }
-            if (data.blockedDates) renderBlockedDates(data.blockedDates);
-            if (data.vacationPeriods) renderVacationPeriods(data.vacationPeriods);
+            if (data.blockedDates) renderBlockedDates(apiBase, data.blockedDates);
+            if (data.vacationPeriods) renderVacationPeriods(apiBase, data.vacationPeriods);
             
             if (onLoadCallback) onLoadCallback();
         })
@@ -87,7 +88,7 @@ export function loadAvailabilityForm(apiBase: string, onLoadCallback?: () => voi
 /**
  * Render vacation periods list
  */
-export function renderVacationPeriods(periods: any[]): void {
+export function renderVacationPeriods(apiBase: string, periods: any[]): void {
     const list = document.getElementById('vacation-list');
     if (!list) return;
     
@@ -99,20 +100,25 @@ export function renderVacationPeriods(periods: any[]): void {
     list.innerHTML = periods.map(v => `
         <div class="blocked-item" style="background:var(--color-white);border-left:3px solid var(--color-slate);">
             <span>
-                <strong>${formatDate(v.startDate)}</strong> — <strong>${formatDate(v.endDate)}</strong>
-                ${v.reason ? '<span style="color:var(--color-slate);margin-left:12px;">' + v.reason + '</span>' : ''}
+                <strong>${escapeHtml(formatDate(v.startDate))}</strong> — <strong>${escapeHtml(formatDate(v.endDate))}</strong>
+                ${v.reason ? '<span style="color:var(--color-slate);margin-left:12px;">' + escapeHtml(v.reason) + '</span>' : ''}
             </span>
-            <button onclick="removeVacation('${v.id}')" class="btn-close" style="width:28px;height:28px;">
+            <button data-vacation-id="${escapeHtml(v.id)}" class="btn-close" style="width:28px;height:28px;">
                 <i class="ph ph-x"></i>
             </button>
         </div>
     `).join('');
+
+    list.onclick = (event) => {
+        const button = (event.target as Element).closest('[data-vacation-id]') as HTMLElement | null;
+        if (button) removeVacation(apiBase, button.dataset.vacationId!, () => loadAvailabilityForm(apiBase));
+    };
 }
 
 /**
  * Render blocked dates list
  */
-export function renderBlockedDates(dates: any[]): void {
+export function renderBlockedDates(apiBase: string, dates: any[]): void {
     const list = document.getElementById('blocked-dates-list');
     if (!list) return;
     
@@ -123,12 +129,17 @@ export function renderBlockedDates(dates: any[]): void {
     
     list.innerHTML = dates.map(d => `
         <div class="blocked-item">
-            <span>${formatDate(d.date)} ${d.reason ? '— ' + d.reason : ''}</span>
-            <button onclick="removeBlockedDate('${d.date}')" class="btn-close" style="width:28px;height:28px;">
+            <span>${escapeHtml(formatDate(d.date))} ${d.reason ? '— ' + escapeHtml(d.reason) : ''}</span>
+            <button data-blocked-date="${escapeHtml(d.date)}" class="btn-close" style="width:28px;height:28px;">
                 <i class="ph ph-x"></i>
             </button>
         </div>
     `).join('');
+
+    list.onclick = (event) => {
+        const button = (event.target as Element).closest('[data-blocked-date]') as HTMLElement | null;
+        if (button) removeBlockedDate(apiBase, button.dataset.blockedDate!, () => loadAvailabilityForm(apiBase));
+    };
 }
 
 /**
