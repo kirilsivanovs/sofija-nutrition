@@ -34,12 +34,14 @@ export function showToast(message: string, type: ToastType = 'info', title: stri
     toast.innerHTML = `
         <i class="ph ${icons[type]} toast-icon"></i>
         <div class="toast-content">
-            <div class="toast-title">${titles[type]}</div>
-            <div class="toast-message">${message}</div>
+            <div class="toast-title"></div>
+            <div class="toast-message"></div>
         </div>
         <button class="toast-close"><i class="ph ph-x"></i></button>
     `;
-    
+    (toast.querySelector('.toast-title') as HTMLElement).textContent = titles[type];
+    (toast.querySelector('.toast-message') as HTMLElement).textContent = message;
+
     container.appendChild(toast);
     
     // Close button
@@ -74,17 +76,19 @@ export function showConfirm(message: string, title: string = 'Apstiprināt darb�
         dialog.innerHTML = `
             <div class="confirm-header">
                 <i class="ph ph-question confirm-icon"></i>
-                <h3>${title}</h3>
+                <h3></h3>
             </div>
             <div class="confirm-body">
-                <p>${message}</p>
+                <p></p>
             </div>
             <div class="confirm-actions">
                 <button class="btn-secondary confirm-cancel">Atcelt</button>
                 <button class="btn-primary confirm-ok">Apstiprināt</button>
             </div>
         `;
-        
+        (dialog.querySelector('.confirm-header h3') as HTMLElement).textContent = title;
+        (dialog.querySelector('.confirm-body p') as HTMLElement).textContent = message;
+
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
         

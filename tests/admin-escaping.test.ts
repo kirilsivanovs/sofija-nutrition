@@ -2,6 +2,7 @@ import { MealsTabController } from '../src/components/admin/MealsTab/MealsTab';
 import { PatientListController } from '../src/components/admin/PatientList/PatientListController';
 import { DataTabController } from '../src/components/admin/DataTab/DataTab';
 import { CalendarViewController } from '../src/components/admin/CalendarViewController';
+import { showToast, showConfirm } from '../src/utils/admin/notifications';
 
 const PAYLOAD = '<img src=x onerror=alert(1)>';
 
@@ -163,5 +164,45 @@ describe('DataTabController', () => {
     deleteButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     expect(deleteSpy).toHaveBeenCalled();
+  });
+});
+
+describe('showToast', () => {
+  it('renders title and message as text when they contain markup', () => {
+    jest.useFakeTimers();
+    document.body.innerHTML = '<div id="toast-container"></div>';
+
+    showToast(PAYLOAD, 'error', PAYLOAD);
+
+    const container = document.getElementById('toast-container') as HTMLElement;
+    expect(container.querySelector('img')).toBeNull();
+    expect(container.querySelector('.toast-title')?.textContent).toBe(PAYLOAD);
+    expect(container.querySelector('.toast-message')?.textContent).toBe(PAYLOAD);
+    expect(container.querySelector('.toast-close')).not.toBeNull();
+
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+});
+
+describe('showConfirm', () => {
+  it('renders title and message as text when they contain markup', async () => {
+    jest.useFakeTimers();
+    document.body.innerHTML = '';
+
+    const result = showConfirm(PAYLOAD, PAYLOAD);
+
+    const dialog = document.querySelector('.confirm-dialog') as HTMLElement;
+    expect(dialog.querySelector('img')).toBeNull();
+    expect(dialog.querySelector('h3')?.textContent).toBe(PAYLOAD);
+    expect(dialog.querySelector('p')?.textContent).toBe(PAYLOAD);
+    expect(dialog.querySelector('.confirm-ok')).not.toBeNull();
+
+    (dialog.querySelector('.confirm-cancel') as HTMLElement).click();
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+
+    await expect(result).resolves.toBe(false);
+    expect(document.querySelector('.confirm-overlay')).toBeNull();
   });
 });
