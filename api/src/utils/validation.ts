@@ -75,9 +75,7 @@ export function escapeHtml(str: unknown): string {
     .replace(/\//g, '&#x2F;');
 }
 
-/**
- * Удаляет потенциально опасные символы и теги
- */
+/** Removes tags and control characters; escaping belongs to the renderer. */
 export function stripDangerous(str: unknown): string {
   if (typeof str !== 'string') return '';
 
@@ -116,7 +114,7 @@ export function stripDangerous(str: unknown): string {
     .replace(/\s+/g, ' ')
     .trim();
 
-  return escapeHtml(normalized);
+  return normalized;
 }
 
 // ============================================

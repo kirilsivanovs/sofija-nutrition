@@ -98,6 +98,12 @@ describe('admin calendar day details', () => {
     Object.values(payloads).forEach(p => expect(panel().textContent).toContain(p));
   });
 
+  it('shows a booking name with an apostrophe, ampersand and quote unchanged when the API returns it raw', () => {
+    const rawName = 'O\'Brien & "Co"';
+    showBookings([bookingOn({ name: rawName })]);
+    expect(panel().querySelector('.booking-name')?.textContent).toBe(rawName);
+  });
+
   it('calls confirmBooking with the booking id when the confirm button is clicked', () => {
     const confirmBooking = jest.fn();
     actionWindow.confirmBooking = confirmBooking;

@@ -57,6 +57,10 @@ describe('Input Validation', () => {
     test('should normalize whitespace', () => {
       expect(stripDangerous('  Hello    World  ')).toBe('Hello World');
     });
+
+    it('keeps apostrophes, ampersands and quotes unescaped when the text has no tags', () => {
+      expect(stripDangerous('O\'Brien & "Co"')).toBe('O\'Brien & "Co"');
+    });
   });
 
   describe('sanitizeName', () => {
@@ -324,6 +328,15 @@ describe('Input Validation', () => {
 
       expect(result.data.name).not.toContain('<script>');
       expect(result.data.notes).not.toContain('onerror');
+    });
+
+    it('returns name and notes unescaped when they contain apostrophes, ampersands or quotes', () => {
+      const text = 'O\'Brien & "Co"';
+
+      const result = validateBookingInput({ ...validBooking, name: text, notes: text });
+
+      expect(result.data.name).toBe(text);
+      expect(result.data.notes).toBe(text);
     });
   });
 
