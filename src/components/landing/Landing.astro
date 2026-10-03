@@ -7,6 +7,24 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import '../../styles/booking.css';
 import '../../styles/chart.css';
 import '../../styles/question-body.css';
+import {
+  BREAKFAST_MINUTE,
+  CHART_BOTTOM,
+  CHART_LEFT,
+  CHART_RIGHT,
+  CHART_TOP,
+  POINTER_START_MINUTE,
+  X_TICK_MINUTES,
+  chartGeometry,
+  formatAxisValue,
+  formatBreakfastLabel,
+  formatMmol,
+  formatTime,
+  formatTimeInRangeSentence,
+  heroChartConfig,
+  mealLabelPosition,
+  minutesAbove,
+} from '../../scripts/glucose-chart';
 
 interface Props {
   locale: Locale;
@@ -19,6 +37,19 @@ const alternates = {
   ru: getRelativeLocaleUrl('ru', '/'),
   en: getRelativeLocaleUrl('en', '/'),
 };
+
+const chart = heroChartConfig;
+const { colors } = chart;
+const [rangeLow, rangeHigh] = chart.range;
+const geo = chartGeometry(chart);
+const { xScale, yScale } = geo;
+const chartWidth = CHART_RIGHT - CHART_LEFT;
+const breakfastX = xScale(BREAKFAST_MINUTE);
+const mealLabel = mealLabelPosition(xScale);
+const pointerX = xScale(POINTER_START_MINUTE);
+const pointerValueA = geo.curveA[POINTER_START_MINUTE];
+const pointerValueB = geo.curveB[POINTER_START_MINUTE];
+const rangeLines = [rangeLow, rangeHigh];
 ---
 
 <Layout
@@ -213,25 +244,158 @@ const alternates = {
               role="img"
               tabindex="0"
               aria-label={dict.hero_chart_aria_label}
-            ></svg>
+            >
+              <defs>
+                <clipPath id="hero-above">
+                  <rect x={CHART_LEFT} y="0" width={chartWidth} height={yScale(rangeHigh)}></rect>
+                </clipPath>
+                <clipPath id="hero-below">
+                  <rect
+                    x={CHART_LEFT}
+                    y={yScale(rangeHigh)}
+                    width={chartWidth}
+                    height={CHART_BOTTOM - yScale(rangeHigh) + 4}
+                  ></rect>
+                </clipPath>
+              </defs>
+              <rect
+                x={CHART_LEFT}
+                y={yScale(rangeHigh)}
+                width={chartWidth}
+                height={yScale(rangeLow) - yScale(rangeHigh)}
+                fill={colors.range}
+                fill-opacity="0.09"></rect>
+              {
+                chart.grid.map((value) => (
+                  <line
+                    x1={CHART_LEFT}
+                    x2={CHART_RIGHT}
+                    y1={yScale(value)}
+                    y2={yScale(value)}
+                    stroke={colors.grid}
+                    stroke-width="1"
+                  ></line>
+                ))
+              }
+              {
+                rangeLines.map((value) => (
+                  <line
+                    x1={CHART_LEFT}
+                    x2={CHART_RIGHT}
+                    y1={yScale(value)}
+                    y2={yScale(value)}
+                    stroke={colors.range}
+                    stroke-width="1"
+                    stroke-opacity="0.55"
+                  ></line>
+                ))
+              }
+              {
+                chart.labels.map((value) => (
+                  <text x={CHART_LEFT - 8} y={yScale(value) + 4} text-anchor="end">
+                    {formatAxisValue(value, locale)}
+                  </text>
+                ))
+              }
+              <text x={CHART_RIGHT} y={CHART_TOP + 10} text-anchor="end">{dict.glucose_unit}</text>
+              {
+                X_TICK_MINUTES.map((minute) => (
+                  <>
+                    <line
+                      x1={xScale(minute)}
+                      x2={xScale(minute)}
+                      y1={CHART_BOTTOM}
+                      y2={CHART_BOTTOM + 5}
+                      stroke={colors.muted}
+                      stroke-width="1"
+                    ></line>
+                    <text
+                      x={xScale(minute)}
+                      y={CHART_BOTTOM + 20}
+                      text-anchor={minute === 0 ? 'start' : minute === geo.domainEnd ? 'end' : 'middle'}
+                    >
+                      {formatTime(minute)}
+                    </text>
+                  </>
+                ))
+              }
+              <line
+                x1={CHART_LEFT}
+                x2={CHART_RIGHT}
+                y1={CHART_BOTTOM}
+                y2={CHART_BOTTOM}
+                stroke={colors.muted}
+                stroke-width="1"></line>
+              <line
+                x1={breakfastX}
+                x2={breakfastX}
+                y1={CHART_TOP + 18}
+                y2={CHART_BOTTOM}
+                stroke={colors.muted}
+                stroke-width="1"
+                stroke-dasharray="2 4"></line>
+              <text x={mealLabel.x} y={mealLabel.y} style={`fill:${colors.muted}`}>
+                {formatBreakfastLabel(locale)}
+              </text>
+              <path d={geo.pathA} fill="none" stroke={colors.range} stroke-width="2.25" stroke-linejoin="round"
+              ></path>
+              <path
+                d={geo.pathB}
+                fill="none"
+                stroke={colors.ink}
+                stroke-width="2.25"
+                stroke-linejoin="round"
+                clip-path="url(#hero-below)"></path>
+              <path
+                d={geo.pathB}
+                fill="none"
+                stroke={colors.high}
+                stroke-width="2.75"
+                stroke-linejoin="round"
+                clip-path="url(#hero-above)"></path>
+              <line
+                x1={pointerX}
+                x2={pointerX}
+                y1={CHART_TOP}
+                y2={CHART_BOTTOM}
+                stroke={colors.muted}
+                stroke-width="1"
+                stroke-opacity="0.35"></line>
+              <circle
+                cx={pointerX}
+                cy={yScale(pointerValueA)}
+                r="4.5"
+                fill="#fff"
+                stroke={colors.range}
+                stroke-width="2"></circle>
+              <circle
+                cx={pointerX}
+                cy={yScale(pointerValueB)}
+                r="4.5"
+                fill="#fff"
+                stroke={pointerValueB > rangeHigh ? colors.high : colors.ink}
+                stroke-width="2"></circle>
+            </svg>
             <dl class="glucose-fig__readout" aria-live="polite">
               <div>
                 <dt>{dict.hero_readout_time}</dt>
-                <dd id="hero-t">08:30</dd>
+                <dd id="hero-t">{formatTime(POINTER_START_MINUTE)}</dd>
               </div>
               <div>
                 <dt>{dict.hero_readout_a}</dt>
-                <dd id="hero-va">7,1 {dict.glucose_unit}</dd>
+                <dd id="hero-va">{formatMmol(pointerValueA, locale)}</dd>
               </div>
               <div>
                 <dt>{dict.hero_readout_b}</dt>
-                <dd id="hero-vb">10,1 {dict.glucose_unit}</dd>
+                <dd id="hero-vb">{formatMmol(pointerValueB, locale)}</dd>
               </div>
             </dl>
             <figcaption class="glucose-fig__caption">
               <span>{dict.hero_chart_caption}</span>
               <!-- copy pending from Sofija: 7.8 caption wording -->
-              <span id="hero-tir"></span>
+              <span id="hero-tir"
+                >{formatTimeInRangeSentence(minutesAbove(geo.curveB, rangeHigh), rangeHigh, locale)}</span
+              >
             </figcaption>
           </figure>
         </section>

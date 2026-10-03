@@ -164,11 +164,25 @@ export function formatMmol(value: number, lang: string): string {
   return `${lang === 'en' ? text : text.replace('.', ',')} ${glucoseUnit(lang)}`;
 }
 
+/** Axis tick text: dot decimals for EN, comma for LV/RU, no unit. */
+export function formatAxisValue(value: number, lang: string): string {
+  const text = String(value);
+  return lang === 'en' ? text : text.replace('.', ',');
+}
+
 const BREAKFAST_LABEL: Record<string, string> = {
   lv: 'Brokastis',
   ru: 'Завтрак',
   en: 'Breakfast',
 };
+
+export function formatBreakfastLabel(lang: string): string {
+  return `${BREAKFAST_LABEL[lang] ?? BREAKFAST_LABEL.lv} ${formatTime(BREAKFAST_MINUTE)}`;
+}
+
+export function minutesAbove(values: number[], threshold: number): number {
+  return values.filter((value) => value > threshold).length;
+}
 
 const TIME_IN_RANGE_SENTENCE: Record<string, (overMinutes: number, high: string) => string> = {
   lv: (overMinutes, high) => `A: visu laiku diapazonā. B: ${overMinutes} min virs ${high} mmol/L.`,
@@ -189,16 +203,41 @@ export function formatTimeInRangeSentence(overMinutesB: number, rangeHigh: numbe
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const VIEWBOX_WIDTH = 640;
-const CHART_LEFT = 44;
-const CHART_RIGHT = 600;
-const CHART_TOP = 16;
-const CHART_BOTTOM = 316;
-const BREAKFAST_MINUTE = 30;
-const POINTER_START_MINUTE = 90;
+export const CHART_LEFT = 44;
+export const CHART_RIGHT = 600;
+export const CHART_TOP = 16;
+export const CHART_BOTTOM = 316;
+export const BREAKFAST_MINUTE = 30;
+export const POINTER_START_MINUTE = 90;
+export const X_TICK_MINUTES = [0, 60, 120, 180, 240];
 const ARROW_KEY_STEP_MINUTES = 5;
 
 function currentLang(): string {
   return document.documentElement.lang || 'lv';
+}
+
+/** Scales, per-minute curves and path strings shared by the build-time and client-side drawing. */
+export function chartGeometry(cfg: GlucoseChartConfig) {
+  const [yMin, yMax] = cfg.y;
+  const domainEnd = cfg.a[cfg.a.length - 1][0];
+
+  const xScale = (minute: number) => CHART_LEFT + (minute / domainEnd) * (CHART_RIGHT - CHART_LEFT);
+  const yScale = (value: number) =>
+    CHART_BOTTOM - ((value - yMin) / (yMax - yMin)) * (CHART_BOTTOM - CHART_TOP);
+
+  const pathFor = (values: number[]): string =>
+    values
+      .map((value, minute) => `${minute ? 'L' : 'M'}${xScale(minute).toFixed(1)} ${yScale(value).toFixed(1)}`)
+      .join('');
+
+  const curveA = monotoneCubic(cfg.a);
+  const curveB = monotoneCubic(cfg.b);
+  return { domainEnd, xScale, yScale, curveA, curveB, pathA: pathFor(curveA), pathB: pathFor(curveB) };
+}
+
+/** Bottom band between the 3.9 line and the axis, clear of both curves. */
+export function mealLabelPosition(xScale: (minute: number) => number): { x: number; y: number } {
+  return { x: xScale(BREAKFAST_MINUTE) + 6, y: CHART_BOTTOM - 8 };
 }
 
 /**
@@ -210,16 +249,10 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
   const svg = document.getElementById(`${idPrefix}-svg`);
   if (!(svg instanceof SVGSVGElement)) return;
 
-  const [yMin, yMax] = cfg.y;
+  svg.replaceChildren();
+
   const [rangeLow, rangeHigh] = cfg.range;
-  const domainEnd = cfg.a[cfg.a.length - 1][0];
-
-  const xScale = (minute: number) => CHART_LEFT + (minute / domainEnd) * (CHART_RIGHT - CHART_LEFT);
-  const yScale = (value: number) =>
-    CHART_BOTTOM - ((value - yMin) / (yMax - yMin)) * (CHART_BOTTOM - CHART_TOP);
-
-  const curveA = monotoneCubic(cfg.a);
-  const curveB = monotoneCubic(cfg.b);
+  const { domainEnd, xScale, yScale, curveA, curveB, pathA, pathB } = chartGeometry(cfg);
 
   function el<K extends keyof SVGElementTagNameMap>(
     tag: K,
@@ -230,12 +263,6 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
     for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
     parent.appendChild(node);
     return node;
-  }
-
-  function pathFor(values: number[]): string {
-    return values
-      .map((value, minute) => `${minute ? 'L' : 'M'}${xScale(minute).toFixed(1)} ${yScale(value).toFixed(1)}`)
-      .join('');
   }
 
   const defs = el('defs', {});
@@ -287,13 +314,13 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
 
   cfg.labels.forEach((value) => {
     const label = el('text', { x: CHART_LEFT - 8, y: yScale(value) + 4, 'text-anchor': 'end' });
-    label.textContent = String(value).replace('.', ',');
+    label.textContent = formatAxisValue(value, currentLang());
   });
 
   const unitLabel = el('text', { x: CHART_RIGHT, y: CHART_TOP + 10, 'text-anchor': 'end' });
   unitLabel.textContent = glucoseUnit(currentLang());
 
-  [0, 60, 120, 180, 240].forEach((minute) => {
+  X_TICK_MINUTES.forEach((minute) => {
     el('line', {
       x1: xScale(minute),
       x2: xScale(minute),
@@ -329,18 +356,18 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
     'stroke-width': 1,
     'stroke-dasharray': '2 4',
   });
-  const breakfastLabel = el('text', { x: breakfastX + 6, y: CHART_TOP + 30 });
+  const breakfastLabel = el('text', mealLabelPosition(xScale));
   breakfastLabel.setAttribute('style', `fill:${cfg.colors.muted}`);
 
   el('path', {
-    d: pathFor(curveA),
+    d: pathA,
     fill: 'none',
     stroke: cfg.colors.range,
     'stroke-width': 2.25,
     'stroke-linejoin': 'round',
   });
   el('path', {
-    d: pathFor(curveB),
+    d: pathB,
     fill: 'none',
     stroke: cfg.colors.ink,
     'stroke-width': 2.25,
@@ -348,7 +375,7 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
     'clip-path': `url(#${idPrefix}-below)`,
   });
   el('path', {
-    d: pathFor(curveB),
+    d: pathB,
     fill: 'none',
     stroke: cfg.colors.high,
     'stroke-width': 2.75,
@@ -381,14 +408,12 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
   let currentMinute = POINTER_START_MINUTE;
 
   function renderBreakfastLabel(): void {
-    const lang = currentLang();
-    breakfastLabel.textContent = `${BREAKFAST_LABEL[lang] ?? BREAKFAST_LABEL.lv} ${formatTime(BREAKFAST_MINUTE)}`;
+    breakfastLabel.textContent = formatBreakfastLabel(currentLang());
   }
 
   function renderTimeInRange(): void {
     if (!tirEl) return;
-    const overMinutesB = curveB.filter((value) => value > rangeHigh).length;
-    tirEl.textContent = formatTimeInRangeSentence(overMinutesB, rangeHigh, currentLang());
+    tirEl.textContent = formatTimeInRangeSentence(minutesAbove(curveB, rangeHigh), rangeHigh, currentLang());
   }
 
   function set(minute: number): void {

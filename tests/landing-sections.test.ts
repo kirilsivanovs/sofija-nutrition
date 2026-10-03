@@ -70,3 +70,21 @@ describe('landing cookie notice', () => {
     expect(layoutAstro).not.toMatch(/gtag|googletagmanager|analytics\.js/);
   });
 });
+
+describe('landing Q4 chart without JS', () => {
+  const q4Svg = indexAstro.slice(indexAstro.indexOf('id="hero-svg"'), indexAstro.indexOf('glucose-fig__readout'));
+
+  it('draws curve paths inside the Q4 svg markup', () => {
+    expect(q4Svg).toMatch(/<path\s+d=\{geo\.pathA\}/);
+    expect(q4Svg).toMatch(/d=\{geo\.pathB\}/);
+  });
+
+  it('hardcodes no decimal readout value in the Q4 chart', () => {
+    const readout = indexAstro.slice(indexAstro.indexOf('glucose-fig__readout'), indexAstro.indexOf('</dl>', indexAstro.indexOf('glucose-fig__readout')));
+    expect(readout).not.toMatch(/\d[.,]\d/);
+  });
+
+  it('fills the time-in-range sentence in the static Q4 markup', () => {
+    expect(indexAstro).toMatch(/<span id="hero-tir"\s*>\{formatTimeInRangeSentence\(/);
+  });
+});

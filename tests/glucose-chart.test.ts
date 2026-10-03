@@ -8,6 +8,13 @@ import {
   formatMmol,
   formatTimeInRangeSentence,
   heroChartConfig,
+  formatAxisValue,
+  formatBreakfastLabel,
+  minutesAbove,
+  chartGeometry,
+  mealLabelPosition,
+  CHART_BOTTOM,
+  BREAKFAST_MINUTE,
 } from '../src/scripts/glucose-chart';
 
 describe('monotoneCubic', () => {
@@ -96,5 +103,55 @@ describe('heroChartConfig', () => {
   it('has curve B rise above the labelled range mid-morning', () => {
     const values = monotoneCubic(heroChartConfig.b);
     expect(values.some((v) => v > heroChartConfig.range[1])).toBe(true);
+  });
+});
+
+describe('formatAxisValue', () => {
+  it('uses a dot decimal separator when the language is en', () => {
+    expect(formatAxisValue(3.9, 'en')).toBe('3.9');
+  });
+
+  it('uses a comma decimal separator when the language is lv or ru', () => {
+    expect(formatAxisValue(3.9, 'lv')).toBe('3,9');
+    expect(formatAxisValue(7.8, 'ru')).toBe('7,8');
+  });
+});
+
+describe('chartGeometry', () => {
+  it('returns one curve value per minute of the domain', () => {
+    const geo = chartGeometry(heroChartConfig);
+    expect(geo.curveA).toHaveLength(geo.domainEnd + 1);
+    expect(geo.curveB).toHaveLength(geo.domainEnd + 1);
+  });
+});
+
+describe('mealLabelPosition', () => {
+  it('places the breakfast label below both curves and above the axis when the text is 22 units tall', () => {
+    const geo = chartGeometry(heroChartConfig);
+    const { x, y } = mealLabelPosition(geo.xScale);
+    const top = y - 22;
+    const lowestCurveValueInSpan = Math.min(
+      ...[geo.curveA, geo.curveB].flatMap((curve) =>
+        curve.filter((_, minute) => geo.xScale(minute) >= x && geo.xScale(minute) <= x + 170)
+      )
+    );
+    expect(top).toBeGreaterThan(geo.yScale(heroChartConfig.range[0]));
+    expect(top).toBeGreaterThan(geo.yScale(lowestCurveValueInSpan));
+    expect(y).toBeLessThan(CHART_BOTTOM);
+    expect(x).toBeGreaterThan(geo.xScale(BREAKFAST_MINUTE));
+  });
+});
+
+describe('formatBreakfastLabel', () => {
+  it('names the meal and time in each language', () => {
+    expect(formatBreakfastLabel('lv')).toBe('Brokastis 07:30');
+    expect(formatBreakfastLabel('ru')).toBe('Завтрак 07:30');
+    expect(formatBreakfastLabel('en')).toBe('Breakfast 07:30');
+  });
+});
+
+describe('minutesAbove', () => {
+  it('counts only minutes above the threshold', () => {
+    expect(minutesAbove([1, 5, 5, 6, 9], 5)).toBe(2);
   });
 });
