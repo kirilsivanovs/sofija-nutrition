@@ -220,7 +220,7 @@ export function renderCalendar(): void {
 
         html += `<button type="button" class="${cellClass}" data-date="${dateStr}" aria-pressed="false" aria-label="${escapeHtml(label)}" tabindex="${tabStop}"${isToday ? ' aria-current="date"' : ''}>
             <span class="day-number ${isToday ? 'today' : ''}">${day}</span>
-            ${isHoliday ? `<span class="holiday-name">${isHoliday}</span>` : ''}
+            ${isHoliday ? `<span class="holiday-name">${escapeHtml(String(isHoliday))}</span>` : ''}
             ${isVacation && !isHoliday ? '<span class="holiday-name">Atvaļinājums</span>' : ''}
             ${isBlocked && !isHoliday && !isVacation ? '<span class="holiday-name">Bloķēts</span>' : ''}
             ${!isHoliday && !isBlocked && !isVacation && isWorkingDay && !isWeekend && daySchedule ? `<span class="day-time"><i class="ph ph-clock"></i>${formatTime(daySchedule.start)}–${formatTime(daySchedule.end)}</span>` : ''}
@@ -277,17 +277,29 @@ export function showDayDetails(dateStr: string): void {
     const holidayName = holidays[dateStr];
     const dayBookings = allBookings.filter(b => b.date === dateStr);
     
+    const reason = !holidayName && isDateInVacation(dateStr)
+        ? 'Atvaļinājums'
+        : !holidayName && blockedDates.has(dateStr) ? 'Bloķēts' : '';
+
     let html = '';
-    
+
     if (holidayName) {
         html += `<div class="booking-card" style="border-left:3px solid var(--color-slate);background:var(--color-white);">
             <div class="booking-details">
-                <div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${holidayName}</div>
+                <div><i class="ph ph-flag"></i><strong>Valsts svētki:</strong> ${escapeHtml(String(holidayName))}</div>
             </div>
         </div>`;
     }
-    
-    if (dayBookings.length === 0 && !holidayName) {
+
+    if (reason) {
+        html += `<div class="booking-card" style="border-left:3px solid var(--color-slate);background:var(--color-white);">
+            <div class="booking-details">
+                <div><i class="ph ph-calendar-x"></i><strong>${reason}</strong></div>
+            </div>
+        </div>`;
+    }
+
+    if (dayBookings.length === 0 && !holidayName && !reason) {
         html += '<div class="loading-state" style="padding:40px;"><i class="ph ph-calendar-x" style="font-size:32px;color:var(--color-slate);"></i><span>Nav ierakstu šajā dienā</span></div>';
     } else {
         // Group bookings by status
