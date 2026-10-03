@@ -232,6 +232,19 @@ describe('Email Service', () => {
       );
       expect(result).toBeDefined();
     });
+
+    it('omits the recipient address from the log when sending an email', async () => {
+      const infoSpy = jest.spyOn(console, 'info').mockImplementation(() => {});
+      try {
+        await emailService.sendClientConfirmation('client@example.test', 'Subject SN-TEST', '<p></p>', []);
+
+        const logged = infoSpy.mock.calls.map((call) => JSON.stringify(call));
+        expect(logged.some((line) => line.includes('Sending email'))).toBe(true);
+        expect(logged.some((line) => line.includes('client@example.test'))).toBe(false);
+      } finally {
+        infoSpy.mockRestore();
+      }
+    });
   });
 
   describe('sendAdminNotification', () => {

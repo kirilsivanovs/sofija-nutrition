@@ -74,7 +74,7 @@ export async function sendEmail({
   }
 
   try {
-    logger.info('Sending email', { to, subject, attachments: attachments.length });
+    logger.info('Sending email', { subject, attachments: attachments.length });
 
     const result = await client.emails.send({
       from: `${branding.name} <${branding.email}>`,

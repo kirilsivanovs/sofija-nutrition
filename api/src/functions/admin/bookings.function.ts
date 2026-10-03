@@ -190,7 +190,7 @@ app.http('adminUpdateBooking', {
           const emailHtml = generateCancellationEmailHTML(t, bookingData);
           const subject = t.cancellationSubject(bookingData.id);
 
-          context.log(`📧 Sending cancellation email to ${existingBooking.email}`);
+          context.log(`📧 Sending cancellation email for booking ${bookingData.id}`);
           const emailResult = await sendCancellationNotification(
             existingBooking.email,
             subject,

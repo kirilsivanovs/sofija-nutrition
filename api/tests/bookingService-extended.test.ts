@@ -4,6 +4,14 @@
  * Comprehensive tests for business logic not covered by existing tests
  */
 
+jest.mock('resend', () => ({
+    Resend: jest.fn().mockImplementation(() => ({
+        emails: {
+            send: jest.fn().mockResolvedValue({ data: { id: 'test-email-id' } }),
+        },
+    })),
+}));
+
 import {
     createBooking,
     confirmPayment,
@@ -286,6 +294,39 @@ describe('BookingService - Advanced Scenarios', () => {
             });
 
             expect(result.success).toBe(true);
+        });
+
+        it('logs the booking id but not the client email when a booking is cancelled', async () => {
+            const previousKey = process.env.RESEND_API_KEY;
+            process.env.RESEND_API_KEY = 'test-api-key';
+            const infoSpy = jest.spyOn(console, 'info').mockImplementation(() => {});
+            const logSpy = jest.fn();
+            try {
+                const created = await createBooking({
+                    name: 'Test User',
+                    email: 'client@example.test',
+                    date: '2026-03-25',
+                    time: '11:00',
+                    serviceId: 'initial',
+                    consultationFormat: 'online',
+                    language: 'lv'
+                });
+
+                await cancelBooking(created.bookingId, { reason: 'synthetic reason', onLog: logSpy });
+
+                const logged = [
+                    ...logSpy.mock.calls.map((call) => JSON.stringify(call)),
+                    ...infoSpy.mock.calls.map((call) => JSON.stringify(call)),
+                ];
+                expect(logSpy.mock.calls.some((call) => JSON.stringify(call).includes(created.bookingId))).toBe(true);
+                expect(logged.some((line) => line.includes('client@example.test'))).toBe(false);
+                expect(logged.some((line) => line.includes('synthetic reason'))).toBe(false);
+                expect(logged.some((line) => line.includes('Cancellation email sent for booking'))).toBe(true);
+            } finally {
+                infoSpy.mockRestore();
+                if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+                else process.env.RESEND_API_KEY = previousKey;
+            }
         });
 
         it('should not cancel already cancelled booking', async () => {

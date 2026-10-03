@@ -508,7 +508,7 @@ export async function cancelBooking(
     cancelReason: reason,
   });
 
-  log(`Booking ${bookingId} cancelled: ${reason}`);
+  log(`Booking ${bookingId} cancelled`);
 
   // Send cancellation email if configured
   if (isConfigured() && booking.email) {
@@ -532,7 +532,7 @@ export async function cancelBooking(
           : `Rezervācija atcelta - ${bookingId}`,
         emailHtml
       );
-      log(`Cancellation email sent to ${booking.email}`);
+      log(`Cancellation email sent for booking ${bookingId}`);
     } catch (err: unknown) {
       const error = err as { message?: string };
       logError(`Cancellation email failed for booking ${bookingId}:`, error.message);
