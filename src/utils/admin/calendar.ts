@@ -243,6 +243,20 @@ export function renderCalendar(): void {
     grid.innerHTML = html;
 }
 
+type BookingActionWindow = Window & {
+    confirmBooking?: (id: string) => void;
+    cancelBooking?: (id: string) => void;
+};
+
+function handleBookingAction(event: MouseEvent): void {
+    const button = (event.target as Element).closest<HTMLElement>('[data-booking-action]');
+    const id = button?.dataset.bookingId;
+    if (!button || !id) return;
+    const actions = window as BookingActionWindow;
+    if (button.dataset.bookingAction === 'confirm') actions.confirmBooking?.(id);
+    else if (button.dataset.bookingAction === 'cancel') actions.cancelBooking?.(id);
+}
+
 /**
  * Show details for a specific day
  */
@@ -317,27 +331,27 @@ export function showDayDetails(dateStr: string): void {
                         ${title} (${bookings.length})
                     </h4>
                     ${bookings.map(b => `
-                        <div class="booking-card ${b.status}">
+                        <div class="booking-card ${escapeHtml(b.status)}">
                             <div class="booking-header">
                                 <div class="booking-info">
-                                    <div class="booking-name">${b.name}</div>
-                                    <span class="booking-status ${b.status}">
-                                        ${getStatusText(b.status)}
+                                    <div class="booking-name">${escapeHtml(b.name)}</div>
+                                    <span class="booking-status ${escapeHtml(b.status)}">
+                                        ${escapeHtml(getStatusText(b.status))}
                                     </span>
                                 </div>
-                                <span class="booking-time">${formatTime(b.time)}</span>
+                                <span class="booking-time">${escapeHtml(formatTime(b.time))}</span>
                             </div>
                             <div class="booking-details">
-                                <div><i class="ph ph-clipboard-text"></i>${getServiceName(b.service)}</div>
+                                <div><i class="ph ph-clipboard-text"></i>${escapeHtml(getServiceName(b.service))}</div>
                                 <div><i class="ph ${b.consultationFormat === 'online' ? 'ph-video-camera' : 'ph-map-pin'}"></i>${b.consultationFormat === 'online' ? 'Online' : 'Klātienē'}</div>
-                                <div><i class="ph ph-envelope"></i>${b.email}</div>
-                                ${b.phone ? `<div><i class="ph ph-phone"></i>${b.phone}</div>` : ''}
-                                ${b.message ? `<div><i class="ph ph-note"></i>${b.message}</div>` : ''}
-                                <div><i class="ph ph-currency-eur"></i>€${b.price || 0}</div>
+                                <div><i class="ph ph-envelope"></i>${escapeHtml(b.email)}</div>
+                                ${b.phone ? `<div><i class="ph ph-phone"></i>${escapeHtml(b.phone)}</div>` : ''}
+                                ${b.message ? `<div><i class="ph ph-note"></i>${escapeHtml(b.message)}</div>` : ''}
+                                <div><i class="ph ph-currency-eur"></i>€${escapeHtml(b.price || 0)}</div>
                             </div>
                             <div class="booking-actions">
-                                ${b.status === 'pending' ? `<button onclick="confirmBooking('${b.id}')" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}
-                                ${b.status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id}')" class="btn-danger btn-sm"><i class="ph ph-x"></i> Atcelt</button>` : ''}
+                                ${b.status === 'pending' ? `<button data-booking-action="confirm" data-booking-id="${escapeHtml(b.id)}" class="btn-primary btn-sm"><i class="ph ph-check"></i> Apstiprināt</button>` : ''}
+                                ${b.status !== 'cancelled' ? `<button data-booking-action="cancel" data-booking-id="${escapeHtml(b.id)}" class="btn-danger btn-sm"><i class="ph ph-x"></i> Atcelt</button>` : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -351,6 +365,7 @@ export function showDayDetails(dateStr: string): void {
     }
     
     list.innerHTML = html;
+    list.onclick = handleBookingAction;
     details.classList.remove('hidden');
     details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
