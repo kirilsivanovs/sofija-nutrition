@@ -1,8 +1,40 @@
 import { MealsTabController } from '../src/components/admin/MealsTab/MealsTab';
 import { PatientListController } from '../src/components/admin/PatientList/PatientListController';
 import { DataTabController } from '../src/components/admin/DataTab/DataTab';
+import { CalendarViewController } from '../src/components/admin/CalendarViewController';
 
 const PAYLOAD = '<img src=x onerror=alert(1)>';
+
+jest.mock('../src/utils/admin/calendar', () => ({
+  renderCalendar: jest.fn(),
+  showDayDetails: jest.fn(),
+  attachCalendarGridHandlers: jest.fn(),
+  setCalendarData: jest.fn(),
+  getCurrentDate: jest.fn(() => new Date()),
+  setCurrentDate: jest.fn(),
+  getSelectedDate: jest.fn(),
+}));
+
+jest.mock('../src/utils/adminApiAdapter', () => ({
+  loadCalendarData: jest.fn(() => Promise.reject(new Error('<img src=x onerror=alert(1)>'))),
+  confirmBooking: jest.fn(),
+  cancelBooking: jest.fn(),
+  findFirstUpcomingBooking: jest.fn(),
+}));
+
+describe('CalendarViewController', () => {
+  it('renders the load error as text when the message contains markup', async () => {
+    document.body.innerHTML =
+      '<div id="bookings-loading"></div><div id="calendar-container"></div>' +
+      '<div id="day-details"></div><span id="current-month"></span>';
+
+    await new CalendarViewController('', jest.fn(), jest.fn()).loadCalendar();
+
+    const loading = document.getElementById('bookings-loading') as HTMLElement;
+    expect(loading.querySelector('img')).toBeNull();
+    expect(loading.textContent).toContain(PAYLOAD);
+  });
+});
 
 describe('MealsTabController', () => {
   it('renders meal item names as text, not markup', () => {

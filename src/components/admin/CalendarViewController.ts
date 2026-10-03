@@ -137,10 +137,15 @@ export class CalendarViewController {
       if (loading) loading.classList.add('hidden');
       if (container) container.classList.remove('hidden');
     } catch (error: unknown) {
-      if (loading)
-        loading.innerHTML =
-          '<span style="color:#dc2626;">Kļūda: ' + (error as Error).message + '</span>';
+      if (loading) this.showLoadError(loading, error);
     }
+  }
+
+  private showLoadError(loading: HTMLElement, error: unknown): void {
+    const span = document.createElement('span');
+    span.style.color = '#dc2626';
+    span.textContent = 'Kļūda: ' + (error instanceof Error ? error.message : String(error));
+    loading.replaceChildren(span);
   }
 
   private async navigateToFirstUpcomingBooking(): Promise<void> {
