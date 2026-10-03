@@ -75,7 +75,7 @@ input[type='button'] {
 }
 
 /* Text links can be smaller but need adequate padding */
-a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.nav-tab) {
+a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.nav-tab):not(.legal-prose :is(p, li) a) {
   min-height: auto;
   min-width: auto;
   padding: 8px 4px;
@@ -240,9 +240,49 @@ h3 {
   }
 }
 
-p {
+p,
+.legal-prose li {
   font-size: clamp(1.0625rem, 1.035rem + 0.11vw, 1.125rem);
   line-height: 1.6;
+}
+
+.legal-prose ul {
+  list-style: disc;
+  padding-left: 1.25em;
+}
+
+.legal-prose li::marker {
+  color: var(--color-graphite);
+}
+
+.legal-prose li + li {
+  margin-top: 0.5em;
+}
+
+.legal-prose :is(p, ul) + :is(p, ul) {
+  margin-top: 1rem;
+}
+
+.legal-prose__updated {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-slate);
+}
+
+.legal-prose :is(p, li) a {
+  display: inline;
+  min-height: auto;
+  min-width: auto;
+  padding: 0;
+  color: var(--color-graphite);
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+.legal-prose :is(p, li) a:hover {
+  text-decoration-thickness: 2px;
 }
 
 /* iOS Safari link detection fix */
