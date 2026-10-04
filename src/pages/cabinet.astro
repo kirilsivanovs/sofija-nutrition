@@ -313,7 +313,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         id="save-and-fav"
         title="Saglabāt un pievienot favorītiem"
       >
-        <i class="ph ph-star" aria-hidden="true"></i> + Favorīts
+        <i class="ph ph-star" aria-hidden="true"></i> Favorīts
       </button>
       <button type="button" class="btn-primary-sm" id="submit-food-btn">
         <i class="ph ph-plus" aria-hidden="true"></i> Pievienot
@@ -598,12 +598,12 @@ import AppHeader from '../components/common/AppHeader.astro';
       flex: 0 0 30px;
       border-radius: var(--diary-radius);
       border: 1.5px solid var(--diary-text-dim);
-      color: var(--diary-green);
+      color: var(--diary-text-dim);
       font-size: 14px;
     }
     .meal-add-btn:hover {
       background: var(--color-navy);
-      color: #fff;
+      color: var(--color-white);
       border-color: var(--color-navy);
     }
     .meal-section-items:empty + .meal-section-empty {
@@ -686,7 +686,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       font-size: 15px;
     }
     .meal-item-edit:hover {
-      color: var(--diary-green);
+      color: var(--diary-text);
       background: var(--diary-warm);
     }
     .meal-item-actions {
