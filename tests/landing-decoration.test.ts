@@ -258,6 +258,25 @@ describe('landing hero headline', () => {
     expect(phoneBlock).not.toMatch(/\.landing-hero__title/);
   });
 
+  it('spans the hero title across both grid columns when the viewport is 1024px or wider', () => {
+    const title = ruleBody(chartCss, '.landing-hero__title');
+    expect(title).toMatch(/grid-column:\s*1 \/ -1\s*;/);
+    expect(title).toMatch(/margin:\s*0 0 28px\s*;/);
+    expect(ruleBody(tabletBlock, '.landing-hero__title')).toMatch(/margin:\s*0 0 20px\s*;/);
+  });
+
+  it('puts the key phrase of the hero title on its own line when the title wraps', () => {
+    expect(ruleBody(chartCss, '.landing-hero__title strong')).toMatch(/display:\s*block\s*;/);
+  });
+
+  it('keeps the hero spacing in margins with zero row gap when the hero stacks', () => {
+    expect(ruleBody(chartCss, '.landing-hero__inner')).toMatch(/gap:\s*0 56px\s*;/);
+    expect(ruleBody(tabletBlock, '.landing-hero__inner')).toMatch(/gap:\s*0\s*;/);
+    expect(ruleBody(tabletBlock, '.hero-cred')).toMatch(/margin-top:\s*40px\s*;/);
+    expect(ruleBody(phoneBlock, '.landing-hero__inner')).toMatch(/gap:\s*0\s*;/);
+    expect(ruleBody(phoneBlock, '.hero-cred')).toMatch(/margin-top:\s*28px\s*;/);
+  });
+
   it('lays the credentials out in two columns on tablet only', () => {
     const tabletDl = ruleBody(tabletBlock, '.hero-cred dl');
     expect(tabletDl).toMatch(/grid-template-columns:\s*1fr 1fr/);

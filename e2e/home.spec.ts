@@ -118,6 +118,21 @@ test('aligns the header actions with the hero credentials panel on the right edg
   }
 });
 
+test('limits the hero title to four lines in every language at 1024px and 1280px', async ({
+  page,
+}) => {
+  for (const path of ['/', '/ru/', '/en/']) {
+    for (const width of [1024, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(path);
+      const title = page.locator('.landing-hero__title').first();
+      const box = await title.boundingBox();
+      const lineHeight = await title.evaluate((el) => parseFloat(getComputedStyle(el).lineHeight));
+      expect(Math.round(box!.height / lineHeight), `${path} @${width}`).toBeLessThanOrEqual(4);
+    }
+  }
+});
+
 test('hides the Russian header subtitle and keeps a one-row header below 1160px', async ({
   page,
 }) => {
