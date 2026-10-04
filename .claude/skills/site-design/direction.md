@@ -33,7 +33,7 @@ Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hair
 - Container 1160px, 40px/20px side padding; sections split by a Line border, not fills. Radius 4px on buttons, slots, panels; photos square. Phone: single column, index static above the questions.
 
 ## The one motion moment
-The index marker moving to the current question (200ms ease-out colour/border); smooth scroll on index clicks. Both off under `prefers-reduced-motion`. Nothing else animates.
+The index marker moving to the current question (200ms ease-out colour/border); smooth scroll on index clicks. Both off under `prefers-reduced-motion`. Nothing else animates; hover/focus states change instantly. Loading spinners are status, not motion: only beside a text label, frozen under reduced motion.
 
 ## The glucose-curve figure
 In "what Sofija researches" (Q4) only, as an example of her field (moved out of the hero 2026-09-28): AGP-style chart, same breakfast, two people, 07:00-11:00, monotone curves, real units. Green range 3.9-7.8 mmol/L (post-meal normal without diabetes; caption wording for Sofija to approve). Above 7.8 drawn in High. Labelled illustrative/synthetic. Pointer and arrow keys show values.
