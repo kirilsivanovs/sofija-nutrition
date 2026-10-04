@@ -5,6 +5,8 @@
 
 import { escapeHtml } from '../../../utils/escapeHtml';
 
+const STATUS_MODIFIERS = ['confirmed', 'pending', 'cancelled'];
+
 interface TableData {
   entities: any[];
   columns: string[];
@@ -302,17 +304,17 @@ export class DataTabController {
               if (typeof value === 'object') value = JSON.stringify(value);
               const displayValue =
                 String(value).length > 40 ? String(value).substring(0, 40) + '...' : value;
-              let style = '';
+              const title = escapeHtml(value);
+              const text = escapeHtml(displayValue);
               if (col === 'status') {
-                if (value === 'confirmed') style = 'color:#16a34a;font-weight:600;';
-                else if (value === 'pending') style = 'color:#ca8a04;font-weight:600;';
-                else if (value === 'cancelled') style = 'color:#dc2626;font-weight:600;';
+                const modifier = STATUS_MODIFIERS.includes(value) ? value : '';
+                return `<td title="${title}"><span class="booking-status ${modifier}">${text}</span></td>`;
               }
-              return `<td style="${style}" title="${escapeHtml(value)}">${escapeHtml(displayValue)}</td>`;
+              return `<td title="${title}">${text}</td>`;
             })
             .join('')}
           <td>
-            <button data-delete-pk="${escapeHtml(pk)}" data-delete-rk="${escapeHtml(rk)}" class="btn-close" title="Dzēst">
+            <button data-delete-pk="${escapeHtml(pk)}" data-delete-rk="${escapeHtml(rk)}" class="btn-delete-row" title="Dzēst">
               <i class="ph ph-trash"></i>
             </button>
           </td>
@@ -630,7 +632,7 @@ export class DataTabController {
       // Use textContent to avoid interpreting the message as HTML (prevents XSS)
       this.elements.loading.innerHTML = '';
       const span = document.createElement('span');
-      span.style.color = '#dc2626';
+      span.className = 'load-error';
       span.textContent = `Kļūda: ${message}`;
       this.elements.loading.appendChild(span);
     }

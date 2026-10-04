@@ -56,10 +56,7 @@ export function showToast(message: string, type: ToastType = 'info', title: stri
 }
 
 function removeToast(toast: HTMLElement): void {
-    toast.classList.add('removing');
-    setTimeout(() => {
-        toast.remove();
-    }, 300);
+    toast.remove();
 }
 
 /**
@@ -92,20 +89,12 @@ export function showConfirm(message: string, title: string = 'ApstiprinÄt darbÄ
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
         
-        // Animate in
-        requestAnimationFrame(() => {
-            overlay.classList.add('show');
-        });
-        
         // Focus on OK button
         setTimeout(() => (dialog.querySelector('.confirm-ok') as HTMLButtonElement)?.focus(), 100);
         
         const close = (result: boolean) => {
-            overlay.classList.remove('show');
-            setTimeout(() => {
-                overlay.remove();
-                resolve(result);
-            }, 200);
+            overlay.remove();
+            resolve(result);
         };
         
         dialog.querySelector('.confirm-ok')?.addEventListener('click', () => close(true));

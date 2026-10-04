@@ -75,7 +75,7 @@ input[type='button'] {
 }
 
 /* Text links can be smaller but need adequate padding */
-a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.nav-tab):not(.legal-prose :is(p, li) a) {
+a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.btn-home):not(.nav-tab):not(.legal-prose :is(p, li) a) {
   min-height: auto;
   min-width: auto;
   padding: 8px 4px;

@@ -143,7 +143,7 @@ export class CalendarViewController {
 
   private showLoadError(loading: HTMLElement, error: unknown): void {
     const span = document.createElement('span');
-    span.style.color = '#dc2626';
+    span.className = 'load-error';
     span.textContent = 'Kļūda: ' + (error instanceof Error ? error.message : String(error));
     loading.replaceChildren(span);
   }

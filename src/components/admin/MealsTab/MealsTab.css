@@ -156,7 +156,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
   font-size: 18px;
   color: var(--color-text);
 }
@@ -197,7 +196,6 @@
   padding: 10px;
   min-height: 100px;
   cursor: pointer;
-  transition: all 0.2s;
   display: flex;
   flex-direction: column;
 }
@@ -302,11 +300,15 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.meals-summary-row:last-child {
+  border-bottom: none;
 }
 
 .meals-summary-label {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .meals-summary-value {
@@ -382,7 +384,7 @@
 /* ── Responsive: Tablet ── */
 @media (max-width: 1024px) {
   .meals-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .meals-sidebar {
     max-height: 260px;

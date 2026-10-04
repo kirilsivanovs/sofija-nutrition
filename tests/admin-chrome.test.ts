@@ -10,6 +10,11 @@ function readStripped(...segments: string[]): string {
 const adminCss = readStripped('styles', 'admin.css');
 const patientListCss = readStripped('components', 'admin', 'PatientList', 'PatientList.css');
 const mealsTabCss = readStripped('components', 'admin', 'MealsTab', 'MealsTab.css');
+const dataTabCss = readStripped('components', 'admin', 'DataTab', 'DataTab.css');
+const dataTabTs = readStripped('components', 'admin', 'DataTab', 'DataTab.ts');
+const calendarViewControllerTs = readStripped('components', 'admin', 'CalendarViewController.ts');
+const notificationsTs = readStripped('utils', 'admin', 'notifications.ts');
+const adminIndexAstro = readStripped('pages', 'admin', 'index.astro');
 const calendarViewAstro = fs.readFileSync(
   path.join(root, 'components', 'admin', 'CalendarView.astro'),
   'utf-8'
@@ -32,6 +37,42 @@ describe('admin chrome', () => {
   it('has no hex or rgba literal in admin.css', () => {
     expect(adminCss).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
     expect(adminCss).not.toMatch(/rgba?\(/);
+  });
+
+  it('has no named colour literal in the admin stylesheets', () => {
+    for (const css of [adminCss, dataTabCss, patientListCss, mealsTabCss]) {
+      expect(css).not.toMatch(
+        /(?:color|background(?:-color)?|border(?:-[a-z]+)*)\s*:(?:[^;{}()]|\([^)]*\))*?(?<![-\w])(?:white|black|red|green|blue|gray|grey|orange|yellow)\b(?!-)/i
+      );
+    }
+  });
+
+  it('gives the Dati row delete button its own class with a White fill and Line border', () => {
+    expect(dataTabTs).toMatch(/class="btn-delete-row"/);
+    expect(dataTabTs).not.toMatch(/class="btn-close"/);
+    const rule = ruleBody(dataTabCss, '.btn-delete-row');
+    expect(rule).toMatch(/background:\s*var\(--color-white\)/);
+    expect(rule).toMatch(/border:\s*1px solid var\(--color-line\)/);
+    expect(ruleBody(dataTabCss, '.btn-delete-row:hover')).toMatch(/var\(--color-error\)/);
+    expect(ruleBody(adminCss, '.btn-close:hover')).not.toMatch(/background:\s*var\(--color-mist\)/);
+  });
+
+  it('uses minmax(0, 1fr) for single-column patient grids so long text cannot widen them', () => {
+    expect(patientListCss).not.toMatch(/grid-template-columns:\s*1fr;/);
+    expect(mealsTabCss).not.toMatch(/grid-template-columns:\s*1fr;/);
+  });
+
+  it('uses minmax(0, 1fr) for the meals layout in admin.css so the Pacienti column fits 375px', () => {
+    const rules = [...adminCss.matchAll(/\.meals-layout\s*{([^}]*)}/g)].map((m) => m[1]);
+    expect(rules.length).toBeGreaterThan(0);
+    for (const body of rules) {
+      expect(body).not.toMatch(/grid-template-columns:\s*1fr\s*;/);
+    }
+  });
+
+  it('excludes .btn-home from the global text-link padding rule', () => {
+    const globalCss = readStripped('styles', 'global.css');
+    expect(globalCss).toMatch(/a:not\([^{]*:not\(\.btn-home\)[^{]*{/);
   });
 
   it('has no uppercase transform or letter-spacing in admin.css', () => {
@@ -160,6 +201,59 @@ describe('admin chrome', () => {
         new RegExp(`color:\\s*var\\(--color-${token}\\)`)
       );
     }
+  });
+
+  it('has no weight 500 in the admin stylesheets', () => {
+    for (const css of [adminCss, dataTabCss, patientListCss, mealsTabCss]) {
+      expect(css).not.toMatch(/font-weight:\s*500/);
+    }
+  });
+
+  it('has no transition and animates only the spinner in the admin stylesheets', () => {
+    for (const css of [adminCss, dataTabCss, patientListCss, mealsTabCss]) {
+      expect(css).not.toMatch(/transition/);
+      expect(css).not.toMatch(/@keyframes\s+(?!spin\b)/);
+      for (const [, name] of css.matchAll(/animation:\s*([\w-]+)/g)) {
+        expect(name).toBe('spin');
+      }
+    }
+  });
+
+  it('has no hex, rgba or inline colour in the admin component styles and scripts', () => {
+    for (const css of [dataTabCss, patientListCss, mealsTabCss]) {
+      expect(css).not.toMatch(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?=[\s;,)])/);
+      expect(css).not.toMatch(/rgba?\(/);
+    }
+    for (const script of [dataTabTs, calendarViewControllerTs]) {
+      expect(script).not.toMatch(/#[0-9a-fA-F]{6}\b/);
+      expect(script).not.toMatch(/rgba?\(/);
+      expect(script).not.toMatch(/style\.color|style="[^"]*color/);
+    }
+  });
+
+  it('renders DataTab status as a booking-status class and not an inline style', () => {
+    expect(dataTabTs).toMatch(/class="booking-status/);
+    expect(dataTabTs).not.toMatch(/style="\$\{/);
+    expect(dataTabTs).toMatch(/STATUS_MODIFIERS\.includes\(value\)/);
+  });
+
+  it('draws the access toggle as a plain button with a status dot', () => {
+    expect([...patientListCss.matchAll(/\.access-toggle\s*{/g)]).toHaveLength(1);
+    const toggle = ruleBody(patientListCss, '.access-toggle');
+    expect(toggle).toMatch(/background:\s*var\(--color-white\)/);
+    expect(toggle).not.toMatch(/border-radius:\s*\d+px|9999|rgba/);
+    expect(ruleBody(patientListCss, '.access-toggle::before')).toMatch(/width:\s*8px/);
+    expect(ruleBody(patientListCss, '.access-toggle.on::before')).toMatch(/var\(--color-range\)/);
+    expect(ruleBody(patientListCss, '.access-toggle.off::before')).toMatch(/var\(--color-error\)/);
+  });
+
+  it('removes toast and confirm without waiting for an animation', () => {
+    expect(notificationsTs).not.toMatch(/removing|'show'|requestAnimationFrame|\}, (?:200|300)\)/);
+  });
+
+  it('drops the access-denied icon', () => {
+    expect(adminIndexAstro).not.toMatch(/unauthorized-icon/);
+    expect(adminCss).not.toMatch(/unauthorized-icon/);
   });
 
   it('maps system health to Range, High and Error without a fill', () => {
