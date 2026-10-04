@@ -184,7 +184,7 @@ export const translations: Record<Locale, LandingDict> = {
     q1_refer:
       'Uztura konsultācija neaizstāj ārsta diagnozi un ārstēšanu. Ja jautājums ir ārpus manas kompetences, piemēram, ēšanas traucējumi, es to pateikšu un ieteikšu, pie kā vērsties.',
     q2_title: 'Kā notiek pirmā konsultācija?',
-    q2_step1: 'Izvēlaties laiku kalendārā un saņemat apstiprinājumu e-pastā.',
+    q2_step1: 'Izvēlaties laiku kalendārā un saņemat apstiprinājumu e-\u2060pastā.',
     q2_step2:
       'Ja ir nesenas analīzes (bioķīmija, glikoze, lipīdi), paņemat tās līdzi. Ja nav, sāksim ar to, kas ir.',
     q2_step3: 'Sarunā izrunājam Jūsu ikdienu, ēšanu un mērķus.',

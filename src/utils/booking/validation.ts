@@ -47,13 +47,13 @@ export function validateName(name: string): ValidationError | null {
  */
 export function validateEmail(email: string): ValidationError | null {
   if (!email || email.trim().length === 0) {
-    return createValidationError('email', 'E-pasts ir obligāts');
+    return createValidationError('email', 'E-\u2060pasts ir obligāts');
   }
 
   if (email.length > VALIDATION.EMAIL.MAX_LENGTH) {
     return createValidationError(
       'email',
-      `E-pasts nedrīkst pārsniegt ${VALIDATION.EMAIL.MAX_LENGTH} rakstzīmes`
+      `E-\u2060pasts nedrīkst pārsniegt ${VALIDATION.EMAIL.MAX_LENGTH} rakstzīmes`
     );
   }
 

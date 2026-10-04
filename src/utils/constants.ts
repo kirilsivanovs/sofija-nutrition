@@ -142,7 +142,7 @@ export const VALIDATION = {
   EMAIL: {
     MAX_LENGTH: 254,
     PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    ERROR_MESSAGE: 'Lūdzu, ievadiet derīgu e-pasta adresi',
+    ERROR_MESSAGE: 'Lūdzu, ievadiet derīgu e-\u2060pasta adresi',
   },
   PHONE: {
     MIN_LENGTH: 8,

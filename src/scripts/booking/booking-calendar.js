@@ -106,7 +106,7 @@ const fallbackTranslations = {
     formatOnline: 'Tiešsaistē',
     formatInPerson: 'Klātienē Rīgā',
     nameLabel: 'Jūsu vārds',
-    emailLabel: 'E-pasts',
+    emailLabel: 'E-\u2060pasts',
     phoneLabel: 'Telefons',
     personalCodeLabel: 'Personas kods (neobligāts)',
     personalCodeHint: 'Norādiet, ja vēlaties iesniegt čeku VID attaisnoto izdevumu atgūšanai.',
@@ -120,7 +120,7 @@ const fallbackTranslations = {
     nextAvailableSlot: (dateLabel) => `Tuvākais brīvais laiks: ${dateLabel}`,
     successTitle: 'Rezervācija veiksmīga!',
     successText: 'Mēs sazināsimies ar Jums 24 stundu laikā, lai apstiprinātu vizīti.',
-    bookingConfirmNote: 'Pēc rezervācijas saņemsiet apstiprinājumu e-pastā.',
+    bookingConfirmNote: 'Pēc rezervācijas saņemsiet apstiprinājumu e-\u2060pastā.',
     closeBtn: 'Aizvērt',
     selectedLabel: 'Izvēlēts',
     today: 'Šodien',
@@ -130,8 +130,8 @@ const fallbackTranslations = {
     validation: {
       nameRequired: 'Lūdzu, ievadiet savu vārdu',
       nameMinLength: 'Vārdam jābūt vismaz 2 simboliem',
-      emailRequired: 'Lūdzu, ievadiet e-pasta adresi',
-      emailInvalid: 'Lūdzu, ievadiet derīgu e-pasta adresi',
+      emailRequired: 'Lūdzu, ievadiet e-\u2060pasta adresi',
+      emailInvalid: 'Lūdzu, ievadiet derīgu e-\u2060pasta adresi',
       phoneInvalid: 'Lūdzu, ievadiet 8 ciparu telefona numuru',
       personalCodeInvalid: 'Lūdzu, ievadiet derīgu personas kodu (11 cipari)',
       consentRequired: 'Lūdzu, apstipriniet piekrišanu datu apstrādei',
@@ -336,7 +336,7 @@ class BookingCalendar {
     const errorMessages = {
       lv: {
         title: 'Sistēma īslaicīgi nepieejama',
-        message: 'Lūdzu, mēģiniet vēlāk vai sazinieties pa e-pastu:',
+        message: 'Lūdzu, mēģiniet vēlāk vai sazinieties pa e-\u2060pastu:',
         email: 'info@sofijaivanova.lv',
         retry: 'Mēģināt vēlreiz',
       },
@@ -1418,7 +1418,7 @@ class BookingCalendar {
           ? `<p class="invoice-info">Счёт <strong>${booking.id}</strong> отправлен на вашу почту.<br>Сумма: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
           : this.currentLang === 'en'
             ? `<p class="invoice-info">Invoice <strong>${booking.id}</strong> has been sent to your email.<br>Amount: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`
-            : `<p class="invoice-info">Rēķins <strong>${booking.id}</strong> ir nosūtīts uz Jūsu e-pastu.<br>Summa: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`;
+            : `<p class="invoice-info">Rēķins <strong>${booking.id}</strong> ir nosūtīts uz Jūsu e-\u2060pastu.<br>Summa: <strong>€${booking.price?.toFixed(2) || '—'}</strong></p>`;
 
       const detailsHtml = this.buildBookingDetailsHtml(booking);
 
