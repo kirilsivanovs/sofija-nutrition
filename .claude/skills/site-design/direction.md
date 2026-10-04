@@ -12,7 +12,7 @@ Reason: the user picked SN-036 "Итог · A+D" over SN-034. Mockup: https://cl
 |---|---|---|---|
 | White | #FFFFFF | the only page background | - |
 | Graphite | #1E2530 | body text and headings | 15.4:1 |
-| Slate | #52607A | secondary text, index links | 6.3:1 |
+| Slate | #52607A | secondary text, index links, icon buttons at rest (hover Graphite) | 6.3:1 |
 | Navy | #002D74 | action accent only: primary buttons (hover #001F52), selected slot/format, chart line B | 12.9:1 |
 | Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
 | High | #B06A00 | chart segment above range only | graphic |
