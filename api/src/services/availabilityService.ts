@@ -134,8 +134,24 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
     servicesCacheTime = Date.now();
 
     return services;
-  } catch {
+  } catch (error: unknown) {
+    if (!isNotFound(error)) throw error;
     return DEFAULT_SERVICES as ServiceType[];
+  }
+}
+
+// A missing row or table may fall back to defaults; any other failure must not look like "nothing configured"
+function isNotFound(error: unknown): boolean {
+  return (error as { statusCode?: number })?.statusCode === 404;
+}
+
+async function readConfigValue(rowKey: string): Promise<string | null> {
+  try {
+    const entity = await createTableClient(SETTINGS_TABLE).getEntity('config', rowKey);
+    return entity.value as string;
+  } catch (error: unknown) {
+    if (isNotFound(error)) return null;
+    throw error;
   }
 }
 
@@ -167,39 +183,24 @@ export function generateSlotsFromSchedule(schedule: DaySchedule, dayName: string
  * Fetch admin schedule settings from database
  */
 export async function getScheduleSettings(): Promise<DaySchedule> {
-  try {
-    const tableClient = createTableClient(SETTINGS_TABLE);
-    const entity = await tableClient.getEntity('config', 'schedule');
-    return JSON.parse(entity.value as string);
-  } catch {
-    return DEFAULT_SCHEDULE;
-  }
+  const value = await readConfigValue('schedule');
+  return value === null ? DEFAULT_SCHEDULE : JSON.parse(value);
 }
 
 /**
  * Fetch blocked dates from database
  */
 export async function getBlockedDates(): Promise<BlockedDate[]> {
-  try {
-    const tableClient = createTableClient(SETTINGS_TABLE);
-    const entity = await tableClient.getEntity('config', 'blockedDates');
-    return JSON.parse(entity.value as string);
-  } catch {
-    return [];
-  }
+  const value = await readConfigValue('blockedDates');
+  return value === null ? [] : JSON.parse(value);
 }
 
 /**
  * Fetch vacation periods from database
  */
 export async function getVacationPeriods(): Promise<VacationPeriod[]> {
-  try {
-    const tableClient = createTableClient(SETTINGS_TABLE);
-    const entity = await tableClient.getEntity('config', 'vacationPeriods');
-    return JSON.parse(entity.value as string);
-  } catch {
-    return [];
-  }
+  const value = await readConfigValue('vacationPeriods');
+  return value === null ? [] : JSON.parse(value);
 }
 
 /**
@@ -240,9 +241,8 @@ export async function getBookedSlots(
         bookedSlots[bookingDate].push(entity.time as string);
       }
     }
-  } catch (e: unknown) {
-    const err = e as { message?: string };
-    // Silently handle - empty booked slots is acceptable fallback
+  } catch (error: unknown) {
+    if (!isNotFound(error)) throw error;
   }
 
   return bookedSlots;

@@ -70,11 +70,23 @@ describe('API Endpoints', () => {
     beforeAll(() => {
       jest.resetModules();
       mockApp.http.mockClear();
+      // Empty-but-reachable store: reads answer 404, listings hold no rows
+      const notFound = Object.assign(new Error('not found'), { statusCode: 404 });
+      jest.doMock('../src/services/tableClientFactory', () => ({
+        createTableClient: () => ({
+          getEntity: jest.fn().mockRejectedValue(notFound),
+          listEntities: () => ({ async *[Symbol.asyncIterator]() {} }),
+        }),
+      }));
       require('../src/functions/booking/getAvailability.function');
       const availabilityCall = mockApp.http.mock.calls.find(
         (call) => call[0] === 'getAvailability'
       );
       availabilityHandler = availabilityCall[1].handler;
+    });
+
+    afterAll(() => {
+      jest.dontMock('../src/services/tableClientFactory');
     });
 
     it('should return available slots for valid date', async () => {
