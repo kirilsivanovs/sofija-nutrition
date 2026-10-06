@@ -5,6 +5,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { createTableClient } from '../../services/tableClientFactory';
+import { sweepStaleBookingsDaily } from '../../services/bookingRepository';
 import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
 import { sendCancellationNotification } from '../../services/emailService';
 import { generateCancellationEmailHTML } from '../../templates/emailTemplates';
@@ -65,6 +66,8 @@ app.http('adminGetBookings', {
       return unauthorizedResponse(auth.error);
     }
     context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
+
+    await sweepStaleBookingsDaily();
 
     try {
       const url = new URL(request.url);

@@ -10,6 +10,7 @@ import type { HttpResponseInit } from '@azure/functions';
 import { checkRateLimit, rateLimitExceededResponse } from '../../utils/rateLimiter';
 import { validateBookingInput, validationErrorResponse } from '../../utils/validation';
 import { createBooking, BookingError } from '../../services/bookingService';
+import { sweepStaleBookingsDaily } from '../../services/bookingRepository';
 
 // ============================================
 // Handler
@@ -49,6 +50,8 @@ async function createBookingHandler(
       onWarn: (msg: unknown, ...args: unknown[]) => context.warn(String(msg), ...args),
       onError: (msg: unknown, ...args: unknown[]) => context.error(String(msg), ...args),
     });
+
+    await sweepStaleBookingsDaily();
 
     return {
       status: 200,

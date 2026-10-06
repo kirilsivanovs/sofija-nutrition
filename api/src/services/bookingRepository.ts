@@ -3,7 +3,7 @@
  * Handles data persistence for bookings (Azure Table Storage with in-memory fallback)
  */
 
-import { TableClient } from '@azure/data-tables';
+import { TableClient, odata } from '@azure/data-tables';
 import { createHmac, timingSafeEqual } from 'crypto';
 import type { Booking, BookingStatus } from '../types';
 import { tables, booking as bookingConfig } from '../config';
@@ -403,6 +403,79 @@ export async function isSlotBooked(date: string, time: string): Promise<boolean>
   }
 }
 
+// ============================================
+// Retention
+// ============================================
+
+const UNCONFIRMED_RETENTION_MONTHS = 6;
+const SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000;
+const STALE_STATUSES: readonly BookingStatus[] = ['pending', 'cancelled'];
+
+let lastSweepAt = 0;
+
+// Clamps to the last day of the target month so Aug 31 minus 6 months is Feb 28, not Mar 3
+function retentionCutoffDate(now: Date): string {
+  const firstOfTargetMonth = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - UNCONFIRMED_RETENTION_MONTHS, 1)
+  );
+  const daysInTargetMonth = new Date(
+    Date.UTC(firstOfTargetMonth.getUTCFullYear(), firstOfTargetMonth.getUTCMonth() + 1, 0)
+  ).getUTCDate();
+  firstOfTargetMonth.setUTCDate(Math.min(now.getUTCDate(), daysInTargetMonth));
+  return firstOfTargetMonth.toISOString().slice(0, 10);
+}
+
+/**
+ * Delete unpaid pending/cancelled bookings whose appointment date is past retention.
+ * Returns the number of deleted rows.
+ */
+export async function deleteStaleUnconfirmedBookings(now: Date): Promise<number> {
+  const client = await getTableClient();
+  if (!client) {
+    return 0;
+  }
+
+  const cutoff = retentionCutoffDate(now);
+  const entities = client.listEntities({
+    queryOptions: { filter: odata`PartitionKey lt ${cutoff}` },
+  });
+
+  let deleted = 0;
+  for await (const entity of entities) {
+    const status = (entity.status as string | undefined) ?? 'pending';
+    if (!STALE_STATUSES.includes(status as BookingStatus) || entity.paymentConfirmed === true) {
+      continue;
+    }
+    try {
+      // The etag makes a payment confirmed after listing win over the delete (412)
+      await client.deleteEntity(entity.partitionKey as string, entity.rowKey as string, {
+        etag: entity.etag as string | undefined,
+      });
+      deleted++;
+    } catch {
+      // Row changed or vanished meanwhile; skip it and keep sweeping
+    }
+  }
+  return deleted;
+}
+
+/**
+ * Run the retention sweep at most once per 24 h per process; never throws.
+ */
+export async function sweepStaleBookingsDaily(now: Date = new Date()): Promise<void> {
+  if (now.getTime() - lastSweepAt < SWEEP_INTERVAL_MS) {
+    return;
+  }
+  lastSweepAt = now.getTime();
+
+  try {
+    const count = await deleteStaleUnconfirmedBookings(now);
+    logger.info('Retention sweep deleted stale bookings', { count });
+  } catch (error: unknown) {
+    logger.warn('Retention sweep failed', error instanceof Error ? error.message : String(error));
+  }
+}
+
 /**
  * Get all bookings from in-memory storage (for debugging)
  */
@@ -425,6 +498,8 @@ module.exports = {
   isUsingAzureStorage,
   isSlotBooked,
   getAllInMemoryBookings,
+  deleteStaleUnconfirmedBookings,
+  sweepStaleBookingsDaily,
   acquireSlotLock,
   releaseSlotLock,
   LOCK_TTL_MS,

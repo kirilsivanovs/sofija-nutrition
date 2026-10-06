@@ -107,7 +107,18 @@ function clearMockTables() {
     initializeSeedData();
 }
 
+// Tagged template like the SDK's odata: string values are quoted, single quotes doubled
+function odata(strings, ...values) {
+    return strings.reduce((acc, part, i) => {
+        if (i >= values.length) return acc + part;
+        const value = values[i];
+        const text = typeof value === 'string' ? `'${value.replace(/'/g, "''")}'` : String(value);
+        return acc + part + text;
+    }, '');
+}
+
 module.exports = {
     TableClient: MockTableClient,
+    odata,
     clearMockTables
 };
