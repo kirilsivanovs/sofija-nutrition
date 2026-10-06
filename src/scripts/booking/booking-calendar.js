@@ -367,11 +367,14 @@ class BookingCalendar {
                     <a href="mailto:${t.email}" class="error-email-link">
                         <i class="ph ph-envelope"></i> ${t.email}
                     </a>
-                    <button class="error-retry-btn" onclick="location.reload()">
+                    <button class="error-retry-btn">
                         <i class="ph ph-arrow-clockwise"></i> ${t.retry}
                     </button>
                 </div>
             `;
+      this.container
+        .querySelector('.error-retry-btn')
+        .addEventListener('click', () => location.reload());
     }
   }
 

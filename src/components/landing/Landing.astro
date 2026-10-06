@@ -440,7 +440,7 @@ const rangeLines = [rangeLow, rangeHigh];
         <section class="question" id="f-q6">
           <h2>{dict.q6_title}</h2>
           <div id="contact">
-            <div id="bookingCalendar" class="booking-calendar-wrapper">
+            <div id="bookingCalendar" class="booking-calendar-wrapper" data-locale={locale}>
               <noscript>
                 <p class="booking-noscript">
                   {dict.booking_noscript}
@@ -489,12 +489,11 @@ const rangeLines = [rangeLow, rangeHigh];
 
   <script>
     import '../../scripts/booking/booking-calendar.js';
-  </script>
 
-  <script define:vars={{ locale }}>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof BookingCalendar !== 'undefined' && document.getElementById('bookingCalendar')) {
-        new BookingCalendar('bookingCalendar', { lang: locale, onBookingComplete: () => {} });
+    document.addEventListener('astro:page-load', () => {
+      const host = document.getElementById('bookingCalendar');
+      if (typeof BookingCalendar !== 'undefined' && host) {
+        new BookingCalendar('bookingCalendar', { lang: host.dataset.locale, onBookingComplete: () => {} });
       }
     });
   </script>

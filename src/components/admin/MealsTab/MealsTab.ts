@@ -90,7 +90,6 @@ export class MealsTabController {
   init(): void {
     this.initDOMElements();
     this.setupEventListeners();
-    this.exposeGlobalFunctions();
     this.renderCalendar();
   }
 
@@ -127,14 +126,14 @@ export class MealsTabController {
     this.elements.patientsRefreshBtn?.addEventListener('click', () =>
       this.patientController.loadPatients()
     );
-  }
-
-  /**
-   * Expose functions to window for onclick handlers
-   */
-  private exposeGlobalFunctions(): void {
-    (window as any).showDayMealsModal = (dateKey: string) => this.showDayModal(dateKey);
-    (window as any).closeMealsModal = () => this.closeModal();
+    this.elements.calendarGrid?.addEventListener('click', (event) => {
+      const day = (event.target as Element).closest<HTMLElement>('[data-date]');
+      if (day?.dataset.date) this.showDayModal(day.dataset.date);
+    });
+    // The modal markup exists twice (same ids), so bind every close button
+    document
+      .querySelectorAll('.meals-modal .modal-close')
+      .forEach((btn) => btn.addEventListener('click', () => this.closeModal()));
   }
 
   /**
@@ -296,7 +295,7 @@ export class MealsTabController {
         const carbs = Math.round(dayData.totalCarbs);
 
         cells.push(`
-          <div class="meals-calendar-day has-data" onclick="showDayMealsModal('${dateKey}')">
+          <div class="meals-calendar-day has-data" data-date="${dateKey}">
             <div class="meals-day-number">${day}</div>
             <div class="meals-day-kcal">${kcal} kcal</div>
             <div class="meals-day-macros">

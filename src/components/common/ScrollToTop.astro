@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * Scroll to Top Button
  * Shows when user scrolls down, hides at the top
@@ -72,54 +72,49 @@ const dict = t(locale);
   }
 </style>
 
-<script is:inline>
-  // Scroll to top functionality - inline for compatibility
-  (function () {
+<script>
+  const scrollRoot = document.scrollingElement || document.documentElement;
+  const SCROLL_THRESHOLD = 200;
+  let ticking = false;
+
+  function getScrollTop(): number {
+    return window.pageYOffset || scrollRoot.scrollTop || document.body.scrollTop || 0;
+  }
+
+  // Show/hide button based on scroll position; the button is replaced on navigation, so look it up each time
+  function toggleButton() {
     const scrollBtn = document.getElementById('scroll-to-top');
     if (!scrollBtn) return;
+    scrollBtn.classList.toggle('visible', getScrollTop() > SCROLL_THRESHOLD);
+  }
 
-    const scrollRoot = document.scrollingElement || document.documentElement;
-    const SCROLL_THRESHOLD = 200;
-    let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      toggleButton();
+      ticking = false;
+    });
+  }
 
-    function getScrollTop() {
-      return window.pageYOffset || scrollRoot.scrollTop || document.body.scrollTop || 0;
+  function scrollToTop(e: Event) {
+    e.preventDefault();
+    if (scrollRoot && typeof scrollRoot.scrollTo === 'function') {
+      scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
 
-    // Show/hide button based on scroll position
-    function toggleButton() {
-      if (getScrollTop() > SCROLL_THRESHOLD) {
-        scrollBtn.classList.add('visible');
-      } else {
-        scrollBtn.classList.remove('visible');
-      }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
+
+  document.addEventListener('astro:page-load', () => {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (scrollBtn && scrollBtn.dataset.bound !== 'true') {
+      scrollBtn.dataset.bound = 'true';
+      scrollBtn.addEventListener('click', scrollToTop);
     }
-
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        toggleButton();
-        ticking = false;
-      });
-    }
-
-    // Smooth scroll to top
-    function scrollToTop(e) {
-      e.preventDefault();
-      if (scrollRoot && typeof scrollRoot.scrollTo === 'function') {
-        scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
-    // Event listeners
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true });
-    scrollBtn.addEventListener('click', scrollToTop);
-
-    // Check initial position
     toggleButton();
-  })();
+  });
 </script>

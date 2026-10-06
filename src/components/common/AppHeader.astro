@@ -605,8 +605,8 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   }
 </style>
 
-<script is:inline>
-  // Mobile menu functionality - inline for iOS Safari compatibility
+<script>
+  // Mobile menu functionality
   (function () {
     function initBurgerMenu() {
       const btns = document.querySelectorAll('.mobile-menu-btn');
@@ -695,12 +695,8 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
       });
     }
 
-    // Initialize immediately if DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initBurgerMenu);
-    } else {
-      initBurgerMenu();
-    }
+    // Fires on first load and after every ClientRouter swap
+    document.addEventListener('astro:page-load', initBurgerMenu);
   })();
 
   // Logout: Azure SWA handles session cleanup server-side via /.auth/logout

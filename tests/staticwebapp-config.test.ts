@@ -21,4 +21,9 @@ describe('staticwebapp.config.json', () => {
     const oldCabinetRoute = config.routes.find((r: { route: string }) => r.route === '/cabinet');
     expect(oldCabinetRoute).toBeUndefined();
   });
-});
+
+  it('omits unsafe-inline and third-party hosts from script-src when the CSP header is read', () => {
+    const csp: string = config.globalHeaders['Content-Security-Policy'];
+    const scriptSrc = csp.split(';').find((d) => d.trim().startsWith('script-src'));
+    expect(scriptSrc?.trim()).toBe("script-src 'self'");
+  });});
