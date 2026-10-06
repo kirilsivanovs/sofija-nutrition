@@ -231,12 +231,13 @@ export async function removeVacation(apiBase: string, id: string, onSuccess?: ()
     if (!confirmed) return;
     
     try {
-        await fetch(apiBase + '/dashboard/availability/vacation', {
+        const response = await fetch(apiBase + '/dashboard/availability/vacation', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
         });
-        
+        await requireOk(response);
+
         showToast('Atvaļinājums dzēsts', 'success');
         
         if (onSuccess) onSuccess();
@@ -286,12 +287,13 @@ export async function addBlockedDate(apiBase: string, onSuccess?: () => void): P
  */
 export async function removeBlockedDate(apiBase: string, date: string, onSuccess?: () => void): Promise<void> {
     try {
-        await fetch(apiBase + '/dashboard/availability/block', {
+        const response = await fetch(apiBase + '/dashboard/availability/block', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date })
         });
-        
+        await requireOk(response);
+
         showToast('Bloķēšana noņemta', 'success');
         
         if (onSuccess) onSuccess();

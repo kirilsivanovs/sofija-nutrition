@@ -16,7 +16,11 @@ const fetchMock = jest.fn();
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 function respondWith(body: unknown) {
-  fetchMock.mockImplementation(async () => ({ json: async () => body }));
+  fetchMock.mockImplementation(async () => ({ ok: true, json: async () => body }));
+}
+
+function rejectWith(error: string) {
+  fetchMock.mockImplementation(async () => ({ ok: false, status: 500, json: async () => ({ error }) }));
 }
 
 async function loadAvailability(body: unknown) {
@@ -35,6 +39,7 @@ describe('availability lists', () => {
       <div id="blocked-dates-list"></div>`;
     fetchMock.mockReset();
     (global as any).fetch = fetchMock;
+    (showToast as jest.Mock).mockClear();
   });
 
   it('renders a vacation reason with markup as text when the API returns it raw', async () => {
@@ -85,6 +90,27 @@ describe('availability lists', () => {
     const [url, init] = deleteCall()!;
     expect(url).toBe(`${API}/dashboard/availability/block`);
     expect(JSON.parse(init.body)).toEqual({ date: '2026-02-19' });
+  });
+
+  const expectRejectedRemove = async (listSelector: string, body: unknown) => {
+    await loadAvailability(body);
+    rejectWith('Failed to delete');
+    fetchMock.mockClear();
+    (document.querySelector(`${listSelector} button`) as HTMLElement).click();
+    await flush();
+    expect(showToast).toHaveBeenCalledWith('Failed to delete', 'error');
+    expect(showToast).not.toHaveBeenCalledWith(expect.anything(), 'success');
+    expect(fetchMock.mock.calls.filter(([, init]) => !init?.method)).toHaveLength(0);
+  };
+
+  it('shows the API error instead of success when Remove vacation is rejected', async () => {
+    await expectRejectedRemove('#vacation-list', {
+      vacationPeriods: [{ id: 'v1', startDate: '2026-02-23', endDate: '2026-02-25' }],
+    });
+  });
+
+  it('shows the API error instead of success when Remove blocked date is rejected', async () => {
+    await expectRejectedRemove('#blocked-dates-list', { blockedDates: [{ date: '2026-02-19' }] });
   });
 });
 
@@ -146,6 +172,52 @@ describe('AvailabilityController buttons', () => {
     await click('save-availability');
     expect(showToast).toHaveBeenCalledWith('Failed to update availability', 'error');
     expect(showToast).not.toHaveBeenCalledWith(expect.anything(), 'success');
+  });
+
+  const fillVacation = () => {
+    (document.getElementById('vacation-start') as HTMLInputElement).value = '01/03/2027';
+    (document.getElementById('vacation-end') as HTMLInputElement).value = '05/03/2027';
+  };
+  const fillBlockedDate = () => {
+    (document.getElementById('block-date') as HTMLInputElement).value = '01/03/2027';
+  };
+  const expectRejected = () => {
+    expect(showToast).toHaveBeenCalledWith('Failed to add', 'error');
+    expect(showToast).not.toHaveBeenCalledWith(expect.anything(), 'success');
+  };
+  const rejectAdd = () =>
+    fetchMock.mockImplementation(async () => ({ ok: false, status: 500, json: async () => ({ error: 'Failed to add' }) }));
+  const expectListReload = () =>
+    expect(fetchMock.mock.calls.some(([url, init]) => url === `${API}/dashboard/availability` && !init?.method)).toBe(true);
+
+  it('shows the API error instead of success when Add vacation is rejected', async () => {
+    fillVacation();
+    rejectAdd();
+    await click('add-vacation');
+    expectRejected();
+  });
+
+  it('shows the API error instead of success when Add blocked date is rejected', async () => {
+    fillBlockedDate();
+    rejectAdd();
+    await click('add-blocked-date');
+    expectRejected();
+  });
+
+  it('reloads the lists when a vacation is added', async () => {
+    await flush();
+    fetchMock.mockClear();
+    fillVacation();
+    await click('add-vacation');
+    expectListReload();
+  });
+
+  it('reloads the lists when a blocked date is added', async () => {
+    await flush();
+    fetchMock.mockClear();
+    fillBlockedDate();
+    await click('add-blocked-date');
+    expectListReload();
   });
 });
 
