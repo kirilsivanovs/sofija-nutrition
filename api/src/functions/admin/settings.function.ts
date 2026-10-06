@@ -6,7 +6,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { createTableClient } from '../../services/tableClientFactory';
 import { getLatvianHolidays, getHolidaysInRange } from '../../services/latvianHolidays';
-import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorization, authFailureResponse } from '../../utils/authMiddleware';
 
 const SETTINGS_TABLE = 'adminSettings';
 const PARTITION_KEY = 'config';
@@ -74,7 +74,7 @@ app.http('adminGetAvailability', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -138,7 +138,7 @@ app.http('adminUpdateAvailability', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -177,7 +177,7 @@ app.http('adminAddBlockedDate', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -232,7 +232,7 @@ app.http('adminRemoveBlockedDate', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -281,7 +281,7 @@ app.http('adminGetSettings', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -326,7 +326,7 @@ app.http('adminUpdateSettings', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -399,7 +399,7 @@ app.http('adminAddVacation', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -455,7 +455,7 @@ app.http('adminDeleteVacation', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {

@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { MealsRepository } from '../../services/mealsRepository';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorizationWithLogging, authFailureResponse } from '../../utils/authMiddleware';
 
 /**
  * Admin endpoint to fetch meals for any user by date
@@ -14,7 +14,7 @@ export async function adminGetMeals(
 
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error || 'Unauthorized');
+    return authFailureResponse(auth);
   }
 
   try {
@@ -64,7 +64,7 @@ export async function adminGetMealsRange(
 
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error || 'Unauthorized');
+    return authFailureResponse(auth);
   }
 
   try {

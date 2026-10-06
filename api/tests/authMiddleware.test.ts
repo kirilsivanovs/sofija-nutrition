@@ -5,6 +5,7 @@
 
 import {
   checkAuthorization,
+  authFailureResponse,
   unauthorizedResponse,
   isAdminEmail,
   getAllowedAdminEmails,
@@ -24,6 +25,31 @@ describe('Auth Middleware', () => {
 
   afterAll(() => {
     process.env = originalEnv;
+  });
+
+  describe('authFailureResponse', () => {
+    const requestWith = (principal?: object) => ({
+      headers: {
+        get: (name: string) =>
+          name === 'x-ms-client-principal' && principal
+            ? Buffer.from(JSON.stringify(principal)).toString('base64')
+            : null,
+      },
+    });
+
+    it('returns 403 when the principal is authenticated but not an admin', () => {
+      const auth = checkAuthorization(
+        requestWith({ userId: 'user-456', identityProvider: 'aad', userDetails: NON_ADMIN_EMAIL })
+      );
+
+      expect(authFailureResponse(auth).status).toBe(403);
+    });
+
+    it('returns 401 when the principal is missing', () => {
+      const auth = checkAuthorization(requestWith());
+
+      expect(authFailureResponse(auth).status).toBe(401);
+    });
   });
 
   describe('SWA Built-in Auth (x-ms-client-principal)', () => {

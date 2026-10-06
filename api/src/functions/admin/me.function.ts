@@ -5,7 +5,7 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorization, authFailureResponse } from '../../utils/authMiddleware';
 
 app.http('admin-me', {
   methods: ['GET'],
@@ -15,7 +15,7 @@ app.http('admin-me', {
     const auth = checkAuthorization(request, context);
 
     if (!auth.authorized || !auth.user) {
-      return unauthorizedResponse(auth.error || 'Unauthorized');
+      return authFailureResponse(auth);
     }
 
     return {

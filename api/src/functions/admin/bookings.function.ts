@@ -6,7 +6,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { createTableClient } from '../../services/tableClientFactory';
 import { sweepStaleBookingsDaily } from '../../services/bookingRepository';
-import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorization, authFailureResponse } from '../../utils/authMiddleware';
 import { sendCancellationNotification } from '../../services/emailService';
 import { generateCancellationEmailHTML } from '../../templates/emailTemplates';
 import { getTranslation } from '../../translations';
@@ -63,7 +63,7 @@ app.http('adminGetBookings', {
   handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
     const auth = checkAuthorization(request);
     if (!auth.authorized) {
-      return unauthorizedResponse(auth.error);
+      return authFailureResponse(auth);
     }
     context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 
@@ -133,7 +133,7 @@ app.http('adminUpdateBooking', {
   handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
     const auth = checkAuthorization(request);
     if (!auth.authorized) {
-      return unauthorizedResponse(auth.error);
+      return authFailureResponse(auth);
     }
     context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 
@@ -234,7 +234,7 @@ app.http('adminGetBooking', {
   handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
     const auth = checkAuthorization(request);
     if (!auth.authorized) {
-      return unauthorizedResponse(auth.error);
+      return authFailureResponse(auth);
     }
     context.log(`Auth: ${auth.method} - ${auth.user?.name}`);
 

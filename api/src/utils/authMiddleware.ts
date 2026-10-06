@@ -9,6 +9,8 @@
  * Если ADMIN_EMAILS не задан — админов нет.
  */
 
+import type { HttpResponseInit } from '@azure/functions';
+import { CommonErrors } from './apiResponse';
 import {
   logAuthFailure,
   logAuthSuccess,
@@ -56,6 +58,8 @@ export interface AuthResult {
   user?: AuthUser;
   method?: string;
   error?: string;
+  /** True when the principal is valid but not an admin. */
+  forbidden?: boolean;
 }
 
 export interface HttpRequest {
@@ -123,6 +127,7 @@ export function checkAuthorization(
           return {
             authorized: false,
             error: 'Access denied: not authorized for admin access',
+            forbidden: true,
           };
         }
 
@@ -186,6 +191,15 @@ export function unauthorizedResponse(message = 'Unauthorized'): UnauthorizedResp
   };
 }
 
+/**
+ * 403 for an authenticated non-admin caller, 401 when there is no valid principal
+ */
+export function authFailureResponse(auth: AuthResult): HttpResponseInit {
+  return auth.forbidden
+    ? (CommonErrors.forbidden(auth.error) as HttpResponseInit)
+    : unauthorizedResponse(auth.error);
+}
+
 // ============================================
 // CommonJS exports for backward compatibility
 // ============================================
@@ -194,6 +208,7 @@ module.exports = {
   checkAuthorization,
   checkAuthorizationWithLogging,
   unauthorizedResponse,
+  authFailureResponse,
   isAdminEmail,
   getAllowedAdminEmails,
 };

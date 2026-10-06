@@ -5,7 +5,7 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { createTableClient } from '../../services/tableClientFactory';
-import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorization, authFailureResponse } from '../../utils/authMiddleware';
 
 
 interface TableEntity {
@@ -26,7 +26,7 @@ app.http('adminGetTableData', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {
@@ -120,7 +120,7 @@ app.http('adminDeleteTableEntity', {
     handler: async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
         const auth = checkAuthorization(request);
         if (!auth.authorized) {
-            return unauthorizedResponse(auth.error);
+            return authFailureResponse(auth);
         }
 
         try {

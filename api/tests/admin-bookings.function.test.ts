@@ -8,6 +8,7 @@ jest.mock('@azure/functions', () => ({
 jest.mock('../src/utils/authMiddleware', () => ({
   checkAuthorization: jest.fn().mockReturnValue({ authorized: true, method: 'swa', user: { name: 'admin' } }),
   unauthorizedResponse: jest.fn(),
+  authFailureResponse: jest.fn(),
 }));
 
 jest.mock('@azure/data-tables', () => ({

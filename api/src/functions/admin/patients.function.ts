@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { MealsRepository } from '../../services/mealsRepository';
 import { FoodAccessRepository } from '../../services/foodAccessRepository';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorizationWithLogging, authFailureResponse } from '../../utils/authMiddleware';
 
 /**
  * Admin endpoint to list patients who have meals
@@ -15,7 +15,7 @@ export async function adminListPatients(
 
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error || 'Unauthorized');
+    return authFailureResponse(auth);
   }
 
   try {
@@ -72,7 +72,7 @@ export async function adminDeletePatient(
 
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error || 'Unauthorized');
+    return authFailureResponse(auth);
   }
 
   try {

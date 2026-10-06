@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { FoodAccessRepository } from '../../services/foodAccessRepository';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorizationWithLogging, authFailureResponse } from '../../utils/authMiddleware';
 
 /**
  * Admin endpoint to list or update food access
@@ -13,7 +13,7 @@ export async function adminFoodAccess(
 ): Promise<HttpResponseInit> {
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error || 'Unauthorized');
+    return authFailureResponse(auth);
   }
 
   let repository: FoodAccessRepository;

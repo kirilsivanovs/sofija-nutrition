@@ -16,7 +16,7 @@ import {
 } from '../../services/bookingRepository';
 import { sendPaymentConfirmation, isConfigured } from '../../services/emailService';
 import { confirmPayment, BookingError, BookingErrorCodes } from '../../services/bookingService';
-import { checkAuthorizationWithLogging, unauthorizedResponse } from '../../utils/authMiddleware';
+import { checkAuthorizationWithLogging, authFailureResponse } from '../../utils/authMiddleware';
 import { escapeHtml } from '../../utils/validation';
 import {
   generatePaymentConfirmedEmailHTML,
@@ -96,7 +96,7 @@ async function adminConfirmPaymentHandler(
 ): Promise<HttpResponseInit> {
   const auth = checkAuthorizationWithLogging(request, context);
   if (!auth.authorized) {
-    return unauthorizedResponse(auth.error);
+    return authFailureResponse(auth);
   }
 
   const bookingId = request.params.id;
