@@ -425,6 +425,12 @@ function retentionCutoffDate(now: Date): string {
   return firstOfTargetMonth.toISOString().slice(0, 10);
 }
 
+// 404: row already gone; 412: etag lost to a payment confirmation after listing
+function isRowChangedOrGone(error: unknown): boolean {
+  const statusCode = (error as { statusCode?: number } | undefined)?.statusCode;
+  return statusCode === 404 || statusCode === 412;
+}
+
 /**
  * Delete unpaid pending/cancelled bookings whose appointment date is past retention.
  * Returns the number of deleted rows.
@@ -441,6 +447,8 @@ export async function deleteStaleUnconfirmedBookings(now: Date): Promise<number>
   });
 
   let deleted = 0;
+  let failed = 0;
+  const failedStatusCodes = new Set<number>();
   for await (const entity of entities) {
     const status = (entity.status as string | undefined) ?? 'pending';
     if (!STALE_STATUSES.includes(status as BookingStatus) || entity.paymentConfirmed === true) {
@@ -452,9 +460,23 @@ export async function deleteStaleUnconfirmedBookings(now: Date): Promise<number>
         etag: entity.etag as string | undefined,
       });
       deleted++;
-    } catch {
-      // Row changed or vanished meanwhile; skip it and keep sweeping
+    } catch (error: unknown) {
+      if (isRowChangedOrGone(error)) {
+        continue;
+      }
+      failed++;
+      const statusCode = (error as { statusCode?: unknown } | undefined)?.statusCode;
+      if (typeof statusCode === 'number') {
+        failedStatusCodes.add(statusCode);
+      }
     }
+  }
+  if (failed > 0) {
+    // Count and status codes only: error messages can carry request URLs and row keys
+    logger.warn('Retention sweep could not delete stale bookings', {
+      failed,
+      statusCodes: [...failedStatusCodes],
+    });
   }
   return deleted;
 }

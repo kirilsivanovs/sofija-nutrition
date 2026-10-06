@@ -78,17 +78,52 @@ describe('booking retention sweep', () => {
     expect(deleteEntity).toHaveBeenCalledWith(OLD_DATE, 'SN-A', { etag: 'W/"etag-1"' });
   });
 
-  it('continues with the remaining rows when one delete fails', async () => {
+  it('continues with the remaining rows when one delete loses the etag race', async () => {
     entities = [
       entity(OLD_DATE, 'SN-X', { status: 'pending' }),
       entity(OLD_DATE, 'SN-Y', { status: 'pending' }),
     ];
-    deleteEntity.mockRejectedValueOnce(new Error('412'));
+    deleteEntity.mockRejectedValueOnce(
+      Object.assign(new Error('precondition failed'), { statusCode: 412 })
+    );
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
     const count = await repository.deleteStaleUnconfirmedBookings(NOW);
 
     expect(deleteEntity).toHaveBeenCalledTimes(2);
     expect(count).toBe(1);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('logs the failed-row count and status code when deletes fail with 403', async () => {
+    entities = [
+      entity(OLD_DATE, 'SN-P', { status: 'pending' }),
+      entity(OLD_DATE, 'SN-Q', { status: 'pending' }),
+    ];
+    deleteEntity.mockRejectedValue(
+      Object.assign(new Error('forbidden for patient@example.test'), { statusCode: 403 })
+    );
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    await repository.sweepStaleBookingsDaily(NOW);
+
+    const logged = warn.mock.calls.flat().join('\n');
+    expect(logged).toContain('"failed":2');
+    expect(logged).toContain('403');
+    expect(logged).not.toContain('patient@example.test');
+    expect(logged).not.toContain('Test Patient');
+    expect(logged).not.toContain('SN-');
+  });
+
+  it('logs no warning when a delete fails with 404', async () => {
+    entities = [entity(OLD_DATE, 'SN-R', { status: 'pending' })];
+    deleteEntity.mockRejectedValue(Object.assign(new Error('not found'), { statusCode: 404 }));
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    const count = await repository.deleteStaleUnconfirmedBookings(NOW);
+
+    expect(count).toBe(0);
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it('keeps a booking dated 2026-03-01 when now is 2026-08-31', async () => {
@@ -182,9 +217,8 @@ describe('booking retention sweep', () => {
     await expect(repository.sweepStaleBookingsDaily(NOW)).resolves.toBeUndefined();
   });
 
-  it('does not throw when the table query rejects with undefined', async () => {
+  it('does not throw when the table query throws undefined', async () => {
     listEntities.mockImplementation(() => {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw undefined;
     });
     jest.spyOn(console, 'warn').mockImplementation(() => undefined);
