@@ -1,4 +1,49 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+// Next week's Monday is always 1-7 days ahead (never today) and the seven days share one rendered week.
+// Local date parts match the page's formatDateISO; toISOString() would shift the day in UTC+2/+3.
+function nextWeekIsoDates(): string[] {
+  const today = new Date();
+  const daysUntilNextMonday = 8 - (today.getDay() || 7);
+  return Array.from({ length: 7 }, (_, offset) => {
+    const day = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + daysUntilNextMonday + offset
+    );
+    const month = String(day.getMonth() + 1).padStart(2, '0');
+    const date = String(day.getDate()).padStart(2, '0');
+    return `${day.getFullYear()}-${month}-${date}`;
+  });
+}
+
+const fixtureDays = nextWeekIsoDates();
+
+async function mockAvailability(page: Page, slots: Record<string, string[]>) {
+  await page.route('**/api/availability**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        slots,
+        booked: [],
+        serviceTypes: [
+          {
+            id: 'consultation',
+            duration: 60,
+            name: {
+              lv: 'Uztura konsultācija (60 min)',
+              ru: 'Консультация по питанию (60 мин)',
+              en: 'Nutrition Consultation (60 min)',
+            },
+            allowOnline: true,
+            allowInPerson: true,
+          },
+        ],
+      }),
+    });
+  });
+}
 
 /**
  * E2E Tests for Booking Flow
@@ -35,32 +80,10 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability API to return available slots
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2026-10-05': ['09:00', '10:00', '11:00', '14:00', '15:00'],
-            '2026-10-06': ['09:00', '10:00', '11:00'],
-            '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00', '11:00', '14:00', '15:00'],
+      [fixtureDays[1]]: ['09:00', '10:00', '11:00'],
+      [fixtureDays[2]]: ['09:00', '14:00', '15:00', '16:00'],
     });
 
     // The calendar already fetched real availability on the initial page load;
@@ -81,31 +104,9 @@ test.describe('Booking Flow', () => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2027-06-02': ['09:00', '10:00', '11:00'],
-            '2027-06-03': ['09:00', '14:00', '15:00', '16:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00', '11:00'],
+      [fixtureDays[1]]: ['09:00', '14:00', '15:00', '16:00'],
     });
     // The calendar already fetched real availability on the initial page load;
     // reload so this test's mocked response drives the render deterministically.
@@ -128,32 +129,10 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability API
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2026-10-05': ['09:00', '10:00', '11:00', '14:00'],
-            '2026-10-06': ['09:00', '10:00'],
-            '2026-10-07': ['14:00', '15:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00', '11:00', '14:00'],
+      [fixtureDays[1]]: ['09:00', '10:00'],
+      [fixtureDays[2]]: ['14:00', '15:00'],
     });
 
     // Mock booking API - success response
@@ -192,10 +171,7 @@ test.describe('Booking Flow', () => {
 
     // Step 1: Select a slot (date + time together)
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -238,31 +214,9 @@ test.describe('Booking Flow', () => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2027-06-02': ['09:00', '10:00', '11:00', '14:00'],
-            '2027-06-03': ['09:00', '10:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00', '11:00', '14:00'],
+      [fixtureDays[1]]: ['09:00', '10:00'],
     });
 
     await page.route('**/api/bookings', async (route) => {
@@ -335,29 +289,7 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability API
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: { '2026-10-05': ['09:00', '10:00'] },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
-    });
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00', '10:00'] });
 
     // Mock booking API - 409 conflict (slot taken)
     await page.route('**/api/bookings', async (route) => {
@@ -376,10 +308,7 @@ test.describe('Booking Flow', () => {
 
     // Select a slot
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -416,29 +345,7 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: { '2026-10-05': ['09:00'] },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
-    });
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00'] });
 
     // Mock booking API - 429 rate limited
     await page.route('**/api/bookings', async (route) => {
@@ -454,10 +361,7 @@ test.describe('Booking Flow', () => {
 
     // Select a slot
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -492,29 +396,7 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: { '2026-10-05': ['09:00'] },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
-    });
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00'] });
 
     // Mock booking API - plain 400, not 409/429/5xx
     await page.route('**/api/bookings', async (route) => {
@@ -530,10 +412,7 @@ test.describe('Booking Flow', () => {
 
     // Select a slot
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -575,29 +454,7 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: { '2026-10-05': ['09:00'] },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
-    });
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00'] });
 
     // Mock booking API - abort to simulate a network failure (not a timeout, not offline)
     await page.route('**/api/bookings', async (route) => {
@@ -609,10 +466,7 @@ test.describe('Booking Flow', () => {
 
     // Select a slot
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -654,39 +508,14 @@ test.describe('Booking Flow', () => {
     await expect(bookingSection).toBeVisible();
 
     // Mock availability
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: { '2026-10-05': ['09:00', '10:00'] },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
-    });
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00', '10:00'] });
 
     await page.reload();
     await expect(bookingSection).toBeVisible();
 
     // Select a slot
     const availableSlot = bookingSection.locator('.slot-btn').first();
-    if (!(await availableSlot.isVisible())) {
-      test.skip();
-      return;
-    }
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
     await availableSlot.click();
     await bookingSection.locator('#formatToggleInPerson').click();
 
@@ -731,32 +560,10 @@ test.describe('Booking calendar at 375px', () => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2026-10-05': ['09:00', '10:00', '11:00', '14:00', '15:00'],
-            '2026-10-06': ['09:00', '10:00', '11:00'],
-            '2026-10-07': ['09:00', '14:00', '15:00', '16:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00', '11:00', '14:00', '15:00'],
+      [fixtureDays[1]]: ['09:00', '10:00', '11:00'],
+      [fixtureDays[2]]: ['09:00', '14:00', '15:00', '16:00'],
     });
 
     // The calendar already fetched real availability on the initial page load;
@@ -782,31 +589,9 @@ test.describe('Booking calendar at 375px', () => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
 
-    await page.route('**/api/availability**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          slots: {
-            '2026-10-05': ['09:00', '10:00'],
-            '2026-10-06': ['11:00', '14:00'],
-          },
-          booked: [],
-          serviceTypes: [
-            {
-              id: 'consultation',
-              duration: 60,
-              name: {
-                lv: 'Uztura konsultācija (60 min)',
-                ru: 'Консультация по питанию (60 мин)',
-                en: 'Nutrition Consultation (60 min)',
-              },
-              allowOnline: true,
-              allowInPerson: true,
-            },
-          ],
-        }),
-      });
+    await mockAvailability(page, {
+      [fixtureDays[0]]: ['09:00', '10:00'],
+      [fixtureDays[1]]: ['11:00', '14:00'],
     });
 
     await page.reload();
