@@ -143,13 +143,6 @@ describe('Email Templates Snapshots', () => {
             expect(html).toMatchSnapshot();
         });
         
-        it('should match snapshot for free booking', () => {
-            const confirmUrl = 'https://example.com/api/confirm?id=BK-2026-003&token=abc123';
-            const html = generateAdminEmailHTML(mockFreeBooking, confirmUrl);
-            
-            expect(html).toMatchSnapshot();
-        });
-        
         it('should match snapshot for in-person booking', () => {
             const confirmUrl = 'https://example.com/api/confirm?id=BK-2026-002&token=abc123';
             const html = generateAdminEmailHTML(mockBookingInPerson, confirmUrl);

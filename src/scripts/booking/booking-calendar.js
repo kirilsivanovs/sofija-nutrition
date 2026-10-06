@@ -1462,9 +1462,8 @@ class BookingCalendar {
 
   /**
    * Disables the format the selected service's `allowOnline`/`allowInPerson`
-   * rules out (from the payload's `serviceTypes`, not the stale
-   * `cgm-diagnostic` fallback), and drops a format the current selection no
-   * longer permits.
+   * rules out (from the payload's `serviceTypes`), and drops a format the
+   * current selection no longer permits.
    */
   updateFormatOptions() {
     const service = this.availability?.serviceTypes?.find((s) => s.id === this.selectedService);

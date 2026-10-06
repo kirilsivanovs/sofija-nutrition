@@ -255,6 +255,17 @@ describe('Input Validation', () => {
       const result = sanitizeServiceId('hacking-service');
       expect(result.valid).toBe(false);
     });
+
+    it('accepts followup when it is a bookable service', () => {
+      expect(sanitizeServiceId('followup').valid).toBe(true);
+    });
+
+    it.each(['cgm-diagnostic', 'free-consultation', 'initial', 'package3', 'package5'])(
+      'rejects %s when it is no longer bookable',
+      (id) => {
+        expect(sanitizeServiceId(id).valid).toBe(false);
+      }
+    );
   });
 
   describe('sanitizeFormat', () => {

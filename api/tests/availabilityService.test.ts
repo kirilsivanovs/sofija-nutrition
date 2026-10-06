@@ -75,20 +75,26 @@ describe('AvailabilityService', () => {
   });
 
   describe('getServiceSettings', () => {
-    it('should read allowOnline and allowInPerson off each active service', async () => {
+    it('reads allowOnline and allowInPerson off each active service when the flags are set', async () => {
       const services = await getServiceSettings();
 
-      const freeConsultation = services.find((s) => s.id === 'free-consultation');
-      expect(freeConsultation?.allowOnline).toBe(true);
-      expect(freeConsultation?.allowInPerson).toBe(false);
+      const followup = services.find((s) => s.id === 'followup');
+      expect(followup?.allowOnline).toBe(true);
+      expect(followup?.allowInPerson).toBe(false);
     });
 
-    it('should default a service to both formats allowed when the flags are missing', async () => {
+    it('defaults to both formats when the flags are missing', async () => {
       const services = await getServiceSettings();
 
-      const initial = services.find((s) => s.id === 'initial');
-      expect(initial?.allowOnline).toBe(true);
-      expect(initial?.allowInPerson).toBe(true);
+      const consultation = services.find((s) => s.id === 'consultation');
+      expect(consultation?.allowOnline).toBe(true);
+      expect(consultation?.allowInPerson).toBe(true);
+    });
+
+    it('hides stale service rows when the table still holds removed ids', async () => {
+      const services = await getServiceSettings();
+
+      expect(services.map((s) => s.id).sort()).toEqual(['consultation', 'followup']);
     });
   });
 

@@ -12,6 +12,7 @@ import {
   cache,
   schedule as scheduleConfig,
   defaultServices as DEFAULT_SERVICES,
+  validServiceIds,
 } from '../config';
 import type { DaySchedule, TimeSlot, ServiceInfo, Vacation } from '../types';
 
@@ -112,7 +113,11 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
     const services: ServiceType[] = [];
 
     for await (const entity of tableClient.listEntities()) {
-      if (entity.partitionKey === PARTITION_KEY && entity.isActive !== false) {
+      if (
+        entity.partitionKey === PARTITION_KEY &&
+        entity.isActive !== false &&
+        validServiceIds.includes(entity.serviceId as string)
+      ) {
         services.push({
           id: entity.serviceId as string,
           duration: entity.durationMinutes as number,

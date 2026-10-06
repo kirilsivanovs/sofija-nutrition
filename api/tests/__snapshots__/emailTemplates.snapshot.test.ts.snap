@@ -106,7 +106,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                 </tr>
             </table>
 
-            
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="center" style="padding: 15px 0;">
@@ -117,145 +116,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
-        </td>
-    </tr>
-    <tr>
-        <td style="background-color: #2d5a4a; padding: 15px 20px; text-align: center;">
-            <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 12px;">Sofija Nutrition Booking System</p>
-        </td>
-    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>"
-`;
-
-exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot for free booking 1`] = `
-"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Jauna rezervācija - BK-2026-003</title>
-    <!--[if mso]>
-    <style type="text/css">
-        body, table, td {font-family: Arial, Helvetica, sans-serif;}
-    </style>
-    <![endif]-->
-</head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
-        <tr>
-            <td align="center" style="padding: 20px 10px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-                    
-    <tr>
-        <td style="background: linear-gradient(135deg, #d4a574 0%, #c4956a 100%); padding: 25px 20px; text-align: center;">
-            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600;">🆕 Jauna rezervācija!</h1>
-        </td>
-    </tr>
-    <tr>
-        <td style="padding: 25px 20px;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8f9fa; border-radius: 12px; margin-bottom: 20px;">
-                <tr>
-                    <td style="padding: 20px;">
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Numurs</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #2d5a4a; ">BK-2026-003</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Klients</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Jānis Bērziņš</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">E-pasts</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; word-break: break-all;">janis@example.com</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Telefons</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">+371 20000000</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Pakalpojums</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Bezmaksas iepazīšanās zvans</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Formāts</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #2196F3; ">💻 Tiešsaistē</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Datums</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">2026-02-15</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Laiks</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">10:00</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Summa</p>
-            <p style="margin: 0; font-size: 20px; font-weight: 700; color: #2d5a4a; ">BEZMAKSAS</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Valoda</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">LV</p>
-        </td></tr>
-    </table>
-                        
-    <table role="presentation" width="100%" style=" padding-bottom: 10px; margin-bottom: 10px;">
-        <tr><td>
-            <p style="margin: 0 0 4px 0; color: #888; font-size: 11px; text-transform: uppercase;">Piezīmes</p>
-            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; ">Vēlos konsultēties par veselīgu uzturu.</p>
-        </td></tr>
-    </table>
-                    </td>
-                </tr>
-            </table>
-
-            
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td align="center" style="padding: 15px 0;">
-                        <p style="margin: 0; padding: 12px 20px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;">
-                            ✓ Bezmaksas konsultācija - maksājums nav nepieciešams
-                        </p>
-                    </td>
-                </tr>
-            </table>
-            
         </td>
     </tr>
     <tr>
@@ -383,7 +243,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                 </tr>
             </table>
 
-            
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="center" style="padding: 15px 0;">
@@ -394,7 +253,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
         </td>
     </tr>
     <tr>
@@ -522,7 +380,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                 </tr>
             </table>
 
-            
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="center" style="padding: 15px 0;">
@@ -533,7 +390,6 @@ exports[`Email Templates Snapshots generateAdminEmailHTML should match snapshot 
                     </td>
                 </tr>
             </table>
-            
         </td>
     </tr>
     <tr>

@@ -69,7 +69,7 @@ describe('Email Content Generation', () => {
     });
 
     describe('Service Names in Email', () => {
-        const services = ['initial', 'followup', 'package3', 'package5', 'cgm-diagnostic', 'consultation', 'free-consultation'];
+        const services = ['initial', 'followup', 'package3', 'package5', 'consultation'];
 
         services.forEach(service => {
             test(`Latvian service "${service}" should be defined`, () => {

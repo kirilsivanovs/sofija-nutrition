@@ -29,9 +29,10 @@ export const DAY_NAMES_LATVIAN = [
     'Sestdiena'
 ];
 
+// Legacy ids stay so old bookings keep a readable label.
 export const SERVICE_NAMES: Record<string, string> = {
     'cgm-diagnostic': 'CGM diagnostika',
-    'consultation': 'Uztura konsultācija',
+    'consultation': 'Pirmreizējā konsultācija',
     'initial': 'Pirmreizējā konsultācija',
     'followup': 'Atkārtota konsultācija',
     'package3': '3 konsultāciju pakete',

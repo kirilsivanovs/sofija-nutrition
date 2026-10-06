@@ -162,12 +162,6 @@ describe('Email Templates', () => {
             const html = generateAdminEmailHTML(inPersonBooking, confirmUrl);
             expect(html).toContain('📍');
         });
-
-        it('should not show confirm button for free consultation', () => {
-            const freeBooking = { ...booking, price: 0 };
-            const html = generateAdminEmailHTML(freeBooking, confirmUrl);
-            expect(html).not.toContain('Apstiprināt maksājumu');
-        });
     });
 
     describe('generatePaymentConfirmedEmailHTML', () => {

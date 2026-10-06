@@ -82,7 +82,7 @@ const sharedTranslations = {
       followup: 'Atkārtota konsultācija',
       package3: '3 konsultāciju pakete',
       package5: '5 konsultāciju pakete',
-      consultation: 'Uztura konsultācija',
+      consultation: 'Pirmreizējā konsultācija',
     },
 
     // Email
@@ -227,7 +227,7 @@ const sharedTranslations = {
       followup: 'Follow-up Consultation',
       package3: '3 Consultation Package',
       package5: '5 Consultation Package',
-      consultation: 'Nutrition Consultation',
+      consultation: 'First Consultation',
     },
 
     // Email
@@ -372,7 +372,7 @@ const sharedTranslations = {
       followup: 'Повторная консультация',
       package3: 'Пакет из 3 консультаций',
       package5: 'Пакет из 5 консультаций',
-      consultation: 'Консультация по питанию',
+      consultation: 'Первичная консультация',
     },
 
     // Email

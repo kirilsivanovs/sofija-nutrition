@@ -1,4 +1,5 @@
 import {
+  getServiceName,
   renderCalendar,
   setCalendarData,
   setCurrentDate,
@@ -139,5 +140,19 @@ describe('admin calendar day details', () => {
     const cell = document.querySelector('button.calendar-cell[data-date="2026-02-12"]') as HTMLElement;
     expect(cell.querySelector('img')).toBeNull();
     expect(cell.querySelector('.holiday-name')?.textContent).toBe(MARKUP_NAME);
+  });
+});
+
+describe('getServiceName', () => {
+  it('returns a readable label when the service is a legacy id', () => {
+    for (const id of ['initial', 'package3', 'package5', 'cgm-diagnostic']) {
+      const label = getServiceName(id);
+      expect(label).not.toBe('');
+      expect(label).not.toBe(id);
+    }
+  });
+
+  it('returns the raw id when the service is unknown', () => {
+    expect(getServiceName('mystery-service')).toBe('mystery-service');
   });
 });

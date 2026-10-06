@@ -417,13 +417,8 @@ describe('BookingService - Advanced Scenarios', () => {
     describe('Service Pricing', () => {
         it('should calculate correct price for each service', async () => {
             const services = [
-                { id: 'initial', expectedPrice: 65 },
-                { id: 'followup', expectedPrice: 50 },
-                { id: 'package3', expectedPrice: 180 },
-                { id: 'package5', expectedPrice: 280 },
-                { id: 'cgm-diagnostic', expectedPrice: 140 },
-                { id: 'consultation', expectedPrice: 50 },
-                { id: 'free-consultation', expectedPrice: 0 },
+                { id: 'consultation', expectedPrice: 80 },
+                { id: 'followup', expectedPrice: 45 },
             ];
 
             for (const service of services) {

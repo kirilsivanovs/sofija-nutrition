@@ -222,9 +222,9 @@ export const defaultServices: DefaultService[] = [
     id: 'consultation',
     duration: 60,
     name: {
-      lv: 'Uztura konsultācija (60 min)',
-      ru: 'Консультация по питанию (60 мин)',
-      en: 'Nutrition Consultation (60 min)',
+      lv: 'Pirmreizējā konsultācija (60 min)',
+      ru: 'Первичная консультация (60 мин)',
+      en: 'First Consultation (60 min)',
     },
     allowOnline: true,
     allowInPerson: true,
@@ -233,9 +233,9 @@ export const defaultServices: DefaultService[] = [
     id: 'followup',
     duration: 30,
     name: {
-      lv: 'Atkārtota vizīte (30 min)',
-      ru: 'Повторный визит (30 мин)',
-      en: 'Follow-up (30 min)',
+      lv: 'Atkārtota konsultācija (30 min)',
+      ru: 'Повторная консультация (30 мин)',
+      en: 'Follow-up Consultation (30 min)',
     },
     allowOnline: true,
     allowInPerson: true,
@@ -246,13 +246,8 @@ export const defaultServices: DefaultService[] = [
 // Valid Service IDs
 // ============================================
 
-export const validServiceIds: readonly string[] = [
-  'initial',
-  'followup',
-  'package3',
-  'package5',
-  'consultation',
-] as const;
+// Ids bookable today; stored bookings of older ids keep their stored name.
+export const validServiceIds: readonly string[] = ['consultation', 'followup'] as const;
 
 // ============================================
 // Legacy Exports (CommonJS compatibility)

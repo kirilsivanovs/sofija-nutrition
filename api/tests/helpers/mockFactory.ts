@@ -218,9 +218,7 @@ export const TEST_SERVICES = {
     followup: { id: 'followup', price: 50, duration: 45 },
     package3: { id: 'package3', price: 180, duration: 60 },
     package5: { id: 'package5', price: 280, duration: 60 },
-    cgmDiagnostic: { id: 'cgm-diagnostic', price: 140, duration: 90 },
-    consultation: { id: 'consultation', price: 50, duration: 60 },
-    freeConsultation: { id: 'free-consultation', price: 0, duration: 30 }
+    consultation: { id: 'consultation', price: 50, duration: 60 }
 } as const;
 
 export function createBookingForService(serviceId: keyof typeof TEST_SERVICES, overrides: BookingOverrides = {}) {

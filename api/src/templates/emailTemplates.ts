@@ -285,16 +285,13 @@ export function generateAdminEmailHTML(booking: BookingEmailData, confirmUrl: st
                         ${adminDetailRow('Formāts', `${formatIcon} ${formatLabel}`, { color: formatColor })}
                         ${adminDetailRow('Datums', safeDate)}
                         ${adminDetailRow('Laiks', safeTime)}
-                        ${adminDetailRow('Summa', price > 0 ? '€' + price : 'BEZMAKSAS', { bold: true, color: colors.primary, size: '20px' })}
+                        ${adminDetailRow('Summa', '€' + price, { bold: true, color: colors.primary, size: '20px' })}
                         ${adminDetailRow('Valoda', safeLanguage, { noBorder: !booking.notes })}
                         ${safeNotes ? adminDetailRow('Piezīmes', safeNotes, { noBorder: true }) : ''}
                     </td>
                 </tr>
             </table>
 
-            ${
-              price > 0
-                ? `
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="center" style="padding: 15px 0;">
@@ -305,19 +302,6 @@ export function generateAdminEmailHTML(booking: BookingEmailData, confirmUrl: st
                     </td>
                 </tr>
             </table>
-            `
-                : `
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td align="center" style="padding: 15px 0;">
-                        <p style="margin: 0; padding: 12px 20px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; text-align: center;">
-                            ✓ Bezmaksas konsultācija - maksājums nav nepieciešams
-                        </p>
-                    </td>
-                </tr>
-            </table>
-            `
-            }
         </td>
     </tr>
     <tr>

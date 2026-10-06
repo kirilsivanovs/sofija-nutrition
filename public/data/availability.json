@@ -31,7 +31,7 @@
       "time": "10:00",
       "name": "Demo Booking",
       "email": "demo@example.com",
-      "type": "cgm-diagnostic"
+      "type": "consultation"
     },
     {
       "date": "2026-01-22",
@@ -44,21 +44,25 @@
   "serviceTypes": [
     {
       "id": "consultation",
-      "duration": 45,
+      "duration": 60,
       "name": {
-        "lv": "Konsultācija (45 min)",
-        "ru": "Консультация (45 мин)",
-        "en": "Consultation (45 min)"
-      }
+        "lv": "Pirmreizējā konsultācija (60 min)",
+        "ru": "Первичная консультация (60 мин)",
+        "en": "First Consultation (60 min)"
+      },
+      "allowOnline": true,
+      "allowInPerson": true
     },
     {
-      "id": "follow-up",
+      "id": "followup",
       "duration": 30,
       "name": {
-        "lv": "Atkārtota vizīte (30 min)",
-        "ru": "Повторный визит (30 мин)",
-        "en": "Follow-up (30 min)"
-      }
+        "lv": "Atkārtota konsultācija (30 min)",
+        "ru": "Повторная консультация (30 мин)",
+        "en": "Follow-up Consultation (30 min)"
+      },
+      "allowOnline": true,
+      "allowInPerson": true
     }
   ]
 }

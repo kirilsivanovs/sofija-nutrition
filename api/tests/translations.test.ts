@@ -148,7 +148,7 @@ describe('Translations Module', () => {
     test('English services should have proper names', () => {
       expect(translations.en.services.initial).toBe('Initial Consultation');
       expect(translations.en.services.followup).toBe('Follow-up Consultation');
-      expect(translations.en.services.consultation).toBe('Nutrition Consultation');
+      expect(translations.en.services.consultation).toBe('First Consultation');
     });
 
     test('English format labels should be correct', () => {

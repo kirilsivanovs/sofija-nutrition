@@ -197,12 +197,12 @@ describe('Centralized Configuration', () => {
       expect(config.validServiceIds).toBeDefined();
       expect(Array.isArray(config.validServiceIds)).toBe(true);
       expect(config.validServiceIds).toContain('consultation');
-      expect(config.validServiceIds).toContain('initial');
+      expect(config.validServiceIds).not.toContain('initial');
     });
 
-    it('should match service prices keys', () => {
-      Object.keys(config.servicePrices).forEach((serviceId) => {
-        expect(config.validServiceIds).toContain(serviceId);
+    it('every valid service id has a price', () => {
+      config.validServiceIds.forEach((serviceId) => {
+        expect(config.servicePrices).toHaveProperty(serviceId);
       });
     });
   });
