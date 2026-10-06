@@ -70,4 +70,21 @@ describe('adminUpdateBooking', () => {
     expect(logged.some((line) => line.includes('client@example.test'))).toBe(false);
     expect(logged.some((line) => line.includes('SN-TEST001'))).toBe(true);
   });
+
+  it('returns a generic 500 without the error message when updating a booking fails', async () => {
+    const context = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+    const request = {
+      headers: { get: () => null },
+      params: { id: 'SN-TEST001' },
+      json: async () => {
+        throw new Error('AADSTS7000215: synthetic-tenant-0000');
+      },
+    } as unknown as HttpRequest;
+
+    const response = await findHandler('adminUpdateBooking')(request, context as unknown as InvocationContext);
+
+    expect(response.status).toBe(500);
+    expect(JSON.stringify(response)).not.toContain('AADSTS');
+    expect(context.error).toHaveBeenCalled();
+  });
 });

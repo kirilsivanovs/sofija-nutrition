@@ -106,7 +106,7 @@ app.http('adminGetTableData', {
             context.error('Error fetching table data:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch table data', details: err.message }
+                jsonBody: { error: 'Failed to fetch table data' }
             };
         }
     }
@@ -151,7 +151,7 @@ app.http('adminDeleteTableEntity', {
             context.error('Error deleting entity:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to delete entity', details: err.message }
+                jsonBody: { error: 'Failed to delete entity' }
             };
         }
     }

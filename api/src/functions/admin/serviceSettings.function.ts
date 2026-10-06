@@ -121,7 +121,7 @@ app.http('adminGetServiceSettings', {
       context.error('Error fetching services:', err);
       return {
         status: 500,
-        jsonBody: { error: err.message },
+        jsonBody: { error: 'Failed to fetch services' },
       };
     }
   },
@@ -246,7 +246,7 @@ app.http('adminUpdateServiceSettings', {
       context.error('Error updating service:', err);
       return {
         status: 500,
-        jsonBody: { error: err.message },
+        jsonBody: { error: 'Failed to update service' },
       };
     }
   },
@@ -319,7 +319,7 @@ app.http('adminGetServiceHistory', {
       context.error('Error fetching service history:', err);
       return {
         status: 500,
-        jsonBody: { error: err.message },
+        jsonBody: { error: 'Failed to fetch service history' },
       };
     }
   },
@@ -412,7 +412,7 @@ app.http('adminInitializeServices', {
       context.error('Error initializing services:', err);
       return {
         status: 500,
-        jsonBody: { error: err.message },
+        jsonBody: { error: 'Failed to initialize services' },
       };
     }
   },

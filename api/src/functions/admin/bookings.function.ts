@@ -119,7 +119,7 @@ app.http('adminGetBookings', {
       context.error('Error fetching bookings:', err);
       return {
         status: 500,
-        jsonBody: { error: 'Failed to fetch bookings', details: err.message },
+        jsonBody: { error: 'Failed to fetch bookings' },
       };
     }
   },
@@ -220,7 +220,7 @@ app.http('adminUpdateBooking', {
       context.error('Error updating booking:', err);
       return {
         status: 500,
-        jsonBody: { error: 'Failed to update booking', details: err.message },
+        jsonBody: { error: 'Failed to update booking' },
       };
     }
   },
@@ -267,7 +267,7 @@ app.http('adminGetBooking', {
       context.error('Error fetching booking:', err);
       return {
         status: 500,
-        jsonBody: { error: 'Failed to fetch booking', details: err.message },
+        jsonBody: { error: 'Failed to fetch booking' },
       };
     }
   },

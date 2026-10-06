@@ -37,7 +37,7 @@ async function getAvailabilityHandler(
     return addCorsHeaders(
       {
         status: 500,
-        jsonBody: { error: 'Internal server error', details: err.message },
+        jsonBody: { error: 'Internal server error' },
       },
       request
     );

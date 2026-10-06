@@ -290,6 +290,58 @@ describe('API Endpoints', () => {
       expect(serviceCreateBooking.mock.calls[0][0].notes).toBe('Synthetic comment');
     });
   });
+
+  describe('Unexpected errors', () => {
+    let createBookingHandler;
+    let availabilityHandler;
+
+    beforeAll(() => {
+      jest.resetModules();
+      mockApp.http.mockClear();
+      jest.doMock('../src/services/availabilityService', () => ({
+        getAvailability: jest
+          .fn()
+          .mockRejectedValue(new Error('AADSTS7000215: synthetic-tenant-0000')),
+      }));
+      require('../src/functions/booking/createBooking.function');
+      require('../src/functions/booking/getAvailability.function');
+      const handlerOf = (name) =>
+        mockApp.http.mock.calls.find((call) => call[0] === name)[1].handler;
+      createBookingHandler = handlerOf('createBooking');
+      availabilityHandler = handlerOf('getAvailability');
+    });
+
+    afterAll(() => {
+      jest.dontMock('../src/services/availabilityService');
+    });
+
+    it('returns a generic 500 without the error message when createBooking fails unexpectedly', async () => {
+      const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+      const mockRequest = {
+        json: jest.fn().mockRejectedValue(new Error('AADSTS7000215: synthetic-tenant-0000')),
+        headers: {
+          get: jest.fn((name) => (name === 'x-forwarded-for' ? '127.0.0.9' : null)),
+        },
+      };
+
+      const response = await createBookingHandler(mockRequest, mockContext);
+
+      expect(response.status).toBe(500);
+      expect(JSON.stringify(response.jsonBody)).not.toContain('AADSTS');
+      expect(mockContext.error).toHaveBeenCalled();
+    });
+
+    it('returns a generic 500 without the error message when getAvailability fails unexpectedly', async () => {
+      const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+      const mockRequest = { params: {}, headers: { get: () => null } };
+
+      const response = await availabilityHandler(mockRequest, mockContext);
+
+      expect(response.status).toBe(500);
+      expect(JSON.stringify(response.jsonBody)).not.toContain('AADSTS');
+      expect(mockContext.error).toHaveBeenCalled();
+    });
+  });
 });
 
 describe('Booking Flow Simulation', () => {

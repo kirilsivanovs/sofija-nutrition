@@ -124,7 +124,7 @@ app.http('adminGetAvailability', {
             context.error('Error fetching availability:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch availability', details: err.message }
+                jsonBody: { error: 'Failed to fetch availability' }
             };
         }
     }
@@ -163,7 +163,7 @@ app.http('adminUpdateAvailability', {
             context.error('Error updating availability:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to update availability', details: err.message }
+                jsonBody: { error: 'Failed to update availability' }
             };
         }
     }
@@ -218,7 +218,7 @@ app.http('adminAddBlockedDate', {
             context.error('Error adding blocked date:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to add blocked date', details: err.message }
+                jsonBody: { error: 'Failed to add blocked date' }
             };
         }
     }
@@ -267,7 +267,7 @@ app.http('adminRemoveBlockedDate', {
             context.error('Error removing blocked date:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to remove blocked date', details: err.message }
+                jsonBody: { error: 'Failed to remove blocked date' }
             };
         }
     }
@@ -312,7 +312,7 @@ app.http('adminGetSettings', {
             context.error('Error fetching settings:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch settings', details: err.message }
+                jsonBody: { error: 'Failed to fetch settings' }
             };
         }
     }
@@ -351,7 +351,7 @@ app.http('adminUpdateSettings', {
             context.error('Error updating settings:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to update settings', details: err.message }
+                jsonBody: { error: 'Failed to update settings' }
             };
         }
     }
@@ -385,7 +385,7 @@ app.http('getHolidays', {
             context.error('Error fetching holidays:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to fetch holidays', details: err.message }
+                jsonBody: { error: 'Failed to fetch holidays' }
             };
         }
     }
@@ -441,7 +441,7 @@ app.http('adminAddVacation', {
             context.error('Error adding vacation:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to add vacation', details: err.message }
+                jsonBody: { error: 'Failed to add vacation' }
             };
         }
     }
@@ -490,7 +490,7 @@ app.http('adminDeleteVacation', {
             context.error('Error deleting vacation:', err);
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to delete vacation', details: err.message }
+                jsonBody: { error: 'Failed to delete vacation' }
             };
         }
     }

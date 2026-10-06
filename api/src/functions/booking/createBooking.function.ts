@@ -75,7 +75,6 @@ async function createBookingHandler(
       status: 500,
       jsonBody: {
         error: 'Failed to process booking',
-        details: err.message,
       },
     };
   }
