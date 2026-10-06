@@ -44,6 +44,14 @@ function findHandler(name: string): Handler {
 }
 
 describe('adminUpdateBooking', () => {
+  beforeEach(() => {
+    process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
+  });
+
+  afterEach(() => {
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+  });
+
   it('omits the client email from the log when an admin cancels a booking', async () => {
     const context = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
     const request = {

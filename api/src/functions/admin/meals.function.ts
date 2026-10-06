@@ -28,7 +28,7 @@ export async function adminGetMeals(
       };
     }
 
-    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const repository = new MealsRepository();
 
     const meals = await repository.getMealsByDate(userId, date);
 
@@ -79,7 +79,7 @@ export async function adminGetMealsRange(
       };
     }
 
-    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const repository = new MealsRepository();
 
     // Get meals for each day in range
     const start = new Date(startDate);

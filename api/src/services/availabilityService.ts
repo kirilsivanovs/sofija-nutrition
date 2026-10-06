@@ -4,10 +4,9 @@
  * Handles schedule settings, blocked dates, vacation periods, and slot availability calculations.
  */
 
-import { TableClient } from '@azure/data-tables';
+import { createTableClient } from './tableClientFactory';
 import { isLatvianHoliday } from './latvianHolidays';
 import {
-  env,
   tables,
   cache,
   schedule as scheduleConfig,
@@ -66,7 +65,6 @@ export interface VacationPeriod {
 // Constants
 // ============================================
 
-const connectionString = env.azureStorageConnectionString;
 const BOOKINGS_TABLE = tables.bookings;
 const SETTINGS_TABLE = tables.settings;
 const SERVICES_TABLE = tables.services;
@@ -109,7 +107,7 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
   }
 
   try {
-    const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
+    const tableClient = createTableClient(SERVICES_TABLE);
     const services: ServiceType[] = [];
 
     for await (const entity of tableClient.listEntities()) {
@@ -170,7 +168,7 @@ export function generateSlotsFromSchedule(schedule: DaySchedule, dayName: string
  */
 export async function getScheduleSettings(): Promise<DaySchedule> {
   try {
-    const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+    const tableClient = createTableClient(SETTINGS_TABLE);
     const entity = await tableClient.getEntity('config', 'schedule');
     return JSON.parse(entity.value as string);
   } catch {
@@ -183,7 +181,7 @@ export async function getScheduleSettings(): Promise<DaySchedule> {
  */
 export async function getBlockedDates(): Promise<BlockedDate[]> {
   try {
-    const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+    const tableClient = createTableClient(SETTINGS_TABLE);
     const entity = await tableClient.getEntity('config', 'blockedDates');
     return JSON.parse(entity.value as string);
   } catch {
@@ -196,7 +194,7 @@ export async function getBlockedDates(): Promise<BlockedDate[]> {
  */
 export async function getVacationPeriods(): Promise<VacationPeriod[]> {
   try {
-    const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+    const tableClient = createTableClient(SETTINGS_TABLE);
     const entity = await tableClient.getEntity('config', 'vacationPeriods');
     return JSON.parse(entity.value as string);
   } catch {
@@ -225,7 +223,7 @@ export async function getBookedSlots(
   const bookedSlots: Record<string, string[]> = {};
 
   try {
-    const tableClient = TableClient.fromConnectionString(connectionString, BOOKINGS_TABLE);
+    const tableClient = createTableClient(BOOKINGS_TABLE);
 
     for await (const entity of tableClient.listEntities()) {
       // Skip cancelled bookings

@@ -4,10 +4,9 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { TableClient } from '@azure/data-tables';
+import { createTableClient } from '../../services/tableClientFactory';
 import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 
 interface TableEntity {
     partitionKey: string;
@@ -42,7 +41,7 @@ app.http('adminGetTableData', {
                 };
             }
 
-            const tableClient = TableClient.fromConnectionString(connectionString, tableName!);
+            const tableClient = createTableClient(tableName!);
 
             const entities: CleanEntity[] = [];
             
@@ -136,7 +135,7 @@ app.http('adminDeleteTableEntity', {
                 };
             }
 
-            const tableClient = TableClient.fromConnectionString(connectionString, tableName!);
+            const tableClient = createTableClient(tableName!);
 
             await tableClient.deleteEntity(
                 decodeURIComponent(partitionKey || ''), 

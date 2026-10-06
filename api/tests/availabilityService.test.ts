@@ -75,6 +75,14 @@ describe('AvailabilityService', () => {
   });
 
   describe('getServiceSettings', () => {
+    beforeEach(() => {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
+    });
+
+    afterEach(() => {
+      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+    });
+
     it('reads allowOnline and allowInPerson off each active service when the flags are set', async () => {
       const services = await getServiceSettings();
 

@@ -29,7 +29,6 @@ export const env: EnvConfig = {
   isProduction: process.env.NODE_ENV === 'production',
   isDevelopment: process.env.NODE_ENV === 'development',
   isTest: process.env.NODE_ENV === 'test',
-  azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING || '',
   resendApiKey: process.env.RESEND_API_KEY || '',
   apiBaseUrl: process.env.API_BASE_URL || '',
 };

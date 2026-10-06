@@ -22,10 +22,8 @@ export async function adminListPatients(
     const limitParam = request.query.get('limit');
     const limit = limitParam ? Math.min(Math.max(Number(limitParam) || 200, 1), 1000) : 200;
 
-    const mealsRepository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
-    const accessRepository = new FoodAccessRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const mealsRepository = new MealsRepository();
+    const accessRepository = new FoodAccessRepository();
 
     const patients = await mealsRepository.listPatientSummaries(limit);
     const accessRecords = await accessRepository.listAccess();
@@ -86,7 +84,7 @@ export async function adminDeletePatient(
       };
     }
 
-    const repository = new MealsRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    const repository = new MealsRepository();
 
     const deletedCount = await repository.deleteAllUserMeals(userId);
 

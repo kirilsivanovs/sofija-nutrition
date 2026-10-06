@@ -40,8 +40,13 @@ describe('MealsRepository', () => {
   let repository: MealsRepository;
 
   beforeEach(() => {
+    process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
     clearMockTables();
-    repository = new MealsRepository('DefaultEndpointsProtocol=https;AccountName=test');
+    repository = new MealsRepository();
+  });
+
+  afterEach(() => {
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
   });
 
   describe('saveMeal', () => {
@@ -223,13 +228,15 @@ describe('MealsRepository OData filters', () => {
   let listEntitiesSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
     clearMockTables();
-    repository = new MealsRepository('DefaultEndpointsProtocol=https;AccountName=test');
+    repository = new MealsRepository();
     listEntitiesSpy = jest.spyOn(TableClient.prototype, 'listEntities');
   });
 
   afterEach(() => {
     listEntitiesSpy.mockRestore();
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
   });
 
   describe('getMealsByDate', () => {

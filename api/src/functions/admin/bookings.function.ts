@@ -4,14 +4,13 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { TableClient } from '@azure/data-tables';
+import { createTableClient } from '../../services/tableClientFactory';
 import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
 import { sendCancellationNotification } from '../../services/emailService';
 import { generateCancellationEmailHTML } from '../../templates/emailTemplates';
 import { getTranslation } from '../../translations';
 import { buildStatusFilter } from '../../utils/odataSanitizer';
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 
 interface BookingEntity {
   partitionKey: string;
@@ -71,7 +70,7 @@ app.http('adminGetBookings', {
       const url = new URL(request.url);
       const statusFilter = url.searchParams.get('status') || 'all';
 
-      const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
+      const tableClient = createTableClient('bookings');
 
       const bookings: BookingResponse[] = [];
 
@@ -139,7 +138,7 @@ app.http('adminUpdateBooking', {
       const bookingId = request.params.id;
       const body = (await request.json()) as UpdateBookingBody;
 
-      const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
+      const tableClient = createTableClient('bookings');
 
       // Find the booking by iterating
       let existingBooking: BookingEntity | null = null;
@@ -239,7 +238,7 @@ app.http('adminGetBooking', {
     try {
       const bookingId = request.params.id;
 
-      const tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
+      const tableClient = createTableClient('bookings');
 
       let booking: BookingEntity | null = null;
       for await (const entity of tableClient.listEntities<BookingEntity>()) {

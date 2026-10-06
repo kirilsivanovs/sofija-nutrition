@@ -53,7 +53,7 @@ function createFakeContext(): InvocationContext {
 const principalA = { userId: PATIENT_A, identityProvider: 'aad', userDetails: 'patient-a@example.test' };
 
 async function enableAccess(userId: string) {
-  const repository = new FoodAccessRepository('DefaultEndpointsProtocol=https;AccountName=test');
+  const repository = new FoodAccessRepository();
   await repository.setAccess(userId, true, {});
 }
 
@@ -109,7 +109,7 @@ describe('meals function authorization', () => {
   });
 
   it('returns 403 when food access is disabled', async () => {
-    const repository = new FoodAccessRepository('DefaultEndpointsProtocol=https;AccountName=test');
+    const repository = new FoodAccessRepository();
     await repository.setAccess(PATIENT_A, false, {});
 
     const response = await getMeals(

@@ -180,7 +180,6 @@ export interface AppConfig {
 
 export interface EnvConfig {
   nodeEnv: string;
-  azureStorageConnectionString: string;
   resendApiKey: string;
   apiBaseUrl: string;
   isProduction: boolean;

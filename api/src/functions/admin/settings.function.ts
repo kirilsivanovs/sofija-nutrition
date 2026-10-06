@@ -4,11 +4,10 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { TableClient } from '@azure/data-tables';
+import { createTableClient } from '../../services/tableClientFactory';
 import { getLatvianHolidays, getHolidaysInRange } from '../../services/latvianHolidays';
 import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 const SETTINGS_TABLE = 'adminSettings';
 const PARTITION_KEY = 'config';
 
@@ -57,7 +56,7 @@ interface SiteSettings {
 // Helper to ensure table exists
 async function ensureTable(tableName: string): Promise<void> {
     try {
-        const tableClient = TableClient.fromConnectionString(connectionString, tableName);
+        const tableClient = createTableClient(tableName);
         await tableClient.createTable();
     } catch (error) {
         const err = error as { statusCode?: number };
@@ -81,7 +80,7 @@ app.http('adminGetAvailability', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let schedule: WeekSchedule;
             let blockedDates: BlockedDate[] = [];
@@ -146,7 +145,7 @@ app.http('adminUpdateAvailability', {
             await ensureTable(SETTINGS_TABLE);
             
             const body = await request.json() as { schedule: WeekSchedule };
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             await tableClient.upsertEntity({
                 partitionKey: PARTITION_KEY,
@@ -185,7 +184,7 @@ app.http('adminAddBlockedDate', {
             await ensureTable(SETTINGS_TABLE);
             
             const body = await request.json() as BlockedDate;
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let blockedDates: BlockedDate[] = [];
             try {
@@ -240,7 +239,7 @@ app.http('adminRemoveBlockedDate', {
             await ensureTable(SETTINGS_TABLE);
             
             const body = await request.json() as { date: string };
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let blockedDates: BlockedDate[] = [];
             try {
@@ -288,7 +287,7 @@ app.http('adminGetSettings', {
         try {
             await ensureTable(SETTINGS_TABLE);
             
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let settings: SiteSettings = {
                 prices: { initial: 65, followup: 45 },
@@ -334,7 +333,7 @@ app.http('adminUpdateSettings', {
             await ensureTable(SETTINGS_TABLE);
             
             const settings = await request.json() as SiteSettings;
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             await tableClient.upsertEntity({
                 partitionKey: PARTITION_KEY,
@@ -407,7 +406,7 @@ app.http('adminAddVacation', {
             await ensureTable(SETTINGS_TABLE);
             
             const body = await request.json() as { startDate: string; endDate: string; reason?: string };
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let vacationPeriods: VacationPeriod[] = [];
             try {
@@ -463,7 +462,7 @@ app.http('adminDeleteVacation', {
             await ensureTable(SETTINGS_TABLE);
             
             const body = await request.json() as { id: string };
-            const tableClient = TableClient.fromConnectionString(connectionString, SETTINGS_TABLE);
+            const tableClient = createTableClient(SETTINGS_TABLE);
 
             let vacationPeriods: VacationPeriod[] = [];
             try {

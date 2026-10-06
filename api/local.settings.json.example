@@ -3,7 +3,11 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": "",
-    "AZURE_STORAGE_CONNECTION_STRING": "<your-azure-storage-connection-string>",
+    "AZURE_STORAGE_CONNECTION_STRING": "<local Azurite only>",
+    "STORAGE_TABLE_ENDPOINT": "<https://account.table.core.windows.net>",
+    "STORAGE_TENANT_ID": "<entra-tenant-id>",
+    "STORAGE_CLIENT_ID": "<entra-app-client-id>",
+    "STORAGE_CLIENT_SECRET": "<entra-app-client-secret>",
     "RESEND_API_KEY": "<your-resend-api-key>",
     "BUSINESS_EMAIL": "your-email@example.com",
     "BUSINESS_NAME": "Your Business Name",

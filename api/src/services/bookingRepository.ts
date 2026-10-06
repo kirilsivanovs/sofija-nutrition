@@ -6,13 +6,14 @@
 import { TableClient } from '@azure/data-tables';
 import { createHmac, timingSafeEqual } from 'crypto';
 import type { Booking, BookingStatus } from '../types';
-import { env, tables, booking as bookingConfig } from '../config';
+import { tables, booking as bookingConfig } from '../config';
 import {
   sanitizeODataValue,
   validateDateFormat,
   validateTimeFormat,
 } from '../utils/odataSanitizer';
 import { createLogger } from '../utils/logger';
+import { createTableClient, isTableStorageConfigured } from './tableClientFactory';
 
 const logger = createLogger('BookingRepository');
 
@@ -39,7 +40,6 @@ export interface SaveBookingResult {
 // State
 // ============================================
 
-const connectionString = env.azureStorageConnectionString;
 let tableClient: TableClient | null = null;
 let lockTableClient: TableClient | null = null;
 const inMemoryBookings = new Map<string, Booking>();
@@ -48,7 +48,7 @@ const inMemoryLocks = new Map<string, SlotLock>();
 // Lock configuration from centralized config
 const LOCK_TTL_MS = bookingConfig.lockTtlMs;
 
-logger.info('Initialized', { azureStorage: !!connectionString });
+logger.info('Initialized', { azureStorage: isTableStorageConfigured() });
 
 // ============================================
 // Table Client Management
@@ -58,8 +58,8 @@ logger.info('Initialized', { azureStorage: !!connectionString });
  * Get or create the Azure Table client for bookings
  */
 async function getTableClient(): Promise<TableClient | null> {
-  if (!tableClient && connectionString) {
-    tableClient = TableClient.fromConnectionString(connectionString, 'bookings');
+  if (!tableClient && isTableStorageConfigured()) {
+    tableClient = createTableClient('bookings');
     try {
       await tableClient.createTable();
     } catch (error: unknown) {
@@ -77,8 +77,8 @@ async function getTableClient(): Promise<TableClient | null> {
  * Get or create the Azure Table client for slot locks
  */
 async function getLockTableClient(): Promise<TableClient | null> {
-  if (!lockTableClient && connectionString) {
-    lockTableClient = TableClient.fromConnectionString(connectionString, 'slotlocks');
+  if (!lockTableClient && isTableStorageConfigured()) {
+    lockTableClient = createTableClient('slotlocks');
     try {
       await lockTableClient.createTable();
     } catch (error: unknown) {
@@ -361,7 +361,7 @@ export function verifyPaymentToken(
  * Check if using Azure Table Storage or in-memory
  */
 export function isUsingAzureStorage(): boolean {
-  return !!connectionString;
+  return isTableStorageConfigured();
 }
 
 /**

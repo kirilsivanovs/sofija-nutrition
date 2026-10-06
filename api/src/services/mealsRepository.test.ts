@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { MealsRepository } from './mealsRepository';
 import type { Meal } from '../types/food';
 
@@ -20,7 +20,12 @@ describe('MealsRepository', () => {
   const mockConnectionString = 'DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test';
 
   beforeEach(() => {
-    repository = new MealsRepository(mockConnectionString);
+    process.env.AZURE_STORAGE_CONNECTION_STRING = mockConnectionString;
+    repository = new MealsRepository();
+  });
+
+  afterEach(() => {
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
   });
 
   const mockMeal: Meal = {

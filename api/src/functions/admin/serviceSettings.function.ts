@@ -4,11 +4,10 @@
  */
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { TableClient } from '@azure/data-tables';
+import { createTableClient } from '../../services/tableClientFactory';
 import { checkAuthorization, unauthorizedResponse } from '../../utils/authMiddleware';
 import { sanitizeODataValue } from '../../utils/odataSanitizer';
 
-const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || '';
 const SERVICES_TABLE = 'Services';
 const PARTITION_KEY = 'SERVICE';
 
@@ -87,7 +86,7 @@ app.http('adminGetServiceSettings', {
     }
 
     try {
-      const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
+      const tableClient = createTableClient(SERVICES_TABLE);
       const services: ServiceResponse[] = [];
 
       for await (const entity of tableClient.listEntities<ServiceEntity>()) {
@@ -179,7 +178,7 @@ app.http('adminUpdateServiceSettings', {
         };
       }
 
-      const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
+      const tableClient = createTableClient(SERVICES_TABLE);
 
       let existingEntity: ServiceEntity | null = null;
       try {
@@ -212,9 +211,7 @@ app.http('adminUpdateServiceSettings', {
 
       // Save to history if updating
       if (existingEntity) {
-        const historyTableClient = TableClient.fromConnectionString(
-          connectionString,
-          'ServicesHistory'
+        const historyTableClient = createTableClient('ServicesHistory'
         );
         const historyEntry = {
           ...entity,
@@ -277,9 +274,7 @@ app.http('adminGetServiceHistory', {
         };
       }
 
-      const historyTableClient = TableClient.fromConnectionString(
-        connectionString,
-        'ServicesHistory'
+      const historyTableClient = createTableClient('ServicesHistory'
       );
       const history: ServiceHistoryEntry[] = [];
 
@@ -342,7 +337,7 @@ app.http('adminInitializeServices', {
     }
 
     try {
-      const tableClient = TableClient.fromConnectionString(connectionString, SERVICES_TABLE);
+      const tableClient = createTableClient(SERVICES_TABLE);
 
       const now = new Date().toISOString();
 

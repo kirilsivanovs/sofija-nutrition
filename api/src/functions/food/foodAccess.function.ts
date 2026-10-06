@@ -19,7 +19,7 @@ export async function getFoodAccess(
   let repository: FoodAccessRepository;
 
   try {
-    repository = new FoodAccessRepository(process.env.AZURE_STORAGE_CONNECTION_STRING || '');
+    repository = new FoodAccessRepository();
   } catch (error) {
     context.error('Food access repository init failed:', error);
     return { status: 500, jsonBody: { error: 'Storage is not configured' } };

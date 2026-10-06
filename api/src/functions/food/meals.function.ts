@@ -42,9 +42,7 @@ async function authorizeDiaryPatient(
     return { status: 403, jsonBody: { error: 'Forbidden' } };
   }
 
-  const accessRepository = new FoodAccessRepository(
-    process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-  );
+  const accessRepository = new FoodAccessRepository();
   const access = await accessRepository.getAccess(principal.userId);
   if (!access || !access.enabled) {
     return { status: 403, jsonBody: { error: 'Forbidden' } };
@@ -85,9 +83,7 @@ export async function getMeals(
       return { status: 400, jsonBody: { error: 'Invalid date' } };
     }
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository();
 
     const meals = await repository.getMealsByDate(authz.userId, date);
 
@@ -143,9 +139,7 @@ export async function createMeal(
     meal.PartitionKey = `${authz.userId}_${date}`;
     meal.RowKey = Date.now().toString();
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository();
 
     const savedMeal = await repository.saveMeal(meal);
 
@@ -186,9 +180,7 @@ export async function updateMeal(
       };
     }
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository();
 
     const existingMeal = await repository.getMealById(authz.userId, date, mealId);
     if (!existingMeal) {
@@ -244,9 +236,7 @@ export async function deleteMeal(
       };
     }
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository();
 
     const existingMeal = await repository.getMealById(authz.userId, date, mealId);
     if (!existingMeal) {
@@ -288,9 +278,7 @@ export async function getDailyStats(
       return { status: 400, jsonBody: { error: 'Invalid date' } };
     }
 
-    const repository = new MealsRepository(
-      process.env.AZURE_STORAGE_CONNECTION_STRING || ''
-    );
+    const repository = new MealsRepository();
 
     const stats = await repository.getDailyStats(authz.userId, date);
 

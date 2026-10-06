@@ -1,4 +1,5 @@
 import { TableClient } from '@azure/data-tables';
+import { createTableClient } from './tableClientFactory';
 
 export interface FoodAccessRecord {
   userId: string;
@@ -14,11 +15,8 @@ export class FoodAccessRepository {
   private tableClient: TableClient;
   private tableReady: Promise<void> | null = null;
 
-  constructor(connectionString: string, tableName = 'FoodAccess') {
-    if (!connectionString) {
-      throw new Error('AZURE_STORAGE_CONNECTION_STRING is not set');
-    }
-    this.tableClient = TableClient.fromConnectionString(connectionString, tableName);
+  constructor(tableName = 'FoodAccess') {
+    this.tableClient = createTableClient(tableName);
   }
 
   private async ensureTable(): Promise<void> {

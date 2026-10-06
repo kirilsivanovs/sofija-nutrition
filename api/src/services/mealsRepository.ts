@@ -3,6 +3,7 @@
  * Following Single Responsibility and Dependency Inversion principles
  */
 import { TableClient } from '@azure/data-tables';
+import { createTableClient } from './tableClientFactory';
 import type { Meal, DailyStats } from '../types/food.js';
 import { buildPartitionKeyFilter, sanitizeODataValue } from '../utils/odataSanitizer';
 
@@ -26,8 +27,8 @@ export interface AdminPatientSummary {
 export class MealsRepository implements IMealsRepository {
   private tableClient: TableClient;
 
-  constructor(connectionString: string, tableName = 'Meals') {
-    this.tableClient = TableClient.fromConnectionString(connectionString, tableName);
+  constructor(tableName = 'Meals') {
+    this.tableClient = createTableClient(tableName);
   }
 
   private toEntity(meal: Meal) {
