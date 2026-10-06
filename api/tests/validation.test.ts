@@ -13,7 +13,6 @@ import {
   sanitizeNotes,
   sanitizeServiceId,
   sanitizeFormat,
-  sanitizePersonalCode,
   validateBookingInput,
   validationErrorResponse,
 } from '../src/utils/validation';
@@ -162,43 +161,6 @@ describe('Input Validation', () => {
     });
   });
 
-  describe('sanitizePersonalCode', () => {
-    test('should accept empty personal code (optional field)', () => {
-      const result = sanitizePersonalCode('');
-      expect(result.valid).toBe(true);
-      expect(result.value).toBe('');
-    });
-
-    test('should accept undefined personal code', () => {
-      const result = sanitizePersonalCode(undefined);
-      expect(result.valid).toBe(true);
-      expect(result.value).toBe('');
-    });
-
-    test('should accept and normalize valid old-format code with hyphen', () => {
-      const result = sanitizePersonalCode('010180-12345');
-      expect(result.valid).toBe(true);
-      expect(result.value).toBe('010180-12345');
-    });
-
-    test('should normalize 11 digits without hyphen', () => {
-      const result = sanitizePersonalCode('01018012345');
-      expect(result.valid).toBe(true);
-      expect(result.value).toBe('010180-12345');
-    });
-
-    test('should accept new-format code starting with 32', () => {
-      const result = sanitizePersonalCode('321234-56789');
-      expect(result.valid).toBe(true);
-      expect(result.value).toBe('321234-56789');
-    });
-
-    test('should reject code with wrong number of digits', () => {
-      const result = sanitizePersonalCode('12345');
-      expect(result.valid).toBe(false);
-    });
-  });
-
   describe('sanitizeDate', () => {
     test('should accept valid future date', () => {
       const futureDate = new Date();
@@ -304,6 +266,21 @@ describe('Input Validation', () => {
       consultationFormat: 'online',
       language: 'lv',
     };
+
+    test('should ignore personalCode when the request body carries a valid one', () => {
+      const body = { ...validBooking, personalCode: '010180-12345' };
+      const result = validateBookingInput(body);
+      expect(result.valid).toBe(true);
+      expect('personalCode' in result.data).toBe(false);
+    });
+
+    test('should ignore personalCode when the request body carries a malformed one', () => {
+      const body = { ...validBooking, personalCode: '12345' };
+      const result = validateBookingInput(body);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toBeUndefined();
+      expect('personalCode' in result.data).toBe(false);
+    });
 
     test('should validate complete booking', () => {
       const result = validateBookingInput(validBooking);

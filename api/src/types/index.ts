@@ -21,7 +21,6 @@ export interface Booking {
   format: 'online' | 'in-person';
   consultationFormat?: 'online' | 'in-person'; // alias for format
   notes?: string;
-  personalCode?: string; // Latvian personas kods (optional, for VID expense claims)
   privacyConsentAt?: string; // ISO timestamp when the client accepted the privacy policy
   status: BookingStatus;
   confirmationCode: string;

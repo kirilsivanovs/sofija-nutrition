@@ -52,8 +52,6 @@ function buildUITranslations(lang) {
     nameLabel: t.form.nameLabel,
     emailLabel: t.form.emailLabel,
     phoneLabel: t.form.phoneLabel,
-    personalCodeLabel: t.form.personalCodeLabel,
-    personalCodeHint: t.form.personalCodeHint,
     messageLabel: t.form.messageLabel,
     consentText: t.form.consentText,
     submitBtn: t.form.submitBtn,
@@ -108,8 +106,6 @@ const fallbackTranslations = {
     nameLabel: 'Jūsu vārds',
     emailLabel: 'E-\u2060pasts',
     phoneLabel: 'Telefons',
-    personalCodeLabel: 'Personas kods (neobligāts)',
-    personalCodeHint: 'Norādiet, ja vēlaties iesniegt čeku VID attaisnoto izdevumu atgūšanai.',
     messageLabel: 'Komentārs (neobligāts)',
     consentText:
       'Es piekrītu, ka mani personas dati tiek apstrādāti saskaņā ar <a href="/privacy-policy/" target="_blank" rel="noopener">privātuma politiku</a> un <a href="/terms/" target="_blank" rel="noopener">pakalpojumu noteikumiem</a>.',
@@ -133,7 +129,6 @@ const fallbackTranslations = {
       emailRequired: 'Lūdzu, ievadiet e-\u2060pasta adresi',
       emailInvalid: 'Lūdzu, ievadiet derīgu e-\u2060pasta adresi',
       phoneInvalid: 'Lūdzu, ievadiet 8 ciparu telefona numuru',
-      personalCodeInvalid: 'Lūdzu, ievadiet derīgu personas kodu (11 cipari)',
       consentRequired: 'Lūdzu, apstipriniet piekrišanu datu apstrādei',
       formatRequired: 'Lūdzu, izvēlieties konsultācijas formātu',
     },
@@ -166,8 +161,6 @@ const fallbackTranslations = {
     nameLabel: 'Ваше имя',
     emailLabel: 'Email',
     phoneLabel: 'Телефон',
-    personalCodeLabel: 'Персональный код (необязательно)',
-    personalCodeHint: 'Укажите, если хотите подать чек в VID для возврата налога.',
     messageLabel: 'Комментарий (необязательно)',
     consentText:
       'Я соглашаюсь на обработку моих персональных данных в соответствии с <a href="/privacy-policy/" target="_blank" rel="noopener">политикой конфиденциальности</a> и <a href="/terms/" target="_blank" rel="noopener">условиями оказания услуг</a>.',
@@ -191,7 +184,6 @@ const fallbackTranslations = {
       emailRequired: 'Пожалуйста, введите email',
       emailInvalid: 'Пожалуйста, введите корректный email',
       phoneInvalid: 'Введите 8 цифр номера телефона',
-      personalCodeInvalid: 'Введите корректный персональный код (11 цифр)',
       consentRequired: 'Пожалуйста, подтвердите согласие на обработку данных',
       formatRequired: 'Пожалуйста, выберите формат консультации',
     },
@@ -224,8 +216,6 @@ const fallbackTranslations = {
     nameLabel: 'Your name',
     emailLabel: 'Email',
     phoneLabel: 'Phone',
-    personalCodeLabel: 'Personal code (optional)',
-    personalCodeHint: 'Provide it if you want to submit the receipt to VID for a tax refund.',
     messageLabel: 'Comment (optional)',
     consentText:
       'I agree that my personal data is processed in accordance with the <a href="/privacy-policy/" target="_blank" rel="noopener">privacy policy</a> and <a href="/terms/" target="_blank" rel="noopener">terms of service</a>.',
@@ -249,7 +239,6 @@ const fallbackTranslations = {
       emailRequired: 'Please enter your email',
       emailInvalid: 'Please enter a valid email address',
       phoneInvalid: 'Please enter 8 digit phone number',
-      personalCodeInvalid: 'Please enter a valid personal code (11 digits)',
       consentRequired: 'Please confirm your consent to data processing',
       formatRequired: 'Please select a consultation format',
     },
@@ -470,12 +459,6 @@ class BookingCalendar {
                                     <span class="phone-prefix">+371</span>
                                     <input type="tel" id="bookingPhone" name="phone" placeholder="20000000" maxlength="8" inputmode="numeric" pattern="[0-9]*" autocomplete="tel-national">
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="bookingPersonalCode">${this.t('personalCodeLabel')}</label>
-                                <input type="text" id="bookingPersonalCode" name="personalCode" placeholder="000000-00000" maxlength="12" inputmode="numeric" autocomplete="off">
-                                <small class="form-hint">${this.t('personalCodeHint')}</small>
                             </div>
 
                             <div class="form-group form-group-full">
@@ -995,7 +978,6 @@ class BookingCalendar {
       name: formData.get('name'),
       email: formData.get('email'),
       phone: formData.get('phone'),
-      personalCode: formData.get('personalCode'),
       service: formData.get('serviceType'),
       consultationFormat: formData.get('consultationFormat'),
       message: formData.get('message'),
@@ -1214,18 +1196,6 @@ class BookingCalendar {
         }
         return { valid: true, message: '' };
 
-      case 'personalCode': {
-        // Optional, but if provided must be a valid Latvian personas kods (11 digits)
-        if (!value || value.trim() === '') {
-          return { valid: true, message: '' };
-        }
-        const codeDigits = value.replace(/\D/g, '');
-        if (codeDigits.length !== 11) {
-          return { valid: false, message: v.personalCodeInvalid };
-        }
-        return { valid: true, message: '' };
-      }
-
       case 'consultationFormat':
         if (!value) {
           return { valid: false, message: v.formatRequired };
@@ -1326,13 +1296,11 @@ class BookingCalendar {
     const nameInput = form.querySelector('input[name="name"]');
     const emailInput = form.querySelector('input[name="email"]');
     const phoneInput = form.querySelector('input[name="phone"]');
-    const personalCodeInput = form.querySelector('input[name="personalCode"]');
     const consentInput = form.querySelector('input[name="consent"]');
 
     if (!this.validateAndShowError(nameInput)) isValid = false;
     if (!this.validateAndShowError(emailInput)) isValid = false;
     if (phoneInput) this.validateAndShowError(phoneInput); // Phone is optional
-    if (personalCodeInput && !this.validateAndShowError(personalCodeInput)) isValid = false; // Optional, but validate format if filled
 
     // Service and format are chosen before the form is reachable (the continue
     // button stays disabled until both are picked), so there is nothing left
@@ -1709,15 +1677,11 @@ class BookingCalendar {
       const nameInput = form.querySelector('input[name="name"]');
       const emailInput = form.querySelector('input[name="email"]');
       const phoneInput = form.querySelector('input[name="phone"]');
-      const personalCodeInput = form.querySelector('input[name="personalCode"]');
 
       // Validate on blur
       nameInput?.addEventListener('blur', () => this.validateAndShowError(nameInput));
       emailInput?.addEventListener('blur', () => this.validateAndShowError(emailInput));
       phoneInput?.addEventListener('blur', () => this.validateAndShowError(phoneInput));
-      personalCodeInput?.addEventListener('blur', () =>
-        this.validateAndShowError(personalCodeInput)
-      );
 
       // Clear error on input (but don't validate until blur)
       nameInput?.addEventListener('input', () => {
@@ -1738,16 +1702,6 @@ class BookingCalendar {
 
         if (phoneInput.classList.contains('input-error')) {
           this.validateAndShowError(phoneInput);
-        }
-      });
-
-      // Personal code - allow digits, auto-insert hyphen after 6 digits (DDMMYY-XXXXX)
-      personalCodeInput?.addEventListener('input', (e) => {
-        const digits = e.target.value.replace(/\D/g, '').slice(0, 11);
-        e.target.value = digits.length > 6 ? `${digits.slice(0, 6)}-${digits.slice(6)}` : digits;
-
-        if (personalCodeInput.classList.contains('input-error')) {
-          this.validateAndShowError(personalCodeInput);
         }
       });
 

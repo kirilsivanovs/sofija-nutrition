@@ -18,7 +18,6 @@ export interface InvoiceData {
   name: string;
   email: string;
   phone?: string;
-  personalCode?: string;
   date: string;
   time: string;
   serviceName: string;
@@ -111,7 +110,6 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
     name,
     email,
     phone,
-    personalCode,
     date,
     time,
     serviceName,
@@ -173,10 +171,6 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   y -= 16;
   page.drawText(`${t.pdfPhone}: ${phone || t.pdfNotProvided}`, { x: 50, y, size: 11, font });
   y -= 16;
-  if (personalCode) {
-    page.drawText(`Personas kods: ${personalCode}`, { x: 50, y, size: 11, font });
-    y -= 16;
-  }
   y -= 19;
 
   // Service section
