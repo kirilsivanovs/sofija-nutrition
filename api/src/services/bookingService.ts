@@ -66,6 +66,7 @@ export interface BookingData {
   name: string;
   email: string;
   phone: string;
+  notes: string;
   date: string;
   time: string;
   service: string;
@@ -297,6 +298,7 @@ export async function createBooking(
       name,
       email,
       phone: phone || '',
+      notes: notes || '',
       date,
       time,
       service,
@@ -413,7 +415,9 @@ async function sendBookingEmails(
 
   // Send admin notification
   try {
-    const adminEmailHtml = generateAdminEmailHTML(bookingData, confirmPaymentUrl);
+    // The comment is health-related free text; whether it goes in email is undecided
+    const { notes: _omittedNotes, ...bookingWithoutNotes } = bookingData;
+    const adminEmailHtml = generateAdminEmailHTML(bookingWithoutNotes, confirmPaymentUrl);
     const adminResult = await sendAdminNotification(
       `Jauna rezervācija - ${bookingId}`,
       adminEmailHtml

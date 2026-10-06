@@ -31,10 +31,11 @@ async function createBookingHandler(
 
     const body = (await request.json()) as Record<string, unknown>;
 
-    // Input validation & sanitization (HTTP concern)
+    // Input validation & sanitization (HTTP concern); form field names -> service input
     const validation = validateBookingInput({
       ...body,
-      serviceId: body.service as string, // map service -> serviceId
+      serviceId: body.service as string,
+      notes: body.message as string,
     });
 
     if (!validation.valid) {

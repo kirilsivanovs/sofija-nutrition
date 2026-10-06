@@ -68,7 +68,7 @@ describe('admin calendar day details', () => {
     name: 'Test Person',
     email: 'test@example.test',
     phone: '+37100000000',
-    message: 'note',
+    notes: 'note',
     service: 'consultation',
     status: 'pending',
     price: 40,
@@ -86,16 +86,26 @@ describe('admin calendar day details', () => {
     showDayDetails('2026-02-10');
   };
 
-  it('renders booking name, email, phone and message as text when they contain markup', () => {
+  it('renders booking name, email, phone and notes as text when they contain markup', () => {
     const payloads = {
       name: MARKUP_NAME,
       email: 'a<b>@example.test',
       phone: '<svg onload=alert(2)>',
-      message: '<script>alert(3)</script>',
+      notes: '<script>alert(3)</script>',
     };
     showBookings([bookingOn(payloads)]);
     expect(panel().querySelector('img, svg, script, b')).toBeNull();
     Object.values(payloads).forEach(p => expect(panel().textContent).toContain(p));
+  });
+
+  it('shows the booking notes in the day panel when the API returns notes', () => {
+    showBookings([bookingOn({ notes: 'Synthetic comment' })]);
+    expect(panel().querySelector('.booking-details')?.textContent).toContain('Synthetic comment');
+  });
+
+  it('omits the notes row when the booking has no notes', () => {
+    showBookings([bookingOn({ notes: '' })]);
+    expect(panel().querySelector('.ph-note')).toBeNull();
   });
 
   it('shows a booking name with an apostrophe, ampersand and quote unchanged when the API returns it raw', () => {

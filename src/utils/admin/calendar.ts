@@ -346,7 +346,7 @@ export function showDayDetails(dateStr: string): void {
                                 <div><i class="ph ${b.consultationFormat === 'online' ? 'ph-video-camera' : 'ph-map-pin'}"></i>${b.consultationFormat === 'online' ? 'Online' : 'Klātienē'}</div>
                                 <div><i class="ph ph-envelope"></i>${escapeHtml(b.email)}</div>
                                 ${b.phone ? `<div><i class="ph ph-phone"></i>${escapeHtml(b.phone)}</div>` : ''}
-                                ${b.message ? `<div><i class="ph ph-note"></i>${escapeHtml(b.message)}</div>` : ''}
+                                ${b.notes ? `<div><i class="ph ph-note"></i>${escapeHtml(b.notes)}</div>` : ''}
                                 <div><i class="ph ph-currency-eur"></i>€${escapeHtml(b.price || 0)}</div>
                             </div>
                             <div class="booking-actions">

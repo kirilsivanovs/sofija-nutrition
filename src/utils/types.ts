@@ -52,7 +52,7 @@ export interface AdminBooking {
     consultationFormat: 'online' | 'in-person';
     status: 'pending' | 'confirmed' | 'cancelled';
     price: number;
-    message?: string;
+    notes?: string;
     createdAt: string;
 }
 

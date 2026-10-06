@@ -239,6 +239,57 @@ describe('API Endpoints', () => {
       expect(response.jsonBody.details.serviceId).toBeDefined();
     });
   });
+
+  describe('CreateBooking Endpoint - field mapping', () => {
+    let createBookingHandler;
+    const serviceCreateBooking = jest.fn();
+
+    beforeAll(() => {
+      jest.resetModules();
+      mockApp.http.mockClear();
+      serviceCreateBooking.mockResolvedValue({
+        success: true,
+        bookingId: 'X',
+        message: '',
+        booking: {},
+      });
+      jest.doMock('../src/services/bookingService', () => ({
+        createBooking: serviceCreateBooking,
+        BookingError: class BookingError extends Error {},
+      }));
+      require('../src/functions/booking/createBooking.function');
+      const bookingCall = mockApp.http.mock.calls.find((call) => call[0] === 'createBooking');
+      createBookingHandler = bookingCall[1].handler;
+    });
+
+    afterAll(() => {
+      jest.dontMock('../src/services/bookingService');
+    });
+
+    it('passes the form message to the booking service as notes when the request has one', async () => {
+      const mockContext = { log: jest.fn(), warn: jest.fn(), error: jest.fn() };
+      const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const mockRequest = {
+        json: jest.fn().mockResolvedValue({
+          name: 'Test User',
+          email: 'test@example.test',
+          date: nextWeek,
+          time: '10:00',
+          service: 'consultation',
+          consultationFormat: 'online',
+          message: 'Synthetic comment',
+        }),
+        headers: {
+          get: jest.fn((name) => (name === 'x-forwarded-for' ? '127.0.0.5' : null)),
+        },
+      };
+
+      const response = await createBookingHandler(mockRequest, mockContext);
+
+      expect(response.status).toBe(200);
+      expect(serviceCreateBooking.mock.calls[0][0].notes).toBe('Synthetic comment');
+    });
+  });
 });
 
 describe('Booking Flow Simulation', () => {

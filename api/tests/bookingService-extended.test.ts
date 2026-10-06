@@ -273,6 +273,72 @@ describe('BookingService - Advanced Scenarios', () => {
         });
     });
 
+    describe('Booking notes', () => {
+        it('stores the comment as notes when the booking has one', async () => {
+            const result = await createBooking({
+                name: 'Test User',
+                email: 'test@example.com',
+                date: '2026-03-17', // Tuesday
+                time: '11:00',
+                serviceId: 'initial',
+                consultationFormat: 'online',
+                language: 'lv',
+                notes: 'Synthetic comment'
+            });
+
+            expect(result.booking.notes).toBe('Synthetic comment');
+        });
+
+        it('keeps the comment out of the admin email when the booking has one', async () => {
+            const emailService = require('../src/services/emailService');
+            const previousKey = process.env.RESEND_API_KEY;
+            process.env.RESEND_API_KEY = 'test-key';
+            const clientSpy = jest.spyOn(emailService, 'sendClientConfirmation').mockResolvedValue({ success: true, id: 'c' });
+            const adminSpy = jest.spyOn(emailService, 'sendAdminNotification').mockResolvedValue({ success: true, id: 'a' });
+
+            try {
+                await createBooking({
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    date: '2026-03-18', // Wednesday
+                    time: '11:00',
+                    serviceId: 'initial',
+                    consultationFormat: 'online',
+                    language: 'lv',
+                    notes: 'Synthetic-comment-marker'
+                });
+
+                expect(adminSpy).toHaveBeenCalled();
+                expect(adminSpy.mock.calls[0][1]).not.toContain('Synthetic-comment-marker');
+            } finally {
+                clientSpy.mockRestore();
+                adminSpy.mockRestore();
+                if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+                else process.env.RESEND_API_KEY = previousKey;
+            }
+        });
+
+        it('does not log the comment when the booking has one', async () => {
+            const logs = jest.fn();
+            const warns = jest.fn();
+            const errors = jest.fn();
+
+            await createBooking({
+                name: 'Test User',
+                email: 'test@example.com',
+                date: '2026-03-19', // Thursday
+                time: '11:00',
+                serviceId: 'initial',
+                consultationFormat: 'online',
+                language: 'lv',
+                notes: 'Synthetic-comment-marker'
+            }, { onLog: logs, onWarn: warns, onError: errors });
+
+            const logged = JSON.stringify([...logs.mock.calls, ...warns.mock.calls, ...errors.mock.calls]);
+            expect(logged).not.toContain('Synthetic-comment-marker');
+        });
+    });
+
     describe('Booking Cancellation', () => {
         it('should cancel pending booking', async () => {
             // Create booking first
