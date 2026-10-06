@@ -103,8 +103,8 @@ export function renderVacationPeriods(apiBase: string, periods: any[]): void {
                 <strong>${escapeHtml(formatDate(v.startDate))}</strong> — <strong>${escapeHtml(formatDate(v.endDate))}</strong>
                 ${v.reason ? '<span style="color:var(--color-slate);margin-left:12px;">' + escapeHtml(v.reason) + '</span>' : ''}
             </span>
-            <button data-vacation-id="${escapeHtml(v.id)}" class="btn-close" style="width:28px;height:28px;">
-                <i class="ph ph-x"></i>
+            <button type="button" data-vacation-id="${escapeHtml(v.id)}" aria-label="${escapeHtml('Dzēst atvaļinājumu ' + formatDate(v.startDate) + ' — ' + formatDate(v.endDate))}" class="btn-close" style="width:28px;height:28px;">
+                <i class="ph ph-x" aria-hidden="true"></i>
             </button>
         </div>
     `).join('');
@@ -130,8 +130,8 @@ export function renderBlockedDates(apiBase: string, dates: any[]): void {
     list.innerHTML = dates.map(d => `
         <div class="blocked-item">
             <span>${escapeHtml(formatDate(d.date))} ${d.reason ? '— ' + escapeHtml(d.reason) : ''}</span>
-            <button data-blocked-date="${escapeHtml(d.date)}" class="btn-close" style="width:28px;height:28px;">
-                <i class="ph ph-x"></i>
+            <button type="button" data-blocked-date="${escapeHtml(d.date)}" aria-label="${escapeHtml('Noņemt bloķēšanu ' + formatDate(d.date))}" class="btn-close" style="width:28px;height:28px;">
+                <i class="ph ph-x" aria-hidden="true"></i>
             </button>
         </div>
     `).join('');
@@ -140,6 +140,12 @@ export function renderBlockedDates(apiBase: string, dates: any[]): void {
         const button = (event.target as Element).closest('[data-blocked-date]') as HTMLElement | null;
         if (button) removeBlockedDate(apiBase, button.dataset.blockedDate!, () => loadAvailabilityForm(apiBase));
     };
+}
+
+async function requireOk(response: Response): Promise<void> {
+    if (response.ok) return;
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.error ?? `HTTP ${response.status}`);
 }
 
 /**
@@ -161,11 +167,12 @@ export async function saveAvailability(apiBase: string): Promise<void> {
     });
     
     try {
-        await fetch(apiBase + '/dashboard/availability', {
+        const response = await fetch(apiBase + '/dashboard/availability', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ schedule: scheduleData })
         });
+        await requireOk(response);
         showToast('Pieejamība saglabāta!', 'success');
     } catch (e: any) {
         showToast(e.message, 'error');
@@ -197,15 +204,13 @@ export async function addVacation(apiBase: string, onSuccess?: () => void): Prom
     }
     
     try {
-        console.log('💼 Adding vacation:', { startDate, endDate, reason });
         const response = await fetch(apiBase + '/dashboard/availability/vacation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ startDate, endDate, reason })
         });
-        const result = await response.json();
-        console.log('✅ Vacation added:', result);
-        
+        await requireOk(response);
+
         startDateInput.value = '';
         endDateInput.value = '';
         reasonInput.value = '';
@@ -214,7 +219,6 @@ export async function addVacation(apiBase: string, onSuccess?: () => void): Prom
         
         if (onSuccess) onSuccess();
     } catch (e: any) {
-        console.error('❌ Error adding vacation:', e);
         showToast(e.message, 'error');
     }
 }
@@ -259,12 +263,13 @@ export async function addBlockedDate(apiBase: string, onSuccess?: () => void): P
     const date = formatDateReverse(dateDisplay);
     
     try {
-        await fetch(apiBase + '/dashboard/availability/block', {
+        const response = await fetch(apiBase + '/dashboard/availability/block', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date, reason })
         });
-        
+        await requireOk(response);
+
         dateInput.value = '';
         reasonInput.value = '';
         
