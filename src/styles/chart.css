@@ -58,6 +58,7 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   padding: 20px 20px 16px;
+  container-type: inline-size;
 }
 
 .glucose-fig__head {
@@ -113,6 +114,8 @@
 
 .glucose-fig__svg text {
   font: 400 11px var(--font-sans);
+  /* The viewBox is fixed, so units must grow as the figure narrows to keep ~11-13px rendered. */
+  font-size: clamp(11px, calc(33.8px - 3.56cqi), 23px);
   fill: var(--color-slate);
   font-variant-numeric: tabular-nums;
 }
@@ -223,14 +226,5 @@
 
   .glucose-fig {
     padding: 14px 12px 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  /* The SVG viewBox stays fixed while the rendered width shrinks to ~300px,
-     so the same font-size renders unreadably small. Scale it up to keep
-     axis ticks and labels legible at this width. */
-  .glucose-fig__svg text {
-    font-size: 22px;
   }
 }

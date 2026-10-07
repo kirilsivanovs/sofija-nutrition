@@ -286,6 +286,23 @@ describe('landing hero headline', () => {
   });
 });
 
+describe('glucose chart text sizing', () => {
+  it('makes the glucose figure an inline-size container so its text can follow the chart width', () => {
+    expect(ruleBody(chartCss, '.glucose-fig')).toMatch(/container-type:\s*inline-size/);
+  });
+
+  it('sizes the glucose chart text by the figure width in cqi when the viewport changes', () => {
+    const text = ruleBody(chartCss, '.glucose-fig__svg text');
+    expect(text).toMatch(/font-size:\s*clamp\(11px,\s*calc\(33\.8px - 3\.56cqi\),\s*23px\)/);
+    expect(text.indexOf('font-size:')).toBeGreaterThan(text.indexOf('font:'));
+  });
+
+  it('has no viewport-keyed font-size override for the glucose chart text when the phone block ends', () => {
+    expect(chartCss).not.toMatch(/max-width:\s*480px/);
+    expect(mediaBlock(chartCss, 'max-width: 760px')).not.toMatch(/glucose-fig__svg text/);
+  });
+});
+
 describe('question body rules', () => {
   const mobileCss = questionBodyCss.slice(questionBodyCss.indexOf('@media (max-width: 760px)'));
 

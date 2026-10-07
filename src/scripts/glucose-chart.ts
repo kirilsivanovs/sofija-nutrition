@@ -207,6 +207,8 @@ export const CHART_LEFT = 44;
 export const CHART_RIGHT = 600;
 export const CHART_TOP = 16;
 export const CHART_BOTTOM = 316;
+// Clears the 5-unit tick marks under the axis at the 23-unit label size.
+export const TIME_LABEL_OFFSET = 27;
 export const BREAKFAST_MINUTE = 30;
 export const POINTER_START_MINUTE = 90;
 export const X_TICK_MINUTES = [0, 60, 120, 180, 240];
@@ -331,7 +333,7 @@ export function initGlucoseChart(idPrefix: string, cfg: GlucoseChartConfig): voi
     });
     const tick = el('text', {
       x: xScale(minute),
-      y: CHART_BOTTOM + 20,
+      y: CHART_BOTTOM + TIME_LABEL_OFFSET,
       'text-anchor': minute === 0 ? 'start' : minute === domainEnd ? 'end' : 'middle',
     });
     tick.textContent = formatTime(minute);

@@ -13,6 +13,7 @@ import {
   CHART_LEFT,
   CHART_RIGHT,
   CHART_TOP,
+  TIME_LABEL_OFFSET,
   POINTER_START_MINUTE,
   X_TICK_MINUTES,
   chartGeometry,
@@ -311,7 +312,7 @@ const rangeLines = [rangeLow, rangeHigh];
                     ></line>
                     <text
                       x={xScale(minute)}
-                      y={CHART_BOTTOM + 20}
+                      y={CHART_BOTTOM + TIME_LABEL_OFFSET}
                       text-anchor={minute === 0 ? 'start' : minute === geo.domainEnd ? 'end' : 'middle'}
                     >
                       {formatTime(minute)}

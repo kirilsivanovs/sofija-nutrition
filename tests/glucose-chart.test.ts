@@ -14,6 +14,7 @@ import {
   chartGeometry,
   mealLabelPosition,
   CHART_BOTTOM,
+  TIME_LABEL_OFFSET,
   BREAKFAST_MINUTE,
 } from '../src/scripts/glucose-chart';
 
@@ -153,5 +154,15 @@ describe('formatBreakfastLabel', () => {
 describe('minutesAbove', () => {
   it('counts only minutes above the threshold', () => {
     expect(minutesAbove([1, 5, 5, 6, 9], 5)).toBe(2);
+  });
+});
+
+describe('TIME_LABEL_OFFSET', () => {
+  it('keeps the time label clear of the 5-unit tick marks when the text is 23 units tall', () => {
+    const tickLength = 5;
+    const digitHeight = 22.8 * 0.745;
+    const pixelsPerUnitAt375 = 309 / 640;
+    const gapInPixels = (TIME_LABEL_OFFSET - digitHeight - tickLength) * pixelsPerUnitAt375;
+    expect(gapInPixels).toBeGreaterThanOrEqual(2);
   });
 });
