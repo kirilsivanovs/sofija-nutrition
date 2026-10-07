@@ -14,7 +14,7 @@ Reason: the user picked SN-036 "Итог · A+D" over SN-034. Mockup: https://cl
 | Graphite | #1E2530 | body text and headings | 15.4:1 |
 | Slate | #52607A | secondary text, index links, icon buttons at rest (hover Graphite) | 6.3:1 |
 | Navy | #002D74 | action accent only: primary buttons (hover #001F52), selected slot/format, chart line B | 12.9:1 |
-| Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers | 5.0:1 |
+| Range | #2E7D5B | chart in-range band and line A, active index marker, step numbers; cabinet calorie ring and macro bars (progress within target; ring High over target). Never a general accent (SN-089: the diary used it for arrows, tabs, focus, text) | 5.0:1 |
 | High | #B06A00 | chart segment above range only | graphic |
 
 Mist #F1F4F9 is the one panel tint (booking summary); Line #DDE3EC the only hairline (1.3:1, dividers only). SN-033 (forms, admin): field borders Slate (WCAG 1.4.11); Error #B42318 (6.6:1) for field errors and destructive actions only; admin booking status is an icon or 3px left border, never a fill, label Graphite: confirmed Range, pending High, cancelled Error. Admin calendar (SN-041, no rule covered day states): bookable White, non-bookable Mist, reason as Slate text. Navy stays scarce (user, 2026-09-26): never for text, headings, fills or section backgrounds. No dark sections, no gradients, no shadows.
