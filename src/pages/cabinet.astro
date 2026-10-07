@@ -330,8 +330,6 @@ import AppHeader from '../components/common/AppHeader.astro';
   <style is:global>
     /* ---- Design tokens ---- */
     :root {
-      --diary-green: var(--color-range);
-      --diary-green-light: var(--color-range);
       --diary-cream: var(--color-white);
       --diary-warm: var(--color-mist);
       --diary-border: var(--color-line);
@@ -395,12 +393,13 @@ import AppHeader from '../components/common/AppHeader.astro';
       justify-content: center;
       width: 40px;
       height: 40px;
-      color: var(--diary-green);
+      color: var(--color-slate);
       font-size: 20px;
       border-radius: var(--diary-radius);
     }
     .day-nav-btn:hover {
       background: var(--diary-warm);
+      color: var(--color-graphite);
     }
     .day-nav-date {
       display: flex;
@@ -460,7 +459,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .ring-fill {
       fill: none;
-      stroke: var(--diary-green);
+      stroke: var(--color-range);
       stroke-width: 8;
       stroke-linecap: round;
       stroke-dasharray: 326.73;
@@ -528,7 +527,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     }
     .macro-fill {
       height: 100%;
-      background: var(--diary-green);
+      background: var(--color-range);
       border-radius: 4px;
       width: 0;
       max-width: 100%;
@@ -648,7 +647,7 @@ import AppHeader from '../components/common/AppHeader.astro';
     .meal-item-kcal {
       font-size: 13px;
       font-weight: 600;
-      color: var(--diary-green);
+      color: var(--color-graphite);
       font-variant-numeric: tabular-nums;
       flex-shrink: 0;
       white-space: nowrap;
@@ -741,14 +740,14 @@ import AppHeader from '../components/common/AppHeader.astro';
       align-items: center;
       gap: 10px;
     }
-    .day-empty i {
+    .day-empty > i {
       width: 72px;
       height: 72px;
       font-size: 34px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--diary-green);
+      color: var(--color-slate);
       border-radius: var(--diary-radius);
     }
     .day-empty p {
@@ -858,10 +857,13 @@ import AppHeader from '../components/common/AppHeader.astro';
       border-radius: var(--diary-radius);
       border: 1px solid transparent;
     }
+    .sheet-tab:hover:not([aria-selected='true']) {
+      color: var(--color-graphite);
+    }
     .sheet-tab[aria-selected='true'] {
-      background: #fff;
-      color: var(--diary-green);
-      border-color: var(--diary-text-dim);
+      background: var(--color-white);
+      color: var(--color-graphite);
+      border-color: var(--color-graphite);
     }
     .sheet-tab i {
       font-size: 16px;
@@ -895,9 +897,9 @@ import AppHeader from '../components/common/AppHeader.astro';
       width: 100%;
     }
     .form-group input:focus {
-      outline: 2px solid var(--diary-green);
+      outline: 2px solid var(--color-graphite);
       outline-offset: 1px;
-      border-color: var(--diary-green);
+      border-color: var(--color-graphite);
     }
     .form-row-2 {
       display: grid;
@@ -924,10 +926,10 @@ import AppHeader from '../components/common/AppHeader.astro';
       font-size: 14px;
     }
     .form-group .photo-label:hover {
-      border-color: var(--diary-green);
+      border-color: var(--color-graphite);
     }
     .form-group .photo-label:has(input:focus-visible) {
-      outline: 2px solid var(--diary-green);
+      outline: 2px solid var(--color-graphite);
       outline-offset: 1px;
     }
     .photo-preview {
@@ -981,18 +983,18 @@ import AppHeader from '../components/common/AppHeader.astro';
       align-items: center;
       gap: 5px;
       padding: 14px 16px;
-      border: 1.5px solid var(--diary-border);
+      border: 1.5px solid var(--color-slate);
       border-radius: var(--diary-radius);
-      background: #fff;
-      color: var(--diary-text-dim);
+      background: var(--color-white);
+      color: var(--color-slate);
       font-size: 13px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
     }
     .btn-save-fav:hover {
-      border-color: var(--diary-gold);
-      color: var(--diary-text);
+      border-color: var(--color-graphite);
+      color: var(--color-graphite);
     }
     .btn-text {
       color: var(--diary-text-dim);
@@ -1085,9 +1087,12 @@ import AppHeader from '../components/common/AppHeader.astro';
     .sheet-status {
       text-align: center;
       font-size: 13px;
-      color: var(--diary-green);
+      color: var(--color-slate);
       padding: 8px 0 0;
       min-height: 24px;
+    }
+    .sheet-status.is-error {
+      color: var(--color-error);
     }
 
     /* ---- FAB ---- */
@@ -1472,7 +1477,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       const ring = $('#cal-ring');
       if (ring) ring.style.strokeDashoffset = String(circumference * (1 - ratio));
       if (cal > targets.calories && ring) ring.style.stroke = 'var(--color-high)';
-      else if (ring) ring.style.stroke = 'var(--diary-green)';
+      else if (ring) ring.style.stroke = 'var(--color-range)';
 
       const ringEaten = $('#ring-eaten');
       if (ringEaten) {
@@ -1669,6 +1674,12 @@ import AppHeader from '../components/common/AppHeader.astro';
     });
 
     // ---- Add Food Form ----
+    function setSheetStatus(text, isError = false) {
+      const status = $('#sheet-status');
+      status.textContent = text;
+      status.classList.toggle('is-error', isError);
+    }
+
     function resetAddForm() {
       const form = $('#add-food-form');
       if (form) form.reset();
@@ -1682,7 +1693,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         preview.classList.add('hidden');
         preview.innerHTML = '';
       }
-      $('#sheet-status').textContent = '';
+      setSheetStatus('');
     }
 
     // Photo preview
@@ -1739,7 +1750,7 @@ import AppHeader from '../components/common/AppHeader.astro';
       const carbs = Number($('#food-carbs')?.value || 0);
 
       if (!name || !weight) {
-        $('#sheet-status').textContent = 'Ievadiet nosaukumu un svaru.';
+        setSheetStatus('Ievadiet nosaukumu un svaru.', true);
         return;
       }
 
@@ -1759,7 +1770,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         saveFavorite(item);
       }
 
-      $('#sheet-status').textContent = 'Saglabā…';
+      setSheetStatus('Saglabā…');
       const submitBtn = $('#submit-food-btn');
       if (submitBtn) submitBtn.disabled = true;
 
@@ -1815,12 +1826,12 @@ import AppHeader from '../components/common/AppHeader.astro';
 
         if (!res.ok) {
           const err = await res.json().catch(() => null);
-          $('#sheet-status').textContent = err?.error || 'Kļūda saglabājot.';
+          setSheetStatus(err?.error || 'Kļūda saglabājot.', true);
           if (submitBtn) submitBtn.disabled = false;
           return;
         }
 
-        $('#sheet-status').textContent = editingMealId ? 'Saglabāts!' : 'Pievienots!';
+        setSheetStatus(editingMealId ? 'Saglabāts!' : 'Pievienots!');
         editingMealId = null;
         editingMealDate = null;
         setTimeout(() => {
@@ -1829,7 +1840,7 @@ import AppHeader from '../components/common/AppHeader.astro';
         }, 400);
         await loadMeals();
       } catch (err) {
-        $('#sheet-status').textContent = 'Kļūda: ' + (err.message || 'neizdevās saglabāt');
+        setSheetStatus('Kļūda: ' + (err.message || 'neizdevās saglabāt'), true);
         if (submitBtn) submitBtn.disabled = false;
       }
     }
