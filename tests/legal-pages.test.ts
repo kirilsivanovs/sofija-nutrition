@@ -46,11 +46,12 @@ describe('legal pages', () => {
     expect(globalCss).toMatch(/^p,\s*\.legal-prose li\s*\{/m);
   });
 
-  it('keeps running-text links inline without padding when under legal-prose', () => {
-    const body = ruleBody(globalCss, '.legal-prose :is(p, li) a {');
+  it('keeps running-text links inline without padding when under legal-prose or consent text', () => {
+    const inlineLinks = ':is(.legal-prose :is(p, li), .consent-checkbox) a';
+    const body = ruleBody(globalCss, `${inlineLinks} {`);
     expect(body).toContain('display: inline');
     expect(body).toContain('padding: 0');
-    expect(globalCss).toContain(':not(.legal-prose :is(p, li) a)');
+    expect(globalCss).toContain(`:not(${inlineLinks})`);
   });
 
   it('draws the admin gate icon without a CSS ring when reading admin.css', () => {
