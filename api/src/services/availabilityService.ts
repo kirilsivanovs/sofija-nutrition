@@ -92,6 +92,25 @@ export const dayNames = [
 export const DEFAULT_SCHEDULE = scheduleConfig.defaultWorkingHours;
 
 // ============================================
+// Helpers
+// ============================================
+
+// A missing row or table may fall back to defaults; any other failure must not look like "nothing configured"
+function isNotFound(error: unknown): boolean {
+  return (error as { statusCode?: number })?.statusCode === 404;
+}
+
+async function readConfigValue(rowKey: string): Promise<string | null> {
+  try {
+    const entity = await createTableClient(SETTINGS_TABLE).getEntity('config', rowKey);
+    return entity.value as string;
+  } catch (error: unknown) {
+    if (isNotFound(error)) return null;
+    throw error;
+  }
+}
+
+// ============================================
 // Service Settings
 // ============================================
 
@@ -137,21 +156,6 @@ export async function getServiceSettings(): Promise<ServiceType[]> {
   } catch (error: unknown) {
     if (!isNotFound(error)) throw error;
     return DEFAULT_SERVICES as ServiceType[];
-  }
-}
-
-// A missing row or table may fall back to defaults; any other failure must not look like "nothing configured"
-function isNotFound(error: unknown): boolean {
-  return (error as { statusCode?: number })?.statusCode === 404;
-}
-
-async function readConfigValue(rowKey: string): Promise<string | null> {
-  try {
-    const entity = await createTableClient(SETTINGS_TABLE).getEntity('config', rowKey);
-    return entity.value as string;
-  } catch (error: unknown) {
-    if (isNotFound(error)) return null;
-    throw error;
   }
 }
 

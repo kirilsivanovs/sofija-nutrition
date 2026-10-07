@@ -19,6 +19,24 @@ import {
 import { TableClient } from '@azure/data-tables';
 
 describe('AvailabilityService', () => {
+  const refused = (statusCode: number) =>
+    Object.assign(new Error('refused'), { statusCode });
+  const failingListing = (error: Error) => () => ({
+    async *[Symbol.asyncIterator]() {
+      throw error;
+    },
+  });
+
+  beforeEach(() => {
+    process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
+    clearServicesCache();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+  });
+
   describe('dayNames', () => {
     it('should map day indices correctly', () => {
       expect(dayNames[0]).toBe('sunday');
@@ -82,14 +100,6 @@ describe('AvailabilityService', () => {
   });
 
   describe('getServiceSettings', () => {
-    beforeEach(() => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
-    });
-
-    afterEach(() => {
-      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
-    });
-
     it('reads allowOnline and allowInPerson off each active service when the flags are set', async () => {
       const services = await getServiceSettings();
 
@@ -111,27 +121,25 @@ describe('AvailabilityService', () => {
 
       expect(services.map((s) => s.id).sort()).toEqual(['consultation', 'followup']);
     });
+
+    it('returns the default services when storage has no services table', async () => {
+      jest
+        .spyOn(TableClient.prototype, 'listEntities')
+        .mockImplementationOnce(failingListing(refused(404)) as never);
+
+      await expect(getServiceSettings()).resolves.toEqual(DEFAULT_SERVICES);
+    });
+
+    it('rethrows when storage rejects the services listing with 403', async () => {
+      jest
+        .spyOn(TableClient.prototype, 'listEntities')
+        .mockImplementationOnce(failingListing(refused(403)) as never);
+
+      await expect(getServiceSettings()).rejects.toMatchObject({ statusCode: 403 });
+    });
   });
 
-  describe('storage failures', () => {
-    const refused = (statusCode: number) =>
-      Object.assign(new Error('refused'), { statusCode });
-    const failingListing = (error: Error) => () => ({
-      async *[Symbol.asyncIterator]() {
-        throw error;
-      },
-    });
-
-    beforeEach(() => {
-      process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true';
-      clearServicesCache();
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
-    });
-
+  describe('getScheduleSettings', () => {
     it('rethrows when storage rejects the schedule read with 403', async () => {
       jest.spyOn(TableClient.prototype, 'getEntity').mockRejectedValueOnce(refused(403));
 
@@ -141,11 +149,27 @@ describe('AvailabilityService', () => {
     it('returns the default schedule when storage has no schedule row', async () => {
       await expect(getScheduleSettings()).resolves.toEqual(DEFAULT_SCHEDULE);
     });
+  });
+
+  describe('getBlockedDates', () => {
+    it('returns no blocked dates when storage has no blocked dates row', async () => {
+      jest.spyOn(TableClient.prototype, 'getEntity').mockRejectedValueOnce(refused(404));
+
+      await expect(getBlockedDates()).resolves.toEqual([]);
+    });
 
     it('rethrows when storage rejects the blocked dates read with 401', async () => {
       jest.spyOn(TableClient.prototype, 'getEntity').mockRejectedValueOnce(refused(401));
 
       await expect(getBlockedDates()).rejects.toMatchObject({ statusCode: 401 });
+    });
+  });
+
+  describe('getVacationPeriods', () => {
+    it('returns no vacation periods when storage has no vacation row', async () => {
+      jest.spyOn(TableClient.prototype, 'getEntity').mockRejectedValueOnce(refused(404));
+
+      await expect(getVacationPeriods()).resolves.toEqual([]);
     });
 
     it('rethrows when storage rejects the vacation read with 401', async () => {
@@ -153,7 +177,9 @@ describe('AvailabilityService', () => {
 
       await expect(getVacationPeriods()).rejects.toMatchObject({ statusCode: 401 });
     });
+  });
 
+  describe('getBookedSlots', () => {
     it('rethrows when storage rejects the bookings listing with 403', async () => {
       jest
         .spyOn(TableClient.prototype, 'listEntities')
@@ -171,15 +197,9 @@ describe('AvailabilityService', () => {
 
       await expect(getBookedSlots('2026-01-01', '2026-12-31')).resolves.toEqual({});
     });
+  });
 
-    it('rethrows when storage rejects the services listing with 403', async () => {
-      jest
-        .spyOn(TableClient.prototype, 'listEntities')
-        .mockImplementationOnce(failingListing(refused(403)) as never);
-
-      await expect(getServiceSettings()).rejects.toMatchObject({ statusCode: 403 });
-    });
-
+  describe('getAvailability', () => {
     it('rejects availability when storage fails without a status code', async () => {
       jest.spyOn(TableClient.prototype, 'getEntity').mockRejectedValue(new Error('credential'));
 
