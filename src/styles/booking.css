@@ -707,14 +707,6 @@
   margin-bottom: 5px;
 }
 
-.booking-form .form-hint {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--color-slate);
-}
-
 /* Consent checkbox (GDPR) */
 .booking-form .form-consent {
   margin-top: 4px;

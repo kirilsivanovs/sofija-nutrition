@@ -443,7 +443,7 @@ class BookingCalendar {
                         <input type="hidden" name="consultationFormat" id="consultationFormatInput" value="${this.selectedFormat || ''}">
 
                         <div class="booking-form-grid">
-                            <div class="form-group">
+                            <div class="form-group form-group-full">
                                 <label for="bookingName">${this.t('nameLabel')}</label>
                                 <input type="text" id="bookingName" name="name" placeholder="Anna" autocomplete="name" aria-required="true">
                             </div>
