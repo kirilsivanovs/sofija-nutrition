@@ -12,6 +12,10 @@
   overflow: hidden;
 }
 
+.card.table-card {
+  padding: 0;
+}
+
 .table-wrapper {
   overflow-x: auto;
   max-height: 600px;
@@ -76,11 +80,14 @@
 }
 
 .table-footer {
-  padding: 16px;
-  background: var(--color-mist);
+  padding: 12px 16px;
   border-top: 1px solid var(--color-line);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-slate);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 /* Checkbox styling */
@@ -112,17 +119,24 @@
 
 /* Filter controls */
 .filters-grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 16px 20px;
 }
 
-.filter-field {
-  flex: 1;
-  min-width: 200px;
+@media (min-width: 481px) {
+  .filters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #clear-filters {
+    justify-self: start;
+  }
 }
 
-.filter-field-small {
-  min-width: 150px;
+@media (min-width: 1024px) {
+  .filters-grid {
+    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)) auto;
+  }
 }

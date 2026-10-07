@@ -685,8 +685,10 @@
 
 /* Form Elements */
 .input-field {
-  padding: 12px 18px;
-  border: 1px solid var(--color-line);
+  padding: 12px 16px;
+  height: 54px;
+  box-sizing: border-box;
+  border: 2px solid var(--color-slate);
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -696,8 +698,7 @@
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--color-navy);
+  border-color: var(--color-graphite);
 }
 
 .input-field.input-flex {
@@ -1416,12 +1417,6 @@
   border-left: 3px solid var(--color-navy);
 }
 
-.table-footer {
-  padding: 14px 20px;
-  font-size: 14px;
-  color: var(--color-slate);
-}
-
 .data-controls {
   display: flex;
   gap: 10px;
@@ -1541,14 +1536,6 @@
 }
 
 /* Meals Calendar Styles */
-.meals-calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
 .meals-patient-title {
   font-size: 20px;
   font-weight: 600;
@@ -1561,20 +1548,6 @@
   color: var(--color-slate);
   margin: 4px 0 0 0;
   font-family: monospace;
-}
-
-.meals-month-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.meals-month-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-text);
-  min-width: 140px;
-  text-align: center;
 }
 
 .btn-icon {
@@ -1679,17 +1652,8 @@
     margin-bottom: 12px;
     padding: 14px;
   }
-  .meals-calendar-header {
-    gap: 10px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .meals-patient-title {
     font-size: 17px;
-  }
-  .meals-month-nav {
-    width: 100%;
-    justify-content: space-between;
   }
   .meals-calendar-grid {
     gap: 3px;

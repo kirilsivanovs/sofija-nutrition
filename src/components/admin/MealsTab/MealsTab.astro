@@ -11,8 +11,8 @@ import PatientList from '../PatientList/PatientList.astro';
   <div class="card meals-sidebar">
     <div class="meals-sidebar-header">
       <h3>Pacienti</h3>
-      <button id="patients-refresh" class="btn-secondary btn-sm">
-        <i class="ph ph-arrows-clockwise"></i>
+      <button id="patients-refresh" class="btn-secondary btn-sm" aria-label="Atsvaidzināt pacientu sarakstu">
+        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -23,27 +23,27 @@ import PatientList from '../PatientList/PatientList.astro';
     <!-- Calendar Header with Month Navigation -->
     <div class="card meals-calendar-header-card">
       <div class="meals-calendar-header">
-        <div>
+        <div class="meals-patient-info">
           <h3 id="meals-patient-name" class="meals-patient-title">Izvēlies pacientu</h3>
           <p id="meals-patient-id" class="meals-patient-subtitle"></p>
         </div>
         <div class="meals-month-nav">
-          <button id="meals-prev-month" class="btn-icon" disabled>
-            <i class="ph ph-caret-left"></i>
+          <button id="meals-prev-month" class="btn-icon" aria-label="Iepriekšējais mēnesis" disabled>
+            <i class="ph ph-caret-left" aria-hidden="true"></i>
           </button>
           <span id="meals-current-month" class="meals-month-label">—</span>
-          <button id="meals-next-month" class="btn-icon" disabled>
-            <i class="ph ph-caret-right"></i>
-          </button>
-          <button
-            id="meals-refresh"
-            class="btn-secondary btn-sm"
-            style="margin-left: 12px;"
-            disabled
-          >
-            <i class="ph ph-arrows-clockwise"></i>
+          <button id="meals-next-month" class="btn-icon" aria-label="Nākamais mēnesis" disabled>
+            <i class="ph ph-caret-right" aria-hidden="true"></i>
           </button>
         </div>
+        <button
+          id="meals-refresh"
+          class="btn-secondary btn-sm"
+          aria-label="Atsvaidzināt dienasgrāmatu"
+          disabled
+        >
+          <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
 

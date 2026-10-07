@@ -5,11 +5,11 @@ import './DataTab.css';
 <div class="content-header">
   <h2 class="content-title">Azure Table Storage</h2>
   <div class="data-controls">
-    <select id="table-select" class="input-field">
+    <select id="table-select" class="input-field" aria-label="Tabula">
       <option value="bookings">bookings (ieraksti)</option>
     </select>
-    <button id="refresh-table" class="btn-secondary">
-      <i class="ph ph-arrows-clockwise"></i>
+    <button id="refresh-table" class="btn-secondary" aria-label="Atsvaidzināt tabulu">
+      <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
     </button>
     <button id="export-csv" class="btn-info">
       <i class="ph ph-download-simple"></i>
@@ -21,8 +21,8 @@ import './DataTab.css';
 <!-- Filters and Batch Actions -->
 <div id="table-filters" class="card hidden" style="margin-bottom: 20px; padding: 20px;">
   <div class="filters-grid">
-    <div class="filter-field">
-      <label class="input-label">Meklēt</label>
+    <div>
+      <label class="form-label" for="table-search">Meklēt</label>
       <input
         type="text"
         id="table-search"
@@ -30,8 +30,8 @@ import './DataTab.css';
         placeholder="Meklēt visos laukos..."
       />
     </div>
-    <div class="filter-field-small">
-      <label class="input-label">Statuss</label>
+    <div>
+      <label class="form-label" for="filter-status">Statuss</label>
       <select id="filter-status" class="input-field">
         <option value="">Visi</option>
         <option value="confirmed">Apstiprināts</option>
@@ -39,8 +39,8 @@ import './DataTab.css';
         <option value="cancelled">Atcelts</option>
       </select>
     </div>
-    <div class="filter-field-small">
-      <label class="input-label">Sākuma datums</label>
+    <div>
+      <label class="form-label" for="filter-date-from">Sākuma datums</label>
       <input
         type="text"
         id="filter-date-from"
@@ -48,8 +48,8 @@ import './DataTab.css';
         placeholder="dd/mm/yyyy"
       />
     </div>
-    <div class="filter-field-small">
-      <label class="input-label">Beigu datums</label>
+    <div>
+      <label class="form-label" for="filter-date-to">Beigu datums</label>
       <input
         type="text"
         id="filter-date-to"
@@ -97,13 +97,13 @@ import './DataTab.css';
         <tbody id="table-body"></tbody>
       </table>
     </div>
-  </div>
-  <div class="table-footer">
-    <span id="table-count">0</span> ieraksti
-    <span
-      id="filtered-count"
-      class="hidden"
-      style="color: var(--color-graphite); margin-left: 10px;"></span>
+    <div class="table-footer">
+      <span id="table-count">0</span> ieraksti
+      <span
+        id="filtered-count"
+        class="hidden"
+        style="color: var(--color-graphite); margin-left: 10px;"></span>
+    </div>
   </div>
 </div>
 

@@ -14,6 +14,14 @@ const dataTabCss = readStripped('components', 'admin', 'DataTab', 'DataTab.css')
 const dataTabTs = readStripped('components', 'admin', 'DataTab', 'DataTab.ts');
 const calendarViewControllerTs = readStripped('components', 'admin', 'CalendarViewController.ts');
 const notificationsTs = readStripped('utils', 'admin', 'notifications.ts');
+const dataTabAstro = fs.readFileSync(
+  path.join(root, 'components', 'admin', 'DataTab', 'DataTab.astro'),
+  'utf-8'
+);
+const mealsTabAstro = fs.readFileSync(
+  path.join(root, 'components', 'admin', 'MealsTab', 'MealsTab.astro'),
+  'utf-8'
+);
 const adminIndexAstro = readStripped('pages', 'admin', 'index.astro');
 const calendarViewAstro = fs.readFileSync(
   path.join(root, 'components', 'admin', 'CalendarView.astro'),
@@ -271,5 +279,69 @@ describe('admin chrome', () => {
         new RegExp(`color:\\s*var\\(--color-${token}\\)`)
       );
     }
+  });
+
+  it('gives every Dati filter label a for matching a control id when DataTab.astro is read', () => {
+    const labels = [...dataTabAstro.matchAll(/<label[^>]*for="([^"]+)"/g)].map((m) => m[1]);
+    expect(labels).toEqual(['table-search', 'filter-status', 'filter-date-from', 'filter-date-to']);
+    for (const id of labels) {
+      expect(dataTabAstro).toMatch(new RegExp(`<(?:input|select)[^>]*id="${id}"`));
+    }
+    expect(dataTabAstro).not.toMatch(/<label(?![^>]*\bfor=)/);
+  });
+
+  it('places the table footer inside the table card when DataTab.astro is read', () => {
+    const card = /<div class="card table-card">([\s\S]*?)<div id="table-empty"/.exec(dataTabAstro);
+    expect(card).not.toBeNull();
+    const body = card![1];
+    expect(body.indexOf('class="table-wrapper"')).toBeGreaterThan(-1);
+    expect(body.indexOf('class="table-footer"')).toBeGreaterThan(body.indexOf('class="table-wrapper"'));
+    const afterFooter = body.slice(body.indexOf('class="table-footer"'));
+    expect(afterFooter).toMatch(/<\/div>\s*<\/div>\s*<\/div>\s*$/);
+  });
+
+  it('gives .input-field a 2px Slate border and no outline reset when admin.css is read', () => {
+    const base = ruleBody(adminCss, '.input-field');
+    expect(base).toMatch(/border:\s*2px solid var\(--color-slate\)/);
+    expect(base).not.toMatch(/min-height/);
+    const focus = ruleBody(adminCss, '.input-field:focus');
+    expect(focus).toMatch(/border-color:\s*var\(--color-graphite\)/);
+    expect(focus).not.toMatch(/outline/);
+  });
+
+  it('gives .input-field one box model so selects and inputs share a height when admin.css is read', () => {
+    const base = ruleBody(adminCss, '.input-field');
+    expect(base).toMatch(/box-sizing:\s*border-box/);
+    expect(base).toMatch(/height:\s*54px/);
+    expect(base).not.toMatch(/line-height:\s*\d+px/);
+    expect(base).toMatch(/width:\s*100%/);
+    expect(ruleBody(dataTabCss, '.filters-grid .input-field')).toBe('');
+  });
+
+  it('keeps the Uzturs refresh button out of the month nav and without inline style when MealsTab.astro is read', () => {
+    const nav = /<div class="meals-month-nav">([\s\S]*?)<\/div>/.exec(mealsTabAstro);
+    expect(nav).not.toBeNull();
+    expect(nav![1]).not.toMatch(/meals-refresh/);
+    const refresh = /<button[^>]*id="meals-refresh"[^>]*>/.exec(mealsTabAstro);
+    expect(refresh).not.toBeNull();
+    expect(refresh![0]).not.toMatch(/style=/);
+    expect(mealsTabAstro.indexOf('id="meals-refresh"')).toBeGreaterThan(
+      mealsTabAstro.indexOf('class="meals-month-nav"')
+    );
+  });
+
+  it('defines the month header and table footer rules only in component stylesheets when admin.css is read', () => {
+    for (const selector of ['.meals-calendar-header', '.meals-month-nav', '.meals-month-label', '.table-footer']) {
+      const escaped = selector.replace('.', '\\.');
+      expect(adminCss).not.toMatch(new RegExp(`${escaped}\\s*{`));
+    }
+  });
+
+  it('names the icon-only Dati and Uzturs buttons when the markup is read', () => {
+    for (const id of ['meals-prev-month', 'meals-next-month', 'meals-refresh', 'patients-refresh']) {
+      expect(mealsTabAstro).toMatch(new RegExp(`<button[^>]*id="${id}"[^>]*aria-label="[^"]+"`));
+    }
+    expect(dataTabAstro).toMatch(/<button[^>]*id="refresh-table"[^>]*aria-label="[^"]+"/);
+    expect(dataTabAstro).toMatch(/<select[^>]*id="table-select"[^>]*aria-label="[^"]+"/);
   });
 });
