@@ -38,18 +38,6 @@ export interface Meal {
 }
 
 /**
- * Result from AI food analysis
- */
-export interface FoodAnalysisResult {
-  items: MealItem[];
-  totalCalories: number;
-  totalProtein: number;
-  totalFat: number;
-  totalCarbs: number;
-  mealType: MealType;
-}
-
-/**
  * User profile with nutritional goals
  */
 export interface User {

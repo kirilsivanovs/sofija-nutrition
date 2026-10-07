@@ -25,7 +25,7 @@ sofija-nutrition/
 │   └── src/
 │       ├── functions/
 │       │   ├── booking/        # Booking domain (availability, create, confirm)
-│       │   ├── food/           # Food tracker domain (meals, access, AI)
+│       │   ├── food/           # Food tracker domain (meals, access)
 │       │   ├── admin/          # Admin domain (bookings, settings, services)
 │       │   └── health.function.ts
 │       ├── services/           # Business logic layer

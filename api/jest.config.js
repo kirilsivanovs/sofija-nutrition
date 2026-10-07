@@ -11,7 +11,6 @@ module.exports = {
     'src/**/*.{js,ts}',
     '!src/index.ts',
     '!src/functions/**', // Exclude Azure Functions handlers (covered by E2E tests)
-    '!src/services/aiService.ts', // AI functionality disabled
     '!src/services/mealsRepository.ts', // Covered by dedicated test
     '!**/node_modules/**'
   ],
@@ -54,10 +53,8 @@ module.exports = {
     '^./shared-translations$': '<rootDir>/../shared/translations.js'
   },
   
-  // Exclude AI service tests (functionality disabled)
   testPathIgnorePatterns: [
-    '/node_modules/',
-    'aiService.test.ts'
+    '/node_modules/'
   ],
   
   // Расширения файлов для резолвинга модулей

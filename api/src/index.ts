@@ -15,8 +15,6 @@ import './functions/booking/confirmPayment.function';
 // ============================================
 import './functions/food/meals.function';
 import './functions/food/foodAccess.function';
-import './functions/food/food-analyze.function';
-import './functions/food/food-estimate.function';
 
 // ============================================
 // Admin Domain
