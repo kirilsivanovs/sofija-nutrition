@@ -92,24 +92,23 @@ export function showConfirm(message: string, title: string = 'ApstiprinÄt darbÄ
         // Focus on OK button
         setTimeout(() => (dialog.querySelector('.confirm-ok') as HTMLButtonElement)?.focus(), 100);
         
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') close(false);
+        };
+
         const close = (result: boolean) => {
+            document.removeEventListener('keydown', handleEsc);
             overlay.remove();
             resolve(result);
         };
-        
+
         dialog.querySelector('.confirm-ok')?.addEventListener('click', () => close(true));
         dialog.querySelector('.confirm-cancel')?.addEventListener('click', () => close(false));
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) close(false);
         });
-        
+
         // ESC key to cancel
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                close(false);
-                document.removeEventListener('keydown', handleEsc);
-            }
-        };
         document.addEventListener('keydown', handleEsc);
     });
 }

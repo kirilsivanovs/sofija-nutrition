@@ -168,6 +168,10 @@ describe('DataTabController', () => {
 });
 
 describe('showToast', () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('renders title and message as text when they contain markup', () => {
     jest.useFakeTimers();
     document.body.innerHTML = '<div id="toast-container"></div>';
@@ -181,11 +185,15 @@ describe('showToast', () => {
     expect(container.querySelector('.toast-close')).not.toBeNull();
 
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
   });
 });
 
 describe('showConfirm', () => {
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
   it('renders title and message as text when they contain markup', async () => {
     jest.useFakeTimers();
     document.body.innerHTML = '';
@@ -200,9 +208,32 @@ describe('showConfirm', () => {
 
     (dialog.querySelector('.confirm-cancel') as HTMLElement).click();
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
 
     await expect(result).resolves.toBe(false);
     expect(document.querySelector('.confirm-overlay')).toBeNull();
+  });
+
+  const closePaths: Array<{ path: string; close: () => void }> = [
+    { path: 'ok', close: () => (document.querySelector('.confirm-ok') as HTMLElement).click() },
+    { path: 'cancel', close: () => (document.querySelector('.confirm-cancel') as HTMLElement).click() },
+    { path: 'overlay', close: () => (document.querySelector('.confirm-overlay') as HTMLElement).click() },
+    { path: 'escape', close: () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); } },
+  ];
+
+  it.each(closePaths)('removes the keydown listener when the dialog is closed via $path', async ({ close }) => {
+    jest.useFakeTimers();
+    document.body.innerHTML = '';
+    const add = jest.spyOn(document, 'addEventListener');
+    const remove = jest.spyOn(document, 'removeEventListener');
+
+    const result = showConfirm('m', 't');
+    const keydownCall = add.mock.calls.find(([type]) => type === 'keydown');
+    const handler = keydownCall?.[1];
+    expect(handler).toBeDefined();
+
+    close();
+    await result;
+
+    expect(remove).toHaveBeenCalledWith('keydown', handler);
   });
 });
