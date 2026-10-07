@@ -74,7 +74,7 @@ Everything `/new`, `/close`, `/orchestrate`, `/board`, `/find`, `/next`, `/test`
 
 ## The pipeline
 
-`/work` takes a task from its `status` to `done` on autopilot: analysis, plan, branch, implementation, verification, review, commit, fast-forward merge into `main`, push, archive. `.claude/commands/work.md` holds the route, the fix rounds and the hard stops. **There are no pull requests: pushing `main` deploys production** (frontend and the managed API deploy together, gated on CI success via `workflow_run` — see `deploy.yml`).
+`/work` takes a task from its `status` to `done` on autopilot: analysis, plan, branch, implementation, verification, review, commit, fast-forward merge into `main`, push, archive. `.claude/commands/work.md` holds the route, the fix rounds and the hard stops. **There are no pull requests: pushing `main` deploys production** (frontend and the managed API deploy together, gated on CI success via `workflow_run` — see `azure-static-web-apps-wonderful-bay-0fb550403.yml`, whose filename Azure's OIDC check requires).
 
 - Plain language maps to `/work`: a bare id or "давай возьмём SN-012" is `/work SN-012`, "давай дизайн" is `/work design`, "продолжай" is `/work` with no id, "заведи задачу …" is `/work "<title>"`, "передумай"/"re-analyze" on a named task forces that one stage (`work.md`, "Plain-language stage overrides"). Say which you took it as. A bare "yes" after a gate authorises the stage just described.
 - No pull requests. Never force-push, `reset --hard` or rewrite pushed history.

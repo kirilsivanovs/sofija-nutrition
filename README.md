@@ -114,9 +114,6 @@ npm run test:all
 ### CI/CD Pipeline
 
 ```
-PR → CI + CodeQL → Preview Deploy (SWA) → E2E (Preview)
-  └── merge to main after all checks pass
-
 main → CI → Deploy (SWA + managed API)
 ```
 
@@ -128,14 +125,14 @@ main → CI → Deploy (SWA + managed API)
 
 ### Branch Protection + Auto-merge (recommended)
 
-- Require status checks: `CI`, `CodeQL`, `Deploy Frontend Preview`, `E2E (Preview)`
+- Require status checks: `CI`, `CodeQL`
 - Enable auto-merge to merge PRs automatically after all checks succeed
 
 ### Manual Deployment
 
 ```bash
 # API and frontend deploy together via SWA managed functions,
-# triggered by `deploy.yml` on CI success.
+# triggered by `azure-static-web-apps-wonderful-bay-0fb550403.yml` on CI success.
 ```
 
 ## Workspace Structure
