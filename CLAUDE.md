@@ -10,7 +10,7 @@ This checkout is in the global `safe.directory` list, so plain `git` works (and 
 | `api` | `api/` | Azure Functions v4, TypeScript, Azure Table Storage, Resend, pdf-lib |
 | `shared` | `shared/` | types, validators, `translations.js` (synced to `public/assets/` at build) |
 | `ci` | `.github/workflows/` | GitHub Actions: CI, CodeQL, combined SWA + managed-API deploy, frontend preview deploy |
-| `infra` | `infra/` (not created yet) | Bicep for SWA Free, Storage, App Insights (stay on SWA Free until go-live; no Function App or Key Vault) |
+| `infra` | `infra/` | Bicep for SWA Free, Storage, App Insights (stay on SWA Free until go-live; no Function App or Key Vault) |
 
 ## Build / test
 

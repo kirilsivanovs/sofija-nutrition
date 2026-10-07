@@ -30,6 +30,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
+      id-token: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
@@ -48,11 +49,19 @@ jobs:
       - name: Prepare API shared files
         run: cp shared/translations.js api/shared-translations.js
 
+      - name: Get GitHub ID token
+        id: idtoken
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: return await core.getIDToken()
+
       - name: Deploy to Azure Static Web Apps
         id: deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          github_id_token: ${{ steps.idtoken.outputs.result }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           # ── Build config ──
@@ -187,9 +196,20 @@ jobs:
     name: Close Preview Environment
     runs-on: ubuntu-latest
     if: ${{ github.event.action == 'closed' && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Get GitHub ID token
+        id: idtoken
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: return await core.getIDToken()
+
       - name: Close Azure Static Web Apps preview
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          github_id_token: ${{ steps.idtoken.outputs.result }}
           action: close
