@@ -29,6 +29,7 @@ describe('site chrome', () => {
   it('has no weight 500 in the public, booking, cabinet and header styles', () => {
     for (const css of allFiles) {
       expect(css).not.toMatch(/font-weight:\s*500/);
+      expect(css).not.toMatch(/font-weight:\s*medium|\bfont-medium\b/);
     }
   });
 

@@ -58,9 +58,6 @@ function ruleBody(css: string, selector: string): string {
 describe('landing card chrome', () => {
   it('removes hover-lift transform and shadow from card and button hover states', () => {
     const globalHoverSelectors = [
-      '.outcome-card:hover',
-      '.whom-item:hover',
-      '.cert-badge:hover',
       '.site-footer__social a:hover',
       '.btn-solid:hover',
       '.btn-outline:hover',
@@ -179,6 +176,12 @@ describe('landing colour roles', () => {
 });
 
 describe('landing decorative markers', () => {
+  it('has no rules left for the removed landing sections when no markup uses them', () => {
+    const removed = /\.(credentials?-|outcome-|whom-|process-steps|cert-badge|trust-bar|trust-metric|faq-)/;
+    expect(globalCss).not.toMatch(removed);
+    expect(bookingCss).not.toMatch(removed);
+  });
+
   it('removes the hero eyebrow and floating credential pill', () => {
     expect(indexAstro).not.toMatch(/hero__eyebrow|hero__credential/);
     expect(bookingCss).not.toMatch(/hero__eyebrow|hero__credential/);
