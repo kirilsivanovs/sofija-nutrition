@@ -7,9 +7,15 @@
  * Tests admin panel mobile burger menu behavior
  */
 
+import { initBurgerMenu } from '../src/scripts/burgerMenu';
+
+function pressKey(key: string, shiftKey = false): void {
+  document.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true }));
+}
+
 describe('AppHeader Burger Menu', () => {
-  let mobileMenuBtn;
-  let mobileNavMenu;
+  let mobileMenuBtn: any;
+  let mobileNavMenu: any;
 
   beforeEach(() => {
     // Setup DOM matching AppHeader component structure
@@ -20,7 +26,7 @@ describe('AppHeader Burger Menu', () => {
             type="button"
             class="mobile-menu-btn"
             style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
-            aria-label="Atvērt izvēlni"
+            aria-label="Izvēlne"
             aria-expanded="false"
             aria-controls="mobile-nav-menu-admin"
           >
@@ -47,7 +53,6 @@ describe('AppHeader Burger Menu', () => {
     mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     mobileNavMenu = document.getElementById('mobile-nav-menu-admin');
 
-    // Initialize the burger menu script (from AppHeader.astro)
     initBurgerMenu();
   });
 
@@ -59,59 +64,6 @@ describe('AppHeader Burger Menu', () => {
     document.body.style.top = '';
   });
 
-  // Burger menu initialization function (matches AppHeader.astro script)
-  function initBurgerMenu() {
-    const btns = document.querySelectorAll('.mobile-menu-btn');
-
-    btns.forEach(function (btn) {
-      const menuId = btn.getAttribute('aria-controls');
-      const menu = menuId ? document.getElementById(menuId) : null;
-      if (!menu) return;
-
-      function toggle(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const isOpen = menu.classList.toggle('open');
-        btn.classList.toggle('active', isOpen);
-        btn.setAttribute('aria-expanded', String(isOpen));
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-        document.body.style.position = isOpen ? 'fixed' : '';
-        document.body.style.width = isOpen ? '100%' : '';
-        document.body.style.top = isOpen ? '0' : '';
-      }
-
-      function close() {
-        menu.classList.remove('open');
-        btn.classList.remove('active');
-        btn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-      }
-
-      // Add click handler to button
-      btn.addEventListener('click', toggle, false);
-
-      // Close on link/button click inside menu
-      const links = menu.querySelectorAll('a, button[data-tab]');
-      for (let i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', close, false);
-      }
-
-      // Close on overlay click
-      menu.addEventListener(
-        'click',
-        function (e) {
-          if (e.target === menu) close();
-        },
-        false
-      );
-    });
-  }
-
-  // Initialize immediately (simulating DOMContentLoaded already fired)
-  initBurgerMenu();
 
   describe('Initial State', () => {
     test('burger button should exist', () => {
@@ -125,7 +77,7 @@ describe('AppHeader Burger Menu', () => {
     });
 
     test('burger button should have correct aria attributes', () => {
-      expect(mobileMenuBtn.getAttribute('aria-label')).toBe('Atvērt izvēlni');
+      expect(mobileMenuBtn.getAttribute('aria-label')).toBe('Izvēlne');
       expect(mobileMenuBtn.getAttribute('aria-expanded')).toBe('false');
       expect(mobileMenuBtn.getAttribute('aria-controls')).toBe('mobile-nav-menu-admin');
     });
@@ -222,6 +174,47 @@ describe('AppHeader Burger Menu', () => {
 
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
       expect(mobileMenuBtn.classList.contains('active')).toBe(false);
+    });
+  });
+
+  describe('Keyboard and header offset', () => {
+    it('moves focus to the burger when Tab is pressed on the last menu item', () => {
+      mobileMenuBtn.click();
+      const items = mobileNavMenu.querySelectorAll('button');
+      items[items.length - 1].focus();
+
+      pressKey('Tab');
+
+      expect(document.activeElement).toBe(mobileMenuBtn);
+    });
+
+    it('moves focus to the last menu item when Shift+Tab is pressed on the burger', () => {
+      mobileMenuBtn.click();
+      mobileMenuBtn.focus();
+
+      pressKey('Tab', true);
+
+      const items = mobileNavMenu.querySelectorAll('button');
+      expect(document.activeElement).toBe(items[items.length - 1]);
+    });
+
+    it('sets --menu-top to the header height when the menu opens', () => {
+      const header = document.querySelector('header') as HTMLElement;
+      Object.defineProperty(header, 'offsetHeight', { value: 83, configurable: true });
+
+      mobileMenuBtn.click();
+
+      expect(mobileNavMenu.style.getPropertyValue('--menu-top')).toBe('83px');
+    });
+
+    it('returns focus to the burger when Escape closes the menu', () => {
+      mobileMenuBtn.click();
+      mobileNavMenu.querySelector('button').focus();
+
+      pressKey('Escape');
+
+      expect(mobileNavMenu.classList.contains('open')).toBe(false);
+      expect(document.activeElement).toBe(mobileMenuBtn);
     });
   });
 

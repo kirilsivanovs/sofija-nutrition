@@ -47,6 +47,63 @@ describe('site chrome', () => {
     expect(itemBody).not.toMatch(/translateX\(-20px\)/);
   });
 
+  it('keeps the header positioned, not static, on phones', () => {
+    const phoneBlock = appHeaderAstro.match(/@media \(max-width: 760px\)\s*{\s*\.app-header\s*{([^}]*)}/);
+    expect(phoneBlock).not.toBeNull();
+    expect(phoneBlock![1]).toMatch(/position:\s*relative/);
+    expect(phoneBlock![1]).not.toMatch(/position:\s*static/);
+  });
+
+  it('has no 12px or 8px radius and no sideways hover shift in the mobile menu', () => {
+    const itemRules = [
+      ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item'),
+      ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item:hover'),
+      ruleBody(appHeaderAstro, '.mobile-nav-menu :global(a)'),
+      ruleBody(appHeaderAstro, '.mobile-nav-menu :global(.mobile-nav-item)'),
+      ruleBody(appHeaderAstro, '.app-logout'),
+    ].join('\n');
+    expect(itemRules).not.toMatch(/border-radius:\s*(12|8)px/);
+    expect(globalCss).not.toMatch(/translateX\(4px\)/);
+    expect(appHeaderAstro).not.toMatch(/translateX\(4px\)/);
+    expect(ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item')).not.toMatch(/letter-spacing/);
+    expect(ruleBody(appHeaderAstro, '.mobile-nav-menu :global(.mobile-nav-item)')).not.toMatch(
+      /letter-spacing/
+    );
+  });
+
+  it('draws the active menu row as a full-height Range edge on an unfilled row', () => {
+    const item = ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item');
+    const hover = ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item:hover');
+    const active = ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item.active');
+    const marker = ruleBody(globalCss, '.mobile-nav-menu .mobile-nav-item.active::before');
+    expect(item).not.toMatch(/max-width/);
+    expect(hover).not.toMatch(/rgba|border-color/);
+    expect(active).not.toMatch(/rgba|border-color|navy/);
+    expect(active).toMatch(/background:\s*transparent/);
+    expect(marker).toMatch(/top:\s*0/);
+    expect(marker).toMatch(/bottom:\s*0/);
+    expect(marker).not.toMatch(/transform|height|navy/);
+    expect(marker).toMatch(/var\(--color-range\)/);
+  });
+
+  it('draws the burger lines without navy', () => {
+    const burgerRules = [
+      ruleBody(appHeaderAstro, '.mobile-menu-btn span'),
+      ruleBody(appHeaderAstro, '.mobile-menu-btn:hover span'),
+      ruleBody(appHeaderAstro, '.mobile-menu-btn.active span:nth-child(1)'),
+      ruleBody(appHeaderAstro, '.mobile-menu-btn.active span:nth-child(3)'),
+      ruleBody(globalCss, '.mobile-menu-btn.active span:nth-child(1)'),
+      ruleBody(globalCss, '.mobile-menu-btn.active span:nth-child(3)'),
+    ].join('\n');
+    expect(burgerRules).toMatch(/background:/);
+    expect(burgerRules).not.toMatch(/navy/);
+  });
+
+  it('uses one static burger label', () => {
+    expect(appHeaderAstro).toContain('aria-label="Izvēlne"');
+    expect(appHeaderAstro).not.toContain('Atvērt izvēlni');
+  });
+
   it('keeps the inactive language codes at 400 and the active one at 600', () => {
     expect(ruleBody(appHeaderAstro, '.app-lang-switch a')).toMatch(/font-weight:\s*400/);
     expect(ruleBody(appHeaderAstro, ".app-lang-switch a[aria-current='page']")).toMatch(

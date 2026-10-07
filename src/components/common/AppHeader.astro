@@ -48,7 +48,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
           type="button"
           class="mobile-menu-btn"
           style="-webkit-tap-highlight-color:transparent;touch-action:manipulation;"
-          aria-label="Atvērt izvēlni"
+          aria-label="Izvēlne"
           aria-expanded="false"
           aria-controls={mobileMenuId}
         >
@@ -170,7 +170,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   @media (max-width: 760px) {
     .app-header {
-      position: static;
+      position: relative;
     }
 
     .app-lang-switch a {
@@ -382,7 +382,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     color: var(--color-slate);
     text-decoration: none;
     padding: 10px 18px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid transparent;
     cursor: pointer;
   }
@@ -431,19 +431,19 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     display: block;
     width: 24px;
     height: 2px;
-    background: var(--color-navy);
+    background: var(--color-slate);
     border-radius: 2px;
     pointer-events: none;
   }
 
   .mobile-menu-btn:hover span {
-    background: var(--color-navy-hover);
+    background: var(--color-graphite);
   }
 
   /* Hamburger animation to X */
   .mobile-menu-btn.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 6px);
-    background: var(--color-navy);
+    background: var(--color-graphite);
   }
 
   .mobile-menu-btn.active span:nth-child(2) {
@@ -452,25 +452,25 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 
   .mobile-menu-btn.active span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -6px);
-    background: var(--color-navy);
+    background: var(--color-graphite);
   }
 
-  /* ── Premium Fullscreen Mobile Menu ── */
+  /* Fullscreen mobile menu, starts below the header (--menu-top is set on open) */
   .mobile-nav-menu {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    padding-top: 72px; /* header height */
+    padding-top: var(--menu-top, 84px);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: stretch;
     gap: 0;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 60px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 24px;
     background: var(--color-white);
     z-index: 999;
     opacity: 0;
@@ -492,14 +492,14 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     pointer-events: auto;
   }
 
-  /* Premium nav items */
+  /* Menu items */
   .mobile-nav-menu :global(a),
   .mobile-nav-menu :global(button) {
     display: flex;
     align-items: center;
     gap: 16px;
     padding: 16px 24px;
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     font-family: var(--font-sans);
     font-size: 1.1rem;
     font-weight: 600;
@@ -510,7 +510,6 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     cursor: pointer;
     min-height: 56px;
     width: 100%;
-    max-width: 320px;
     box-shadow: none;
     position: relative;
   }
@@ -518,17 +517,23 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   .mobile-nav-menu :global(a:hover),
   .mobile-nav-menu :global(button:hover) {
     color: var(--color-graphite);
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--color-mist);
     box-shadow: none;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item) {
     justify-content: flex-start;
+    padding: 0 20px;
+    min-height: 56px;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-slate);
+    font-size: 1rem;
+    line-height: 1.3;
   }
 
   .mobile-nav-menu :global(.mobile-nav-item.active) {
     color: var(--color-graphite);
-    background: var(--color-mist);
     font-weight: 600;
   }
 
@@ -536,12 +541,11 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     content: '';
     position: absolute;
     left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    bottom: 0;
     width: 3px;
-    height: 24px;
     background: var(--color-range);
-    border-radius: 0 3px 3px 0;
+    border-radius: 0;
   }
 
   /* Responsive */
@@ -601,98 +605,10 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
 </style>
 
 <script>
-  // Mobile menu functionality
-  (function () {
-    function initBurgerMenu() {
-      const btns = document.querySelectorAll('.mobile-menu-btn');
+  import { initBurgerMenu } from '../../scripts/burgerMenu';
 
-      btns.forEach(function (btn) {
-        if (btn.dataset.burgerBound === 'true') return;
-        const menuId = btn.getAttribute('aria-controls');
-        const menu = document.getElementById(menuId);
-        if (!menu) return;
-        btn.dataset.burgerBound = 'true';
-
-        function toggle(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const isOpen = menu.classList.toggle('open');
-          btn.classList.toggle('active', isOpen);
-          btn.setAttribute('aria-expanded', String(isOpen));
-          document.body.style.overflow = isOpen ? 'hidden' : '';
-          document.body.style.position = isOpen ? 'fixed' : '';
-          document.body.style.width = isOpen ? '100%' : '';
-          document.body.style.top = isOpen ? '0' : '';
-        }
-
-        function close() {
-          menu.classList.remove('open');
-          btn.classList.remove('active');
-          btn.setAttribute('aria-expanded', 'false');
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
-        }
-
-        // Add click handler to button
-        btn.addEventListener('click', toggle, false);
-        btn.addEventListener(
-          'touchstart',
-          function (e) {
-            e.preventDefault();
-            toggle(e);
-          },
-          { passive: false }
-        );
-
-        // Close on link/button click inside menu
-        const links = menu.querySelectorAll('a, button[data-tab]');
-        for (let i = 0; i < links.length; i++) {
-          links[i].addEventListener('click', close, false);
-        }
-
-        // Close on overlay click
-        menu.addEventListener(
-          'click',
-          function (e) {
-            if (e.target === menu) close();
-          },
-          false
-        );
-
-        // Escape closes the menu and refocuses the button; Tab traps focus inside it
-        document.addEventListener('keydown', function (e) {
-          if (!menu.classList.contains('open')) return;
-
-          if (e.key === 'Escape') {
-            close();
-            btn.focus();
-            return;
-          }
-
-          if (e.key !== 'Tab') return;
-
-          const focusable = menu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
-          if (!focusable.length) return;
-
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        });
-      });
-    }
-
-    // Fires on first load and after every ClientRouter swap
-    document.addEventListener('astro:page-load', initBurgerMenu);
-  })();
+  // Fires on first load and after every ClientRouter swap
+  document.addEventListener('astro:page-load', initBurgerMenu);
 
   // Logout: Azure SWA handles session cleanup server-side via /.auth/logout
   // No need to manually clear cookies/storage — auth cookies are httpOnly.
