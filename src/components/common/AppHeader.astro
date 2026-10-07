@@ -52,9 +52,9 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
           aria-expanded="false"
           aria-controls={mobileMenuId}
         >
-          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
-          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
-          <span class="w-6 h-0.5 transition-all" style="pointer-events:none;" />
+          <span class="w-6 h-0.5" style="pointer-events:none;" />
+          <span class="w-6 h-0.5" style="pointer-events:none;" />
+          <span class="w-6 h-0.5" style="pointer-events:none;" />
         </button>
       )
     }
@@ -274,7 +274,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   .app-logo-sub {
     font-size: 14px;
     color: var(--color-slate);
-    font-weight: 500;
+    font-weight: 400;
   }
 
   /* Public nav / lang / CTA */
@@ -289,7 +289,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     color: var(--color-graphite);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     white-space: nowrap;
   }
 
@@ -317,7 +317,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     min-width: 44px;
     min-height: 44px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--color-slate);
     cursor: pointer;
     border-bottom: 2px solid transparent;
@@ -343,7 +343,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     align-items: center;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .app-public-cta:hover {
@@ -369,7 +369,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
   .app-user-name {
     font-size: 14px;
     color: var(--color-graphite);
-    font-weight: 500;
+    font-weight: 400;
     display: none;
   }
 
@@ -383,7 +383,6 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     text-decoration: none;
     padding: 10px 18px;
     border-radius: 8px;
-    transition: all 0.2s;
     border: 1px solid transparent;
     cursor: pointer;
   }
@@ -434,7 +433,6 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     height: 2px;
     background: var(--color-navy);
     border-radius: 2px;
-    transition: all 0.3s ease;
     pointer-events: none;
   }
 
@@ -478,9 +476,6 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition:
-      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-      visibility 0.4s;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -507,7 +502,7 @@ const logoutUrl = '/.auth/logout?post_logout_redirect_uri=/';
     border-radius: 12px;
     font-family: var(--font-sans);
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--color-graphite);
     text-decoration: none;
     background: transparent;

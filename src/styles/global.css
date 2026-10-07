@@ -89,7 +89,6 @@ button,
   font-size: 1rem;
   font-weight: 600;
   border-radius: var(--radius-sm);
-  transition: background-color 0.2s ease, color 0.2s ease;
   -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
 }
 
@@ -118,7 +117,6 @@ button,
   letter-spacing: 0.02em;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .btn-solid {
@@ -160,9 +158,6 @@ button,
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.875rem;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
 }
 
 .btn-chip:hover {
@@ -183,7 +178,6 @@ select {
   font-size: 16px; /* Prevents zoom on iOS */
   border-radius: var(--radius-sm);
   border: 2px solid var(--color-slate);
-  transition: border-color 0.2s ease;
 }
 
 input:focus,
@@ -366,9 +360,6 @@ i.ph {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition:
-    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    visibility 0.4s;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -400,10 +391,6 @@ i.ph {
   background: var(--color-navy);
 }
 
-.mobile-menu-btn span {
-  transition: all 0.3s ease;
-}
-
 /* Premium mobile nav items */
 .mobile-nav-menu .mobile-nav-item {
   display: flex;
@@ -413,13 +400,12 @@ i.ph {
   border-radius: 12px;
   font-family: var(--font-sans);
   font-size: 1.35rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-graphite);
   text-decoration: none;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 56px;
   width: 100%;
   max-width: 320px;
@@ -427,36 +413,6 @@ i.ph {
   position: relative;
   z-index: 1;
   letter-spacing: 0.02em;
-  /* Staggered entrance animation */
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-.mobile-nav-menu.open .mobile-nav-item {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.mobile-nav-menu.open .mobile-nav-item:nth-child(1) {
-  transition: all 0.4s 0.08s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(2) {
-  transition: all 0.4s 0.14s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(3) {
-  transition: all 0.4s 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(4) {
-  transition: all 0.4s 0.26s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(5) {
-  transition: all 0.4s 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(6) {
-  transition: all 0.4s 0.38s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mobile-nav-menu.open .mobile-nav-item:nth-child(7) {
-  transition: all 0.4s 0.44s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-nav-menu .mobile-nav-item:hover {
@@ -561,7 +517,7 @@ i.ph {
 
 .credential-label {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -606,7 +562,6 @@ i.ph {
   border-radius: var(--radius-sm);
   background: var(--color-mist);
   border: 1px solid rgba(27, 67, 50, 0.06);
-  transition: border-color 0.2s ease;
 }
 
 .outcome-card:hover {
@@ -655,9 +610,6 @@ i.ph {
   font-size: 15px;
   line-height: 1.5;
   color: var(--color-graphite);
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
 }
 
 .whom-item:hover {
@@ -693,7 +645,6 @@ i.ph {
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(27, 67, 50, 0.1);
-  transition: border-color 0.2s ease;
 }
 
 .cert-badge:hover {
