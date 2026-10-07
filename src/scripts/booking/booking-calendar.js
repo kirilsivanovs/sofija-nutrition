@@ -951,7 +951,7 @@ class BookingCalendar {
         }
 
         this.updateFormatOptions();
-        formSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        formSection.scrollIntoView({ behavior: 'auto', block: 'nearest' });
       }
     });
   }
@@ -1661,7 +1661,7 @@ class BookingCalendar {
         // Scroll to first error
         const firstError = this.container.querySelector('.input-error');
         if (firstError) {
-          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstError.scrollIntoView({ behavior: 'auto', block: 'center' });
           firstError.focus();
         }
         return;

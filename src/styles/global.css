@@ -75,7 +75,7 @@ input[type='button'] {
 }
 
 /* Text links can be smaller but need adequate padding */
-a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.btn-home):not(.nav-tab):not(.legal-prose :is(p, li) a) {
+a:not(.btn-primary):not(.lang-btn):not(.mobile-menu-btn):not(.btn-cta):not(.btn-home):not(.nav-tab):not(:is(.legal-prose :is(p, li), .consent-checkbox) a) {
   min-height: auto;
   min-width: auto;
   padding: 8px 4px;
@@ -263,7 +263,7 @@ p,
   color: var(--color-slate);
 }
 
-.legal-prose :is(p, li) a {
+:is(.legal-prose :is(p, li), .consent-checkbox) a {
   display: inline;
   min-height: auto;
   min-width: auto;
@@ -275,7 +275,7 @@ p,
   text-underline-offset: 0.15em;
 }
 
-.legal-prose :is(p, li) a:hover {
+:is(.legal-prose :is(p, li), .consent-checkbox) a:hover {
   text-decoration-thickness: 2px;
 }
 

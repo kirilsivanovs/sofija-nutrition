@@ -535,6 +535,55 @@ test.describe('Booking Flow', () => {
     }
   });
 
+  async function openBookingForm(page: Page) {
+    const bookingSection = page.locator('#bookingCalendar');
+    await mockAvailability(page, { [fixtureDays[0]]: ['09:00', '10:00'] });
+    await page.reload();
+    await expect(bookingSection).toBeVisible();
+
+    const availableSlot = bookingSection.locator('.slot-btn').first();
+    await expect(availableSlot).toBeVisible({ timeout: 5000 });
+    await availableSlot.click();
+    await bookingSection.locator('#formatToggleInPerson').click();
+
+    const continueBtn = bookingSection.locator('.booking-continue-btn');
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
+    return bookingSection;
+  }
+
+  test('renders consent links inline without padding when the booking form is open', async ({
+    page,
+  }) => {
+    const bookingSection = await openBookingForm(page);
+    const links = bookingSection.locator('.consent-checkbox a');
+    await expect(links.first()).toBeVisible({ timeout: 5000 });
+
+    for (const link of await links.all()) {
+      const style = await link.evaluate((el) => {
+        const computed = getComputedStyle(el);
+        return {
+          display: computed.display,
+          paddingLeft: computed.paddingLeft,
+          paddingRight: computed.paddingRight,
+        };
+      });
+      expect(style).toEqual({ display: 'inline', paddingLeft: '0px', paddingRight: '0px' });
+    }
+  });
+
+  test('shows a 3px focus outline on the phone wrapper when the phone input is focused', async ({
+    page,
+  }) => {
+    const bookingSection = await openBookingForm(page);
+    const phoneInput = bookingSection.locator('input[name="phone"]');
+    await expect(phoneInput).toBeVisible({ timeout: 5000 });
+    await phoneInput.focus();
+
+    const wrapper = bookingSection.locator('.phone-input-wrapper');
+    await expect(wrapper).toHaveCSS('outline-width', '3px');
+  });
+
   test('picking the in-person format releases the online toggle', async ({ page }) => {
     const bookingSection = page.locator('#bookingCalendar');
     await expect(bookingSection).toBeVisible();
