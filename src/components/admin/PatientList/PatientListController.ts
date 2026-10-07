@@ -267,7 +267,7 @@ export class PatientListController {
 
       this.onAccessUpdate?.(userId, enabled);
       this.applyFilter();
-      this.onShowToast?.(enabled ? 'Piekļuve atļauta' : 'Piekļuve liegta', 'success');
+      this.onShowToast?.(enabled ? 'Piekļuve dienasgrāmatai ieslēgta' : 'Piekļuve dienasgrāmatai izslēgta', 'success');
     } catch (error) {
       console.error('Error updating access:', error);
       this.onShowToast?.('Kļūda mainot piekļuvi', 'error');
