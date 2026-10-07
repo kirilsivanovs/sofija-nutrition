@@ -6,6 +6,11 @@ test('landing page loads', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
+test('renders no Astro dev toolbar when served locally', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('astro-dev-toolbar')).toHaveCount(0);
+});
+
 test('keeps the hero-to-footer content inside <body> in the raw HTML', async ({ request }) => {
   const response = await request.get('/');
   const html = await response.text();
