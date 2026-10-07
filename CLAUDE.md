@@ -25,7 +25,7 @@ npm run build                                                    # astro build; 
 npx playwright test e2e/<file>.spec.ts                           # needs `npm run dev` on :4321 (launch config `astro-dev`)
 ```
 
-Three frontend suites are excluded in `jest.config.cjs` as broken (`booking-state`, `booking-formatters`, `apiClient`). A plan that relies on one must fix and re-enable it, not add to the list.
+No frontend suite is excluded in `jest.config.cjs`. A broken suite is fixed or deleted with the code it covers, not added to an ignore list.
 
 ## Conventions
 

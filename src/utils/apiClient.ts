@@ -13,12 +13,13 @@
  */
 
 import type { APIResponse, BookingData, AvailabilityData, AdminBooking } from './types';
+import { API_CONFIG } from './constants';
 
 // ============================================
 // Configuration
 // ============================================
 
-const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL || '';
+const API_BASE_URL = API_CONFIG.BASE_URL;
 
 const DEFAULT_HEADERS = {
     'Content-Type': 'application/json',
