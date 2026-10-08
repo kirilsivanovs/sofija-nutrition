@@ -318,6 +318,24 @@ describe('admin chrome', () => {
     expect(ruleBody(dataTabCss, '.filters-grid .input-field')).toBe('');
   });
 
+  it('gives the blocked-date reason field the same 160px minimum as the vacation form when admin.css is read', () => {
+    for (const selector of ['.vacation-form .input-field', '.blocked-date-form .input-field']) {
+      const rule = ruleBody(adminCss, selector);
+      expect(rule).toMatch(/min-width:\s*160px/);
+      expect(rule).toMatch(/width:\s*auto/);
+    }
+  });
+
+  it('wraps only the Dati header when DataTab.css is read', () => {
+    expect(ruleBody(dataTabCss, '.content-header:has(> .data-controls)')).toMatch(/flex-wrap:\s*wrap/);
+    expect(ruleBody(adminCss, '.content-header')).not.toMatch(/flex-wrap/);
+  });
+
+  it('defines the Dati controls only in DataTab.css when admin.css is read', () => {
+    expect(adminCss).not.toMatch(/\.data-controls\s*[{,]/);
+    expect(ruleBody(dataTabCss, '.data-controls')).toMatch(/gap:\s*10px/);
+  });
+
   it('keeps the Uzturs refresh button out of the month nav and without inline style when MealsTab.astro is read', () => {
     const nav = /<div class="meals-month-nav">([\s\S]*?)<\/div>/.exec(mealsTabAstro);
     expect(nav).not.toBeNull();

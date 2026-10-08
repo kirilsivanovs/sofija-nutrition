@@ -1295,7 +1295,8 @@
   margin-bottom: 24px;
 }
 
-.vacation-form .input-field {
+.vacation-form .input-field,
+.blocked-date-form .input-field {
   width: auto;
   min-width: 160px;
 }
@@ -1305,10 +1306,6 @@
   flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 24px;
-}
-
-.blocked-date-form .input-field {
-  width: auto;
 }
 
 .blocked-list {
@@ -1415,16 +1412,6 @@
 
 .data-table tr.row-selected td:first-child {
   border-left: 3px solid var(--color-navy);
-}
-
-.data-controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.data-controls .input-field {
-  width: auto;
 }
 
 /* Meals Admin Tab */
