@@ -18,6 +18,10 @@ const dataTabAstro = fs.readFileSync(
   path.join(root, 'components', 'admin', 'DataTab', 'DataTab.astro'),
   'utf-8'
 );
+const patientListAstro = fs.readFileSync(
+  path.join(root, 'components', 'admin', 'PatientList', 'PatientList.astro'),
+  'utf-8'
+);
 const mealsTabAstro = fs.readFileSync(
   path.join(root, 'components', 'admin', 'MealsTab', 'MealsTab.astro'),
   'utf-8'
@@ -68,6 +72,49 @@ describe('admin chrome', () => {
   it('uses minmax(0, 1fr) for single-column patient grids so long text cannot widen them', () => {
     expect(patientListCss).not.toMatch(/grid-template-columns:\s*1fr;/);
     expect(mealsTabCss).not.toMatch(/grid-template-columns:\s*1fr;/);
+  });
+
+  it('gives the four PatientList controls the input-field class and the add input input-flex when PatientList.astro is read', () => {
+    for (const id of [
+      'patients-search-input',
+      'patients-sort',
+      'patients-page-size',
+      'patients-add-input',
+    ]) {
+      const tag = new RegExp(`<(?:input|select)[^>]*id="${id}"[^>]*>`).exec(patientListAstro);
+      expect(tag?.[0]).toMatch(/class="input-field[" ]/);
+    }
+    const addInput = /<input[^>]*id="patients-add-input"[^>]*>/.exec(patientListAstro);
+    expect(addInput?.[0]).toMatch(/class="[^"]*\binput-flex\b/);
+  });
+
+  it('gives the PatientList add button btn-primary and the two labels form-label when PatientList.astro is read', () => {
+    expect(patientListAstro).toMatch(/<button[^>]*id="patients-add-btn"[^>]*class="btn-primary"/);
+    expect(patientListAstro).toMatch(/<span class="form-label">Kārtot<\/span>/);
+    expect(patientListAstro).toMatch(/<span class="form-label">Rādīt<\/span>/);
+  });
+
+  it('declares no PatientList field border, font-size or padding beyond the search icon clearance when PatientList.css is read', () => {
+    for (const selector of [
+      '.patients-search input',
+      '.patients-control select',
+      '.patients-add input',
+      '.patients-add button',
+    ]) {
+      expect(ruleBody(patientListCss, selector)).toBe('');
+    }
+    const search = ruleBody(patientListCss, '.patients-search .input-field');
+    expect(search).toMatch(/padding-right:\s*48px/);
+    expect(search).not.toMatch(/border|font-size/);
+    const addButton = ruleBody(patientListCss, '.patients-add .btn-primary');
+    expect(addButton).toMatch(/flex/);
+    expect(addButton).not.toMatch(/padding|background|font-size|border/);
+    expect(ruleBody(patientListCss, '.patients-control')).not.toMatch(/gap|font-size|color/);
+  });
+
+  it('gives the PatientList sort select the wide column when PatientList.css is read', () => {
+    expect(ruleBody(patientListCss, '.patients-controls')).toMatch(/minmax\(0, 1fr\) 104px/);
+    expect(ruleBody(patientListCss, '.patients-search .search-icon')).toMatch(/right:\s*16px/);
   });
 
   it('uses minmax(0, 1fr) for the meals layout in admin.css so the Pacienti column fits 375px', () => {

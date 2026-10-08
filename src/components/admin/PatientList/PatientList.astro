@@ -7,14 +7,14 @@ import './PatientList.css';
 ---
 
 <div class="patients-search">
-  <input type="text" id="patients-search-input" placeholder="Meklēt pēc ID, vārda, e-&#8288;pasta..." />
+  <input type="text" id="patients-search-input" class="input-field" placeholder="Meklēt pēc ID, vārda, e-&#8288;pasta..." />
   <i class="ph ph-magnifying-glass search-icon"></i>
 </div>
 
 <div class="patients-controls">
   <label class="patients-control">
-    <span>Kārtot</span>
-    <select id="patients-sort">
+    <span class="form-label">Kārtot</span>
+    <select id="patients-sort" class="input-field">
       <option value="name-asc">A-Z (vārds/e-&#8288;pasts)</option>
       <option value="name-desc">Z-A (vārds/e-&#8288;pasts)</option>
       <option value="access-enabled">Atļauts vispirms</option>
@@ -22,8 +22,8 @@ import './PatientList.css';
     </select>
   </label>
   <label class="patients-control">
-    <span>Rādīt</span>
-    <select id="patients-page-size">
+    <span class="form-label">Rādīt</span>
+    <select id="patients-page-size" class="input-field">
       <option value="10" selected>10</option>
       <option value="25">25</option>
       <option value="50">50</option>
@@ -33,8 +33,8 @@ import './PatientList.css';
 </div>
 
 <div class="patients-add">
-  <input type="text" id="patients-add-input" placeholder="Pacien ID (email)" />
-  <button id="patients-add-btn">Pievienot</button>
+  <input type="text" id="patients-add-input" class="input-field input-flex" placeholder="Pacien ID (email)" />
+  <button id="patients-add-btn" class="btn-primary">Pievienot</button>
 </div>
 
 <div id="patients-list" class="patients-list"></div>
