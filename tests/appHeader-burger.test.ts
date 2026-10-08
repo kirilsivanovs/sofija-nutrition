@@ -43,8 +43,11 @@ function renderHeader(): void {
 describe('AppHeader Burger Menu', () => {
   let mobileMenuBtn: any;
   let mobileNavMenu: any;
+  let scrollToSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
     renderHeader();
 
     // Reset body styles
@@ -61,6 +64,9 @@ describe('AppHeader Burger Menu', () => {
   });
 
   afterEach(() => {
+    // The scroll lock lives in module state, so a menu left open would leak into the next test
+    if (mobileNavMenu.classList.contains('open')) mobileMenuBtn.click();
+    scrollToSpy.mockRestore();
     document.body.innerHTML = '';
     document.body.style.overflow = '';
     document.body.style.position = '';
@@ -178,6 +184,50 @@ describe('AppHeader Burger Menu', () => {
 
       expect(mobileNavMenu.classList.contains('open')).toBe(false);
       expect(mobileMenuBtn.classList.contains('active')).toBe(false);
+    });
+  });
+
+  describe('Scroll position', () => {
+    beforeEach(() => {
+      Object.defineProperty(window, 'scrollY', { value: 420, configurable: true });
+      mobileMenuBtn.click();
+    });
+
+    it('restores the scroll position when the burger closes the menu after scrolling', () => {
+      expect(document.body.style.top).toBe('-420px');
+
+      mobileMenuBtn.click();
+
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 420, behavior: 'instant' });
+    });
+
+    it('restores the scroll position when Escape closes the menu', () => {
+      pressKey('Escape');
+
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 420, behavior: 'instant' });
+    });
+
+    it('refocuses the burger without scrolling when Escape closes the menu', () => {
+      const focusSpy = jest.spyOn(mobileMenuBtn, 'focus');
+
+      pressKey('Escape');
+
+      expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+    });
+
+    it('restores the scroll position when a menu item is clicked', () => {
+      mobileNavMenu.querySelector('button[data-tab]').click();
+
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 420, behavior: 'instant' });
+    });
+
+    it('restores the scroll position when the overlay is clicked', () => {
+      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+      Object.defineProperty(clickEvent, 'target', { value: mobileNavMenu, enumerable: true });
+
+      mobileNavMenu.dispatchEvent(clickEvent);
+
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 420, behavior: 'instant' });
     });
   });
 

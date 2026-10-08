@@ -436,37 +436,6 @@ i.ph {
   border-radius: 0;
 }
 
-/* Language buttons inside mobile menu */
-.mobile-nav-menu .flex.gap-4 {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(27, 67, 50, 0.1);
-}
-
-.mobile-nav-menu .flex.gap-4 .lang-btn,
-.mobile-nav-menu .flex.gap-4 .btn-chip {
-  background: rgba(27, 67, 50, 0.04);
-  color: var(--color-graphite);
-  border: 1px solid rgba(27, 67, 50, 0.12);
-  min-height: 44px;
-  min-width: 44px;
-  font-size: 14px;
-  border-radius: 8px;
-}
-
-.mobile-nav-menu .flex.gap-4 .lang-btn:hover,
-.mobile-nav-menu .flex.gap-4 .btn-chip:hover {
-  background: rgba(27, 67, 50, 0.08);
-  color: var(--color-graphite);
-}
-
-.mobile-nav-menu .flex.gap-4 .lang-btn.active,
-.mobile-nav-menu .flex.gap-4 .btn-chip.active {
-  background: var(--color-navy);
-  color: #fff;
-  border-color: var(--color-navy);
-}
-
 /* Hide mobile menu on desktop */
 @media (min-width: 768px) {
   .mobile-nav-menu,

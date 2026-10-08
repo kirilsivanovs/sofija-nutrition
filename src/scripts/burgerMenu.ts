@@ -1,12 +1,31 @@
 const BODY_LOCK_PROPS = ['overflow', 'position', 'width', 'top'] as const;
 
 let globalListenersBound = false;
+let lockedScrollY: number | null = null;
 
-function lockBody(locked: boolean): void {
-  const lockedValues = { overflow: 'hidden', position: 'fixed', width: '100%', top: '0' };
+// A fixed body drops the scroll offset, so it is stored here and put back on unlock
+function lockBody(): void {
+  if (lockedScrollY !== null) return;
+  lockedScrollY = window.scrollY;
+  const lockedValues = {
+    overflow: 'hidden',
+    position: 'fixed',
+    width: '100%',
+    top: `${-lockedScrollY}px`,
+  };
   for (const prop of BODY_LOCK_PROPS) {
-    document.body.style[prop] = locked ? lockedValues[prop] : '';
+    document.body.style[prop] = lockedValues[prop];
   }
+}
+
+// 'instant' because global.css sets smooth scrolling, which would animate down from the top
+function unlockBody(): void {
+  for (const prop of BODY_LOCK_PROPS) {
+    document.body.style[prop] = '';
+  }
+  if (lockedScrollY === null) return;
+  window.scrollTo({ top: lockedScrollY, behavior: 'instant' });
+  lockedScrollY = null;
 }
 
 function placeMenuBelowHeader(btn: HTMLButtonElement, menu: HTMLElement): void {
@@ -18,7 +37,7 @@ function close(btn: HTMLButtonElement, menu: HTMLElement): void {
   menu.classList.remove('open');
   btn.classList.remove('active');
   btn.setAttribute('aria-expanded', 'false');
-  lockBody(false);
+  unlockBody();
 }
 
 function findOpenBurger(): { btn: HTMLButtonElement; menu: HTMLElement } | null {
@@ -33,7 +52,8 @@ function handleResize(): void {
   if (open) placeMenuBelowHeader(open.btn, open.menu);
 }
 
-// Escape closes and refocuses the burger; Tab cycles burger -> items -> burger
+// Escape closes and refocuses the burger; Tab cycles burger -> items -> burger.
+// preventScroll: focusing the burger would otherwise scroll it into view and undo the restored position
 function handleKeydown(e: KeyboardEvent): void {
   const open = findOpenBurger();
   if (!open) return;
@@ -41,7 +61,7 @@ function handleKeydown(e: KeyboardEvent): void {
 
   if (e.key === 'Escape') {
     close(btn, menu);
-    btn.focus();
+    btn.focus({ preventScroll: true });
     return;
   }
 
@@ -74,7 +94,8 @@ function bindBurger(btn: HTMLButtonElement): void {
     const isOpen = menu!.classList.toggle('open');
     btn.classList.toggle('active', isOpen);
     btn.setAttribute('aria-expanded', String(isOpen));
-    lockBody(isOpen);
+    if (isOpen) lockBody();
+    else unlockBody();
     if (isOpen) placeMenuBelowHeader(btn, menu!);
   }
 

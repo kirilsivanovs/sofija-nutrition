@@ -205,6 +205,10 @@ describe('landing decorative markers', () => {
     expect(globalCss).not.toMatch(/Subtle decorative gold line/);
     expect(indexAstro).not.toMatch(/bg-secondary\/60/);
   });
+
+  it('has no language-button rules left inside the mobile menu when the menu holds only tab items', () => {
+    expect(globalCss).not.toMatch(/\.mobile-nav-menu\s+\.flex/);
+  });
 });
 
 describe('old hero section', () => {
