@@ -13,13 +13,9 @@ function pressKey(key: string, shiftKey = false): void {
   document.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true }));
 }
 
-describe('AppHeader Burger Menu', () => {
-  let mobileMenuBtn: any;
-  let mobileNavMenu: any;
-
-  beforeEach(() => {
-    // Setup DOM matching AppHeader component structure
-    document.body.innerHTML = `
+function renderHeader(): void {
+  // DOM matching AppHeader component structure
+  document.body.innerHTML = `
       <header class="app-header app-header--admin">
         <div class="app-header-inner">
           <button
@@ -42,6 +38,14 @@ describe('AppHeader Burger Menu', () => {
         <button class="mobile-nav-item" data-tab="settings">Iestatījumi</button>
       </div>
     `;
+}
+
+describe('AppHeader Burger Menu', () => {
+  let mobileMenuBtn: any;
+  let mobileNavMenu: any;
+
+  beforeEach(() => {
+    renderHeader();
 
     // Reset body styles
     document.body.style.overflow = '';
@@ -205,6 +209,38 @@ describe('AppHeader Burger Menu', () => {
       mobileMenuBtn.click();
 
       expect(mobileNavMenu.style.getPropertyValue('--menu-top')).toBe('83px');
+    });
+
+    it('updates --menu-top when the window resizes while the menu is open', () => {
+      const header = document.querySelector('header') as HTMLElement;
+      Object.defineProperty(header, 'offsetHeight', { value: 83, configurable: true });
+      mobileMenuBtn.click();
+      Object.defineProperty(header, 'offsetHeight', { value: 120, configurable: true });
+
+      window.dispatchEvent(new Event('resize'));
+
+      expect(mobileNavMenu.style.getPropertyValue('--menu-top')).toBe('120px');
+    });
+
+    it('registers one resize and one keydown listener when the header is re-initialised repeatedly', () => {
+      jest.isolateModules(() => {
+        const { initBurgerMenu: freshInit } = require('../src/scripts/burgerMenu');
+        const windowSpy = jest.spyOn(window, 'addEventListener');
+        const documentSpy = jest.spyOn(document, 'addEventListener');
+
+        for (let navigation = 0; navigation < 3; navigation++) {
+          renderHeader();
+          freshInit();
+        }
+
+        const countOf = (spy: jest.SpyInstance, type: string) =>
+          spy.mock.calls.filter(([eventType]) => eventType === type).length;
+        expect(countOf(windowSpy, 'resize')).toBe(1);
+        expect(countOf(documentSpy, 'keydown')).toBe(1);
+
+        windowSpy.mockRestore();
+        documentSpy.mockRestore();
+      });
     });
 
     it('returns focus to the burger when Escape closes the menu', () => {
